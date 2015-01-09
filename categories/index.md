@@ -5,7 +5,7 @@ layout: page
 
 <div id='tag_cloud'>
 {% for cat in site.categories %}
-<a href="#{{ cat[0] }}" title="{{ cat[0] }}" rel="{{ cat[1].size }}">{{ cat[0] }} <span style="color:#07e"> ({{ cat[1].size }})</span></a>
+<a href="#{{ cat[0] }}" title="{{ cat[0] }}" rel="{{ cat[1].size }}">{{ cat[0] }} <span style="color:#07e"> ({{ cat[1].size }})</span></a>>&nbsp;&nbsp;&nbsp;
 {% endfor %}
 </div>
 
@@ -21,7 +21,7 @@ layout: page
 {% endfor %}
 </ul>
 
-<script src="/jscss/jquery.tagcloud.js" type="text/javascript" charset="utf-8"></script> 
+<script src="/jscss/jquery.tagcloud.js" charset="utf-8"></script> 
 <script language="javascript">
 $.fn.tagcloud.defaults = {
     size: {start: 1, end: 1, unit: 'em'},

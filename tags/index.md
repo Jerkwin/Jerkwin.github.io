@@ -21,7 +21,7 @@ layout: page
 {% endfor %}
 </ul>
 
-<script src="/jscss/jquery.tagcloud.js" type="text/javascript" charset="utf-8"></script> 
+<script src="/jscss/jquery.tagcloud.js" charset="utf-8"></script> 
 <script language="javascript">
 $.fn.tagcloud.defaults = {
     size: {start: 1, end: 1, unit: 'em'},

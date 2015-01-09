@@ -4,5 +4,5 @@
 
 此博客的代码高亮使用了[prism](http://prismjs.com/).
 
-此博客的评论功能使用了[Disqus](http://disqus.com/).
+此博客的评论功能使用了[多说](http://duoshuo.com/).
 
