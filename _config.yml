@@ -1,0 +1,8 @@
+markdown: kramdown
+permalink: /:year/:month/:day/:title/
+url: http://jerkwin.github.io
+author: Jerkwin
+pygments: true
+safe: true
+paginate: 25
+auto: true

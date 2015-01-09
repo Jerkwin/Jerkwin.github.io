@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+
+<script src="three.min.js"></script>
+<script src="OrbitControls.js"></script>
+
+<style type="text/css">
+div#canvas-frame{
+  border: none;
+  cursor: pointer;
+  width: 1600px;
+  height: 800px;
+  background-color: #EEEEEE;
+}
+</style>
+
+<script>
+
+var $ = function(id){return document.getElementById(id)}
+
+var renderer, camera, scene, light, width, height;
+
+function initThree() {
+	width  = $('canvas-frame').clientWidth;
+	height = $('canvas-frame').clientHeight;
+	renderer = new THREE.WebGLRenderer({antialias: true});
+	renderer.setSize(width-10, height-10);
+	renderer.setClearColorHex(0xFFFFFF, 1.0);
+	$('canvas-frame').appendChild(renderer.domElement);
+}
+
+function initScene() {
+	scene = new THREE.Scene();
+}
+
+function initCamera() {
+	camera = new THREE.PerspectiveCamera(30, width/height, 1, 10000);
+	camera.position.x = -20;
+	camera.position.y = -20;
+	camera.position.z = 15;
+	camera.up.x = 0;
+	camera.up.y = 0;
+	camera.up.z = 1;
+	camera.lookAt( {x:10, y:0, z:0 } );
+
+	var controls = new THREE.OrbitControls( camera );
+	controls.addEventListener( 'change', controls.update() );
+}
+
+function initLight() {
+	light = new THREE.DirectionalLight(0xFFFFFF, 1.0, 0);
+	light.position.set(0, 0, 50);
+	scene.add(light);
+
+	light2 = new THREE.AmbientLight(0x555555);
+	scene.add(light2);
+}
+
+function initObject(){
+
+	var gridMaterial, wireMaterial, vertexColorMaterial;
+	var normMaterial = new THREE.MeshNormalMaterial;
+	var shadeMaterial = new THREE.MeshLambertMaterial( { color: 0xff0000 , wireframe: false, side:THREE.DoubleSide} );
+	var wireframeMaterial = new THREE.MeshBasicMaterial( { color: 0x000000, wireframe: true, side:THREE.DoubleSide } );
+	var vertexColorMaterial  = new THREE.MeshBasicMaterial( { vertexColors: THREE.VertexColors } );
+
+	var meshFunction = function(x, y) {
+		x = xRange * x + xMin;
+		y = yRange * y + yMin;
+		var z = PES(x,y);
+		if ( isNaN(z) )
+			return new THREE.Vector3(0,0,9); // TODO: better fix
+		else
+			return new THREE.Vector3(x, y, z);
+	};
+
+	var segments = 50,
+	xMin = -7, xMax = 5.5, xRange = xMax - xMin,
+	yMin = -7, yMax = 7,   yRange = yMax - yMin;
+	var graphGeometry = new THREE.ParametricGeometry( meshFunction, segments, segments, false );
+	var graphMesh = new THREE.Mesh( graphGeometry, wireframeMaterial );
+	graphMesh.doubleSided = true;
+
+	scene.add(new THREE.Mesh( graphGeometry, shadeMaterial));
+	scene.add(graphMesh);
+	
+	sphere = addSphere(.5, 0xFFFF00, 0,0,0)
+}
+
+var t=0, Xini=-4.5, x, y, z, cube, sphere;
+
+function PES(x,y) {
+	var Fx, Fy;
+	if(x==0) Fx = 4; else Fx = 4*Math.sin(x)/x+.1*x;
+	if(y==0) Fy = 4; else Fy = 4*Math.sin(y)/y;
+	return Fx+Fy;
+}
+
+function Animate() {
+	t++; 
+	x = Xini+t/100; if(x>5.5) t=0;
+	y = Xini+t*0/100; 
+	z=PES(x,y);
+	renderer.clear();
+	sphere.position.set(x, y, z);
+
+	camera.lookAt( {x:0, y:0, z:0 } );
+	renderer.render(scene, camera);
+	window.requestAnimationFrame(Animate);
+}
+
+function startThree() {
+	initThree();
+	initScene();
+	initCamera();
+	initLight();
+	initObject();
+	Animate();
+}
+
+function addSphere(Radii, Color, X, Y, Z) {
+	var sphere = new THREE.Mesh(
+		new THREE.SphereGeometry(Radii,10,10),
+		new THREE.MeshLambertMaterial({color: Color})
+	);
+	sphere.position.set(X,Y,Z);
+	scene.add(sphere);
+	return sphere;
+}
+</script>
+</head>
+
+<body onload="startThree();">
+<div id="canvas-frame"></div>
+
+</body>
+</html>
