@@ -290,7 +290,7 @@ dl .meta {
 	float: right;
 }
 
-.listing-item a { padding:.2em 1em; }
+.listing-item a { padding:.025em .4em; }
 .listing-item time { color:#999999; }
 .listing-seperator { font-weight:bold;}
 .listing-item, .listing-seperator{ list-style-type:none; }
