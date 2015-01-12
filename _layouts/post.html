@@ -8,7 +8,7 @@ layout: default
 
 <section class="meta">
 	</br>
-	<h4>◆本文网址: <a href="{{ site.url }}{{ page.url }}">{{ site.url }}/{{ page.date | date:"%Y/%m/%d" }}/{{ page.title }}</a>, 转载请注明◆</h4>
+	<h4 style="text-align=center;">◆本文网址: <a href="{{ site.url }}{{ page.url }}">{{ site.url }}/{{ page.date | date:"%Y/%m/%d" }}/{{ page.title }}</a>, 转载请注明◆</h4>
 	<hr>
 	<span style="float:left;">
 		<a {% if page.previous %} href="{{ site.url }}{{ page.previous.url }}" style="font-size: 21px" {% endif %} {% unless page.previous %} class="pageNavInvalid" {% endunless %} >前一篇:　{{ page.previous.title }}</a>
