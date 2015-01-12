@@ -134,6 +134,9 @@ a, a:link, a:hover, a:active {
 	color: #EE0000;
 	margin: 0 auto;
 	padding: 0;
+	text-decoration: none;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
 	vertical-align: baseline;
 }
 a:visited { color: #B22222; }
