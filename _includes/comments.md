@@ -5,7 +5,7 @@
 <!-- 多说评论框 end -->
 
 <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-<script type="text/javascript">
+<script>
 var duoshuoQuery = {short_name:"jerkwin"};
 	(function() {
 		var ds = document.createElement('script');
@@ -19,7 +19,7 @@ var duoshuoQuery = {short_name:"jerkwin"};
 <!-- 多说公共JS代码 end -->
 
 <!-- div id="disqus_thread"></div>
-<script type="text/javascript">
+<script>
     /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
     var disqus_shortname = 'jerkwin'; // required: replace example with your forum shortname
     var disqus_url = '{{ site.url }}{{ page.url | remove:'index.html' }}';
