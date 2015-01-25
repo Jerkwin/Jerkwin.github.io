@@ -1,10 +1,7 @@
 <section class="comment">
 
-<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="{{page.id}}" data-title="{{page.title}}" data-url="{{ site.url }}{{ page.url | remove:'index.html' }}"></div>
-<!-- 多说评论框 end -->
+<div class="ds-thread" data-thread-key="{{page.id}}" data-title="{{page.title}}" data-url="{{ site.url }}{{ page.url | remove:'index.html' }}"></div>
 
-<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 <script>
 var duoshuoQuery = {short_name:"jerkwin"};
 	(function() {
@@ -16,20 +13,3 @@ var duoshuoQuery = {short_name:"jerkwin"};
 		 || document.getElementsByTagName('body')[0]).appendChild(ds);
 	})();
 </script>
-<!-- 多说公共JS代码 end -->
-
-<!-- div id="disqus_thread"></div>
-<script>
-    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-    var disqus_shortname = 'jerkwin'; // required: replace example with your forum shortname
-    var disqus_url = '{{ site.url }}{{ page.url | remove:'index.html' }}';
-    /* * * DON'T EDIT BELOW THIS LINE * * */
-    (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</section--->
-
