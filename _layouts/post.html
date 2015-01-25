@@ -3,6 +3,7 @@ layout: default
 ---
 
 <section class="post"> {{ content }} </section>
+<script src="/jscss/ChemDoodleWeb.js"></script>
 
 <section class="meta">
 </br><h4 style="text-align:center;">◆本文地址: <a href="{{ site.url }}{{ page.url }}">{{ site.url }}/{{ page.date | date:"%Y/%m/%d" }}/{{ page.title }}</a>, 转载请注明◆</h4>
@@ -31,7 +32,6 @@ layout: default
 
 <script src="/jscss/TOC.js"></script>
 <script src="/jscss/flowchart-min.js"></script>
-<script src="/jscss/ChemDoodleWeb.js"></script>
 <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({tex2jax:{processEscapes: true, inlineMath: [ ['$','$'], ["\\(","\\)"] ], skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}});
