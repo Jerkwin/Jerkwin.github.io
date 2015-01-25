@@ -9,6 +9,33 @@
 
 	<link rel="stylesheet" href="/jscss/MD.css" >
 	<link rel="stylesheet" href="/jscss/prism.css">
+</head>
+
+<body>
+	<div id="container">
+	<div id="main" role="main">
+		<header>
+		<div class="buttons">
+			<a href="/" title="Go to homepage">主页</a>
+			<a href="/categories" title="Category" >类别</a>
+			<a href="/tags" title="Tag Cloud" >标签</a>
+			<a href="/guestbook" title="Guest Book" >留言</a>
+			<a href="/links" title="Links" >链接</a>
+			<a href="/about" title="About" >关于</a>
+			<a href="/feed" title="Subscribe by RSS" >订阅</a>
+		</div>
+		<h1>{{ page.title }}</h1>
+		</header>
+		<hr>
+		<article class="content">
+			{{ content }}
+		</article>
+	</div>
+	<footer>
+		<p><small>Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a> | Copyright 2008 - {{site.time | date:"%Y"}} by <a href="http://jerkwin.github.io/about/">Jerkwin</a> | <span class="label label-info">{{site.time | date:"%Y-%m-%d %H:%M:%S %Z"}}</span></small></p>
+	</footer>
+	</div>
+</body>
 	<script src="/jscss/prism.js"></script>
 	<script src="/jscss/raphael-min.js"></script>
 	<script src="/jscss/flowchart-min.js"></script>
@@ -48,32 +75,4 @@
 			}
 		});
 	</script>
-</head>
-
-<body>
-	<div id="container">
-	<div id="main" role="main">
-		<header>
-		<div class="buttons">
-			<a href="/" title="Go to homepage">主页</a>
-			<a href="/categories" title="Category" >类别</a>
-			<a href="/tags" title="Tag Cloud" >标签</a>
-			<a href="/guestbook" title="Guest Book" >留言</a>
-			<a href="/links" title="Links" >链接</a>
-			<a href="/about" title="About" >关于</a>
-			<a href="/feed" title="Subscribe by RSS" >订阅</a>
-		</div>
-		<h1>{{ page.title }}</h1>
-		</header>
-		<hr>
-		<article class="content">
-			{{ content }}
-		</article>
-	</div>
-	<footer>
-		<p><small>Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a> | Copyright 2008 - {{site.time | date:"%Y"}} by <a href="http://jerkwin.github.io/about/">Jerkwin</a> | <span class="label label-info">{{site.time | date:"%Y-%m-%d %H:%M:%S %Z"}}</span></small></p>
-	</footer>
-	</div>
-
-</body>
 </html>
