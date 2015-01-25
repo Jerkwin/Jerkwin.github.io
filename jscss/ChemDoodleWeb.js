@@ -1,30 +1,3 @@
-//
-// ChemDoodle Web Components 6.0.1
-//
-// http://web.chemdoodle.com
-//
-// Copyright 2009-2014 iChemLabs, LLC.  All rights reserved.
-//
-// The ChemDoodle Web Components library is licensed under version 3
-// of the GNU GENERAL PUBLIC LICENSE.
-//
-// You may redistribute it and/or modify it under the terms of the
-// GNU General Public License as published by the Free Software Foundation,
-// either version 3 of the License, or (at your option) any later version.
-//
-// As an exception to the GPL, you may distribute this packed form of
-// the code without the copy of the GPL license normally required,
-// provided you include this license notice and a URL through which
-// recipients can access the corresponding unpacked source code. 
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// Please contact iChemLabs <http://www.ichemlabs.com/contact-us> for
-// alternate licensing options.
-//
 var ChemDoodle=function(){var b={iChemLabs:{},informatics:{},io:{},lib:{},structures:{}};b.structures.d2={};b.structures.d3={};b.getVersion=function(){return"6.0.1"};return b}();
 (function(b,j,n){function l(x){var c=x.length,a=m.type(x);return m.isWindow(x)?!1:1===x.nodeType&&c?!0:"array"===a||"function"!==a&&(0===c||"number"===typeof c&&0<c&&c-1 in x)}function h(x,c,a,k){if(m.acceptData(x)){var d=m.expando,b=x.nodeType,f=b?m.cache:x,g=b?x[d]:x[d]&&d;if(g&&f[g]&&(k||f[g].data)||!(a===n&&"string"===typeof c)){g||(g=b?x[d]=ha.pop()||m.guid++:d);f[g]||(f[g]=b?{}:{toJSON:m.noop});if("object"===typeof c||"function"===typeof c)k?f[g]=m.extend(f[g],c):f[g].data=m.extend(f[g].data,
 c);x=f[g];k||(x.data||(x.data={}),x=x.data);a!==n&&(x[m.camelCase(c)]=a);"string"===typeof c?(a=x[c],null==a&&(a=x[m.camelCase(c)])):a=x;return a}}}function e(x,c,k){if(m.acceptData(x)){var d,b,f=x.nodeType,g=f?m.cache:x,r=f?x[m.expando]:m.expando;if(g[r]){if(c&&(d=k?g[r]:g[r].data)){m.isArray(c)?c=c.concat(m.map(c,m.camelCase)):c in d?c=[c]:(c=m.camelCase(c),c=c in d?[c]:c.split(" "));for(b=c.length;b--;)delete d[c[b]];if(k?!a(d):!m.isEmptyObject(d))return}if(!k&&(delete g[r].data,!a(g[r])))return;
