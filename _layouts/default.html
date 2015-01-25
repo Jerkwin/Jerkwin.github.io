@@ -7,8 +7,7 @@
 	<link href="data:image/x-icon;base64,AAABAAEAEBAQAAAAAAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAD/APr59wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIiIiIiIiAAAiIiIiIiIAACIiIiIiIgERERERERIiAREREREREiIBERERERESIgERIiIiERIiAREiIiIREiIBESIhERESIgERIiERERIiAREiIiIiIiIBESIiIiIiIgERIiIiIiIiAREREREREAABEREREREQAAERERERERAADgAQAA4AEAAOABAAAAAQAAAAEAAAABAAAAAQAAAAEAAAABAAAAAQAAAAEAAAABAAAAAQAAAA8AAAAPAAAADwAA" rel="icon" type="image/x-icon" />
 	<link href="/feed/" rel="alternate" title="{{ site.author }}" type="application/atom+xml" />
 
-	<link rel="stylesheet" href="/jscss/MD.css" >
-	<link rel="stylesheet" href="/jscss/prism.css">
+	<link rel="stylesheet" href="/jscss/MDprism.css">
 </head>
 
 <body>
@@ -36,43 +35,40 @@
 	</footer>
 	</div>
 </body>
-	<script src="/jscss/prism.js"></script>
-	<script src="/jscss/raphael-min.js"></script>
-	<script src="/jscss/flowchart-min.js"></script>
-	<script src="/jscss/ChemDoodleWeb.js"></script>
-
-	<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-	</script>
-
-	<script type="text/x-mathjax-config">
-		MathJax.Hub.Config({
-			tex2jax: {
-				processEscapes: true,
-				inlineMath: [ ['$','$'], ["\\(","\\)"] ],
-				skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+<script src="/jscss/prism.js"></script>
+<script src="/jscss/raphael-min.js"></script>
+<script src="/jscss/flowchart-min.js"></script>
+<script src="/jscss/ChemDoodleWeb.js"></script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+	MathJax.Hub.Config({
+		tex2jax: {
+			processEscapes: true,
+			inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+			skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+		}
+	});
+	MathJax.Hub.Config({
+		TeX: {
+			extensions: ["cancel.js", "enclose.js"],
+			Macros: {
+				a:"\\alpha",b:"\\beta",c:"\\chi",d:"\\delta",e:"\\epsilon",f:"\\phi",g:"\\gamma",h:"\\eta",i:"\\iota",j:"\\varphi",k:"\\kappa",l:"\\lambda",m:"\\mu",n:"\\nu",o:"\\omicron",p:"\\pi",q:"\\theta",r:"\\rho",s:"\\sigma",t:"\\tau",u:"\\upsilon",v:"\\varpi",w:"\\omega",x:"\\xi",y:"\\psi",z:"\\zeta",
+				D:"\\Delta",F:"\\Phi",G:"\\Gamma",J:"\\vartheta",L:"\\Lambda",P:"\\Pi",Q:"\\Theta",S:"\\Sigma",U:"\\Upsilon",V:"\\varsigma",W:"\\Omega",X:"\\Xi",Y:"\\Psi",
+				ve:"\\varepsilon",vk:"\\varkappa",vq:"\\vartheta",vp:"\\varpi",vr:"\\varrho",vs:"\\varsigma",vf:"\\varphi",
+				alg:"\\begin{align}", ealg:"\\end{align}",
+				bmat:"\\begin{bmatrix}", Bmat:"\\begin{Bmatrix}", pmat:"\\begin{pmatrix}", Pmat:"\\begin{Pmatrix}", vmat:"\\begin{vmatrix}", Vmat:"\\begin{Vmatrix}",
+				ebmat:"\\end{bmatrix}", eBmat:"\\end{Bmatrix}",  epmat:"\\end{pmatrix}",  ePmat:"\\end{Pmatrix}",  evmat:"\\end{vmatrix}",  eVmat:"\\end{Vmatrix}",
+				AA:"\\unicode{x212B}",  abs:['\\lvert #1\\rvert',1], rmd:['\\mathop{\\mathrm{d}#1}',1],
+				bi:['\\boldsymbol{#1}', 1], obar:['0\\!\\!\\!\\raise{.05em}{-}'],
+				opar:['\\frac{\\partial #1}{\\partial #2}', 2], oppar:['\\frac{\\partial^2 #1}{\\partial #2^2}', 2]
 			}
-		});
-		MathJax.Hub.Config({
-			TeX: {
-				extensions: ["cancel.js", "enclose.js"],
-				Macros: {
-					a:"\\alpha",b:"\\beta",c:"\\chi",d:"\\delta",e:"\\epsilon",f:"\\phi",g:"\\gamma",h:"\\eta",i:"\\iota",j:"\\varphi",k:"\\kappa",l:"\\lambda",m:"\\mu",n:"\\nu",o:"\\omicron",p:"\\pi",q:"\\theta",r:"\\rho",s:"\\sigma",t:"\\tau",u:"\\upsilon",v:"\\varpi",w:"\\omega",x:"\\xi",y:"\\psi",z:"\\zeta",
-					D:"\\Delta",F:"\\Phi",G:"\\Gamma",J:"\\vartheta",L:"\\Lambda",P:"\\Pi",Q:"\\Theta",S:"\\Sigma",U:"\\Upsilon",V:"\\varsigma",W:"\\Omega",X:"\\Xi",Y:"\\Psi",
-					ve:"\\varepsilon",vk:"\\varkappa",vq:"\\vartheta",vp:"\\varpi",vr:"\\varrho",vs:"\\varsigma",vf:"\\varphi",
-					alg:"\\begin{align}", ealg:"\\end{align}",
-					bmat:"\\begin{bmatrix}", Bmat:"\\begin{Bmatrix}", pmat:"\\begin{pmatrix}", Pmat:"\\begin{Pmatrix}", vmat:"\\begin{vmatrix}", Vmat:"\\begin{Vmatrix}",
-					ebmat:"\\end{bmatrix}", eBmat:"\\end{Bmatrix}",  epmat:"\\end{pmatrix}",  ePmat:"\\end{Pmatrix}",  evmat:"\\end{vmatrix}",  eVmat:"\\end{Vmatrix}",
-					AA:"\\unicode{x212B}",  abs:['\\lvert #1\\rvert',1], rmd:['\\mathop{\\mathrm{d}#1}',1],
-					bi:['\\boldsymbol{#1}', 1], obar:['0\\!\\!\\!\\raise{.05em}{-}'],
-					opar:['\\frac{\\partial #1}{\\partial #2}', 2], oppar:['\\frac{\\partial^2 #1}{\\partial #2^2}', 2]
-				}
-			}
-		});
-		MathJax.Hub.Queue(function() {
-			var all = MathJax.Hub.getAllJax(), i;
-			for(i=0; i < all.length; i += 1) {
-				all[i].SourceElement().parentNode.className += ' has-jax';
-			}
-		});
-	</script>
+		}
+	});
+	MathJax.Hub.Queue(function() {
+		var all = MathJax.Hub.getAllJax(), i;
+		for(i=0; i < all.length; i += 1) {
+			all[i].SourceElement().parentNode.className += ' has-jax';
+		}
+	});
+</script>
 </html>
