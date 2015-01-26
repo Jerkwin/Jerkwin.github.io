@@ -2,7 +2,17 @@
 layout: default
 ---
 
-<script src="/jscss/ChemDoodleWeb.js"></script>
+<script>
+var chem = document.getElementsById('xyzCoor');
+if(chem.length>0) {
+var oHead = document.getElementsByTagName('HEAD').item(0); 
+	var oScript= document.createElement("script");
+	oScript.src="/jscss/ChemDoodleWeb.js";
+	oHead.appendChild( oScript);
+}
+</script>
+
+<!--script src="/jscss/ChemDoodleWeb.js"></script-->
 <section class="post"> {{ content }} </section>
 
 <section class="meta">
@@ -12,19 +22,13 @@ layout: default
 <span class="author"> <a href="http://Jerkwin.github.com">{{ site.author }}</a> </span>
 <span class="time"> / <time datetime="{{ page.date | date:"%Y-%m-%d" }}">{{ page.date | date:"%Y-%m-%d" }}</time> </span><br/>
 <span class="license">版权: <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">(CC) BY-NC-SA</a>&nbsp;</span>
-{% if page.categories %}
-	<span class="categories">
-		类别: 
-		{% for cat in page.categories %} <a href="/categories/#{{ cat }}" title="{{ cat }}">{{ cat }}</a>&nbsp;
-		{% endfor %}
-	</span>
+{% if page.categories %}<span class="categories">类别:
+	{% for cat in page.categories %} <a href="/categories/#{{ cat }}" title="{{ cat }}">{{ cat }}</a>&nbsp;
+	{% endfor %}</span>
 {% endif %}
-{% if page.tags %}
-	<span class="tags">
-		标签: 
-		{% for tag in page.tags %} <a href="/tags/#{{ tag }}" title="{{ tag }}">{{ tag }}</a>&nbsp; 
-		{% endfor %}
-	</span>
+{% if page.tags %}<span class="tags">标签:
+	{% for tag in page.tags %} <a href="/tags/#{{ tag }}" title="{{ tag }}">{{ tag }}</a>&nbsp;
+	{% endfor %}</span>
 {% endif %}
 </section>
 
@@ -43,19 +47,17 @@ for(i=0; i < all.length; i += 1) {all[i].SourceElement().parentNode.className +=
 <script>
 $(function(){$(document).keydown(function(e) {
 var url = false;
-	if (e.which == 37 || e.which == 74) {  // Left arrow and J
+	if (e.which == 37 || e.which == 74) {
 		{% if page.previous %}
 	url = '{{ site.url }}{{ page.previous.url }}';
 	{% endif %}
 	}
-	else if (e.which == 39 || e.which == 75) {  // Right arrow and K
+	else if (e.which == 39 || e.which == 75) {
 		{% if page.next %}
-	url = '{{ site.url }}{{ page.next.url }}';
+	url='{{ site.url }}{{ page.next.url }}';
 	{% endif %}
 	}
-	if (url) {
-		window.location = url;
-	}
+	if(url){window.location=url;}
 });})</script>
 
 {% include comments.md %}
