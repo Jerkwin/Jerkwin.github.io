@@ -1,37 +1,25 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
 <head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<meta name="author" content="{{ site.author }}" />
-	<title>{{ page.title }} | {{ site.author }}</title>
-	<link href="data:image/x-icon;base64,AAABAAEAEBAQAAAAAAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAD/APr59wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIiIiIiIiAAAiIiIiIiIAACIiIiIiIgERERERERIiAREREREREiIBERERERESIgERIiIiERIiAREiIiIREiIBESIhERESIgERIiERERIiAREiIiIiIiIBESIiIiIiIgERIiIiIiIiAREREREREAABEREREREQAAERERERERAADgAQAA4AEAAOABAAAAAQAAAAEAAAABAAAAAQAAAAEAAAABAAAAAQAAAAEAAAABAAAAAQAAAA8AAAAPAAAADwAA" rel="icon" type="image/x-icon" />
-	<link href="/feed/" rel="alternate" title="{{ site.author }}" type="application/atom+xml" />
-	<link rel="stylesheet" href="/jscss/MDprism.css">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta name="author" content="{{ site.author }}" />
+<title>{{ page.title }} | {{ site.author }}</title>
+<link href="data:image/x-icon;base64,AAABAAEAEBAQAAAAAAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAD/APr59wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIiIiIiIiAAAiIiIiIiIAACIiIiIiIgERERERERIiAREREREREiIBERERERESIgERIiIiERIiAREiIiIREiIBESIhERESIgERIiERERIiAREiIiIiIiIBESIiIiIiIgERIiIiIiIiAREREREREAABEREREREQAAERERERERAADgAQAA4AEAAOABAAAAAQAAAAEAAAABAAAAAQAAAAEAAAABAAAAAQAAAAEAAAABAAAAAQAAAA8AAAAPAAAADwAA" rel="icon" type="image/x-icon" />
+<link href="/feed/" rel="alternate" title="{{ site.author }}" type="application/atom+xml" />
+<link rel="stylesheet" href="/jscss/MDprism.css">
 </head>
 
 <body>
-	<div id="container">
-	<div id="main" role="main">
-		<header>
-		<div class="buttons">
-			<a href="/" title="Go to homepage">主页</a>
-			<a href="/categories" title="Category" >类别</a>
-			<a href="/tags" title="Tag Cloud" >标签</a>
-			<a href="/guestbook" title="Guest Book" >留言</a>
-			<a href="/links" title="Links" >链接</a>
-			<a href="/about" title="About" >关于</a>
-			<a href="/feed" title="Subscribe by RSS" >订阅</a>
-		</div>
-		<h1>{{ page.title }}</h1>
-		</header>
-		<hr>
-		<article class="content">
-			{{ content }}
-		</article>
-	</div>
-	<footer>
-		<p><small>Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a> | Copyright 2008 - {{site.time | date:"%Y"}} by <a href="http://jerkwin.github.io/about/">Jerkwin</a> | <span class="label label-info">{{site.time | date:"%Y-%m-%d %H:%M:%S %Z"}}</span></small></p>
-	</footer>
-	</div>
-</body>
-</html>
+<div id="container"><div id="main" role="main">
+<header><div class="buttons">
+<a href="/" title="Go to homepage">主页</a>
+<a href="/categories" title="Category" >类别</a>
+<a href="/tags" title="Tag Cloud" >标签</a>
+<a href="/guestbook" title="Guest Book" >留言</a>
+<a href="/links" title="Links" >链接</a>
+<a href="/about" title="About" >关于</a>
+<a href="/feed" title="Subscribe by RSS" >订阅</a>
+</div><h1>{{ page.title }}</h1></header>
+<hr><article class="content">{{ content }}</article></div>
+<footer><p><small>Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a> | Copyright 2008 - {{site.time | date:"%Y"}} by <a href="http://jerkwin.github.io/about/">Jerkwin</a> | <span class="label label-info">{{site.time | date:"%Y-%m-%d %H:%M:%S %Z"}}</span></small></p></footer>
+</div></body></html>
