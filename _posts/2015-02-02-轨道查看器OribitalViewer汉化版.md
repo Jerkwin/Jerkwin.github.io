@@ -69,7 +69,6 @@ H  -1.770699997  1.213648000  0.000000000 1 s 0 0
 	</script></td>
 <td>
 	ORB文件<br/><textarea id="orb" style="width:400px; height:500px; resize: none">
-	
 	</textarea></td>
 </tr></table>
 
@@ -104,7 +103,7 @@ function genCoor() {
 	for(var i=1; i<=Natm; i++) {
 		Line=Lines[1+i].split(/\s+/)
 		$("orb").value += '\nAtom { #' + i
-		+ "\n  n          " + Line[4] 
+		+ "\n  n          " + Line[4]
 		+ "\n  l          " + Line[5]
 		+ "\n  m          " + Line[6]
 		+ "\n  Protons(Z) " + (atmID[Line[0].toUpperCase()] || Line[0])
