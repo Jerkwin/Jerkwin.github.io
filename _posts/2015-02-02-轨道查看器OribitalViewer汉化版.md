@@ -127,7 +127,3 @@ function genCoor() {
 }
 </script>
 
-### 网络资源
-
-- [适用于 Windows 7 的 Windows 帮助程序 WinHlp32.exe](http://www.microsoft.com/zh-cn/download/details.aspx?id=91)
-
