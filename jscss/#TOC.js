@@ -23,7 +23,6 @@ function box() {
 				if(ImgSrc[j]==this.src) {ImgIdx=j; break;}
 			}
 			var top=document.body.scrollTop||document.documentElement.scrollTop
-
 			var dsp='block'; if(this.id=="TopImg") dsp='none'
 			$('TopImg').src=this.src;
 			$('TopImg').style.height=winHeight-90+"px";
@@ -40,8 +39,9 @@ function Page(i) {
 	ImgIdx += i
 	if(ImgIdx<1) ImgIdx=Nfig
 	if(ImgIdx>Nfig) ImgIdx=1
-	
+
 	$('TopImg').src=ImgSrc[ImgIdx];
+	$('TopTxt').innerHTML=ImgAlt[ImgIdx]
 	$('Prev').innerHTML=ImgIdx+"/"+Nfig+"&#9668;&#9668;"
 	$('Next').innerHTML="&#9658;&#9658;"+ImgIdx+"/"+Nfig
 }
@@ -72,7 +72,7 @@ function flc() {
 	}
 }
 
-var ImgIdx=0, ImgSrc=new Array();
+var ImgIdx=0, ImgSrc=new Array(), ImgAlt=new Array();
 var $=function(id){return document.getElementById(id)}
 var C$=function(tg){return document.createElement(tg)}
 
