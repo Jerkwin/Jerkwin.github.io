@@ -19,13 +19,12 @@ function box() {
 		ImgSrc[i]=Img[i].src
 		ImgAlt[i]=Img[i].alt
 		Img[i].addEventListener("click", function() {
-			for(var j=1; j<ImgSrc.length; j++) {
-				if(ImgSrc[j]==this.src) {ImgIdx=j; break;}
-			}
+			ImgIdx=1; while(ImgSrc[ImgIdx]!=this.src && ImgIdx<ImgSrc.length) ImgIdx++
+
 			var top=document.body.scrollTop||document.documentElement.scrollTop
 			var dsp='block'; if(this.id=="TopImg") dsp='none'
 			$('TopImg').src=this.src;
-			$('TopImg').style.height=winHeight-90+"px";
+			$('TopImg').style.maxHeight=winHeight-90+"px";
 			$('Bkg').style.display=dsp; $('Bkg').style.top=top+"px";
 			$('Box').style.display=dsp; $('Box').style.top=top+"px";
 			Page(0)
@@ -39,7 +38,6 @@ function Page(i) {
 	ImgIdx += i
 	if(ImgIdx<1) ImgIdx=Nfig
 	if(ImgIdx>Nfig) ImgIdx=1
-
 	$('TopImg').src=ImgSrc[ImgIdx];
 	$('TopTxt').innerHTML=ImgAlt[ImgIdx]
 	$('Prev').innerHTML=ImgIdx+"/"+Nfig+"&#9668;&#9668;"
@@ -72,8 +70,8 @@ function flc() {
 	}
 }
 
+var  $=function(id){return document.getElementById(id)}
+var C$=function(tag){return document.createElement(tag)}
 var ImgIdx=0, ImgSrc=new Array(), ImgAlt=new Array();
-var $=function(id){return document.getElementById(id)}
-var C$=function(tg){return document.createElement(tg)}
 
 window.onload = function() { box(); flc() }
