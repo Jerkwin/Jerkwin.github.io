@@ -2,25 +2,31 @@ function box() {
 	var Bkg = C$("div");   Bkg.id = "Bkg";
 	var Box = C$("div");   Box.id = "Box";
 	var TopImg= C$("img"); TopImg = "<img id='TopImg'>";
-	var TopTxt= C$("i");   TopTxt = "<i></i>";
+	var TopTxt= C$("i");   TopTxt = "<i id='TopTxt'></i>";
 	var Prev=C$("a");      Prev="<a id='Prev' href='javascript:Page(-1)'>&#9668;&#9668;</a>"
 	var Next=C$("a");      Next="<a id='Next' href='javascript:Page(1)'>&#9658;&#9658;</a>"
+	
+	var winHeight=0;
+	if(window.innerHeight) winHeight=window.innerHeight;
+	else if((document.body)&&(document.body.clientHeight)) winHeight=document.body.clientHeight;
 
-	Box.innerHTML=Prev+TopImg+Next+TopTxt
+	Box.innerHTML=TopTxt+Prev+TopImg+Next
 	document.body.insertBefore(Bkg, document.body.firstChild);
 	document.body.insertBefore(Box, document.body.firstChild);
 
 	var Img=document.getElementsByTagName("img");
 	for(var i=0; i<Img.length; i++) {
 		ImgSrc[i]=Img[i].src
+		ImgAlt[i]=Img[i].alt
 		Img[i].addEventListener("click", function() {
 			for(var j=1; j<ImgSrc.length; j++) {
-				if(ImgSrc[j]==this.src) { ImgIdx=j; break;}
+				if(ImgSrc[j]==this.src) {ImgIdx=j; break;}
 			}
 			var top=document.body.scrollTop||document.documentElement.scrollTop
 
 			var dsp='block'; if(this.id=="TopImg") dsp='none'
 			$('TopImg').src=this.src;
+			$('TopImg').style.height=winHeight-90+"px";
 			$('Bkg').style.display=dsp; $('Bkg').style.top=top+"px";
 			$('Box').style.display=dsp; $('Box').style.top=top+"px";
 			Page(0)
