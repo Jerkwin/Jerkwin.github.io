@@ -154,8 +154,8 @@
 
 <p>除​​MPI并行外, GROMACS还支持通过OpenMP的线程并行. MPI和OpenMP并行可以结合起来使用, 也就是所谓的杂合并行化. 在某些情况下, 杂合并行可提供更好的性能和标度.</p>
 
-<p>请参看<a href="www.gromacs.org">www.gromacs.org</a>上关于不同并行方案使用和性能的详细信息.</p>
+<p>请参看<a href="http://www.gromacs.org/">www.gromacs.org</a>上关于不同并行方案使用和性能的详细信息.</p>
 
 <h2 id="a.4使用gpu运行gromacs">A.4 使用GPU运行GROMACS</h2>
 
-<p>自4.6版本开始, GROMACS原生支持基于CUDA的GPU. 注意, GROMACS只将计算最密集的部分, 目前也就是非键相互作用, 分配到GPU上运行, MD计算的所有其他部分都是在CPU上进行的. 对CUDA代码的要求是, Nvidia计算能力≥2.0的GPU, 即至少为Fermi类. 在许多情况下, <code>cmake</code>可自动检测GPU并自动配置GPU支持. 请传递<code>-DGMX_GPU=on</code>选项给<code>cmake</code>, 并确认已配置GPU支持, . GPU的实际使用与否在<code>mdrun</code>运行时决定, 取决于是否有(合适的)GPU可用和运行输入设置. 支持GPU的可执行程序也可以只使用CPU进行模拟, 通过使用<code>mdrun -nb cpu</code>强制仅使用CPU来运行模拟. 只有使用Verlet截断方案的模拟才能在GPU上运行. 为测试以前的tpr文件在GPU上运行的性能, 可以使用<code>mdrun</code>的<code>-testverlet</code>选项, 但因为没有进行<code>grommp</code>的完整参数一致性检查, 你不应该使用此选项进行最终模拟. 在GPU上获得GROMACS的良好性能很容易, 但得到最佳性能很困难. 请查看<a href="www.gromacs.org">www.gromacs.org</a>上关于GPU使用的最新信息.</p>
+<p>自4.6版本开始, GROMACS原生支持基于CUDA的GPU. 注意, GROMACS只将计算最密集的部分, 目前也就是非键相互作用, 分配到GPU上运行, MD计算的所有其他部分都是在CPU上进行的. 对CUDA代码的要求是, Nvidia计算能力≥2.0的GPU, 即至少为Fermi类. 在许多情况下, <code>cmake</code>可自动检测GPU并自动配置GPU支持. 请传递<code>-DGMX_GPU=on</code>选项给<code>cmake</code>, 并确认已配置GPU支持, . GPU的实际使用与否在<code>mdrun</code>运行时决定, 取决于是否有(合适的)GPU可用和运行输入设置. 支持GPU的可执行程序也可以只使用CPU进行模拟, 通过使用<code>mdrun -nb cpu</code>强制仅使用CPU来运行模拟. 只有使用Verlet截断方案的模拟才能在GPU上运行. 为测试以前的tpr文件在GPU上运行的性能, 可以使用<code>mdrun</code>的<code>-testverlet</code>选项, 但因为没有进行<code>grommp</code>的完整参数一致性检查, 你不应该使用此选项进行最终模拟. 在GPU上获得GROMACS的良好性能很容易, 但得到最佳性能很困难. 请查看<a href="http://www.gromacs.org/">www.gromacs.org</a>上关于GPU使用的最新信息.</p>
