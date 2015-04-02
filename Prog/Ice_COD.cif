@@ -1,0 +1,282 @@
+#------------------------------------------------------------------------------
+#$Date: 2013-03-28 16:17:04 +0000 (Thu, 28 Mar 2013) $
+#$Revision: 77586 $
+#$URL: file:///home/coder/svn-repositories/cod/cif/1/00/87/1008748.cif $
+#------------------------------------------------------------------------------
+#
+# This file is available in the Crystallography Open Database (COD),
+# http://www.crystallography.net/
+#
+# All data on this site have been placed in the public domain by the
+# contributors.
+#
+data_1008748
+loop_
+_publ_author_name
+'Peterson, S W'
+'Levy, H A'
+_publ_section_title
+;
+A Single-Crystal Neutron Diffraction Study of Heavy Ice
+;
+_journal_coden_ASTM              ACCRA9
+_journal_name_full               'Acta Crystallographica (1,1948-23,1967)'
+_journal_page_first              70
+_journal_page_last               76
+_journal_volume                  10
+_journal_year                    1957
+_chemical_formula_structural     'D2 O'
+_chemical_formula_sum            'D2 O'
+_chemical_name_mineral           'Ice Ih deuterated'
+_chemical_name_systematic        'Dideuterium oxide'
+_symmetry_cell_setting           hexagonal
+_symmetry_Int_Tables_number      194
+_symmetry_space_group_name_H-M   'P 63/m m c'
+_cell_angle_alpha                90
+_cell_angle_beta                 90
+_cell_angle_gamma                120
+_cell_formula_units_Z            4
+_cell_length_a                   4.513
+_cell_length_b                   4.513
+_cell_length_c                   7.355
+_cell_volume                     129.7
+_refine_ls_R_factor_all          0.063
+_cod_database_code               1008748
+loop_
+_symmetry_equiv_pos_as_xyz
+x,y,z
+-y,x-y,z
+y-x,-x,z
+-y,-x,z
+y-x,y,z
+x,x-y,z
+-x,-y,-z
+y,y-x,-z
+x-y,x,-z
+y,x,-z
+x-y,-y,-z
+-x,y-x,-z
+-x,-y,1/2+z
+y,y-x,1/2+z
+x-y,x,1/2+z
+y,x,1/2+z
+x-y,-y,1/2+z
+-x,y-x,1/2+z
+x,y,1/2-z
+-y,x-y,1/2-z
+y-x,-x,1/2-z
+-y,-x,1/2-z
+y-x,y,1/2-z
+x,x-y,1/2-z
+loop_
+_atom_site_aniso_label
+_atom_site_aniso_B_11
+_atom_site_aniso_B_12
+_atom_site_aniso_B_13
+_atom_site_aniso_B_22
+_atom_site_aniso_B_23
+_atom_site_aniso_B_33
+O1 2.39(22) 1.2 0. 2.39 0. 2.39(17)
+D1 3.23(22) 1.62 0. 3.23 0. 2.97(28)
+D2 3.30(27) 1.4 0.24(18) 2.80(26) 0.48 3.05(15)
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_symbol
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+_atom_site_attached_hydrogens
+_atom_site_calc_flag
+O1 O2- 4 f 0.3333 0.6667 0.0629(6) 1. 2 d
+D1 D1+ 4 f 0.3333 0.6667 0.1989(9) 0.5 0 d
+D2 D1+ 12 k 0.4551(13) 0.9102(13) 0.0182(6) 0.5 0 d
+loop_
+_atom_type_symbol
+_atom_type_oxidation_number
+O2- -2.000
+D1+ 1.000
+
+#------------------------------------------------------------------------------
+#$Date: 2013-03-28 16:17:04 +0000 (Thu, 28 Mar 2013) $
+#$Revision: 77586 $
+#$URL: file:///home/coder/svn-repositories/cod/cif/1/00/87/1008749.cif $
+#------------------------------------------------------------------------------
+#
+# This file is available in the Crystallography Open Database (COD),
+# http://www.crystallography.net/
+#
+# All data on this site have been placed in the public domain by the
+# contributors.
+#
+data_1008749
+loop_
+_publ_author_name
+'Peterson, S W'
+'Levy, H A'
+_publ_section_title
+;
+A Single-Crystal Neutron Diffraction Study of Heavy Ice
+;
+_journal_coden_ASTM              ACCRA9
+_journal_name_full               'Acta Crystallographica (1,1948-23,1967)'
+_journal_page_first              70
+_journal_page_last               76
+_journal_volume                  10
+_journal_year                    1957
+_chemical_formula_structural     'D2 O'
+_chemical_formula_sum            'D2 O'
+_chemical_name_mineral           'Ice Ih deuterated'
+_chemical_name_systematic        'Dideuterium oxide'
+_symmetry_cell_setting           hexagonal
+_symmetry_Int_Tables_number      194
+_symmetry_space_group_name_H-M   'P 63/m m c'
+_cell_angle_alpha                90
+_cell_angle_beta                 90
+_cell_angle_gamma                120
+_cell_formula_units_Z            4
+_cell_length_a                   4.489
+_cell_length_b                   4.489
+_cell_length_c                   7.327
+_cell_volume                     127.9
+_refine_ls_R_factor_all          0.069
+_cod_database_code               1008749
+loop_
+_symmetry_equiv_pos_as_xyz
+x,y,z
+-y,x-y,z
+y-x,-x,z
+-y,-x,z
+y-x,y,z
+x,x-y,z
+-x,-y,-z
+y,y-x,-z
+x-y,x,-z
+y,x,-z
+x-y,-y,-z
+-x,y-x,-z
+-x,-y,1/2+z
+y,y-x,1/2+z
+x-y,x,1/2+z
+y,x,1/2+z
+x-y,-y,1/2+z
+-x,y-x,1/2+z
+x,y,1/2-z
+-y,x-y,1/2-z
+y-x,-x,1/2-z
+-y,-x,1/2-z
+y-x,y,1/2-z
+x,x-y,1/2-z
+loop_
+_atom_site_aniso_label
+_atom_site_aniso_B_11
+_atom_site_aniso_B_12
+_atom_site_aniso_B_13
+_atom_site_aniso_B_22
+_atom_site_aniso_B_23
+_atom_site_aniso_B_33
+O1 1.53(11) 0.76 0. 1.53 0. 1.48(10)
+D1 2.41(13) 1.2 0. 2.41 0. 1.81(12)
+D2 2.29(21) 0.92 0.24(9) 1.85(12) 0.48 2.43(10)
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_symbol
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+_atom_site_attached_hydrogens
+_atom_site_calc_flag
+O1 O2- 4 f 0.3333 0.6667 0.0620(4) 1. 0 d
+D1 D1+ 4 f 0.3333 0.6667 0.1980(7) 0.5 0 d
+D2 D1+ 12 k 0.4545(9) 0.9090(9) 0.0172(4) 0.5 0 d
+loop_
+_atom_type_symbol
+_atom_type_oxidation_number
+O2- -2.000
+D1+ 1.000
+
+#------------------------------------------------------------------------------
+#$Date: 2013-03-28 16:17:04 +0000 (Thu, 28 Mar 2013) $
+#$Revision: 77586 $
+#$URL: file:///home/coder/svn-repositories/cod/cif/1/01/10/1011023.cif $
+#------------------------------------------------------------------------------
+#
+# This file is available in the Crystallography Open Database (COD),
+# http://www.crystallography.net/
+#
+# All data on this site have been placed in the public domain by the
+# contributors.
+#
+data_1011023
+loop_
+_publ_author_name
+'Bernal, J D'
+'Fowler, R H'
+_publ_section_title
+;
+A Theory of Water and Ionic Solution, with Particular Reference to
+Hydrogen and Hydroxyl Ions
+;
+_journal_coden_ASTM              JCPSA6
+_journal_name_full               'Journal of Chemical Physics'
+_journal_page_first              515
+_journal_page_last               548
+_journal_volume                  1
+_journal_year                    1933
+_chemical_formula_structural     'H2 O'
+_chemical_formula_sum            'H2 O'
+_chemical_name_mineral           'IceIh Ordered'
+_chemical_name_systematic        'Dihydrogen oxide'
+_symmetry_cell_setting           hexagonal
+_symmetry_Int_Tables_number      185
+_symmetry_space_group_name_H-M   'P 63 c m'
+_cell_angle_alpha                90
+_cell_angle_beta                 90
+_cell_angle_gamma                120
+_cell_formula_units_Z            12
+_cell_length_a                   7.82
+_cell_length_b                   7.82
+_cell_length_c                   7.36
+_cell_volume                     389.8
+_exptl_crystal_density_meas      0.92
+_cod_database_code               1011023
+loop_
+_symmetry_equiv_pos_as_xyz
+x,y,z
+-y,x-y,z
+y-x,-x,z
+y,x,z
+x-y,-y,z
+-x,y-x,z
+-x,-y,1/2+z
+y,y-x,1/2+z
+x-y,x,1/2+z
+-y,-x,1/2+z
+y-x,y,1/2+z
+x,x-y,1/2+z
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_symbol
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+_atom_site_attached_hydrogens
+_atom_site_calc_flag
+O1 O2- 6 c 0.3333 0. 0.0625 1. 0 d
+O2 O2- 6 c 0.6667 0. 0.9375 1. 0 d
+H1 H1+ 6 c 0.3333 0. 0.174 1. 0 d
+H2 H1+ 6 c 0.438 0. 0.026 1. 0 d
+H3 H1+ 12 d 0.772 0.105 0.975 1. 0 d
+loop_
+_atom_type_symbol
+_atom_type_oxidation_number
+O2- -2.000
+H1+ 1.000
