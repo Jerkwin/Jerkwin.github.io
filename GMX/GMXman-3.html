@@ -121,3 +121,399 @@
 <p><strong>压缩位置输出组</strong> 为了进一步减小压缩轨迹文件(.xtc或.tng)的大小, 可以仅仅存储一部分粒子的轨迹. 所有标记为压缩组的会被保存, 其他则不会. 如果没有指定这样的输出组, 所有的原子坐标都将被保存到压缩轨迹文件.</p>
 
 <p>GROMACS工具中组的使用将在8.1节详述.</p>
+
+<h2 id="3.4　分子动力学">3.4　分子动力学</h2>
+
+<h3 id="3.4.8温度耦合">3.4.8 温度耦合</h3>
+
+<p>直接使用的分子动力学模拟对应于NVE系综(粒子数不变, 体积不变, 能量恒定的系综), 我们希望计算的大多数物理量实际上对应于等温(NVT)系综, 也被称为正则系综. GROMACS可以使用Berendsen的 <strong>弱耦合</strong> 方案[25], 通过Andersen恒温器的随机化[26], 扩展系综的Nose-Hoover方案[27, 28], 或速度重缩放方案[29]来模拟恒温过程, 这些方案各自的优缺点将在下面介绍.</p>
+
+<p>还有其他一些原因使得我们需要对体系的温度进行调控(平衡过程中的漂移, 力截断和积分误差引起的漂移, 外力或摩擦力导致的加热), 但从热力学的观点来看, 这并不是完全正确的. 在某些情况下, 这些做法只是掩盖了问题(增加了体系的温度), 而没有从根本上解决问题(动力学与真实物理过程之间存在的偏差). 对于大的体系, 系综平均引起的误差, 用于消除温度缓慢漂移的控温对结构性质的影响几乎可以忽略. 但如果没有进行完全的综合比较, 在解释模拟结果时必须谨慎.</p>
+
+<p><strong>Berendsen温度耦合</strong></p>
+
+<p>Berendsen算法模仿了与给定温度 <span class="math">\(T_0\)</span> 的外部热浴相连, 并具有一级动力学特征的弱耦合. 参考文献[30]将它与Nose-Hoover方案进行了比较. 该算法的效果是, 根据下式慢慢校正体系温度对 <span class="math">\(T_0\)</span> 的偏差:</p>
+
+<p><span class="math">\[{dT \over dt} = {T_0-T \over \t} \tag{3.44}\]</span></p>
+
+<p>这意味着温度偏差指数衰减, 其时间常数为 <span class="math">\(\t\)</span>. 这种耦合方法的优点是, 耦合的强度可以改变以适应用户的需要: 对于以平衡为目的模拟可采取很小的时间常数(如0.01 ps); 但对于可靠的平衡模拟, 可采用更大的时间常数(如0.5 ps), 在这种情况下, 它几乎不会影响动力学的守恒性.</p>
+
+<p>Berendsen恒温可降低动能的涨落. 这意味着, 它不会产生正确的正则系综, 所以严格来说, 采样是不正确的. 引入误差的标度为 <span class="math">\(1/N\)</span>, 因此对于非常大的体系, 大部分系综平均值不会受到显著影响, 除了动能本身的分布. 然而, 涨落性质, 如热容量, 将受到影响. 后面将要描述的速度重缩放恒温器[29]是一种与此类似的控温方法, 但能产生正确的系综.</p>
+
+<p>流入或流出体系的热量受到对每个粒子的速度进行重新缩放的影响, 缩放每步或每 <span class="math">\(n_{\text{tc}}\)</span> 步进行一次, 使用一个与时间相关的因子 <span class="math">\(\l\)</span>, :</p>
+
+<p><span class="math">\[\l=\left[ 1+{n_{\text{TC}} \D t \over \t_T} \left\{ {T_0 \over T(t-{1\over2}\D t)}-1\right\} \right] \tag{3.45}\]</span></p>
+
+<p>参数 <span class="math">\(\t_T\)</span> 接近但不完全等于温度耦合的时间常数 <span class="math">\(\t\)</span> (方程3.44):</p>
+
+<p><span class="math">\[\t=2C_V \t_T / N_{df} k \tag{.46}\]</span></p>
+
+<p>其中 <span class="math">\(C_V\)</span> 为体系总的热容, <span class="math">\(k\)</span> 为玻尔兹曼常数, <span class="math">\(N_{df}\)</span> 为总的自由度数. <span class="math">\(\t \ne \t_T\)</span> 的原因在于, 缩放速度引起的动能变化会部分地在动能和势能之间进行重新分布, 因此, 温度的变化小于缩放能量. 实际上, 比值 <span class="math">\(\t/\t_T\)</span> 的范围从1(气体)到2(简谐固体)到3(水). 当我们使用术语&#8220;温度耦合时间常数&#8221;时, 我们指的是参数 <span class="math">\(\t\)</span>. <strong>注意</strong> 缩放因子 <span class="math">\(\l\)</span> 在实际中被限制在 <span class="math">\(0.8<=\l<=1.25\)</span> 的范围内, 以避免当其过大时导致模拟体系崩溃. 在正常使用中, <span class="math">\(\l\)</span> 总是会更接近1.0.</p>
+
+<p><strong>速度重缩放温度耦合</strong></p>
+
+<p>速度重缩放恒温器[29]本质上是一个Berendsen恒温器(见上文), 并附加了一个随机项, 以保证能够给出正确的动能分布, 使用时根据下面的公式对动能进行修改:</p>
+
+<p><span class="math">\[dK = (K_O-K){dt \over \t_T}+2 \sqrt{ {K K_0 \over Nf} } {dW \over \sqrt \t_T} \tag{3.47}\]</span></p>
+
+<p>其中 <span class="math">\(K\)</span> 为动能, <span class="math">\(N_f\)</span> 为自由度数, <span class="math">\(dW\)</span> 为Wiener过程. 除了随机数种子外, 没有另外的参数. 这种温控器能够产生正确的正则系综, 仍然具有Berendsen温控器的优点: 温度偏差一阶衰减, 无振荡. 当使用 <span class="math">\(NVT\)</span> 系综时, 守恒的能量会被写入到能量文件和log文件.</p>
+
+<p><strong>Andersen温控器</strong></p>
+
+<p>保持恒温系综的一种简单的方式如下, 使用 <span class="math">\(NVE\)</span> 积分方法, 并周期性地从麦克斯韦-玻尔兹曼分布中重新选择粒子的速度. [26] 这可以通过每 <span class="math">\(\t_T/\D t\)</span> 步同时(大规模碰撞)将所有粒子的速度进行随机化(<code>andersen-massive</code>), 或通过每步以小概率, 等于 <span class="math">\(\D t/\t\)</span>, 随机化每个粒子(<code>andersen</code>), 在这两种情况下, <span class="math">\(\D t\)</span> 为时间步长, <span class="math">\(\t_T\)</span> 为特征的耦合时间尺度. 由于约束的操作方式, 同一约束组中所有粒子的速度必须同时随机化. 由于并行问题, <code>andersen</code>选项目前(5.0)还不能用于含有约束的体系. <code>andersen-massive</code>的使用不受约束限制. 此温控器也是目前唯一可与速度Verlet算法一同使用的, 因为它在每个时间步的直接对速度进行操作.</p>
+
+<p>这个算法完全避免了其他恒温算法具有的一些遍历性问题, 像能量不能在体系的能量去耦合组分间来回流动, 如在速度缩放运动中. 但是, 它可以通过随机化体系的相关运动降低体系的动能, 包括减慢采样, 当 <span class="math">\(\t_T\)</span> 处于中等水平时(小于10 ps). 因此, 该算法通常不能用于考察体系的动力学或输运性质. [31]</p>
+
+<p><strong>Nose-Hoover温度耦合</strong></p>
+
+<p>Berendsen弱耦合算法可以非常高效地将体系弛豫到到目标温度, 但是, 一旦系统达到平衡, 维持正确的正则系综更重要. 很可惜, 弱耦合方案并不能满足这一点.</p>
+
+<hr />
+
+<p>为了使用正则系综模拟, GROMACS还支持扩展系综方法. 这种方法首先由Nose提出[27], 后经Hoover修改[28]. 通过在运动方程中引入一个热容器和一个摩擦项, 方法对体系的哈密顿量进行了扩展. 摩擦力正比于每个粒子的速度和摩擦参数 <span class="math">\(\x\)</span> 的乘积. 这个摩擦参数(或&#8220;热浴&#8221;变量)是一个完全的动力学量, 有着自己是动量(<span class="math">\(p_\x\)</span>)和运动方程; 其时间导数由当前动能和参考温度之间的差值来计算.</p>
+
+<p>在这个公式中, 图3.3中粒子的运动方程被替换为:</p>
+
+<p><span class="math">\[{d^2 \bi r_i \over dt^2}={\bi F_i \over m_i}-{p_\x \over Q}{d \bi r_i \over dt} \tag{3.48}\]</span></p>
+
+<p>其中热浴参数 <span class="math">\(\x\)</span> 的运动方程为:</p>
+
+<p><span class="math">\[{d p_\x \over dt}=(T_0-T) \tag{3.49}\]</span></p>
+
+<p>参考温度以 <span class="math">\(T_0\)</span> 表示, 而 <span class="math">\(T\)</span> 为体系当前的瞬时温度. 耦合强度由常数 <span class="math">\(Q\)</span> (通常被称为容器的&#8220;质量参数&#8221;)和参考温度共同决定<a href="#fn:1" id="fnref:1" title="see footnote" class="footnote">[1]</a></p>
+
+<p>Nose-Hoover运动方程的守恒量并不是总能量, 而是</p>
+
+<p><span class="math">\[H=\Sum_{i=1}^N {\bi p_i \over 2m_i}+U(\bi r_1, \bi r_2,...,\bi r_N)+{p_\x^2 \over 2Q}+N_f kT\x \tag{3.50}\]</span></p>
+
+<p>其中 <span class="math">\(Nf\)</span> 为总的自由度数.</p>
+
+<p>依我们看, 利用质量参数来描述耦合强度让人有点难以理解, 特别是它还依赖于参考温度(在一些实现中 <span class="math">\(Q\)</span> 的定义还和体系的自由度数有关). 为了维持耦合强度, <span class="math">\(Q\)</span> 的改变必须正比于参考温度的改变. 基于这个原因, 我们更愿意让GROMACS用户使用体系和容器之间动能的振荡周期 <span class="math">\(\t_T\)</span> 来代替 <span class="math">\(Q\)</span>, 它通过下式直接与 <span class="math">\(Q\)</span> 和 <span class="math">\(T_0\)</span> 相关:</p>
+
+<p><span class="math">\[Q={\t_T^2 T_0 \over 4 \p^2}  \tag{3.51}\]</span></p>
+
+<p>这为选择Nose-Hoover耦合强度(弱耦合弛豫与此类似)提供了一个更为直观的方式, 并且 <span class="math">\(\t_T\)</span> 与体系的大小和参考温度无关.</p>
+
+<p>然而, 要特别注意弱耦合方案和Nose-Hoover算法的区别: 使用弱耦合你将得到一个具有强烈阻尼的 <strong>指数弛豫</strong>, 而Nose-Hoover方法产生 <strong>振荡弛豫</strong>. Nose-Hoover耦合需要的实际弛豫时间 比你选择的振荡周期要大几倍. 这些振荡(相比于指数弛豫)也意味着时间常数通常应该比弱耦合所使用的弛豫时间大4&#8211;5倍, 但你可以根据情况改变.</p>
+
+<hr />
+
+<p>Nose-Hoover动力学在简单的体系, 如谐振子集合中, 可能是非遍历的, 这意味着即使模拟运行了无限长时间, 也只能对相空间的一小部分进行采样. 因此, 人们发展了Nose-Hoover链方法, 其中每个的Nose-Hoover控温器都有自己的Nose-Hoover恒温器来控制其温度. 当恒温器链的长度趋向无限时, 可以保证过程是遍历的. 只使用几个链可以大大提高遍历性, 但最近的研究表明, 体系仍然是非遍历的, 并且仍然不完全清楚其实际影响[32]. 目前, 链的默认数目为10, 但用户可以更改. 在使用Nose-Hoover链的情况下, 方程修改为下面的形式以包含恒温粒子链[33]:</p>
+
+<p><span class="math">\(\alg
+{d^2 \bi r_i \over d t^2} &= {\bi F_i \over m_i}-{p_{\x_1} \over Q_1}{d\bi r_i \over dt} \\
+{d p_{\x_1} \over d t} &= (T-T_0)-p_{\x_1}{p_{\x_2} \over \x_2} \\
+{d p_{\x_{i=2...N} } \over d t} &= \left( {p_{\x_{i-1} }^2 \over Q_{i-1}} -kT \right) -p_{\x_i} {p_{\x_{i+1}} \over Q_{i+1}} \\
+{d p_{\x_N} \over d t} &= \left( {p_{\x_{N-1} }^2 \over Q_{N-1}} -kT \right)
+\ealg
+\tag{3.52}\)</span></p>
+
+<p>Nose-Hoover链的守恒量为</p>
+
+<p><span class="math">\[H=\Sum_{i=1}^N {\bi p_i \over 2m_i}+U(\bi r_1, \bi r_2, ...,\bi r_N)+\Sum_{k=1}^M {p_{\x_k}^2 \over 2Q_k'}+ N_f kT \x_1 + kT \Sum_{k=2}^M \x_k \tag{3.53}\]</span></p>
+
+<p>Nose-Hoover恒温器变量的值与速度一般不包含在输出中, 因为它们会占用相当大的空间并且通常对于分析模拟结果不是很重要. 但是, 可以通过定义环境变量<code>GMX_NOSEHOOVER_CHAINS</code>, 将链中所有Nose-Hoover粒子的位置和速度输出到<code>.edr</code>文件中. 在目前的版本中, 蛙跳式积分方法只能使用长度为1的Nose-Hoover链, 但在以后的版本中可能会支持更长的链.</p>
+
+<p>如在积分方法那节讲的, 对于温度耦合, 速度Verlet方法和蛙跳式算法在试图匹配参考温度时, 对温度的计算有所不同. 速度Verlet(<code>md-vv</code>)使用了整步动能, 而蛙跳式缩放和<code>md-vv-avek</code>使用了半步平均的动能.</p>
+
+<p>通过再次考查Trotter分解, 我们可以更好地理解这些等温积分方法之间的差异. 对Nose-Hoover动力学(为简单起见, 使用的链长 <span class="math">\(N=1\)</span>, 更多细节请参考文献[34]), 将Liouville算子劈分为</p>
+
+<p><span class="math">\[iL=iL_1+iL_2+iL_{\text{NHC} } \tag{3.54}\]</span></p>
+
+<hr />
+
+<p>其中,</p>
+
+<p><span class="math">\(\alg
+iL_1 &=\Sum_{i=1}^N \left[{\bi p_i \over m_i}\right] \cdot {\partial \over \partial \bi r_i} \\
+iL_2 &=\Sum_{i=1}^N {\bi F_i \cdot {\partial \over \partial \bi p_i} } \\
+iL_{\text{NHC} } &= \Sum_{i=1}^N -{p_\x \over Q} \bi v_i \cdot \nabla \bi v_i + {p_\x \over Q} {\partial \over \partial \x} + (T-T_0) {\partial \over \partial p_\x}
+\ealg
+\tag{3.55}\)</span></p>
+
+<p>对于使用Nose-Hoover温度控制的标准速度Verlet方法, 上式变为</p>
+
+<p><span class="math">\(\alg
+\exp(iL\D t)=\; &\exp(iL_{\text{NHC} }\D t/2) \exp(iL_2 \D t/2) \\
+&\exp(iL_1 \D t) \exp(iL_2 \D t/2) \exp(iL_{\text{NHC} }\D t/2) + O(\D t^3)
+\ealg  \tag{3.56}\)</span></p>
+
+<p>对于使用<code>md-vv-avek</code>的半步平均温度控制, 这种分解不适用, 因为我们在第二速度步完成前不可能得到整步的温度. 然而, 我们可以通过交换分解中NHC和速度部分的位置构造另一个分解, 它仍然是可逆的,</p>
+
+<p><span class="math">\(\alg
+\exp(iL\D t)=\; &\exp(iL_2 \D t/2)  \exp(iL_{\text{NHC} }\D t/2) \exp(iL_1 \D t) \\
+&\exp(iL_{\text{NHC} }\D t/2) \exp(iL_2 \D t/2) + O(\D t^3)
+\ealg  \tag{3.57}\)</span></p>
+
+<p>利用这种形式我们可以很容易地看出各种速度Verlet积分方法之间的差异. 蛙跳式积分方法可视为以方程3.57 $$\exp(iL_1\D t)$ 之前的项开始, 得到:</p>
+
+<p><span class="math">\(\alg
+\exp(iL\D t)=\; & \exp(iL_1 \D t) \exp(iL_{\text{NHC} }\D t/2)  \\
+&\exp(iL_2 \D t) \exp(iL_{\text{NHC} }\D t/2)  + O(\D t^3)
+\ealg  \tag{3.58}\)</span></p>
+
+<p>然后使用了一些代数技巧来求解, 因为有一些量在实际计算之前就需要知道[35].</p>
+
+<p><strong>组内温度耦合</strong></p>
+
+<p>在GROMACS中, 温度耦合可用于原子组, 通常是蛋白质和溶剂. 引入这种算法的原因是, 由于各种不同的效应, 包括截断等等, 不同组分之间的能量交换并不完美. 如果现在整个体系耦合到一个热浴, 水(受到的截断噪声最大)将倾向于升温, 而蛋白质会冷却. 这通常会导致二者之间有100 K的温度差异. 通过使用合适的静电方法(PME), 这些差异会小很多, 但仍然不可忽视. 组内温度耦合的参数中在<code>mdp</code>文件中给出. 最近的研究表明, 蛋白质和水之间细微的温度差异, 实际上可能是虚假的, 是由时间步长有限时计算温度的方式导致的, 非常大的温度差异很可能是体系严重出错的标志, 应该仔细检查[36].</p>
+
+<p>应该提到一种特殊情况: 可以只对体系的一部分进行温度耦合, 而其它部分不进行温度耦合. 这可以通过对那些不进行恒温的组指定&#8211;1的时间常数 <span class="math">\(\t_T\)</span> 来实现. 如果只有体系的一部分进行恒温, 体系最终仍然会收敛到一个NVT体系. 实际上, 有一个建议可尽量降低离散时间步长所造成的温度误差: 如果对水使用了约束, 那么应该只对水的自由度进行恒温, 而不是蛋白质的自由度, 因为蛋白质更高频率的模式可能会导致温度与&#8220;真实&#8221;温度有更大的偏差, 这里的真实温度指的是使用小的时间步长得到的温度[36].</p>
+
+<hr />
+
+<h3 id="3.4.9压力耦合">3.4.9 压力耦合</h3>
+
+<p>与温度耦合类似, 体系也可以耦合到一个&#8220;压力浴&#8221;. GROMACS既支持每步重新缩放坐标与盒矢量的Berendsen算法[25], 扩展系综的Parrinello-Rahman方法[37, 38], 也支持速度Verlet的一种变形, Martyna-Tuckerman-Tobias-Klein (MTTK)方法的压力控制[34]. Parrinello-Rahman和Berendsen方法可以与任何上述的温度耦合方法联用; MTTK只能与Nose-Hoover温度控制方法联用.</p>
+
+<p><strong>Berendsen压力耦合</strong></p>
+
+<p>Berendsen算法会利用矩阵 <span class="math">\(\bi \m\)</span> 重新缩放坐标和盒矢量, 每步或每 <span class="math">\(n_{\text{PC} }\)</span> 步一次, 压力向给定参考压力 <span class="math">\(\bi P_0\)</span> 的弛豫符合一级动力学特征</p>
+
+<p><span class="math">\[{\rmd{\bi P} \over \rmd t}={\bi P_0- \bi P \over \t_p} \tag{3.59}\]</span></p>
+
+<p>缩放矩阵 <span class="math">\(\bi \m\)</span> 由下式给出</p>
+
+<p><span class="math">\[\m_{ij}=\d_{ij} - {n_{\text{PC} } \D t \over 3 \t_p} \b_{ij}\{P_{0ij}-P_{ij}(t)\} \tag{3.60}\]</span></p>
+
+<p>这里, <span class="math">\(\bi \b\)</span> 为体系的等温压缩系数. 大多数情况下, 它是一个对角矩阵, 且对角线上的值相等, 这个值通常是未知的, 但完全可以采取一个粗略的估计值, 因为 <span class="math">\(\bi \b\)</span> 的值仅影响压力弛豫的非临界时间常数, 而不影响平均压力本身. 1个标准大气压, 300 K条件下, 水的 <span class="math">\(\b= 4.6 \times 10^{-10} \text{Pa}^{-1} = 4.6 \times 10^{-5} \text{bar}^{-1}\)</span>, 相应于 <span class="math">\(7.6 \times 10^{-4}\)</span> MD单位(参见第二章). 大多数其它的液体具有与此相近的值. 当缩放具有完全的各向异性时, 必须旋转体系使其服从方程 3.1. 缩放时, 旋转采用一阶近似, 通常小于10<sup>-4</sup>. 实际的缩放矩阵 <span class="math">\(\bi \m'\)</span> 为</p>
+
+<p><span class="math">\[\bi \m' =\pmat
+\m_{xx} & \m_{xy}+\m_{yx} & \m_{xz}+\m_{zx} \\
+0       & \m_{yy} & \m_{yz}+\m_{zy} \\
+0       & 0                & \m_{zz} \\
+\epmat \tag{3.61}\]</span></p>
+
+<p>速度既不缩放, 也不旋转.</p>
+
+<p>在GROMACS中, Berendsen缩放也可以各向同性地进行, 这意味着, 使用对角元素为 <span class="math">\(\text{trace}(\bi P)/3\)</span> 的对角矩阵代替 <span class="math">\(\bi P\)</span>. 对存在界面的体系, 半各向同性缩放可能有用. 在这种情况下, 在 <span class="math">\(x/y\)</span> 方向上进行各向同性缩放, 而在 <span class="math">\(z\)</span> 方向上进行独立的缩放. 将 <span class="math">\(x/y\)</span> 或 <span class="math">\(z\)</span> 方向上的压缩系数可以设置为零, 以便只在另一方向上进行缩放.</p>
+
+<hr />
+
+<p>如果允许完全的各向异性变形并使用约束, 你可能必须使用更缓慢的缩放, 或是减少时间步长以避免约束算法导致的误差. 需要注意的是, 尽管Berendsen控压算法在模拟时能产生正确的平均压力, 但它不能得到精确的NPT系综, 而且目前尚不完全清楚这种方法可能导致的误差.</p>
+
+<p><strong>Parrinello-Rahman压力耦合</strong></p>
+
+<p>若压力或体积的涨落就其自身而言非常重要(例如, 计算热力学性质), 特别是对于小的体系, 弱耦合方案可能存在的一个问题, 这种方案没有很好地定义精确的系综, 模拟的并不是真正的NPT系综.</p>
+
+<p>GROMACS也支持使用Parrinello-Rahman方法[37, 38]的等压模拟, 这种方法类似于Nose-Hoover温控方法, 理论上能给出真正NPT系综. 使用Parrinello-Rahman恒压器, 以矩阵 <span class="math">\(\bi b\)</span> 表示的盒矢量服从矩阵运动方程<a href="#fn:2" id="fnref:2" title="see footnote" class="footnote">[2]</a></p>
+
+<p><span class="math">\[{\rmd{\bi b^2} \over \rmd{t^2} }=V \bi W^{-1} \bi b^{'-1}(\bi P-\bi P_{ref}) \tag{3.62}\]</span></p>
+
+<p>其中 <span class="math">\(V\)</span> 代表盒子的体积, <span class="math">\(\bi W\)</span> 为决定耦合强度的矩阵参数. 矩阵 <span class="math">\(\bi P\)</span> 和 <span class="math">\(\bi P_{ref}\)</span> 分别是当前压力和参考压力.</p>
+
+<p>和Nose-Hoover耦合一样, 粒子的运动方程也改变了. 在大多数情况下, 你将联合使用Parrinello-Rahman恒压器与Nose-Hoover恒温器, 为简单起见, 我们这里只给出Parrinello-Rahman导致的变化:</p>
+
+<p><span class="math">\(\alg
+{\rmd {\bi r_i^2} \over \rmd {t^2}} &= {\bi F_i \over m_i} -\bi M {\rmd{\bi r_i} \over \rmd t} \tag{3.63} \\
+\bi M &= \bi b^{-1} \left[\bi b {\rmd{\bi b'} \over \rmd t}+ {\rmd{\bi b} \over \rmd t} \bi b' \right] \bi b^{'-1} \tag{3.64}
+\ealg\)</span></p>
+
+<p>(逆)质量参数矩阵 <span class="math">\(\bi W^{-1}\)</span> 决定了耦合的强度, 以及盒子如何变形. 如果 <span class="math">\(\bi W^{-1}\)</span> 的对应元素为0, 盒子的限制条件(3.1)会自动满足. 由于耦合强度也取决于盒子的大小, 我们更愿意在GROMACS中自动计算盒子的大小. 你只需要在输入文中提供近似的等温压缩系数 <span class="math">\(\bi \b\)</span> 和压力的时间常数 <span class="math">\(\t_P\)</span> (<span class="math">\(L\)</span> 为盒矩阵元素的最大值):</p>
+
+<p><span class="math">\[(\bi W^{-1})_{ij} = {4 \p^2 \b_{ij} \over 3 \t_p^2 L} \tag{3.65}\]</span></p>
+
+<p>正如在Nose-Hoover恒温器, 你应该认识到, Parrinello-Rahman时间常数并 <strong>不</strong> 等同于Berendsen压力耦合算法中使用的弛豫时间. 大多数情况下, 对于Parrinello-Rahman耦合, 你需要使用4&#8211;5倍大的时间常数. 如果压力离平衡态非常远, Parrinello-Rahman耦合会导致盒子产生非常大的振荡甚至最终导致运行崩溃. 在这种情况下, 你可能必须增加时间常数, 或(更好的办法)先使用弱耦合方案达到目标压力, 等系统平衡后再切换到Parrinello-Rahman耦合. 此外, 使用蛙跳式算法时, 在整个时间步骤完成之前不能得到 <span class="math">\(t\)</span> 时刻的压力, 因此必须使用上一步中的压力, 这使得算法不是直接可逆的, 并且可能不适合进行高精度的热力学计算.</p>
+
+<hr />
+
+<p><strong>表面张力耦合</strong></p>
+
+<p>当周期性体系中包含一个以上的相, 且这些相被平行于 <span class="math">\(xy\)</span> 表面的表面所隔离时, 表面张力和压力的 <span class="math">\(z\)</span> 分量会与压力浴相耦合. 目前, 这只适用于GROMACS中的Berendsen压力耦合算法. 平均表面张力 <span class="math">\(\g(t)\)</span> 可以通过法向压力与横向压力之间的差值来计算</p>
+
+<p><span class="math">\(\alg
+\g(t) &={1\over n}\int_0^{L_z} \left\{ P_{zz}(z,t) - {P_{xx}(z,t)+P_{yy}(z,t) \over 2} \right\} \rmd z \tag{3.66} \\
+&= {L_z\over n}\left\{ P_{zz}(t) - {P_{xx}(t)+P_{yy}(t) \over 2} \right\} \tag{3.67}
+\ealg\)</span></p>
+
+<p>其中 <span class="math">\(L_z\)</span> 为盒子的高度, <span class="math">\(n\)</span> 为表面的数目. z方向的压力通过使用 <span class="math">\(\m_{zz}\)</span> 缩放盒子的高度进行校正</p>
+
+<p><span class="math">\(\alg
+\D P_{zz} &={\D t \over \t_p} \{P_{0zz}-P_{zz}(t) \} \tag{3.68} \\
+\m_{zz} &=1+\b_{zz} \D P_{zz} \tag{3.69}
+\ealg\)</span></p>
+
+<p>除缺少 <span class="math">\(1/3\)</span> 这个因子外, 法向压力耦合的校正与此类似. <span class="math">\(z\)</span> 方向上的压力校正, 被用于得到表面张力相对于参考值 <span class="math">\(\g_0\)</span> 的正确收敛值. <span class="math">\(x/y\)</span> 方向盒子长度的校正因子为</p>
+
+<p><span class="math">\[\m_{x/y}=1+{\D t \over 2 \t_p} \b_{x/y} \left( {n\g_0 \over \m_{zz} L_z} -\left\{P_{zz}(t) + \D P_{zz}-{P_{xx}(t)+P_{yy}(t) \over 2} \right\} \right) \tag{3.70}\]</span></p>
+
+<p>相比法向压力耦合, <span class="math">\(\b_{zz}\)</span> 的值更关键. 正常情况下不正确的压缩系数仅仅缩放 <span class="math">\(\t_p\)</span>, 但对表面张力耦合还会影响表面张力的收敛性. 当 <span class="math">\(b_{zz}\)</span> 设为零时(盒子的高度不变), <span class="math">\(\D P_{zz}\)</span> 也设为零, 以获得正确的表面张力.</p>
+
+<p><strong>MTTK压力控制算法</strong></p>
+
+<p>正如上一节所讲, 蛙跳式积分方法一个缺点在于恒压模拟, 因为计算压力需要整个时间步内的维里和动能, 对蛙跳式积分方法, 这些信息 <strong>直到</strong> 整个时间步完成之后才能得到.</p>
+
+<p>速度Verlet方法确实可以计算, 但需要额外的全局通讯作为代价, 并计算真正的NPT系综, 忽略任何积分误差.</p>
+
+<p>综合了压力耦合和温度耦合的完整方程, 这里称其为MTTK方程(Martyna-Tuckerman-Tobias-Klein), 取自Martyna等[34]和Tuckerman[39]的论文, . 为方便, 我们引入 <span class="math">\(\e=(1/3) \ln(V/V_0)\)</span>, 其中 <span class="math">\(V_0\)</span> 为参考体积. <span class="math">\(\e\)</span> 的动量为 <span class="math">\(v_\e = p_\e/W =\dot{\e}=\dot V/3V\)</span>, 并定义 <span class="math">\(\a=1+3/N_{dof}\)</span> (参见参考文献[39])</p>
+
+<p>等压方程为</p>
+
+<p><span class="math">\(\alg
+\dot{\bi r}_i &= {\bi p_i \over m_i}+{p_\e \over W} \bi r_i \\
+{\dot{\bi p_i} \over m_i} &= {1\over m_i} \bi F_i -\a {p_\e \over W} {\bi p_i \over m_i} \tag{3.71} \\
+\dot \e &=  {p_\e \over W} \\
+{\dot{p_\e} \over W} &={3V \over W}(P_{\text{kin} }-P) +(\a-1)\left( \Sum_{i=1}^N {\bi p_i^2 \over m_i}\right) \\
+\tag{3.72}
+\ealg\)</span></p>
+
+<p>其中</p>
+
+<p><span class="math">\[P_{\text{int} } = P_{\text{kin} } - P_{\text{vir} }={1\over 3V}\left[\Sum_{i=1}^N \left({\bi p_i^2 \over 2 m_i}-\bi r_i \cdot \bi F_i \right)  \right] \tag{3.73}\]</span></p>
+
+<p>包含 <span class="math">\(\a\)</span> 的项可保证相空间不可压缩[39]. <span class="math">\(\e\)</span> 加速度项可以改写为</p>
+
+<p><span class="math">\[{\dot{p_\e} \over W} = {3V \over W}(\a P_{\text{kin} }-P_{\text{vir} }-P) \tag{3.74}\]</span></p>
+
+<p>对速度项, 这些方程变为</p>
+
+<p><span class="math">\(\alg
+\dot{\bi r_i} &= \bi v_i + v_\e \bi r_i \\
+\dot{\bi v_i} &= {1\over m_i} \bi F_i -\a v_\e \bi v_i \\
+\dot \e &= v_\e \\
+\dot{v_\e} &= {3V \over W}(P_{\text{int} }-P)+(\a-1)\left(\Sum_{i=1}^N {1\over2} m_i \bi v_i^2 \right) \\
+P_{\text{int} } &= P_{\text{kin} } - P_{\text{vir} }={1\over 3V}\left[ \Sum_{i=1}^N \left({1\over2} m_i \bi v_i^2 -\bi r_i \cdot \bi F_i \right) \right] \tag{3.75}
+\ealg\)</span></p>
+
+<p>对于这些方程, 守恒量为</p>
+
+<p><span class="math">\[H= \Sum_{i=1}^N {\bi p_i^2 \over 2 m_i} +U(\bi r_1, \bi r_2, ..., \bi r_N)+{p_\e \over 2W} +PV \tag{3.76}\]</span></p>
+
+<p>下一步是添加温度控制, 添加Nose-Hoover链, 并将其添加到恒压器自由度. 令 <span class="math">\(\h\)</span> 为恒压器的Nose-Hoover变量, <span class="math">\(Q'\)</span> 为恒压器的恒温器常数, 我们得到</p>
+
+<p><span class="math">\(\alg
+\dot{\bi r}_i &= {\bi p_i \over m_i}+{p_\e \over W} \bi r_i \\
+{\dot{\bi p}_i \over m_i} &= {1\over m_i} \bi F_i -\a {p_\e \over W} {\bi p_i \over m_i} - {p_{\x_1} \over Q_1} {\bi p_i \over m_i} \\
+\dot \e &=  {p_\e \over W} \\
+{\dot{p_\e} \over W} &={3V \over W}(\a P_{\text{kin} }-P_{\text{vir} }-P) - {p_{\h_1} \over Q_1'} p_\e \\
+\dot{\x}_k &= {p_{\x_k} \over Q_k} \\
+\dot \h_k&= {p_{\h_k} \over Q_k'} \\
+\dot p_{\x_k} &= G_k -{p_{\x_{k+1} } \over Q_{k+1} } \qquad k=1,...,M-1 \\
+\dot p_{\h_k} &= G_k' -{p_{\h_{k+1} } \over Q_{k+1}' } \qquad k=1,...,M-1 \\
+\dot p_{\x_M} &= G_M \\
+\dot p_{\h_M} &= G_M'
+\tag{3.77}
+\ealg\)</span></p>
+
+<p>其中</p>
+
+<p><span class="math">\(\alg
+P_{\text{int} } &= P_{\text{kin} } - P_{\text{vir} } = {1\over 3V}\left[ \Sum_{i=1}^N \left({\bi p_i^2 \over 2m_i}-\bi r_i \cdot \bi F_i \right)\right] \\
+G_1 &=\Sum_{i=1}^N {\bi p_i^2 \over 2m_i}-N_f kT \\
+G_k &= {p_{\x_{k-1}}^2 \over 2 Q_{k-1}} - kT \;\; k=1,..., M \\
+G_1' &= {p_\e^2 \over 2W} -kT \\
+G_k' &= {p_{\h_{k-1}}^2 \over 2 Q_{k-1}'} - kT \;\; k=1,..., M
+\tag{3.78}
+\ealg\)</span></p>
+
+<p>现在的守恒量为</p>
+
+<p><span class="math">\(\alg
+H &=\Sum_{i=1}^N {\bi p_i^2 \over 2m_i}+U(\bi r_1, \bi r_2, ..., \bi r_N)+{p_\e^2 \over 2W}+PV  \\
+&+\Sum_{k=1}^M {p_{\x_k}^2 \over 2Q_k} + \Sum_{k=1}^M {p_{\h_k}^2 \over 2Q_k'} + N_f kT \x_1 + kT \Sum_{k=2}^M \x_k +\Sum_{k=2}^M \h_k
+\tag{3.79} \ealg\)</span></p>
+
+<p>回到Trotter分解形式, 对压力控制和温度控制[34]我们得到:</p>
+
+<p><span class="math">\[iL=iL_1+iL_2+iL_{\e,1}+iL_{\e,2}+iL_{\text{NHC-baro} }+iL_{\text{NHC} } \tag{3.80}\]</span></p>
+
+<p>其中, &#8220;NHC-baro&#8221;对应于恒压器的Nose-Hoover链, NHC对应于粒子的NHC</p>
+
+<p><span class="math">\(\alg
+iL_1 &= \Sum_{i=1}^N \left[{\bi p_i \over m_i}+{p_\e \over W} \bi r_i \right] \cdot {\partial \over \partial \bi r_i} \tag{3.81} \\
+iL_2 &= \Sum_{i=1}^N \bi F_i -\a {p_\e \over W} \bi p_i \cdot {\partial \over \partial \bi p_i} \tag{3.82} \\
+iL_{\e,1} &=  {p_\e \over W}  {\partial \over \partial \e} \tag{3.83} \\
+iL_{\e,2} &=  G_\e  {\partial \over \partial p_\e} \tag{3.84}
+\ealg\)</span></p>
+
+<p>其中</p>
+
+<p><span class="math">\[G_\e = 3V(\a P_{\text{kin}} - P_{\text{vir}} -P) \tag{3.85}\]</span></p>
+
+<p>用Trotter分解, 我们得到</p>
+
+<p><span class="math">\(\alg
+\exp(iL\D t) = \;\; & \exp(iL_{\text{NHC-baro} } \D t/2) \exp(iL_{\text{NHC} } \D t/2) \\
+&\exp(iL_{\e,2} \D t/2) \exp(iL_2 \D t/2) \\
+&\exp(iL_{\e,1} \D t) \exp(iL_1 \D t) \\
+&\exp(iL_2 \D t/2) \exp(iL_{\e,2} \D t/2) \\
+&\exp(iL_{\text{NHC} } \D t/2) \exp(iL_{\text{NHC-baro} } \D t/2) +O(\D t^3)
+\tag{3.86}
+\ealg\)</span></p>
+
+<p><span class="math">\(\exp(iL_1 \D t)\)</span> 作用来自于微分方程 <span class="math">\(\dot{\bi r}_i=\bi v_i+v_\e \bi r_i\)</span> 的解, 其中 <span class="math">\(\bi v_i=\bi p_i/m_i\)</span>, <span class="math">\(v_\e\)</span> 为常数, 初始条件为 <span class="math">\(\bi r_i(0)\)</span>, 在 <span class="math">\(t=\D t\)</span> 时刻进行计算. 这样可以得到</p>
+
+<p><span class="math">\[\bi r_i(\D t)=\bi r_i(0) e^{v_\e \D t} + \D t \bi v_i(0)e^{v_\e \D t/2} {\sinh(v_\e \D t/2) \over v_\e \D t/2} \tag{3.87}\]</span></p>
+
+<p><span class="math">\(\exp(iL_2 \D t/2)\)</span> 作用来自于微分方程 <span class="math">\(\dot{\bi v}_i={\bi F_i \over m_i}-\a v_\e \bi v_i\)</span> 的解, 得到</p>
+
+<p><span class="math">\[\bi v_i(\D t/2)=\bi v_i(0) e^{-\a v_\e \D t/2} + {\D t\over 2m_i} \bi F_i(0)e^{-\a v_\e \D t/4} {\sinh(\a v_\e \D t/4) \over \a v_\e \D t/4} \tag{3.88}\]</span></p>
+
+<p><code>md-vv-avek</code>使用完整步的动能来确定压力控制的压力, 但使用半步平均动能来确定温度, 这可以写为Trotter分解</p>
+
+<p><span class="math">\(\alg
+\exp(iL\D t) = \;\; & \exp(iL_{\text{NHC-baro} } \D t/2) \exp(iL_{\e,2} \D t/2)\exp(iL_2 \D t/2) \\
+&\exp(iL_{\text{NHC} } \D t/2) \exp(iL_{\e,1} \D t) \exp(iL_1 \D t) \exp(iL_{\text{NHC} } \D t/2)        \\
+& \exp(iL_2 \D t/2) \exp(iL_{\e,2} \D t/2) \exp(iL_{\text{NHC-baro} } \D t/2) +O(\D t^3)
+\tag{3.89}
+\ealg\)</span></p>
+
+<p>使用约束时, 这些方程会变得更为复杂, 对约束力需要迭代求解每个方程. 对迭代细节的讨论超出了本手册的范围; 我们鼓励读者参看文献[40]中的实现.</p>
+
+<p><strong>温度和压力耦合的不频繁计算</strong></p>
+
+<p>温度和压力的控制需要全局通信来计算的动能和维里, 对大的体系, 如果在每一步都进行会使计算变得十分耗时. 我们可以重排Trotter分解, 给出另一种可逆的辛积分方法, 每 <span class="math">\(n\)</span> 步进行一次而不是每步一次. 当耦合时间步长过大时, 这些新的积分方法将发散, 因为辅助变量积分不收敛. 然而, 在大多数情况下, 长的耦合时间更合适, 因为他们对动力学的扰动小些[34].</p>
+
+<p>使用Nose-Hoover温度控制时, 标准的速度Verlet方法有如下的Trotter展开</p>
+
+<p><span class="math">\(\alg
+\exp(iL\D t) \approx \;\; &\exp(iL_{\text{NHC} } \D t/2) \exp(iL_2 \D t/2) \\
+&\exp(iL_1 \D t) \exp(iL_2 \D t/2)\exp(iL_{\text{NHC} } \D t/2)
+\tag{3.90}
+\ealg\)</span></p>
+
+<p>如果相对于系统运动, Nose-Hoover链的运动足够慢, 对速度Verlet方法, 我们可以写出一个进行 <span class="math">\(n\)</span> 步的积分方法</p>
+
+<p><span class="math">\(\alg
+\exp(iL\D t) \approx \;\; &\exp(iL_{\text{NHC} }(n\D t/2)) [\exp(iL_2 \D t/2) \\
+&\exp(iL_1 \D t) \exp(iL_2 \D t/2)]^n \exp(iL_{\text{NHC} }(n\D t/2))
+\tag{3.91}
+\ealg\)</span></p>
+
+<p>对于压力控制, 这成为</p>
+
+<p><span class="math">\(\alg
+\exp(iL\D t) \approx \;\; & \exp(iL_{\text{NHC-baro} }(n\D t/2)) \exp(iL_{\text{NHC} }(n\D t/2)) \\
+&\exp(iL_{\e,2}(n\D t/2)) [ \exp(iL_2 \D t/2) \\
+&\exp(iL_{\e,1} \D t) \exp(iL_1 \D t) \\
+&\exp(iL_2 \D t/2)]^n  \exp(iL_{\e,2}(n\D t/2)) \\
+&\exp(iL_{\text{NHC} }(n\D t/2)) \exp(iL_{\text{NHC-baro} }(n\D t/2))
+\tag{3.92}
+\ealg\)</span></p>
+
+<p>其中对盒子体积的积分每步都进行, 但对辅助变量的积分每 <span class="math">\(n\)</span> 步一次.</p>
+
+<h3 id="3.4.10完整的更新算法">3.4.10 完整的更新算法</h3>
+
+<p>使用蛙跳式积分方法时, 更新速度和坐标的完整算法见图3.9. 步骤4的SHAKE算法在下面进行说明.</p>
+
+<p>GROMACS具有&#8220;冻结&#8221;(防止运行)选中粒子的规定, 这些粒子必须被定义为&#8220;冻结组&#8221;. 这是使用 <strong>冻结因子</strong> <span class="math">\(\bi f_g\)</span> 实现的, 冻结因子时一个向量, 对每个冷冻组都不相同(参见3.3节). 此向量只包含零(冻结)或1(不冻结). 当我们考虑冻结因子和外部加速度 <span class="math">\(\bi a_h\)</span> 时, 速度的更新算法变为</p>
+
+<p><span class="math">\[\bi v(t+{\D t \over 2}) = \bi f_g * \l * \left[ \bi v(t-{\D t \over 2}+{\bi F(t) \over m} \D t + \bi a_h \D t \right] \tag{3.93}\]</span></p>
+
+<p>其中 <span class="math">\(g\)</span> 和 <span class="math">\(h\)</span> 为组索引, 每个原子都不同.</p>
+
+<figure>
+<img src="3.9.png" alt="图3.9: 蛙跳式积分方法对应的MD更新算法" />
+<figcaption>图3.9: 蛙跳式积分方法对应的MD更新算法</figcaption>
+</figure>
+
+<h3 id="3.4.11输出步">3.4.11 输出步</h3>
+
+<p>MD运行的最重要输出是 <strong>轨迹文件</strong>, 它包含了规则间隔时刻粒子的坐标和(可选的)速度. 轨迹文件包含许多帧, 每帧可能包括位置, 速度和/或力, 以及模拟体积尺寸, 积分步, 积分时间等信息. 时间的解释与所选择的积分方法有关, 如上所述. 对速度Verlet积分方法, 标记时刻 <span class="math">\(t\)</span> 的速度是那个时刻的速度. 对于其他积分方法(如蛙跳式, 随机动力学), 标记时刻 <span class="math">\(t\)</span> 的速度是 <span class="math">\(t-{1\over2}\D t\)</span> 时刻的速度.</p>
+
+<p>由于轨迹文件很长, 不要每一步都保存! 为保留所有信息, 每15步输出一帧就够了, 因为对体系中最大频率的每一周期至少使用了30步, 并且Shannon的采样定理指出, 对带限信号, 最大频率的每一周期进行两次采样就包含了所有可用的信息. 但这样做仍然会得到很大的文件! 所以, 如果对最高频率不感兴趣, 每ps进行10或20此采样就够了. 注意由频闪效应导致的高频运动失真, 这被称为混叠: 较高的频率相对采样频率出现镜像, 显得频率较低.</p>
+
+<p>GROMACS也可以将模拟体系一部分坐标的精度进行降低, 并写入到特殊的压缩格式的轨迹文件. 所有其他的工具可以读取和写入这种格式. 参见7.3节关于如何设置<code>.mdp</code>文件以便使用<code>mdrun</code>此功能的详细信息.</p>
+
+
