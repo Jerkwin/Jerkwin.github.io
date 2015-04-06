@@ -1,0 +1,666 @@
+<h1 id="第六章　专题">第六章　专题</h1>
+
+<h2 id="6.1自由能计算的实现">6.1 自由能计算的实现</h2>
+
+<p>计算自由能时, 必须指定两个条件: 结束状态以及连接结束状态的途径. 指定结束状态的方式有两种, 最直接的方法是在拓扑中指定结束状态. 大多数势能函数形式既支持A状态也支持B状态. 每当指定两种状态时, A状态对应于初始自由能态, 而B状态对应于最终的状态.</p>
+
+<p>在一些情况下, 也可以仅仅通过<code>.mdp</code>文件来定义结束状态, 而无须改变拓扑, 这可以通过使用<code>couple-moltype</code>, <code>couple-lambda0</code>, <code>couple-lambda1</code>, <code>couple-intramol</code>等mdp关键词完成. <code>couple-moltype</code>所选定的任何分子类型会自动获得一个B状态(与一个重新定义的A状态), B状态是根据<code>couple-lambda</code>关键词隐式地构建的, <code>couple-lambda0</code>和<code>couple-lambda1</code>定义了出现于A状态(<code>couple-lambda0</code>)和B状态(<code>couple-lambda1</code>)中的非键参数, 可用选项有&#8217;q&#8217;, &#8216;vdw&#8217;和&#8217;vdw-q&#8217;, 它们分别代表了库仑, van der Waals或二者的参数, 这些参数在各自的状态中可以被关闭.</p>
+
+<p>一旦定义了结束状态, 就必须定义结束状态之间的途径, 途径只需要在.mdp文件中定义. 从4.6版本开始, <span class="math">\(\l\)</span> 是一个向量, 它的库仑, van der Waals, 键合, 约束, 质量分量都可以独立地进行调整. 这样我们在同一模拟中就可以线性地关闭库仑项, 然后是使用软核势的van der Waals项. 对于副本交换或扩展系综模拟, 这尤其有用. 因为对这两种模拟, 为改进采样, 在同一模拟中对相互作用从有到无的所有途径进行采样非常重要.</p>
+
+<p><code>fep-lambdas</code>是 <span class="math">\(\l\)</span> 的默认数组, 其值的范围从0到1. 如果没有指定, 其他所有 <span class="math">\(\l\)</span> 数组都会使用此数组中的值. 以前使用单个 <span class="math">\(\l\)</span> 变量控制途径的做法, 可以通过仅使用<code>fep-lambdas</code>定义途径的方法.</p>
+
+<p>例如, 如果你想首先改变库仑项, 然后是van der Waals项, 同时以与van der Waals项同样的速率改变键合项, 并在整个模拟的前三分之二改变约束项, 那么你可以使用下面的 <span class="math">\(\l\)</span> 向量:</p>
+
+<pre><code>coul-lambdas      = 0.0  0.2  0.5  1.0  1.0  1.0  1.0  1.0  1.0  1.0
+vdw-lambdas       = 0.0  0.0  0.0  0.0  0.4  0.5  0.6  0.7  0.8  1.0
+bonded-lambdas    = 0.0  0.0  0.0  0.0  0.4  0.5  0.6  0.7  0.8  1.0
+restraint-lambdas = 0.0  0.0  0.1  0.2  0.3  0.5  0.7  1.0  1.0  1.0
+</code></pre>
+
+<p>这等价于下面的设置:</p>
+
+<pre><code>fep-lambdas       = 0.0  0.0  0.0  0.0  0.4  0.5  0.6  0.7  0.8  1.0
+coul-lambdas      = 0.0  0.2  0.5  1.0  1.0  1.0  1.0  1.0  1.0  1.0
+restraint-lambdas = 0.0  0.0  0.1  0.2  0.3  0.5  0.7  1.0  1.0  1.0
+</code></pre>
+
+<p>在这种情况下, <code>fep-lambda</code>数组作为默认值被填充到键合与van der Waals相互作用的 <span class="math">\(\l\)</span> 数组中. 通常, 最好时明确列出所有的数组, 以确保进行了正确的赋值.</p>
+
+<p>如果你只想打开从A到B的约束, 那么可以使用下面的设置:</p>
+
+<pre><code>restraint-lambdas = 0.0 0.1 0.2 0.4 0.6 1.0
+</code></pre>
+
+<p>这样, <span class="math">\(\l\)</span> 向量的其他所有分量都将保持A状态的值.</p>
+
+<p>使用热力学积分计算与向量 <span class="math">\(\l\)</span> 对应的自由能时, TI方程变为矢量方程:</p>
+
+<p><span class="math">\[\D F=\int \left< \nabla H \right> \centerdot \rmd{\vec \l}  \tag{6.1}\]</span></p>
+
+<p>或对有限差分有:</p>
+
+<p><span class="math">\[\D F \approx \int \sum \left< \nabla H \right> \centerdot \rmd{\l}  \tag{6.2}\]</span></p>
+
+<p>从<a href="https://SimTK.org/home/pymbar">https://SimTK.org/home/pymbar</a>下载的外部脚本<code>pymbar</code>可以计算根据GROMACS的dhdl.xvg输出自动计算此积分.</p>
+
+<h2 id="6.2平均力势">6.2 平均力势</h2>
+
+<p>平均力势(PMF, potential of mean force)是对构型系综的平均力进行积分得到的势能. 在GROMACS中, 有几种不同的方法可用于计算平均力. 每一种方法都有其局限性, 如下所述.</p>
+
+<ul class="incremental">
+<li><strong>牵引代码</strong>: 用于分子或分子组质心之间.</li>
+<li><strong>使用简谐键或约束的自由能代码</strong>: 单个原子之间.</li>
+<li><strong>位置约束的自由能代码</strong>: 改变相对不动原子组的构型.</li>
+<li><strong>有限情况的牵引代码</strong>: 原子组之间, 它们是较大分子的一部分, 其中的键使用了SHAKE或LINCS约束. 如果牵引组较大, 会使用牵引代码.</li>
+</ul>
+
+<p>下面两节中更详细地讨论牵引和自由能代码.</p>
+
+<p><strong>熵效应</strong></p>
+
+<p>当两个原子或两个组的质心之间的距离被约束或束缚时, 由于两个组的旋转, PMF会含有单纯由熵引起贡献[131]. 对于有两个非相互作用质量的体系, 平均力势为:</p>
+
+<p><span class="math">\[V_{pmf}(r)=-(n_c-1)k_B T \log(r) \tag{6.3}\]</span></p>
+
+<p>其中 <span class="math">\(n_c\)</span> 为约束的维数(例如: 对正常的约束 <span class="math">\(n_c=3\)</span>, 仅在 <span class="math">\(z\)</span> 方向存在约束时, <span class="math">\(n_c=1\)</span>). 是否需要校正这一贡献取决于你需要的PMF. 当你想要将底物牵引到蛋白质中时, 这个熵对应的项确实对要做的功有贡献. 但当计算溶剂中两个溶质之间的PMF以便用于无溶剂的模拟时, 应该移除熵的贡献. <strong>注意</strong>, 此项可能显著; 300 K时, 若距离减半, 贡献为3.5 kJ mol<sup>-1</sup>.</p>
+
+<h2 id="6.3非均衡牵引">6.3 非均衡牵引</h2>
+
+<p>当连续改变两个组之间的距离时, 会对体系做功, 这意味着体系不再处于平衡状态. 尽管在缓慢牵引的极限情况下, 体系会处于平衡状态, 但对于许多体系, 这种极限情况在可行的计算时间内部无法达到. 然而, 使用Jarzynski关系[132], 从两个距离之间的许多非平衡模拟, 可以得到平衡的自由能变化 <span class="math">\(\D G\)</span></p>
+
+<p><span class="math">\[\D G_{AB}=-k_B T\log \left< e^{-\b W_{AB}} \right>_A \tag{6.4}\]</span></p>
+
+<p>其中 <span class="math">\(W_{AB}\)</span> 为强制体系从状态A沿某路径到达状态B所需的功, 尖括号表示对初始状态A的正则系综进行平均, <span class="math">\(\b=1/k_BT\)</span>.</p>
+
+<h2 id="6.4牵引代码">6.4 牵引代码</h2>
+
+<p>牵引代码会在一对或多对原子组的质量的中心之间施加力或约束. 每个牵引的反应坐标被称为&#8220;坐标&#8221;, 它作用于两个牵引组. 一个牵引组可以是一个或多个牵引坐标的一部分. 此外, 坐标还可以作用于单个组或空间中的绝对参考位置. 两个组之间的距离可根据1, 2或3个维度来计算, 或者沿着用户定义的向量进行计算. 参考距离可以是恒定的, 或者可以随时间线性变化. 正常情况下, 所有的原子都根据质量进行加权, 但也可以使用额外的加权因子.</p>
+
+<figure>
+<img src="6.1.png" alt="图6.1: 使用伞形牵引将脂分子拉出双脂层的示意图. $V_{rup}$ 为弹簧是收缩速度, $Z_{link}$ 为弹簧附着的原子, $Z_{spring}$ 为弹簧的位置." />
+<figcaption>图6.1: 使用伞形牵引将脂分子拉出双脂层的示意图. <span class="math">\(V_{rup}\)</span> 为弹簧是收缩速度, <span class="math">\(Z_{link}\)</span> 为弹簧附着的原子, <span class="math">\(Z_{spring}\)</span> 为弹簧的位置.</figcaption>
+</figure>
+
+<p>GMX支持三种不同类型的牵引计算, 对所有类型的牵引, 参考距离可以是恒定, 或是随时间线性变化.</p>
+
+<ol class="incremental">
+<li><strong>伞形牵引</strong> 在两个组的质心之间施加简谐势. 因此, 力正比于位移.</li>
+<li><strong>约束牵引</strong> 约束两组质心之间的距离. 约束力可以写入到文件中. 此方法使用SHAKE算法, 但当仅约束两个组时, 为精确只需要1次迭代.</li>
+<li><strong>恒力牵引</strong> 在两个质心之间施加恒定的力. 因此, 势能是线性的. 在这种情况下, 牵引速度没有参考距离.</li>
+</ol>
+
+<p><strong>质量中心的定义</strong></p>
+
+<p>在GROMACS中, 有三种方法来定义的一组原子的质量中心. 标准方式是使用&#8220;普通&#8221;质心, 可能带有附加的权重因子. 使用周期性边界条件时, 就无法再唯一地定义一组原子的质量中心. 因此, 会使用一个参考原子. 为确定质量中心, 对于组中其他所有的原子, 会使用到参考原子最近的周期影象. 这样唯一地定义了质量中心. 默认情况下, 会使用中间的原子(根据拓扑中的顺序)作为参考原子, 但用户也可以选择使用任何其原子, 如果它更接近于组的中心.</p>
+
+<p>对于多层系统, 例如双脂层, 可能需要计算脂分子的PMF, 它是脂分子到整个双层的距离的函数. 在这种情况下, 整个双层可作为参考组, 但也可以为PMF定义更局部的反应坐标. <code>.mdp</code>选项<code>pull_geometry = cylinder</code>并不使用参考组中的所有原子, 而是动态地仅仅使用那些位于圆柱内的原子. 圆柱的半径为<code>r_1</code>, 围绕着通过牵引组的牵引向量. 这仅适用于一维定义的距离, 并且圆柱的长轴沿着定义距离的方向. 也可以使用<code>r_0</code>定义第二个圆柱, 并且使用一个线性切换函数对距离位于<code>r_0</code>和<code>r_1</code>之间的原子进行加权. 这可以平滑原子进出圆柱的的影响(导致牵引力出现跃变).</p>
+
+<figure>
+<img src="6.2.png" alt="图6.2: 比较普通质心参考组和用于界面体系的圆柱参考组. C为参考组. 圆圈代表两个组的质心加上参考组, $d_c$ 为参考距离." />
+<figcaption>图6.2: 比较普通质心参考组和用于界面体系的圆柱参考组. C为参考组. 圆圈代表两个组的质心加上参考组, <span class="math">\(d_c\)</span> 为参考距离.</figcaption>
+</figure>
+
+<p>对周期性的体系中的一组分子, 可能无法明确地定义一个普通的参考组. 例如在 <span class="math">\(x\)</span> 和 <span class="math">\(y\)</span> 方向周期性相连, 但在 <span class="math">\(z\)</span> 方向具有两个液-气界面的水板坯. 在这样的设置中, 水分子可以从液体中蒸发, 并穿过蒸汽, 通过周期性边界, 到达另一个界面. 这种体系固有的周期性使得我们无法合适地定义一个沿着 <span class="math">\(z\)</span> 方向的&#8220;普通&#8221;质心. 一个合适的解决方法对参考组中的所有原子使用一个余弦形的加权剖面. 此剖面单元格胞中的单周期余弦, 并对其相位进行了优化, 使得能够给出权重的最大加和, 包括质量权重. 当所有原子都位于单元格胞长度一半的范围内时, 这种方法提供了唯一和连续的参考位置, 几乎等同于普通的质心位置. 请参看文献[133]了解详细信息.</p>
+
+<p>当在计算过程中使用相对权重 <span class="math">\(\w_i\)</span> 时, 无论是输入中提供的权重, 还是因圆柱几何或余弦加权引入的权重, 都需要对权重进行缩放, 以保证动量守恒:</p>
+
+<p><span class="math">\[\w_i'= \left. \w_i \Sum_{j=1}^N \w_j m_j \middle/ \Sum_{j=1}^N \w_j^2 m_j \right. \tag{6.5}\]</span></p>
+
+<p>其中 <span class="math">\(m_i\)</span> 为组中原子 <span class="math">\(j\)</span> 的质量. 计算约束力时所需要的组的质量为:</p>
+
+<p><span class="math">\[M=\sum_{i=1}^N \w_i' m_i  \tag{6.6}\]</span></p>
+
+<p>加权的质量中心的定义为:</p>
+
+<p><span class="math">\[\bi r_{com}=\left. \sum_{i=1}^N \w_i' m_i \bi r_i \middle/ M  \right. \tag{6.7}\]</span></p>
+
+<p>根据质心, 可计算作用在每组上的AFM, 约束或伞形力 <span class="math">\(\bi F_{com}\)</span>. 作用于组质心上的力会按下式重新分配到原子上:</p>
+
+<p><span class="math">\[\bi F_i = {\w_i' m_i \over M} \bi F_{com}  \tag{6.8}\]</span></p>
+
+<p><strong>局限性</strong></p>
+
+<p>有一个理论局限性: 严格的来说, 只能计算某些组之间的约束力, 这些组没有通过约束连接到体系的其余部分. 如果一个组包含的一部分分子的键长被约束, 应该同时迭代牵引约束和LINCS或SHAKE的键约束算法. GROMACS还无发做到这点. 这意味着, 若模拟时在<code>.mdp</code>文件中使用了<code>constraints = all-bonds</code>选项, 严格地说, 牵引仅限于整个分子或分子组. 在一些情况下, 通过使用自由能代码可以避免此限制,参加6.7节. 在实践中, 当牵引组包含大量原子和/或牵引力很小时, 因不对两种约束算法同时进行迭代导致的误差可忽略不计. 在这些情况下, 相比于键长, 牵引组的约束校正唯一很小.</p>
+
+<h2 id="6.5强制旋转">6.5 强制旋转</h2>
+
+<p>这个模块可用于强制一组原子进行旋转, 例如一个蛋白质亚基的旋转. 有多种旋转势能, 其中复杂的类型, 在模拟过程中允许灵活地适应旋转亚基以及局部旋转轴. 一个示例应用可以在文献[134]中找到.</p>
+
+<h3 id="6.5.1固定轴旋转">6.5.1 固定轴旋转</h3>
+
+<p><strong>具有各向同性势的固定轴</strong></p>
+
+<p>在固定轴方法中(参见图6.3 B), 对一组 <span class="math">\(N\)</span> 个, 位置为 <span class="math">\(\bi x_i\)</span> 的原子(记为&#8220;旋转组&#8221;), 作用于其上的力矩是通过旋转一组参考原子位置-通常是他们的初始位置 <span class="math">\(\bi y_i^0\)</span>-施加的, 旋转以恒定角速度 <span class="math">\(\w\)</span> 绕着由方向向量 <span class="math">\(\hat{\bi v}\)</span> 和支点 <span class="math">\(\bi u\)</span> 定义的轴线进行. 为此, 每个位置为 <span class="math">\(\bi x_i\)</span> 的原子利用&#8220;虚拟&#8221;弹簧势能附着到它移动的参考位置 <span class="math">\(\bi y_i=\bi \W(t)(\bi y^0_i- \bi u)\)</span>, 其中 <span class="math">\(\bi \W(t)\)</span> 是一个矩阵, 描述了绕轴的旋转. 对最简单的情况, &#8220;弹簧&#8221;是利用简谐势描述的,</p>
+
+<p><span class="math">\[V^{\text{iso} }= {k\over2} \Sum_{i=1}^N \w_i \left[ \bi \W(t)(\bi y_i^0-\bi u)-(\bi x_i-\bi u) \right]^2 \tag{6.9}\]</span></p>
+
+<p>并具有可选的质量加权前因子 <span class="math">\(\w_i = N m_i/M\)</span>, 总质量 <span class="math">\(M=\S_{i=1}^N m_i\)</span>. 旋转矩阵 <span class="math">\(\bi \W(t)\)</span> 为</p>
+
+<p><span class="math">\[\bi \W(t)=\pmat
+\cos \w t + v_x^2\x       & v_x v_y\x - v_z \sin \w t & v_x v_z\x + v_y \sin \w t \\
+v_x v_y\x + v_z \sin \w t & \cos \w t + v_y^2\x       & v_y v_z\x - v_x \sin \w t \\
+v_x v_z\x - v_y \sin \w t & v_y v_z\x + v_x \sin \w t & \cos \w t+v_z^2\x \\
+\epmat\]</span></p>
+
+<figure>
+<img src="6.3.png" alt="图6.3: 固定轴旋转和柔性轴旋转的比较. A: 当使用固定转轴(虚线)时, 旋转白色管状空腔内的形状可产生假象. 更实际的, 形状会围绕成像一个轴承(灰色)内部的柔性的管道清洁器(虚线). B: 围绕轴 $\bi v$ 与由向量 $\bi u$ 指定的支点进行的固定旋转. C: 将旋转片段细分为板坯, 每个板坯具有独立的旋转轴($\uparrow$)和支点($\bullet$)以满足灵活性. 具有索引 $n$ 和 $n+1$ 的两个板坯之间的距离为 $\D x$." />
+<figcaption>图6.3: 固定轴旋转和柔性轴旋转的比较. A: 当使用固定转轴(虚线)时, 旋转白色管状空腔内的形状可产生假象. 更实际的, 形状会围绕成像一个轴承(灰色)内部的柔性的管道清洁器(虚线). B: 围绕轴 <span class="math">\(\bi v\)</span> 与由向量 <span class="math">\(\bi u\)</span> 指定的支点进行的固定旋转. C: 将旋转片段细分为板坯, 每个板坯具有独立的旋转轴(<span class="math">\(\uparrow\)</span>)和支点(<span class="math">\(\bullet\)</span>)以满足灵活性. 具有索引 <span class="math">\(n\)</span> 和 <span class="math">\(n+1\)</span> 的两个板坯之间的距离为 <span class="math">\(\D x\)</span>.</figcaption>
+</figure>
+
+<p>其中 <span class="math">\(v_x, v_y, v_z\)</span> 为归一化的旋转向量 <span class="math">\(\hat v\)</span> 的分量, <span class="math">\(\x:= 1-\cos(\w t)\)</span>. 如图6.4A所示, 对单个原子 <span class="math">\(j\)</span>, 旋转矩阵 <span class="math">\(\bi \W(t)\)</span> 作用于 <span class="math">\(t=t_0\)</span> 时刻原子 <span class="math">\(j\)</span> 的初始参考位置 <span class="math">\(\bi y_j^0=\bi x_j(t_0)\)</span>. 在其后的时刻 <span class="math">\(t\)</span>, 参考位置已旋转远离其初始位置(沿蓝色虚线), 从而产生力</p>
+
+<p><span class="math">\[\bi F_j^{\text{iso}}=-\nabla_j V^{\text{iso}}=k \w_j \left[\bi \W(t) (\bi y_j^0- \bi u)-(\bi x_j-\bi u)\right]  \tag{6.10}\]</span></p>
+
+<p>此力指向参考位置.</p>
+
+<p><strong>无支点各向同性势</strong></p>
+
+<p>不使用固定的支点矢量 <span class="math">\(\bi u\)</span>, 该势能使用旋转组的质量中心 <span class="math">\(\bi x_c\)</span> 作为旋转轴的支点,</p>
+
+<p><span class="math">\[\bi x_c={1 \over M}\sum_{i=1}^N m_i \bi x_i, \;\; \bi y_c^0={1 \over M}\sum_{i=1}^N m_i \bi y_i^0  \tag{6.11}\]</span></p>
+
+<p>这就得到了了&#8220;无支点&#8221;的各向同性势</p>
+
+<p><span class="math">\[V^{\text{iso-pf}}={k\over2} \Sum_{i=1}^N \w_i \left[\bi \W(t)(\bi y_i^0-\bi y_c^0)-(\bi x_i-\bi x_c)\right]^2 \tag{6.12}\]</span></p>
+
+<figure>
+<img src="6.4.png" alt="图6.4: 不同的旋转势的选择和符号的定义. 对位于 $\bi x_j(t)$ 的单个原子显示了所有四个势能函数 $V$(彩色编码). A: 各向同性势 $V^{\text{iso} }$, B: 径向运动势 $V^{\text{rm} }$ 和柔性势 $V^{\text{flex} }$, C-D: 径向运动二型势 $V^{\text{rm2} }$ 和柔性二型势 $V^{\text{flex2} }$, 其中 $\e'$ 分布为0 nm2(C)和0.01 nm2(D). 旋转轴垂直于平面并标记为 $\otimes$. 浅灰色等值线表示 $\bi x_j$ 平面内的波尔兹曼因子 $e^{-V/(k_BT)}$, $T= 300$ K, $k$ = 200 kJ/(mol·nm2). 绿色箭头显示了作用于原子 $j$ 上的力 $\bi F_j$ 的方向; 蓝色虚线表示参考位置的运动." />
+<figcaption>图6.4: 不同的旋转势的选择和符号的定义. 对位于 <span class="math">\(\bi x_j(t)\)</span> 的单个原子显示了所有四个势能函数 <span class="math">\(V\)</span>(彩色编码). A: 各向同性势 <span class="math">\(V^{\text{iso} }\)</span>, B: 径向运动势 <span class="math">\(V^{\text{rm} }\)</span> 和柔性势 <span class="math">\(V^{\text{flex} }\)</span>, C-D: 径向运动二型势 <span class="math">\(V^{\text{rm2} }\)</span> 和柔性二型势 <span class="math">\(V^{\text{flex2} }\)</span>, 其中 <span class="math">\(\e'\)</span> 分布为0 nm<sup>2</sup>(C)和0.01 nm<sup>2</sup>(D). 旋转轴垂直于平面并标记为 <span class="math">\(\otimes\)</span>. 浅灰色等值线表示 <span class="math">\(\bi x_j\)</span> 平面内的波尔兹曼因子 <span class="math">\(e^{-V/(k_BT)}\)</span>, <span class="math">\(T= 300\)</span> K, <span class="math">\(k\)</span> = 200 kJ/(mol·nm<sup>2</sup>). 绿色箭头显示了作用于原子 <span class="math">\(j\)</span> 上的力 <span class="math">\(\bi F_j\)</span> 的方向; 蓝色虚线表示参考位置的运动.</figcaption>
+</figure>
+
+<p>相应的力为</p>
+
+<p><span class="math">\[F^{\text{iso-pf}}= k\w_j \left[\bi \W(t)(\bi y_j^0-\bi y_c^0)-(\bi x_j-\bi x_c)\right] \tag{6.13}\]</span></p>
+
+<p>如果不使用质量加权, 支点 <span class="math">\(\bi x_c\)</span> 为组的几何中心.</p>
+
+<p><strong>平行运动势的变体</strong></p>
+
+<p>由各​​向同性势产生的力(方程6.9和6.12)还含有平行于旋转轴的成分, 从而限制了沿整个旋转组(对 <span class="math">\(V^{\text{iso} }\)</span>)轴线或旋转组内(对 <span class="math">\(V^{\text{iso-pf} }\)</span>)轴线的运动. 如果倾向于不限制沿轴线的运动, 我们已经通过消除势能所有平行于旋转轴的分量实现了&#8220;平行运动&#8221;的一种变体. 通过投影参考和实际位置之间的距离向量</p>
+
+<p><span class="math">\[\bi r_i=\bi \W(t)(\bi y_i^0-\bi u)-(\bi x_i-\bi u)  \tag{6.14}\]</span></p>
+
+<p>到垂直于旋转矢量的平面上,</p>
+
+<p><span class="math">\[\bi r_i^{\bot} := \bi r_i-(\bi r_i \cdot \hat{\bi v}) \hat{\bi v} \tag{6.15}\]</span></p>
+
+<p>得到</p>
+
+<p><span class="math">\(\alg
+V^{\text{pm} } &= {k \over 2} \Sum_{i=1}^N \w_i(\bi r_i^\bot)^2 \\
+ &= {k\over2}\Sum_{i=1}^N \w_i \{ \bi \W(t)(\bi y_i^0-\bi u)-(\bi x_i-\bi u) \\
+&-\left\{\left[\bi \W(t)(\bi y_i^0-\bi u)-(\bi x_i-\bi u)\right] \cdot \hat{\bi v} \right\} \hat{\bi v} \}^2 \tag{6.16}
+\ealg\)</span></p>
+
+<p>同样的</p>
+
+<p><span class="math">\[\bi F_j^{\text{pm}}=k\w_j \bi r_j^{\bot}  \tag{6.17}\]</span></p>
+
+<p><strong>无支点的平行运动势</strong></p>
+
+<p>将方程6.16中的固定支点 <span class="math">\(\bi u\)</span> 替换为质量中心 <span class="math">\(\bi x_c\)</span> 就得到了平行运动势无支点的变体形式. 对</p>
+
+<p><span class="math">\[\bi s_i=\bi \W(t)(\bi y_i^0-\bi y_c^0)-(\bi x_i-\bi x_c) \tag{6.18}\]</span></p>
+
+<p>各自的势能和力为</p>
+
+<p><span class="math">\(\alg
+V^{\text{pm-pf}} &={k\over2}\sum_{i=1}^N \w_i(\bi s_i^{\bot})^2 \tag{6.19} \\
+\bi F_j^{\text{pm-pf}} &=k\w_j \bi s_j^{\bot} \tag{6.20}
+\ealg\)</span></p>
+
+<p><strong>径向运动势</strong></p>
+
+<p>在上述变体中, 转动势能的最小点位于参考位置 <span class="math">\(\bi y_i\)</span> 上的一个点(对各向同性势), 或者是通过 <span class="math">\(\bi y_i\)</span> 平行于旋转轴的一条线(对平行运动势). 结果, 径向力限制了原子的径向运动. 接下来的两类旋转势, <span class="math">\(V^{\text{rm} }\)</span> 和 <span class="math">\(V^{\text{rm2} }\)</span>, 大大减少甚至消除了这种效应. 第一类变体势, <span class="math">\(V^{\text{rm} }\)</span>(图6.4B), 消除了所有平行于连接参考原子和旋转轴向量的力的分量,</p>
+
+<p><span class="math">\[V^{\text{rm}}={k\over2}\sum_{i=1}^N \w_i[ \bi p_i \cdot (\bi x_i-\bi u)]^2 \tag{6.21}\]</span></p>
+
+<p>其中</p>
+
+<p><span class="math">\[\bi p_i:={ \hat{\bi v} \times \bi \W(t)(\bi y_i^0-\bi u) \over \| \hat{\bi v} \times \bi \W(t)(\bi y_i^0-\bi u) \|} \tag{6.22}\]</span></p>
+
+<p>该变体只取决于原子 <span class="math">\(i\)</span> 到由 <span class="math">\(\hat{\bi v}\)</span> 和 <span class="math">\(\bi \W(t)(\bi y_i^0-\bi u)\)</span> 张成的平面的距离 <span class="math">\(\bi p_i \cdot(\bi x_i - \bi u)\)</span>. 相应的力为</p>
+
+<p><span class="math">\[\bi F_j^{\text{rm}}=-k\w_j \left[ \bi p_j \cdot (\bi x_j-\bi u)\right] \bi p_j \tag{6.23}\]</span></p>
+
+<p><strong>无支点的径向运动势</strong></p>
+
+<p>类似于无支点的各向同性势, 我们可以得到上面势能无支点的形式. 对</p>
+
+<p><span class="math">\[\bi q_i:={ \hat{\bi v} \times \bi \W(t)(\bi y_i^0-\bi u) \over \| \hat{\bi v} \times \bi \W(t)(\bi y_i^0-\bi u) \|} \tag{6.24}\]</span></p>
+
+<p>对这种径向运动势无支点的变体形式, 势能和力分别为</p>
+
+<p><span class="math">\(\alg
+V^{\text{rm-pf}} &={k\over2}\sum_{i=1}^N \w_i [\bi q_i \cdot (\bi x_i-\bi x_c)]^2  \tag{6.25} \\
+\bi F_j^{\text{rm-pf}} &= -k \w_j \left[ \bi q_j \cdot (\bi x_j-\bi x_c)\right] \bi q_j +k{m_j\over M}\Sum_{i=1}^N \w_i[\bi q_i \cdot (\bi x_i -\bi x_c)] \bi q_i \tag{6.26}
+\ealg\)</span></p>
+
+<p><strong>二型径向运动势</strong></p>
+
+<p>如图6.4B, 由 <span class="math">\(V^{\text{rm} }\)</span> 产生的力仍包含小的二阶径向分量. 大多数情况下, 这种扰动可以容忍; 如果不能容忍, 可以使用备选的势能函数 <span class="math">\(V^{\text{rm2} }\)</span>, 它完全消除了力径向部分的贡献, 如图6.4C所示,</p>
+
+<p><span class="math">\[V^{\text{rm2}} ={k\over2} \Sum_{i=1}^N \w_i { [ (\hat{\bi v} \times (\bi x_i-\bi u) \cdot \bi \W(t)(\bi y_i^0-\bi u)]^2 \over \| \hat{\bi v} \times (\bi x_i-\bi u) \|^2 +\e'} \tag{6.27}\]</span></p>
+
+<p>其中, 引入了小参数 <span class="math">\(\e'\)</span> 以避免奇异性. 对 <span class="math">\(\e'=0\)</span> nm<sup>2</sup>, 等势能平面由 <span class="math">\(\bi x_i-\bi u\)</span> 和 <span class="math">\(\hat{\bi v}\)</span> 张成, 得到的力垂直于 <span class="math">\(\bi x_i-\bi u\)</span>, 因此不会再压缩会扩展远离或朝向旋转轴的结构部分.</p>
+
+<p>在方程6.27的分母中使用一个小的正值的 <span class="math">\(e'\)</span>(例如, <span class="math">\(\e'= 0.01\)</span> nm<sup>2</sup>, 图6.4D)会得到一个定义良好的势能函数, 并且连续的力也靠近旋转轴, 但 <span class="math">\(\e'=0\)</span> nm<sup>2</sup>时(图6.4C)不是这样. 对</p>
+
+<p><span class="math">\(\alg
+\bi r_i &:=\bi \W(t)(\bi y_i^0-\bi u) \tag{6.28} \\
+\bi s_i &:={\hat{\bi v} \times (\bi x_i-\bi u) \over \|\hat{\bi v} \times (\bi x_i-\bi u)\|} \equiv \Y_i \hat{\bi v} \times (\bi x_i-\bi u) \tag{6.29} \\
+\Y_i^* &:= {1 \over \|\hat{\bi v} \times (\bi x_i-\bi u)\|^2+\e'} \tag{6.30}
+\ealg\)</span></p>
+
+<p>作用在原子 <span class="math">\(j\)</span> 上的力为</p>
+
+<p><span class="math">\[\bi F_j^{\text{rm2} }=-k \left\{ \w_j(\bi s_j \cdot \bi r_j) \left[ {\Y_j^* \over \Y_j} \bi r_j-{\Y_j^{*2} \over \Y_j^3} (\bi s_j \cdot \bi r_j) \bi s_j \right] \right\} \times \hat{\bi v} \tag{6.31}\]</span></p>
+
+<p><strong>二型无支点径向运动势</strong></p>
+
+<p>上面势能的无支点变体形式为</p>
+
+<p><span class="math">\[V^{\text{rm2-pf} }={k \over 2} \Sum_{i=1}^N \w_i { [(\hat{\bi v} \times (\bi x_i-\bi x_c)) \cdot \bi \W(t)(\bi y_i^0-\bi y_c)]^2 \over \|\hat{\bi v} \times (\bi x_i-\bi x_c) \|^2+ \e'} \tag{6.32}\]</span></p>
+
+<p>其中</p>
+
+<p><span class="math">\(\alg
+\bi r_i &:= \W(t)(\bi y_i^0-\bi y_c) \tag{6.33} \\
+\bi s_i &:= {\hat{\bi v} \times (\bi x_i-\bi x_c) \over \|\hat{\bi v} \times (\bi x_i-\bi x_c)\|} \equiv \Y_i \hat{\bi v} \times (\bi x_i-\bi x_c) \tag{6.34} \\
+\Y_i^* &:={1\over \|\hat{\bi v} \times (\bi x_i-\bi x_c) \|^2+\e'} \tag{6.35}
+\ealg\)</span></p>
+
+<p>作用于原子 <span class="math">\(j\)</span> 上的力为</p>
+
+<p><span class="math">\(\alg
+\bi F_j^{\text{rm2-pf} } = &-k\left\{ \w_j (\bi s_j \cdot \bi r_j) \left[ {\Y_j^* \over \Y_j} \bi r_j-{\Y_j^{*2} \over \Y_j^3} (\bi s_j \cdot \bi r_j) \bi s_j\right]\right\} \times \hat{\bi v} \\
+&+k{m_j \over M} \left\{ \Sum_{i=1}^N \w_i (\bi s_i \cdot \bi r_i) \left[ {\Y_i^* \over \Y_i} \bi r_i-{\Y_i^{*2} \over \Y_i^3} (\bi s_i \cdot \bi r_i) \bi s_i\right]\right\} \times \hat{\bi v} \tag{6.36}
+\ealg\)</span></p>
+
+<h3 id="6.5.2柔性轴旋转">6.5.2 柔性轴旋转</h3>
+
+<p>如图6.3A-B所示, 固定轴旋转方案的刚体行为对于许多应用而言是一个缺点. 特别是, 当平衡的原子位置直接依赖于参考位置时, 旋转组的变形会被抑制. 为避免这种限制, 现在将方程6.26和6.32推广到图6.3C示意的&#8220;柔性轴&#8221;. 具体做法是将旋转组划分为一些列等间距的板坯, 每个板坯垂直于旋转向量, 并对每个板坯施加独立的旋转势. 图6.3C中点线表示板坯的中间平面, 大的黑点表示板坯的中心.</p>
+
+<figure>
+<img src="6.5.png" alt="图6.5: 中心位于 $n \D x$ 的高斯函数 $g_n$, 板坯距离 $\D x=1.5$ nm, $n \ge -2$. 高斯函数 $g_0$ 以粗体突出显示; 虚线表示所显示的高斯函数的总和." />
+<figcaption>图6.5: 中心位于 <span class="math">\(n \D x\)</span> 的高斯函数 <span class="math">\(g_n\)</span>, 板坯距离 <span class="math">\(\D x=1.5\)</span> nm, <span class="math">\(n \ge -2\)</span>. 高斯函数 <span class="math">\(g_0\)</span> 以粗体突出显示; 虚线表示所显示的高斯函数的总和.</figcaption>
+</figure>
+
+<p>为避免势能与力的不连续性, 我们定义了&#8220;软板坯&#8221;, 根据每个板坯 <span class="math">\(n\)</span> 对总势能函数 <span class="math">\(V^{\text{flex} }\)</span> 的贡献进行加权, 加权时使用高斯函数</p>
+
+<p><span class="math">\[g_n(\bi x_i)=\G \exp\left(-{\b_n^2(\bi x_i) \over 2\s^2}\right) \tag{6.37}\]</span></p>
+
+<p>其中心位于第 <span class="math">\(n\)</span> 个板坯中间的平面上. 这里的 <span class="math">\(\s\)</span> 为高斯函数的宽度, <span class="math">\(\D x\)</span> 为相邻板坯间的距离,</p>
+
+<p><span class="math">\[\b_n(\bi x_i) := \bi x_i \cdot \hat{\bi v} - n \D x \tag{6.38}\]</span></p>
+
+<p>最方便的一个选择是 <span class="math">\(\s=0.7 \D x\)</span>, 并且</p>
+
+<p><span class="math">\[1/\G=\Sum_{n \in Z} \exp \left(-{(n-{1\over4})^2 \over 2 \cdot 0.7^2} \right) \approx 1.75464\]</span></p>
+
+<p>这样得到的总和几乎是恒定的, 基本上与 <span class="math">\(\bi x_i\)</span> 无关(图6.5中虚线所示), 即</p>
+
+<p><span class="math">\[\Sum_{n\in Z} g_n(\bi x_i)=1+\e(\bi x_i) \tag{6.39}\]</span></p>
+
+<p>其中 <span class="math">\(\abs{\e(\bi x_i)} <1.3 \cdot 10^{-4}\)</span>. 这一选择也意味着板坯对力的各自贡献加起来等于1, 这样就不再需要进一步的归一化了.</p>
+
+<p>对每个板坯中心 <span class="math">\(\bi x_c\)</span>, 所有原子的贡献来源于其高斯加权的(也可选择使用质量加权)位置向量 <span class="math">\(g_n(\bi x_i) \bi x_i\)</span>. 瞬时板坯中心 <span class="math">\(\bi x_c^n\)</span> 根据当前位置 <span class="math">\(\bi x_i\)</span> 进行计算</p>
+
+<p><span class="math">\[\bi x_c^n={\S_{i=1}^N g_n(\bi x_i) m_i \bi x_i \over \S_{i=1}^N g_n(\bi x_i) m_i} \tag{6.40}\]</span></p>
+
+<p>而参考中心 <span class="math">\(\bi y_c^n\)</span> 根据参考位置 <span class="math">\(\bi y_i^0\)</span> 进行计算</p>
+
+<p><span class="math">\[\bi y_c^n ={\S_{i=1}^N g_n(\bi y_i^0) m_i \bi y_i^0 \over \S_{i=1}^N g_n(\bi y_i^0) m_i} \tag{6.41}\]</span></p>
+
+<p>由于 <span class="math">\(g_n\)</span> 衰减很快, 每个板坯将主要涉及距板坯中心 <span class="math">\(\approx 3\D x\)</span> 内的原子的贡献.</p>
+
+<p><strong>柔性轴势</strong></p>
+
+<p>我们考虑两种柔性轴的变体. 在第一种变体中, 将高斯加权的板坯划分过程应用到径向运动势中(方程6.26/图6.4B)中, 就得到了板坯 <span class="math">\(n\)</span> 的贡献</p>
+
+<p><span class="math">\[V^n={k\over2} \Sum_{i=1}^N \w_i g_n(\bi x_i)[ \bi q_i^n \cdot (\bi x_i-\bi x_c^n)]^2\]</span></p>
+
+<p>总的势能函数</p>
+
+<p><span class="math">\[V^{\text{flex} }=\Sum_n V^n \tag{6.42}\]</span></p>
+
+<p>注意, 方程6.26中使用的全局质心 <span class="math">\(\bi x_c\)</span> 现在被 <span class="math">\(\bi x_c^n\)</span> 代替, 它是板坯的质心. 对</p>
+
+<p><span class="math">\(\alg
+\bi q_i^n &:={\hat{\bi v} \times \bi \W(t)(\bi y_i^0-\bi y_c^n) \over \| \hat{\bi v} \times \bi \W(t)(\bi y_i^0-\bi y_c^n)\|} \tag{6.43} \\
+b_i^n &:= \bi q_i^n \cdot (\bi x_i-\bi x_c^n) \tag{6.44}
+\ealg\)</span></p>
+
+<p>作用在原子 <span class="math">\(j\)</span> 上的力为</p>
+
+<p><span class="math">\(\alg
+\bi F_j^{\text{flex} }= &-k \w_j \Sum_n g_n(\bi x_j) b_j^n \left\{\bi q_j^n-b_j^n {\b_n(\bi x_j) \over 2\s^2} \hat{\bi v} \right\} \\
+   &+k m_j \Sum_n {g_n(\bi x_j) \over \S_h g_n(\bi x_h)} \Sum_{i=1}^N \w_i g_n(\bi x_i) b_i^n \left\{ \bi q_i^n- {\b_n(\bi x_j) \over \s^2} [\bi q_i^n \cdot (\bi x_j-\bi x_c^n)] \hat{\bi v} \right\} \tag{6.45}
+\ealg\)</span></p>
+
+<p>注意, 对定义的 <span class="math">\(V^{\text{flex} }\)</span>, 板坯在空间中是固定的, 参考中心 <span class="math">\(\bi y_c^n\)</span> 也一样. 如果在模拟中, 旋转组沿 <span class="math">\(\bi v\)</span> 方向移动得太远, 它可能会进入一个没有定义参考板坯中心的区域-由于缺少附近的参考位置-这样就不可能对势能进行计算. 因此, 对这个势能, 我们给出了一个略加修改的版本, 它能够避免前面所说的问题, 具体做法是将板坯 <span class="math">\(n=0\)</span> 的中间平面附着到旋转组的中心, 这样得到的板坯会与旋转组一起移动. 通过从位置中减去组的质心 <span class="math">\(\bi x_c\)</span>,</p>
+
+<p><span class="math">\[\tilde{\bi x}_i=\bi x_i-\bi x_c, \tilde{\bi y}_i^0=\bi y_i^0-\bi y_c^0 \tag{6.46}\]</span></p>
+
+<p>这样</p>
+
+<p><span class="math">\[V^{\text{flex2} }={k\over2} \Sum_n \Sum_{i=1}^N \w_i g_n(\tilde{\bi x_i}) \left[ { (\hat{\bi v} \times \bi \W(t)(\tilde{\bi y}_i^0-\tilde{\bi y}_c^n) \over \|\hat{\bi v} \times \bi \W(t)(\tilde{\bi y}_i^0-\tilde{\bi y}_c^n)\|} \cdot (\tilde{\bi x}_i-\tilde{\bi x}_c^n) \right]^2 \tag{6.47}\]</span></p>
+
+<p>为了简化力的导数, 以及出于效率的考虑, 我们在这里假定 <span class="math">\(\bi x_c\)</span> 是恒定的, 因此 <span class="math">\(\partial \bi x_c/\partial x = \partial \bi x_c/\partial y=\partial \bi x_c/\partial z=0\)</span>, 这种得到的力误差很小(数量级为 <span class="math">\(O(1/N)\)</span> 或 <span class="math">\(O(m_j/M)\)</span>, 如果使用质量加权的话), 因此可以容忍. 利用这一假定, 力 <span class="math">\(\bi F^{\text{flex-t} }\)</span> 与方程6.45具有相同的形式.</p>
+
+<p><strong>二型柔性轴势</strong></p>
+
+<p>第二种变体是将势 <span class="math">\(V^{\text{rm2} }\)</span>(方程6.32)用于划分的板坯, 得到了无径向力贡献的柔性轴(图6.4C)</p>
+
+<p><span class="math">\[V^{\text{flex2} }={k\over2} \Sum_{i=1}^N \Sum_n \w_i g_n(\bi x_i) { [(\hat{\bi v} \times (\bi x_i-\bi x_c^n)) \cdot \bi \W(t) (\bi y_i^0-\bi y_c^n)]^2 \over \| \hat{\bi v} \times (\bi x_i-\bi x_c^n) \|^2+\e'}  \tag{6.48}\]</span></p>
+
+<p>其中</p>
+
+<p><span class="math">\(\alg
+\bi r_i^n &:= \bi \W(t)(\bi y_i^0-\bi y_c^n) \tag{6.49} \\
+\bi s_i^n &:= {\hat{\bi v} \times (\bi x_i-\bi x_c^n) \over \| \hat{\bi v} \times (\bi x_i-\bi x_c^n) \|} \equiv \y_i \hat{\bi v} \times (\bi x_i-\bi x_c^n) \tag{6.50} \\
+\y_i^* &:={1 \over \| \hat{\bi v} \times (\bi x_i-\bi x_c^n)\|^2+\e'} \tag{6.51} \\
+W_j^n &:= {g_n(\bi x_j) m_j \over \s_h g_n(\bi x_h) m_h } \tag{6.52} \\
+\bi S^n &:= \Sum_{i=1}^N \w_i g_n(\bi x_i)(\bi s_i^n \cdot \bi r_j^n) \left[ {\y_i^* \over \y_i} \bi r_i^n-{\y_i^{*2} \over \y_i^3}(\bi s_i^n \cdot \bi r_i^n) \bi s_i^n \right] \tag{6.53}
+\ealg\)</span></p>
+
+<p>作用于原子 <span class="math">\(j\)</span> 上的力为</p>
+
+<p><span class="math">\(\alg
+\bi F_j^{\text{flex2} } = & -k\left\{ \Sum_n \w_j g_n(\bi x_j) (\bi s_j^n \cdot \bi r_j^n) \left[ {\y_j^* \over \y_j} \bi r_j^n-{\y_j^{*2} \over \y_j^3} (\bi s_j^n \cdot \bi r_j^n) \bi s_j^n\right] \right\} \times \hat{\bi v} \\
+& +k\left\{ \Sum_n W_j^n \bi S^n \right\} \times \hat{\bi v} -k \left\{ \Sum_n W_j^n {\b_n(\bi x_j) \over \s^2} {1\over \y_j} \bi s_j^n \cdot \bi S^n \right\} \hat{\bi v} \\
+& +{k \over 2}\left\{ \Sum_n \w_j g_n(\bi x_j) {\b_n(\bi x_j) \over \s^2} {\y_j^* \over \y_j^2} (\bi s_j^n \cdot \bi r_j^n)^2 \right\} \hat{\bi v}
+\tag{6.54}
+\ealg\)</span></p>
+
+<p>应用变换(6.46)可得到二型柔性势&#8220;耐平动&#8221;的形式, <span class="math">\(V^{\text{flex2-t} }\)</span>. 再次, 假定 <span class="math">\(\partial \bi x_c/\partial x\)</span>, <span class="math">\(\partial \bi x_c/\partial y\)</span>, <span class="math">\(\partial \bi x_c/\partial z\)</span> 很小, 得到的方程 <span class="math">\(V^{\text{flex2-t} }\)</span> 和 <span class="math">\(\bi F^{\text{flex2-t} }\)</span> 分别类似于 <span class="math">\(V^{\text{flex2} }\)</span> 和 <span class="math">\(\bi F^{\text{flex2} }\)</span>.</p>
+
+<h3 id="6.5.3用法">6.5.3 用法</h3>
+
+<p>为使用应用强制旋转, 可通过<code>.mdp</code>输入文件中的<code>rot_group0</code>, <code>rot_group1</code>等索引组定义受到旋转势能作用的粒子 <span class="math">\(i\)</span>. 参考位置 <span class="math">\(\bi y_i^0\)</span> 由提供给<code>grompp</code>的特殊<code>.trr</code>文件中读取. 如果发现发现这样的文件, 会使用 <span class="math">\(\bi x_i(t=0)\)</span> 作为参考位置, 并写入<code>.trr</code>, 这样它们就可以用于随后的设置. 势能的所有参数, 如 <span class="math">\(k\)</span>, <span class="math">\(\e'\)</span> 等(表 6.1 ). 由<code>.mdp</code>参数提供; <code>rot_type</code>选择势能的类型. 选项<code>rot_massw</code>选择是否使用质量加权平均. 对柔性势能, 截断值 <span class="math">\(g_n^{\text{min} }\)</span>(典型值为0.001), 可确保只计算对 <span class="math">\(V\)</span> 和 <span class="math">\(F\)</span> 有显著贡献的部分, 即那些 <span class="math">\(g_n(\bi x) < g_n^{\text{min} }\)</span> 的项被省略. 表6.2总结了写入到附加输出文件的一些量, 将在下面讨论它们.</p>
+
+<table><caption> 表6.1: 各种旋转势能所用的参数. X表示给定的势能实际使用的参数.</caption>
+<tr>
+<td style="text-align:center;">  参数                       </td>
+<td style="text-align:center;"></td>
+<td style="text-align:left;"> \(k\) </td>
+<td style="text-align:center;">\(\hat{\bi v}\)</td>
+<td style="text-align:center;">\(\bi u\)</td>
+<td style="text-align:center;">\(\w\)</td>
+<td style="text-align:center;">\(\e'\)</td>
+<td style="text-align:center;">\(\D x\)</td>
+<td style="text-align:center;">\(g_n^{\text{min}}\)</td>
+</tr>
+<tr>
+<td style="text-align:center;"> <code>.mdp</code>输入变量名 </td>
+<td style="text-align:center;"></td>
+<td style="text-align:left;"> k   </td>
+<td style="text-align:center;">vec</td>
+<td style="text-align:center;">pivot</td>
+<td style="text-align:center;">rate</td>
+<td style="text-align:center;">eps</td>
+<td style="text-align:center;">slab_dist</td>
+<td style="text-align:center;">min_gauss</td>
+</tr>
+<tr>
+<td style="text-align:center;">  单位                       </td>
+<td style="text-align:center;"></td>
+<td style="text-align:left;"> kJ mol nm<sup>-2</sup> </td>
+<td style="text-align:center;">-</td>
+<td style="text-align:center;">nm</td>
+<td style="text-align:center;"><sup>o</sup>/ps</td>
+<td style="text-align:center;">nm<sup>2</sup></td>
+<td style="text-align:center;">nm</td>
+<td style="text-align:center;">-</td>
+</tr>
+<tr>
+<td colspan="9" style="text-align:center;"> </td>
+</tr>
+<tr>
+<td style="text-align:center;">固定轴势能:</td>
+<td style="text-align:center;"> 方程 </td>
+<td colspan="8" style="text-align:center;"></td>
+</tr>
+<tr>
+<td style="text-align:left;">各向同性 \(V^{\text{iso} }\)</td>
+<td style="text-align:center;"> (6.9)  </td>
+<td style="text-align:center;">X</td>
+<td style="text-align:left;"> X </td>
+<td style="text-align:center;">X</td>
+<td style="text-align:center;">X</td>
+<td style="text-align:center;">-</td>
+<td style="text-align:center;">-</td>
+<td colspan="2" style="text-align:center;">-</td>
+</tr>
+<tr>
+<td style="text-align:left;">-无支点  \(V^{\text{iso-pf} }\)</td>
+<td style="text-align:center;"> (6.12) </td>
+<td style="text-align:center;">X</td>
+<td style="text-align:left;"> X </td>
+<td style="text-align:center;">-</td>
+<td style="text-align:center;">X</td>
+<td style="text-align:center;">-</td>
+<td style="text-align:center;">-</td>
+<td colspan="2" style="text-align:center;">-</td>
+</tr>
+<tr>
+<td style="text-align:left;">平行运动 \(V^{\text{pm} }\)</td>
+<td style="text-align:center;"> (6.16) </td>
+<td style="text-align:center;">X</td>
+<td style="text-align:left;"> X </td>
+<td style="text-align:center;">X</td>
+<td style="text-align:center;">X</td>
+<td style="text-align:center;">-</td>
+<td style="text-align:center;">-</td>
+<td colspan="2" style="text-align:center;">-</td>
+</tr>
+<tr>
+<td style="text-align:left;">-无支点  \(V^{\text{pm-pf} }\)</td>
+<td style="text-align:center;"> (6.20) </td>
+<td style="text-align:center;">X</td>
+<td style="text-align:left;"> X </td>
+<td style="text-align:center;">-</td>
+<td style="text-align:center;">X</td>
+<td style="text-align:center;">-</td>
+<td style="text-align:center;">-</td>
+<td colspan="2" style="text-align:center;">-</td>
+</tr>
+<tr>
+<td style="text-align:left;">径向运动 \(V^{\text{rm} }\)</td>
+<td style="text-align:center;"> (6.21) </td>
+<td style="text-align:center;">X</td>
+<td style="text-align:left;"> X </td>
+<td style="text-align:center;">X</td>
+<td style="text-align:center;">X</td>
+<td style="text-align:center;">-</td>
+<td style="text-align:center;">-</td>
+<td colspan="2" style="text-align:center;">-</td>
+</tr>
+<tr>
+<td style="text-align:left;">-无支点  \(V^{\text{rm-pf} }\)</td>
+<td style="text-align:center;"> (6.26) </td>
+<td style="text-align:center;">X</td>
+<td style="text-align:left;"> X </td>
+<td style="text-align:center;">-</td>
+<td style="text-align:center;">X</td>
+<td style="text-align:center;">-</td>
+<td style="text-align:center;">-</td>
+<td colspan="2" style="text-align:center;">-</td>
+</tr>
+<tr>
+<td style="text-align:left;">二型径向 \(V^{\text{rm2} }\)</td>
+<td style="text-align:center;"> (6.27) </td>
+<td style="text-align:center;">X</td>
+<td style="text-align:left;"> X </td>
+<td style="text-align:center;">X</td>
+<td style="text-align:center;">X</td>
+<td style="text-align:center;">X</td>
+<td style="text-align:center;">-</td>
+<td colspan="2" style="text-align:center;">-</td>
+</tr>
+<tr>
+<td style="text-align:left;">-无支点  \(V^{\text{rm2-pf} }\)</td>
+<td style="text-align:center;"> (6.32) </td>
+<td style="text-align:center;">X</td>
+<td style="text-align:left;"> X </td>
+<td style="text-align:center;">-</td>
+<td style="text-align:center;">X</td>
+<td style="text-align:center;">X</td>
+<td style="text-align:center;">-</td>
+<td colspan="2" style="text-align:center;">-</td>
+</tr>
+<tr>
+<td colspan="9" style="text-align:center;"> </td>
+</tr>
+<tr>
+<td style="text-align:center;">柔性轴势能:</td>
+<td style="text-align:center;"> 方程 </td>
+<td colspan="8" style="text-align:center;"></td>
+</tr>
+<tr>
+<td style="text-align:left;">柔性 \(V^{\text{flex} }\)</td>
+<td style="text-align:center;"> (6.42) </td>
+<td style="text-align:center;">X</td>
+<td style="text-align:left;"> X </td>
+<td style="text-align:center;">-</td>
+<td style="text-align:center;">X</td>
+<td style="text-align:center;">-</td>
+<td style="text-align:center;">X</td>
+<td colspan="2" style="text-align:center;">X</td>
+</tr>
+<tr>
+<td style="text-align:left;">-耐平动 \(V^{\text{flex-t} }\)</td>
+<td style="text-align:center;"> (6.47) </td>
+<td style="text-align:center;">X</td>
+<td style="text-align:left;"> X </td>
+<td style="text-align:center;">-</td>
+<td style="text-align:center;">X</td>
+<td style="text-align:center;">-</td>
+<td style="text-align:center;">X</td>
+<td colspan="2" style="text-align:center;">X</td>
+</tr>
+<tr>
+<td style="text-align:center;">二型柔性势 \(V^{\text{flex2} }\)</td>
+<td style="text-align:center;"> (6.48) </td>
+<td style="text-align:center;">X</td>
+<td style="text-align:left;"> X </td>
+<td style="text-align:center;">-</td>
+<td style="text-align:center;">X</td>
+<td style="text-align:center;">X</td>
+<td style="text-align:center;">X</td>
+<td colspan="2" style="text-align:center;">X</td>
+</tr>
+<tr>
+<td style="text-align:left;">-耐平动 \(V^{\text{flex2-t} }\)</td>
+<td style="text-align:center;"> -      </td>
+<td style="text-align:center;">X</td>
+<td style="text-align:left;"> X </td>
+<td style="text-align:center;">-</td>
+<td style="text-align:center;">X</td>
+<td style="text-align:center;">X</td>
+<td style="text-align:center;">X</td>
+<td colspan="2" style="text-align:center;">X</td>
+</tr>
+</table>
+
+<table><caption> 表 6.2: 强制旋转模拟时记录在输出文件中的物理量. 所有板坯数据每<code>nstsout</code>步输出一次, 其他旋转数据每<code>nstrout</code>步输出一次.</caption>
+<tr>
+<th style="text-align:center;"> 物理量 </th>
+<th style="text-align:center;">单位</th>
+<th style="text-align:left;"> 方程 </th>
+<th style="text-align:center;">输出文件</th>
+<th style="text-align:center;">固定</th>
+<th style="text-align:center;">可变</th>
+</tr>
+<tr>
+<td style="text-align:left;">\(V(t)\)</td>
+<td style="text-align:center;"> kJ/mol </td>
+<td style="text-align:center;">参见6.1</td>
+<td style="text-align:left;"> <code>rotation</code>  </td>
+<td style="text-align:center;">X</td>
+<td colspan="2" style="text-align:center;">X</td>
+</tr>
+<tr>
+<td style="text-align:left;">\(\q_{\text{ref} }(t)\)</td>
+<td style="text-align:center;"> 度     </td>
+<td style="text-align:center;">\(\q_{\text{ref} }(t)＝\w t\)</td>
+<td style="text-align:left;"> <code>rotation</code>  </td>
+<td style="text-align:center;">X</td>
+<td colspan="2" style="text-align:center;">X</td>
+</tr>
+<tr>
+<td style="text-align:left;">\(\q_{\text{av} }(t)\)</td>
+<td style="text-align:center;"> 度     </td>
+<td style="text-align:center;">(6.55)</td>
+<td style="text-align:left;"> <code>rotation</code>  </td>
+<td style="text-align:center;">X</td>
+<td colspan="2" style="text-align:center;">-</td>
+</tr>
+<tr>
+<td style="text-align:center;">\(\q_{\text{fit} }(t),\q_{\text{fit} }(t,n)\)</td>
+<td style="text-align:center;"> 度     </td>
+<td style="text-align:center;">(6.57)</td>
+<td style="text-align:left;"> <code>rotangles</code> </td>
+<td style="text-align:center;">-</td>
+<td colspan="2" style="text-align:center;">X</td>
+</tr>
+<tr>
+<td style="text-align:left;">\(\bi y_0(n),\bi x_0(t,n)\)</td>
+<td style="text-align:center;"> nm     </td>
+<td style="text-align:center;">(6.40, 6.41)</td>
+<td style="text-align:left;"> <code>rotslabs</code>  </td>
+<td style="text-align:center;">-</td>
+<td colspan="2" style="text-align:center;">X</td>
+</tr>
+<tr>
+<td style="text-align:left;">\(\t(t)\)</td>
+<td style="text-align:center;"> kJ/mol </td>
+<td style="text-align:center;">(6.58)</td>
+<td style="text-align:left;"> <code>rotation</code>  </td>
+<td style="text-align:center;">X</td>
+<td colspan="2" style="text-align:center;">-</td>
+</tr>
+<tr>
+<td style="text-align:left;">\(\t(t, n)\)</td>
+<td style="text-align:center;"> kJ/mol </td>
+<td style="text-align:center;">(6.58)</td>
+<td style="text-align:left;"> <code>rottorque</code> </td>
+<td style="text-align:center;">-</td>
+<td colspan="2" style="text-align:center;">X</td>
+</tr>
+</table>
+
+<p><strong>旋转组的角度: 固定轴</strong></p>
+
+<p>对固定轴旋转, 组相对于参考组的平均角度 <span class="math">\(\q_{\text{av} }(t)\)</span>, 是通过所有旋转组原子到其参考位置的距离加权的角度偏差来确定的,</p>
+
+<p><span class="math">\[\q_{\text{av} }=\Sum_{i=1}^N r_i \q_i/\Sum_{i=1}^N r_i \tag{6.55}\]</span></p>
+
+<p>这里 <span class="math">\(r_i\)</span> 为参考位置到旋转轴的距离, 偏差角 <span class="math">\(\q_i\)</span> 由原子位置决定, 投射到垂直于旋转轴并通过支点 <span class="math">\(\bi u\)</span> 的平面(参考方程6.15中 <span class="math">\(\bot\)</span> 的定义),</p>
+
+<p><span class="math">\[\cos\q_i={ (\bi y_i-\bi u)^\bot \cdot (\bi x_i-\bi u)^\bot \over \|(\bi y_i-\bi u)^\bot \cdot (\bi x_i-\bi u)^\bot \|} \tag{6.56}\]</span></p>
+
+<p>如果实际结构的旋转在参考前, <span class="math">\(\q_{\text{av} }\)</span> 的符号选择使得 <span class="math">\(\q_{\text{av} } >0\)</span>.</p>
+
+<p><strong>旋转组角度: 柔性轴</strong></p>
+
+<p>对于柔性轴旋转, 会提供两个输出, 整个旋转组的角度和板坯中片段的分开角度. 确定整个旋转组的角度时, 会使用RMSD匹配将 <span class="math">\(\bi x_i\)</span> 匹配到 <span class="math">\(t=0\)</span> 时刻的参考位置 <span class="math">\(\bi y_i^0\)</span>, 得到的 <span class="math">\(\q_{\text{fit} }\)</span> 是参考为达到最佳匹配必须绕 <span class="math">\(\hat v\)</span> 旋转的角度,</p>
+
+<p><span class="math">\[\text{RMSD}(\bi x_i, \bi \W(\q_{\text{fit} }) \bi y_i^0)\overset{!}{=} \text{min} \tag{6.57}\]</span></p>
+
+<p>为了确定每个板坯 <span class="math">\(n\)</span> 的局部角度, 会使用板坯 <span class="math">\(n\)</span> 的高斯函数对参考和实际位置进行加权, 方程6.57计算的 <span class="math">\(\q_{\text{fit} }(t,n)\)</span> 来自于高斯加权的位置.</p>
+
+<p>对于所有的角度, <code>.mdp</code>输入选项<code>rot_fit_method</code>控制是进行正常的RMSD匹配, 还是在匹配时将每个位置 <span class="math">\(\bi x_i\)</span> 置于距旋转轴相同的距离作为其参考对应 <span class="math">\(\bi y^0_i\)</span>. 对后一种情况, RMSD只测量了角度差异, 不包含径向部分.</p>
+
+<p><strong>通过搜索最小能量确定角度</strong></p>
+
+<p>作为替代方法, 对<code>rot_fit_method = potential</code>, 旋转组的角度取为旋转势能最小时对应的角度. 因此, 需要对围绕当前参考角度的一系列角度计算其对应的旋转势能. 在这种情况下, <code>rotangles.log</code>输出文件包含了所选角度对应的旋转势能值, <code>rotation.xvg</code>列出了最小势能对应的角度.</p>
+
+<p><strong>力矩</strong></p>
+
+<p>对固定轴转动, 旋转势对应的力矩 <span class="math">\(\bi \t(t)\)</span> 如下</p>
+
+<p><span class="math">\[\bi \t(t)=\Sum_{i=1}^{N} \bi r_i(t) \times \bi f_i^\bot(t) \tag{6.58}\]</span></p>
+
+<p>其中 <span class="math">\(\bi r_i(t)\)</span> 为旋转轴到 <span class="math">\(\bi x_i(t)\)</span> 的距离向量, <span class="math">\(\bi f_i^\bot(t)\)</span> 为垂直于 <span class="math">\(\bi r_i(t)\)</span> 和 <span class="math">\(\hat{\bi v}\)</span> 的力分量. 对柔性轴旋转, 会使用板坯的局部旋转轴和高斯加权的位置计算每个板坯的 <span class="math">\(\bi \t_n\)</span>.</p>
