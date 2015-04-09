@@ -579,3 +579,549 @@ V_d(\phi_{ijkl}) &= k f_n^d(\phi_{ijkl}) \tag{4.73}
 <p><strong>角度</strong>: <span class="math">\(x\)</span> 是以度为单位的角度. 表格应从0开始直到并包括180度；导数以度为单位.</p>
 
 <p><strong>二面角</strong>: <span class="math">\(x\)</span> 是以度为单位的二面角. 表格应从&#8211;180直到并包括180度, 使用IUPAC/IUB约定, 即零为顺式, 导数以度为单位.</p>
+
+<h2 id="4.6方法">4.6 方法</h2>
+
+<h3 id="4.6.1排除和1-4相互作用">4.6.1 排除和1&#8211;4相互作用</h3>
+
+<p>一个分子链中互相邻近的原子, 即那些以共价键结合, 或者通过一个或两个原子相连的原子分别被称为 <strong>第一相邻原子</strong>, <strong>第二相邻原子</strong> 和 <strong>第三相邻原子</strong>(见图4.18). 由于原子 <strong>i</strong> 与原子 <strong>i+1</strong> 和 <strong>i+2</strong> 之间的相互作用主要是量子力学的, 因此不能用Lennard-Jones势进行描述. 作为替代, 我们假定这些相互作用可以利用简谐键项或约束(<strong>i</strong>, <strong>i+1</strong>)和简谐键角项(<strong>i</strong>, <strong>i+2</strong>)进行充分的描述. 因此, 将第一和第二相邻原子(原子 <strong>i+1</strong>, <strong>i+2</strong>) 从原子 <strong>i</strong> 的Lennard-Jones相互作用列表中 <strong>排除</strong>. 原子 <strong>i+1</strong>, <strong>i+2</strong> 被称为原子 <strong>i</strong> 的排除原子.</p>
+
+<figure>
+<img src="4.18.png" alt="图4.18: 沿烷烃链的原子" />
+<figcaption>图4.18: 沿烷烃链的原子</figcaption>
+</figure>
+
+<p>对第三个相邻原子, 正常的Lennard-Jones排斥作用有时仍然过强, 这意味着当将其应用于分子时, 分子会因内部张力发生变形或者破碎, 对顺式构象的碳-碳相互作用情况尤其如此(如顺丁烷). 因此, 对一些这样的相互作用, , 其Lennard-Jones排斥在GROMACS力场中被减弱了, 这是通过维持一个单独的1&#8211;4作用列表和正常的Lennard-Jones参数列表实现的. 在其他力场中, 如OPLS[101], 标准的Lennard-Jones参数减少为原来的1/2, 但在这种情况下, 也会对色散(r<sup>-6</sup>)和库伦相互作用进行相应的缩放. GROMACS可以使用这些方法中的任何一种.</p>
+
+<h3 id="4.6.2电荷组">4.6.2 电荷组</h3>
+
+<p>原则上, MD中力的计算复杂度是 <span class="math">\(O(N^2)\)</span>. 因此, 对非键力(NBF, non-bonded force)的计算我们使用了截断: 只有彼此间的距离在一定范围内的粒子才会相互作用. 这将NBF计算的复杂度减少为 <span class="math">\(O(N)\)</span>(典型的是 <span class="math">\(100N\)</span> 到 <span class="math">\(200N\)</span>), 但同时也引入了误差. 在大多数情况下, 误差是可以接受的, 除了使用截断会导致电荷产生时. 在这种情况下, 应该考虑使用GROMACS提供的格点加和方法.</p>
+
+<p>让我们考虑水分子与另一个原子的相互作用. 如果在原子-原子的基础上使用普通的截断, 我们可能包括了原子和氧之间的相互作用(电荷为&#8211;0.82), 而没有包括质子的平衡电荷, 结果将导致体系中出现了一个很大的偶极矩. 因此, 我们必须保证原子组的总电荷为0. 这些组被称为 <strong>电荷组</strong>. 注意, 如果对长程静电相互作用使用了好的处理方法(如粒子网格Ewald方法, 见4.8.2节), 就不需要将电荷组维持在一起.</p>
+
+<h3 id="4.6.3组方案中截断的处理">4.6.3 组方案中截断的处理</h3>
+
+<p>GROMACS在处理截断时相当灵活, 这意味有大量的参数可供设置. 这些参数在<code>grommp</code>的输入文件中设置. 影响到截断相互作用的参数有两类: 你可以选择在每种情况下使用哪种相互作用, 在邻区搜索中使用哪种截断.</p>
+
+<p>对于库伦和范德华相互作用有相应的相互作用类型选择词(<code>vdwtype</code>和<code>coulombtype</code>项)和两个参数, 一共六个非键相互作用参数. 参见7.3节对这些参数的完整描述.</p>
+
+<p>邻区搜索(NS, neighbor searching)可使用单程或双程方法进行. 由于前者只是后者的特例, 我们将只讨论更一般的双程方法. 在这种情况下, NS会使用两个半径: <code>rlist</code>和max(<code>rcoulomb</code>,<code>rvdw</code>). 通常每10个时间步或每20 fs(参数<code>nstlist</code>)重新构建一次邻区列表. 在邻区列表中, 会存储所有落在<code>rlist</code>范围内的相互作用对. 此外, 对于没有落在<code>rlist</code>范围内但落在max(<code>rcoulomb</code>,<code>rvdw</code>)范围内的粒子对, 它们之间的相互作用在邻区搜索过程中也会被计算. 力和能量会分开存储, 在连续的NS之间, 在每个积分步会将它们添加到短程力中. 如果<code>rlist</code> = max(<code>rcoulomb</code>,<code>rvdw</code>), 生成邻区列表时不会计算力. 根据短程力与长程力的总和来计算维里, 这意味着在非NS步中维里可能有稍微的不对称. 当使用混合精度的<code>mdrun</code>时, 维里几乎总是不对称的, 因为非对角元素与加和中的每个元素相差不大. 在大多数情况下, 这些都不是真正的问题, 因为维里的涨落可以比平均值大两个数量级.</p>
+
+<p>除了普通截断, 由于需要使用电荷组, 表4.2中所有的相互作用函数都要求使用比为其形式指定的 <span class="math">\(r_c\)</span> 更大的半径进行邻区搜索. 额外半径的典型值是0.25 nm(粗略地等于电荷组中两原子之间的最大距离加上电荷组在邻区列表更新中可扩散的距离).</p>
+
+<table><caption>表4.2: 非键相互作用不同函数形式的参数</caption>
+<tr>
+<th colspan="2" style="text-align:center;">类型</th>
+<th colspan="2" style="text-align:center;">参数</th>
+</tr>
+<tr>
+<td rowspan="4" style="text-align:center;">库仑</td>
+<td style="text-align:center;">普通截断</td>
+<td colspan="3" style="text-align:left;">\(r_c, \ve_r\)</td>
+</tr>
+<tr>
+<td style="text-align:center;">反应场</td>
+<td colspan="3" style="text-align:left;">\(r_c, \ve_{rf}\)</td>
+</tr>
+<tr>
+<td style="text-align:center;">移位函数</td>
+<td colspan="3" style="text-align:left;">\(r_1, r_c, \ve_r\)</td>
+</tr>
+<tr>
+<td style="text-align:center;">切换函数</td>
+<td colspan="3" style="text-align:left;">\(r_1, r_c, \ve_r\)</td>
+</tr>
+<tr>
+<td rowspan="3" style="text-align:left;">VdW</td>
+<td style="text-align:center;">普通截断</td>
+<td colspan="3" style="text-align:left;">\(r_c\)</td>
+</tr>
+<tr>
+<td style="text-align:center;">移位函数</td>
+<td colspan="3" style="text-align:left;">\(r_1, r_c\)</td>
+</tr>
+<tr>
+<td style="text-align:center;">切换函数</td>
+<td colspan="3" style="text-align:left;">\(r_1, r_c\)</td>
+</tr>
+</table>
+
+<h2 id="4.7虚拟相互作用位点">4.7 虚拟相互作用位点</h2>
+
+<p>在GROMACS中可以各种方式使用虚拟相互作用位点(在GROMACS 3.3以前的版本中被称为哑原子). 我们将虚拟位点的位置 <span class="math">\(\bi r_s\)</span> 写为其他粒子位置 <span class="math">\(\bi r_i\)</span> 的函数: <span class="math">\(\bi r_s = f(\bi r_1..\bi r_n)\)</span>, 这样就可以在力的计算中使用虚拟位点了, 它可能带有电荷或者涉及其他相互作用. 作用于虚拟位点上的力必须以一种自洽的方式被重新分配到有质量的粒子上. 在参考文献[102]中可以找到一个较好的方. 我们可以将势能写为:</p>
+
+<p><span class="math">\[V = V (\bi r_s, \bi r_1,...,\bi r_n) = V^*(\bi r_1,...,\bi r_n) \tag{4.141}\]</span></p>
+
+<p>作用于粒子 <span class="math">\(i\)</span> 上的力为:</p>
+
+<p><span class="math">\[\bi F_i = - \opar{V^*}{\bi r_i} = -\opar{V}{\bi r_i}-\opar{V}{\bi r_s} \opar{\bi r_s}{\bi r_i} = \bi F_i^{direct} + \bi F_i' \tag{4.142}\]</span></p>
+
+<p>第一项是正常的力, 第二项是因虚拟位点引起的作用于粒子 <span class="math">\(i\)</span> 上的力, 可以将它写为张量形式:</p>
+
+<p><span class="math">\[\bi F_i'=\bmat
+\opar{x_s}{x_i} & \opar{y_s}{x_i} & \opar{z_s}{x_i} \\
+\opar{x_s}{y_i} & \opar{y_s}{y_i} & \opar{z_s}{y_i} \\
+\opar{x_s}{z_i} & \opar{y_s}{z_i} & \opar{z_s}{z_i} \\
+\ebmat \bi F_s \tag{4.143}\]</span></p>
+
+<p>其中 <span class="math">\(\bi F_s\)</span> 为虚拟位点上的力, <span class="math">\(x_s\)</span>, <span class="math">\(y_s\)</span> 和 <span class="math">\(z_s\)</span> 为虚拟位点的坐标. 这样, 合力和总的力矩都是守恒的.</p>
+
+<figure>
+<img src="4.19.png" alt="图4.19: GROMACS中六种不同类型虚拟位点的构建方式. 黑色为构建原子, 灰色为虚拟位点." />
+<figcaption>图4.19: GROMACS中六种不同类型虚拟位点的构建方式. 黑色为构建原子, 灰色为虚拟位点.</figcaption>
+</figure>
+
+<p>当使用虚拟位点时, 维里的计算(方程3.24)并不简单. 由于维里涉及到所有原子的加和(而不仅虚拟位点), 在计算维里 <strong>之前</strong>, 虚拟位点上的力必须被重新分配到原子上(使用方程4.143). 在一些特殊的情况下, 原子上的力可以写为虚拟位点上的力的线性组合(下面的类型2和类型3), 计算维里时是否重新分配力没有区别. 然而, 一般情况下, 应该首先进行力的重新分配.</p>
+
+<p>在GROMACS中, 从周围原子构建虚拟位点的方法共有六种, 我们按构建原子的数目对其进行分类. <strong>注意</strong>, 所有提到的位点类型都可以利用类型3fd(归一化的, 平面内)和3out(为归一化, 平面外)进行构造. 然而, 涉及到的计算量按列表顺序迅速增大, 因此我们强烈推荐使用第一个适合的虚拟位点类型, 只要它能满足一定的目的. 图4.19给出了6种可用的虚拟位点构建方式. 概念上最简单的构建类型是线性组合:</p>
+
+<p><span class="math">\[\bi r_s = \Sum_{i=1}^N \w_i \bi r_i \tag{4.144}\]</span></p>
+
+<p>使用相同的权重分重新分配力:</p>
+
+<p><span class="math">\[\bi F_i'=\w_i \bi F_s \tag{4.145}\]</span></p>
+
+<p>GROMACS支持的虚拟位点类型将在下面列出. 虚拟位点中的构建原子也可以是虚拟位点自身, 但仅当它们处于列表中的较高位置时, 即虚拟位点可以利用比虚拟位点简单的&#8220;粒子&#8221;进行构建.</p>
+
+<p><strong>2.</strong> 两个原子的线性组合(图4.19 2):</p>
+
+<p><span class="math">\[\w_i = 1 - a, \w_j = a \tag{4.146}\]</span></p>
+
+<p>这种情况下虚拟位点位于通过原子 <span class="math">\(i\)</span> 和 <span class="math">\(j\)</span> 的线上.</p>
+
+<p><strong>3.</strong> 三个原子的线性组合(图4.19 3):</p>
+
+<p><span class="math">\[\w_i = 1 - a - b, \w_j = a,  \w_k = b \tag{4.147}\]</span></p>
+
+<p>这种情况下虚拟位点位于另外三个原子构成的平面上.</p>
+
+<p><strong>3fd.</strong> 在三个原子构成的平面中, 具有固定的距离(图4.19 3fd):</p>
+
+<p><span class="math">\[\bi r_s=\bi r_i+b {\bi r_{ij}+a \bi r_{jk} \over \abs{\bi r_{ij}+a\bi r_{jk}} } \tag{4.148}\]</span></p>
+
+<p>这种情况下虚拟位点位于其他三个粒子所构成的平面中, 与原子 <span class="math">\(i\)</span> 的距离为 <span class="math">\(|b|\)</span>. 由虚拟位点上的力引起的粒子 <span class="math">\(i\)</span>, <span class="math">\(j\)</span> 和 <span class="math">\(k\)</span> 上的力为:</p>
+
+<p><span class="math">\(\alg
+\bi F_i' &= \bi F_s - \g(\bi F_s-\bi p)& \\
+\bi F_j' &=    (1-a)  \g(\bi F_s-\bi p)& \\
+\bi F_k' &=          a\g(\bi F_s-\bi p)& \\
+\g & = {b \over |\bi r_{ij}+a\bi r_{jk} |} \\
+\bi p &= {\bi r_{is} \cdot \bi F_s \over \bi r_{is} \cdot \bi r_{is} } \bi r_{is}
+\ealg
+\tag{4.149}\)</span></p>
+
+<p><strong>3fad.</strong> 在三个原子所构成的平面中, 具有固定的角度和距离(图 4.19 3fad):</p>
+
+<p><span class="math">\(\alg
+\bi r_s &=\bi r_i+d\cos\q{\bi r_{ij} \over |\bi r_{ij}|} +d\cos\q{\bi r_\bot \over |\bi r_\bot|} \\
+\bi r_\bot &= \bi r_{jk}-{\bi r_{ij} \cdot \bi r_{jk} \over \bi r_{ij} \cdot \bi r_{ij} } \bi r_{ij}
+\ealg
+\tag{4.150}\)</span></p>
+
+<p>这种情况下虚拟位点位于其他三个粒子所构成的平面中, 与原子 <span class="math">\(i\)</span> 的距离为 <span class="math">\(|d|\)</span>, 与 <span class="math">\(\bi r_{ij}\)</span> 所成的角度为 <span class="math">\(\a\)</span>. 原子 <span class="math">\(k\)</span> 定义了平面以及角度的方向. <strong>注意</strong>, 在这种情况下必须明确指定 <span class="math">\(b\)</span> 和 <span class="math">\(\a\)</span> 的, 以代替 <span class="math">\(a\)</span> 和 <span class="math">\(b\)</span>(也可参见5.2.2节). 由虚拟位点上的力引起的粒子 <span class="math">\(i\)</span>, <span class="math">\(j\)</span> 和 <span class="math">\(k\)</span> 上的力为(<span class="math">\(\bi r_\bot\)</span> 的定义如方程4.150):</p>
+
+<p><span class="math">\(\alg
+\bi F_i' &= \bi F_s -  &{d\cos\q \over |\bi r_{ij}|} \bi F_1 + &{d \sin\q \over |\bi r_\bot|}\left({\bi r_{ij} \cdot \bi r_{jk} \over \bi r_{ij} \cdot \bi r_{ij}} \bi F_2 + \bi F_3\right)  \\
+\bi F_j' &=          &{d\cos\q \over |\bi r_{ij}|} \bi F_1 - &{d \sin\q \over |\bi r_\bot|}\left(\bi F_2+{\bi r_{ij} \cdot \bi r_{jk} \over \bi r_{ij} \cdot \bi r_{ij}} \bi F_2 + \bi F_3\right)  \\
+\bi F_k' &=    &{ }                                          &{d \sin\q \over |\bi r_\bot|}\bi F_2  \\
+\bi F_1  &= \bi F_s-{\bi r_{ij} \cdot \bi F_s \over \bi r_{ij} \cdot \bi r_{ij} } \bi r_{ij} \\
+\bi F_2  &= \bi F_1-{\bi r_\bot \cdot \bi F_s \over \bi r_\bot \cdot \bi r_\bot } \bi r_\bot \\
+\bi F_3  &= \bi     {\bi r_{ij} \cdot \bi F_s \over \bi r_{ij} \cdot \bi r_{ij} } \bi r_\bot
+\tag{4.151}
+\ealg\)</span></p>
+
+<p><strong>3out.</strong> 三个原子的非线性组合, 平面外(图4.19 3out):</p>
+
+<p><span class="math">\[\bi r_s =  \bi r_i+a\bi r_{ij}+b\bi r_{ik}+c(\bi r_{ij} \times \bi r_{ik}) \tag{4.152}\]</span></p>
+
+<p>构建的虚拟位点位于其他原子构成的平面外. 由虚拟位点上的力引起的粒子 <span class="math">\(i\)</span>, <span class="math">\(j\)</span> 和 <span class="math">\(k\)</span> 上的力为:</p>
+
+<p><span class="math">\[\alg
+\bi F_j' &= \bmat
+a        & -cz_{ik} &  cy_{ik} \\
+cz_{ik}  & a        & -cx_{ik} \\
+-cy_{ik} &  cx_{ik} & a
+\ebmat \bi F_s \\
+\bi F_k' &= \bmat
+b        &  cz_{ij} & -cy_{ij} \\
+-cz_{ij} & b        &  cx_{ij} \\
+ cy_{ij} & -cx_{ij} & b
+\ebmat \bi F_s \\
+\bi F_i' &= \bi F_s - \bi F_j' -\bi F_k'
+\ealg
+\tag{4.153}\]</span></p>
+
+<figure>
+<img src="4.20.png" alt="图4.20: 新的4fdn虚拟位点的构建方法. 即便所有构建原子都处于同一平面内时, 这种虚拟位点也是稳定的." />
+<figcaption>图4.20: 新的4fdn虚拟位点的构建方法. 即便所有构建原子都处于同一平面内时, 这种虚拟位点也是稳定的.</figcaption>
+</figure>
+
+<p><strong>4fdn.</strong> 由四个原子构建, 具有固定的距离, 见图4.20. 这种构建有点复杂. 由于之前的构建类型(4fd)不稳定, 这迫使我们引入了这种更加复杂的构建:</p>
+
+<p><span class="math">\(\alg
+\bi r_{ja} &= a \bi r_{ik}-\bi r_{ij} = a(\bi x_k-\bi x_i)-(\bi x_j-\bi x_i) \\
+\bi r_{jb} &= b \bi r_{il}-\bi r_{ij} = b(\bi x_l-\bi x_i)-(\bi x_j-\bi x_i) \\
+\bi r_m    &= \bi r_{ja} \times \bi r_{jb} \\
+\bi x_s &= \bi x_i+c{\bi r_m \over |\bi r_m|} \tag{4.154}
+\ealg\)</span></p>
+
+<p>这种情况下虚拟位点与原子 <span class="math">\(i\)</span> 的距离为 <span class="math">\(|c|\)</span>, <span class="math">\(a\)</span> 和 <span class="math">\(b\)</span> 是参数. <strong>注意</strong>, 为节省浮点运算的时间, 没有对矢量 <span class="math">\(\bi r_{ik}\)</span> 和 <span class="math">\(\bi r_{ij}\)</span> 进行归一化. 由虚拟位点上的力引起的粒子 <span class="math">\(i\)</span>, <span class="math">\(j\)</span> 和 <span class="math">\(k\)</span> 上的力可通过对构造表达式使用链式规则求导计算. 这种构建精确并保持能量守恒, 但确实导致了相对冗长的表达式, 在这里我们没有给出所有表达式(超过200次浮点运算). 感兴趣的读者可以阅读<code>vsite.c</code>中的代码. 幸运的是, 这种虚拟位点类型通常只用于手性中心, 例如蛋白质中的 <span class="math">\(C_\a\)</span> 原子.</p>
+
+<p>新的4fdn构造在拓扑中的&#8217;type&#8217;识别值为2. GROMACS内部依然支持以前的4fd类型(&#8217;type&#8217;值为1), 但不应将其用于新的模拟. 所有目前的GROMACS程序都会自动创建4fdn类型作为替代.</p>
+
+<p><strong>N.</strong> <span class="math">\(N\)</span> 个原子的线性组合, 相对权重为 <span class="math">\(a_i\)</span>. 原子 <span class="math">\(i\)</span> 的权重为:</p>
+
+<p><span class="math">\[\w_i=a_i\left(\Sum_{j=1}^N a_j \right)^{-1}\tag{4.155}\]</span></p>
+
+<p>设置权重时有三个选项:</p>
+
+<ul class="incremental">
+<li>COG 几何中心: 等权重</li>
+<li>COM 质量中心: <span class="math">\(a_i\)</span> 为原子 <span class="math">\(i\)</span> 的质量. 在自由能模拟中, 原子的质量会改变, 只有A状态的质量会用于权重</li>
+<li>COW 权重中心: <span class="math">\(a_i\)</span> 由用户定义</li>
+</ul>
+
+<h2 id="4.8长程静电作用">4.8 长程静电作用</h2>
+
+<h3 id="4.8.1ewald加和">4.8.1 Ewald 加和</h3>
+
+<p><span class="math">\(N\)</span> 个粒子及其周期映象的总静电能由下式给出:</p>
+
+<p><span class="math">\[V={f \over2}\Sum_{n_x}\Sum_{n_y}\Sum_{n_{z^*} } \Sum_i^N \Sum_j^N {q_i q_j \over \bi r_{ij,\bi n} } \tag{4.156}\]</span></p>
+
+<p><span class="math">\((n_x,n_y,nz)=\bi n\)</span> 为盒子的索引矢量, 星号表示当 <span class="math">\((n_x,n_y,nz)=(0,0,0)\)</span> 时, 应忽略 <span class="math">\(i=j\)</span> 项. 距离 <span class="math">\(\bi r_{ij}\)</span> 为电荷之间的真实距离, 而不是最小映象之间的距离. 此加和条件收敛, 但收敛非常缓慢.</p>
+
+<p>首次引入时, Ewald加和被用于计算晶体中周期映象的长程相互作用[103]. 采取的方法是将方程4.156中收敛缓慢的单个加和转换为两个快速收敛的项与一个常数项:</p>
+
+<p><span class="math">\(\alg
+V &= V_{\text{dir} }+ V_{\text{rec} }+V_0 \tag{4.157} \\
+V_{\text{dir} } &= {f \over2}\Sum_{i,j}^N \Sum_{n_x}\Sum_{n_y}\Sum_{n_{z^*} }q_i q_j {\text{erfc}(\b r_{ij,\bi n}) \over r_{ij,\bi n} } \tag{4.158} \\
+V_{\text{rec} } &= {f \over2\p V} \Sum_{i,j}^N q_i q_j \Sum_{m_x}\Sum_{m_y}\Sum_{m_{z^*} } {\exp(-(\p \bi m/\b)^2+2\p i \bi m \cdot (\bi r_i-\bi r_j)) \over \bi m^2 } \tag{4.159} \\
+V_0 &= -{f \b \over \sqrt \p} \Sum_i^N q_i^2 \tag{4.160}
+\ealg\)</span></p>
+
+<p>其中 <span class="math">\(\b\)</span> 参数用于决定直接空间加和与倒易空间加和之间的相对权重, <span class="math">\(\bi m=(m_x,m_y,m_z)\)</span>. 这样, 我们可以对直接空间加和使用较短的截断(数量级为1 nm), 对倒易空间加和也可以使用较短的截断(例如每个方向10个波矢). 不幸的是, 倒易空间加和的计算量以 <span class="math">\(N_2\)</span> 增加(或 <span class="math">\(N^{3/2}\)</span>, 如果使用更好一点的算法), 因此用于大的体系是不现实的.</p>
+
+<p><strong>使用Ewald方法</strong></p>
+
+<p>不要使用Emald方法, 除非你绝对确定你需要使用. 几乎对所有的情况, 下面的PME方法表现都更好. 如果你依然坚持使用精度的Ewald加和方法, 在你的<code>.mdp</code>文件中输入以下内容, 如果盒子的边长3 nm左右:</p>
+
+<pre><code>coulombtype    = Ewald
+rvdw           = 0.9
+rlist          = 0.9
+rcoulomb       = 0.9
+fourierspacing = 0.6
+ewald-rtol     = 1e-5
+</code></pre>
+
+<p>盒子尺寸的比例和<code>fourierspacing</code>参数决定了每个方向使用的波矢 <span class="math">\(m_x,m_y,m_z\)</span> 的最大振幅. 例子中对3 nm的立方盒子每个方向将使用11个波矢(从&#8211;5到5). <code>ewald-rtol</code>参数为在截断处静电相互作用的相对强度. 减少此值可以得到更加精确的直接空间加和, 但倒易空间加和的精度会略微降低.</p>
+
+<h3 id="4.8.2pme">4.8.2 PME</h3>
+
+<p>Tom Darden提出的粒子网格Ewald方法[12]可提高倒易空间加和的计算速度. 这种方法不直接对波矢进行加和, 而是使用内插方法将电荷分配到网格上. GROMACS实现的PME方法使用了基数B样条插值[13], 通常被称为平滑PME(SPME). 先使用3D FFT算法对格点进行傅里叶变换, 在k空间中利用对格点的单个加和就可以得到倒易空间的能量项.</p>
+
+<p>格点上的势能可利用逆变换进行计算, 通过使用内插因子就可以得到每个原子上的力.</p>
+
+<p>PME算法的复杂度为 <span class="math">\(N\log(N)\)</span>, 对中等或大的体系计算速度远远高于普通的Ewald加和方法. 对非常小的体系, 使用Ewald方法可能更好, 因为可以避免建立格点和进行变换的过程. PME的并行化可参见MPMD PME部分(3.17.5).</p>
+
+<p>使用Verlet截断方案时, PME直接空间的势能被移动了一个常数, 使得在截断处的势能为零. 这种移动很小, 由于体系的电荷接近于零, 总的移动非常小, 这与Lennard-Jones势能的情况不同, 那种情况下所有的移动都会被累加起来. 我们使用了移动, 这样力是势能的精确积分.</p>
+
+<p><strong>使用PME</strong></p>
+
+<p>作为在GROMACS中使用PME加和方法的例子, 在你的<code>.mdp</code>文件中指定如下几行:</p>
+
+<pre><code>coulombtype    = PME
+rvdw           = 0.9
+rlist          = 0.9
+rcoulomb       = 0.9
+fourierspacing = 0.12
+pme-order      = 4
+ewald-rtol     = 1e-5
+</code></pre>
+
+<p>在这个例子中, <code>fourierspacing</code>参数决定了FFT格点的最大间距(即, 格点数的最小值), <code>pme-order</code>控制插值的阶数. 使用四阶(立方)内插与指定的间距, 静电能应该能精确到 <span class="math">\(5 \cdot 10^-3\)</span>. 由于Lennard-Jones能量的精确度更低一些, 还可以轻微地增加间距.</p>
+
+<p>PME可用于压力缩放, 但当心, 在一些体系中各项异性缩放可能会导致虚假的有序结构.</p>
+
+<h3 id="4.8.3p3m-ad">4.8.3 P3M-AD</h3>
+
+<p>在GROMACS中, 也可使用Hockney和Eastwood发展的粒子-粒子粒子-网格方法来处理长程静电相互作用[104]. 动力学计算中, 尽管P3M方法是第一个用于分子模拟的高效长程静电方法, 但在原子模拟中, P3M方法很大程度上已经被平滑PME方法(SPME)所取代. 原始P3M方法计算时有一个缺点: 它需要3次3D-FFT后变换来获得粒子上的力. 但P3M并不需要这样, 可以通过对势能进行数值微分得到所需的力, 像在PME中一样. 这样的方法被称为P3M-AD. P3M-AD和PME唯一的不同在于: PME对晶格Green影响函数进行了优化以尽量减小误差. 然而, 在2012年有研究表明, 可以修改SPME影响函数得到P3M[105]. 这意味着P3M-AD误差最小化的优点在PME中可以同样的计算代价和同样的代码获得, 只需增加几行代码修改影响函数. 然而, 对最佳参数设置, P3M-AD误差最小化的效果小于10%. 对于隔行(也称为交错)的格点, P3M-AD确实展现了很大的精度提升, 但GROMACS(目前)并不支持这种处理.</p>
+
+<p>在GROMACS中使用P3M时, 所用的选项与PME完全相同, 只需要选择不同的静电类型即可.</p>
+
+<pre><code>coulombtype = P3M-AD
+</code></pre>
+
+<h3 id="4.8.4优化傅里叶变换和pme计算">4.8.4 优化傅里叶变换和PME计算</h3>
+
+<p>建议对计算静电相互作用的参数进行优化, 如PME格点尺寸和截断半径. 在运行长的模拟之前, 这尤其重要.</p>
+
+<p>GROMACS中有一个特殊的工具, <code>g_tune_pme</code>, 可用于自动选择格点的最佳大小和PME节点的数目.</p>
+
+<h2 id="4.9长程范德华相互作用">4.9 长程范德华相互作用</h2>
+
+<h3 id="4.9.1色散校正">4.9.1 色散校正</h3>
+
+<p>在这一节中, 我们将推导长程校正, 这是由于对Lennard-Jones或Buckingham相互作用使用截断而引起的. 我们假定截断足够大以至于可以安全地忽略斥力项, 因此只须考虑色散项的校正. 由于色散相互作用的本质(我们截断了一个正比于 -r<sup>-6</sup>的势能), 能量和压力的校正都是负的. 尽管能量的校正通常很小, 对自由能计算却可能很重要, 因计算时需要考虑两种不同哈密顿量之间的差异. 与此相反, 压力的校正很大, 当需要正确的压力时, 在任何情况下都不能忽略, 尤其是对于NPT模拟. 虽然原则上在力场参数化时可以不经校正就使得压力接近期望的实验值, 但这种方法使得参数依赖于截断, 因此不够理想.</p>
+
+<p><strong>能量</strong></p>
+
+<p>如果我们假定超出截断距离 <span class="math">\(r_c\)</span> 后体系变为均相, 色散相互作用对维里的长程贡献就能够解析得到. 两个粒子之间的色散能可写为</p>
+
+<p><span class="math">\[V_(r_{ij})= -C_6 r_{ij}^{-6} \tag{4.161}\]</span></p>
+
+<p>相应的力为:</p>
+
+<p><span class="math">\[\bi F_{ij} = -6 C_6 r_{ij}^{-8} \bi r_{ij} \tag{4.162}\]</span></p>
+
+<p>在周期性体系中计算全部的势能并不容易, 所以通常会使用间断的或光滑的截断. 记截断处的势能和力分别为 <span class="math">\(V_c\)</span> 和 <span class="math">\(\bi F_c\)</span>, 对含有 <span class="math">\(N\)</span> 个粒子, 粒子密度 <span class="math">\(\r=N/V\)</span> 的体系, 色散能的长程贡献为:</p>
+
+<p><span class="math">\[V_{lr}={1\over2}N\r \int_0^\infty 4\p r^2 g(r)(V(r)-V_c(r)) \rmd r \tag{4.163}\]</span></p>
+
+<p>我们将使用移位函数对上式进行积分, 它是GROMACS中VdW相互作用的最一般形式. 从0至 <span class="math">\(r_1\)</span>, 移位函数具有恒定的差值 <span class="math">\(S\)</span>, 超过截断距离 <span class="math">\(r_c\)</span> 后, 移位函数为零. 积分方程4.163, 并假定在半径为 <span class="math">\(r_1\)</span> 的球体内, 粒子密度等于整体密度, 径向分布函数 <span class="math">\(g(r)\)</span> 在 <span class="math">\(r\)</span> 超过 <span class="math">\(r_1\)</span> 后为1:</p>
+
+<p><span class="math">\(\alg
+V_{lr} &= {1\over2} N \left(\r \int_0^{r_1} 4\p r^2 g(r) C_6 S \rmd r +\r \int_{r_1}^{r_c} 4 \p r^2(V(r)-V_c(r))\rmd r + \r \int_{r_c}^\infty 4\p r^2V(r) \rmd r \right) \\
+&={1\over2} N\left(\left({4\over3}\p \r r_1^3-1\right)C_6 S +\r \int_{r_1}^{r_c}4 \p r^2(V(r)-V_c(r))\rmd r -{4\over3}\p N\r C_6 r_c^{-3} \right)\tag{4.164}
+\ealg\)</span></p>
+
+<p>其中, &#8211;1项为自相互作用的校正, 对普通截断, 我们只需要假定超过 <span class="math">\(r_c\)</span> 后 <span class="math">\(g(r)\)</span> 等于1, 这样校正可化简为[106]:</p>
+
+<p><span class="math">\[V_{lr}=-{2\over3}\p N \r C_6 r_c^{-3} \tag{4.165}\]</span></p>
+
+<p>举例来说, 如果我们考虑一个只含水分子的模拟盒子, 截断半径为0.9 nm, 密度为1 g cm<sup>-3</sup>, 上面的校正对每个水分子大约是&#8211;0.75 kJ mol<sup>-1</sup>.</p>
+
+<p>对均相的混合物, 我们需要定义一个 <strong>平均色散常数</strong></p>
+
+<p><span class="math">\[\left < C_6\right >={2\over N(N-1)} \Sum_i^N \Sum_{j \gt i}^N C_6(i,j) \tag{4.166}\]</span></p>
+
+<p>在GROMACS中, 计算此平均值时不考虑被排除的原子对.</p>
+
+<p>对非均相模拟体系, 如脂质界面系统, 若两部分的 <span class="math">\(\left< C_6\right >\)</span> 比较接近, 能量校正也可以适用</p>
+
+<p><strong>维里和压力</strong></p>
+
+<p>体系的标量维里可通过两粒子 <span class="math">\(i\)</span> 和 <span class="math">\(j\)</span> 之间的色散相互作用计算:</p>
+
+<p><span class="math">\[\X={1\over2} \bi r_{ij} \cdot \bi F_{ij} = 3 C_6 r_{ij}^{-6} \tag{4.167}\]</span></p>
+
+<p>相应的压力由下式给出:</p>
+
+<p><span class="math">\[P={2\over3V}(E_{kin}-\X) \tag{4.168}\]</span></p>
+
+<p>对维里的长程校正为:</p>
+
+<p><span class="math">\[\X_{lr}={1\over2}N\r \int_0^\infty 4\p r^2 g(r)(\X-\X_c) \rmd r \tag{4.169}\]</span></p>
+
+<p>假定超过 <span class="math">\(r_1\)</span> 后 <span class="math">\(g(r)\)</span> 为1, 积分得到维里的长程校正:</p>
+
+<p><span class="math">\(\alg
+\X_{lr} &={1\over2}N\r\left(\int_{r_1}^{r_c} 4\p r^2(\X-\X_c) \rmd r + \int_{r_c}^\infty 4\p r^2 3 C_6 r_{ij}^{-6} \rmd r \right) \\
+&={1\over2}N\r\left(\int_{r_1}^{r_c} 4\p r^2(\X-\X_c) \rmd r + 4\p C_6 r_c^{-3} \right) \tag{4.170}
+\ealg\)</span></p>
+
+<p>对普通截断, 压力的校正值为:</p>
+
+<p><span class="math">\[P_{lr}=-{4\over3}\p C_6 \r^2r_c^{-3} \tag{4.171}\]</span></p>
+
+<p>对前面水盒子的例子, 每个分子的维里校正是0.75 kJ mol<sup>-1</sup>, 对SPC水模型相应的压力校正大约是&#8211;280 bar.</p>
+
+<p>对于均相混合物, 我们同样可以使用平均色散常数 <span class="math">\(\left< C6\right >\)</span> (方程4.166):</p>
+
+<p><span class="math">\[P_{lr}=-{4\over3}\p \left< C_6\right > \r^2 r_c^{-3} \tag{4.172}\]</span></p>
+
+<p>对于非均相体系, 使用方程4.172时的限制与在能量的情况下相同(参见4.9.1节).</p>
+
+<h3 id="4.9.2lennard-jonespme">4.9.2 Lennard-Jones PME</h3>
+
+<p>为了利用Lennard-Jones势能处理截断以外非均相的体系, 我们可以使用粒子网格Ewald方法, 像上面对静电的讨论一样. 在这种情况下修改的Ewald方程变为:</p>
+
+<p><span class="math">\(\alg
+V &= V_{\text{dir} }+ V_{\text{rec} }+V_0 \tag{4.173} \\
+V_{\text{dir} } &= {1\over2}\Sum_{i,j}^N \Sum_{n_x}\Sum_{n_y}\Sum_{n_{z^*} } {C_6^{ij} g(\b r_{ij,\bi n}) \over r_{ij,\bi n}^6 } \tag{4.174} \\
+V_{\text{rec} } &= {\p^{3\over2} \b^3 \over 2V} \Sum_{m_x}\Sum_{m_y}\Sum_{m_{z^*} } f(\p |\bi m|/\b) \times \Sum_{i,j}^N C_6^{ij} \exp[-2\p i \bi m \cdot (\bi r_i-\bi r_j)]  \tag{4.175} \\
+V_0 &= -{\b^6 \over 12} \Sum_i^N C_6^{ij} \tag{4.176}
+\ealg\)</span></p>
+
+<p><span class="math">\[\tag{4.1}\]</span></p>
+
+<p>其中 <span class="math">\(\bi m=(m_x,m_y,m_z)\)</span>, 参数 <span class="math">\(\b\)</span> 决定了直接空间和倒易空间的权重, <span class="math">\(C^{ij}_6\)</span> 为粒子 <span class="math">\(i\)</span> 和 <span class="math">\(j\)</span> 的组合色散参数. 星号表示当 <span class="math">\((n_x,n_y,n_z)=(0,0,0)\)</span> 时, 应忽略 <span class="math">\(i=j\)</span> 的项. <span class="math">\(\bi r_{ij,\bi n}\)</span> 为粒子之间的真实距离. 根据Essmann的推导[13], 上面引入的函数 <span class="math">\(f\)</span> 和 <span class="math">\(g\)</span> 的定义为:</p>
+
+<p><span class="math">\(\alg
+f(x) &=1/3\left[(1-2x^2) \exp(-x^2) + 2x^3 \sqrt \p \text{erfc}(x) \right] \tag{4.177} \\
+g(x) &= \exp(-x^2)(1+x^2+{x^4 \over 2}) \tag{4.178}
+\ealg\)</span></p>
+
+<p>只要色散参数可以像静电电荷一样按几何规则进行组合(方程4.6), 上面的方法就适用</p>
+
+<p><span class="math">\[C_{6,\text{geom} }^{ij} \left(C_6^{ii}C_6^{jj} \right) \tag{4.179}\]</span></p>
+
+<p>对Lorentz-Berthelot组合规则(方程4.7), 倒易部分的加和必须计算七次, 因为色散参数的拆分如下:</p>
+
+<p><span class="math">\[C_{6,\text{L-B} }^{ij}=(\s_i+\s_j)^6=\Sum_{n=0}^6 P_n\s_i^n \s_j^{(6-n)} \tag{4.180}\]</span></p>
+
+<p><span class="math">\(P_n\)</span> 为Pascal三角系数. 对倒易部分, 这导致了不可忽略计算代价, 需要七个独立的FFT, 因此这成为了以前实现LJ-PME的限制因素. 解决这个问题的一个方法是, 使用几何组合规则计算势能倒易部分的近似的相互作用参数, 得到总的相互作用:</p>
+
+<p><span class="math">\(\alg
+V(r < r_c) &= \underbrace{C_6^{\text{dir} } g(\b r)r^{-6} }_{\text{直接空间} } + \underbrace{C_{6,\text{geom} }^{\text{recip} }[1-g(\b r)] r^{-6} }_{倒易空间} \\
+&= C_{6,\text{geom} }^{\text{recip} } r^{-6} + \left(C_6^{\text{dir} }-C_{6,\text{geom} }^{\text{recip} } \right) g(\b r) r^{-6} \tag{4.181} \\
+V(r > r_c) &= \underbrace{C_{6,\text{geom} }^{\text{recip} }[1-g(\b r)] r^{-6} }_{倒易空间} \tag{4.182}
+\ealg\)</span></p>
+
+<p>这样可以很好的定义哈密顿量, 且可以显著提高模拟速度. 这个近似确实引入了一些误差, 但由于差异在于倒易空间中计算的相互作用, 与总的相互作用能相比, 影响非常小. 在双脂层模拟中, 使用1.0 nm的截断, 总色散能的相对误差小于0.5%. 更完整的的讨论可参看[107].</p>
+
+<p>在GROMACS中, 我们现在已经能够正确地计算这项相互作用, 方法是从直接空间相互作用中减去倒易空间中使用的近似势能的贡献:</p>
+
+<p><span class="math">\[V_{\text{dir} }=C_6^{\text{dir} } r^{-6}-C_6^{\text{recip} }[1-g(\b r)] r^{-6} \tag{4.183}\]</span></p>
+
+<p>当 <span class="math">\(C_6^{\text{dir} }=C_6^{\text{recip} }\)</span> 时, 这项势能将简化为方程4.174中的表达式, 总的相互作用为:</p>
+
+<p><span class="math">\(\alg
+V(r < r_c) &= \underbrace{C_6^{\text{dir} } r^{-6} -C_6^{\text{recip} }[1-g(\b r)] r^{-6} }_{\text{直接空间} } + \underbrace{C_6^{\text{recip} }[1-g(\b r)] r^{-6} }_{倒易空间} \\
+&= C_6^{\text{dir} } r^{-6} \tag{4.184} \\
+V(r > r_c) &= C_6^{\text{recip} }[1-g(\b r)] r^{-6} \tag{4.185}
+\ealg\)</span></p>
+
+<p>当 <span class="math">\(C_6^{\text{dir} } \ne C_6^{\text{recip} }\)</span> 时, 直到截断处都会存在未经修改的LJ力, 误差比模拟时直接空间相互作用未考虑倒易空间中使用的近似而导致的误差小一个数量级. 当采用移位的范德华相互作用时, 常数</p>
+
+<p><span class="math">\[\left(-C_6^{\text{dir} }+C_6^{\text{recip} }[1-g(\b r_c)] \right)r_c^{-6} \tag{4.1}\]</span></p>
+
+<p>会加到方程4.184中以确保势能在截断处连续. 注意, 当 <span class="math">\(C_6^{\text{dir} }=C_6^{\text{recip} }\)</span> 时上式退化为预期的 <span class="math">\(-C_6 g(\b r_c)r_c^{-6}\)</span>, 如方程4.183类似. 除此之外, 可以利用长程色散校正来校正在倒易空间中使用组合规则导致的近似. 这种校正假定, 对截断LJ势能, 粒子分布是均匀的. 但由于组合规则近似导致的误差非常小, 在大多数情况下, 没有必要进行长程校正. 同样注意, 这样的均相校正并不能校正表面张力, 它是非均相性质.</p>
+
+<p><strong>使用LJ-PME</strong></p>
+
+<p>作为在GROMACS中使用使用粒子网格Ewald加和方法计算Lennard-Jones相互作用的例子, 在你的<code>.mdp</code>文件中指定如下几行:</p>
+
+<pre><code>vdwtype          = PME
+rvdw             = 0.9
+vdw-modifier     = Potential-Shift
+rlist            = 0.9
+rcoulomb         = 0.9
+fourierspacing   = 0.12
+pme-order        = 4
+ewald-rtol-lj    = 0.001
+lj-pme-comb-rule = geometric
+</code></pre>
+
+<p>如果同时启用LJ-PME和静电PME, 应使用同样的傅里叶格点和插值阶数, 因此<code>fourierspacing</code>和<code>pme-order</code>的设置对二者相同. <code>ewald-rtol-lj</code>控制直接空间和倒易空间之间的划分, 方式与<code>ewald-rtol</code>相同. 除此之外, 倒易空间使用的组合规则由<code>lj-pme-comb-rule</code>决定. 如果当前的力场使用Lorentz-Berthelot组合规则, 设置<code>lj-pme-comb-rule = geometric</code>可获得显著的性能提升, 同时精度会略微降低. 有关此方法的细节可在前面的章节中找到.</p>
+
+<p>注意, 使用完全的长程色散校正意味着, 当与库伦PME联用时, <code>rvdw</code>是一个自由参数, 而不必受限于力场的参数化方案. 这样, 为了提高精度和计算速度, 可以对截断, 间距, 阶数和容差项进行优化.</p>
+
+<p>自然, 使用LJ-PME而不是LJ截断会增加倒易空间部分的计算和通信. 因此, 为了使用单纯PME队列并行模拟的最佳负载均衡, 应该使用更多的队列. 这可能改进<code>mdrun</code>使用的自动负载均衡.</p>
+
+<h2 id="4.10力场">4.10 力场</h2>
+
+<p>一个力场由两个明显不同的两部分组成:</p>
+
+<ul class="incremental">
+<li>用于产生势能及其导数, 也即力的方程组(称为s). 这些在前边的章节已有详细的论述.</li>
+<li>用于方程组的参数. 本手册未给出这些参数, 但可以在GROMACS程序的相关数据文件中找到.</li>
+</ul>
+
+<p>在一组方程之内, 可使用各种不同的参数集. 必须当心, 方程与参数的组合应自洽. 一般来说, 后验地改变一些参数是很危险的, 因为对总力的各种贡献是相互关联的. 这意味着原则上在使用之前, 应该记录每一项改动, 通过与实验数据比较进行验证, 发表在预审的杂志上.</p>
+
+<p>GROMACS 5.0.2包括了一些力场, 网上还有额外的一些力场可供使用. 如果你不清楚应该选择哪个力场, 我们推荐GROMOS&#8211;96用于联合原子设置, OPLS-AA/L用于全原子参数. 我们将对可用的选项进行详细描述.</p>
+
+<p><strong>全氢力场</strong></p>
+
+<p>基于GROMOS&#8211;87的全氢力场几乎等同于正常的GROMOS&#8211;87力场, 因为额外的氢原子没有Lennard-Jones相互作用并且电荷为零. 唯一的区别在于键角项和异常二面角项. 此力场仅仅适用于需要精确的氢原子位置的情况, 例如来自NMR测量的距离限制. 当要使用此力场时, 请阅读前面的段落.</p>
+
+<h3 id="4.10.1gromos-96">4.10.1 GROMOS&#8211;96</h3>
+
+<p>GROMACS支持GROMOS&#8211;96力场[78], 并包含了43A1, 43A2(发展, 改进了烷烃二面角), 45A3, 53A5和53A6参数集中的所有参数. 此外还包括了所有的标准构建单元, 并可以利用<code>pdb2gmx</code>程序自动创建拓扑.</p>
+
+<p>GROMOS&#8211;96力场是GROMOS&#8211;87力场的进一步发展, 对GROMOS&#8211;87力场的蛋白质和小分子进行了改进. <strong>注意</strong>, 53A6中的糖类参数确实对应于2004年发表的参数[108], 与45A4中的不同, GROMACS此次为包含这些参数. 45A4参数集对应于这些参数的后一个版本. 然而, 我们不推荐将GROMOS&#8211;96力场用于长的烷烃与脂类分子. GROMOS&#8211;96力场与GROMOS&#8211;87力场的不同之处在于:</p>
+
+<ul class="incremental">
+<li>力场参数</li>
+<li>键合相互作用参数并未与原子类型相关联</li>
+<li>四次键伸缩势(4.2.1)</li>
+<li>基于键角余弦的键角势(4.2.6)</li>
+</ul>
+
+<p>GROMACS和GROMOS&#8211;96的实现有两个不同, 当使用两个程序来模拟同样的体系时, 这可能导致结果有少许的不同:</p>
+
+<ul class="incremental">
+<li>GROMOS&#8211;96中对溶剂的邻区搜索根据溶剂分子的第一个原子进行. GROMACS没有使用这种方法, 但使用电荷组中心进行搜索产生的差别很小</li>
+<li>GROMOS&#8211;96中的维里是基于分子的. GROMACS没有使用这种方法, 而是使用了原子的维里</li>
+</ul>
+
+<p>GROMOS&#8211;96力场参数化时对Lennard-Jones使用的截断值为1.4 nm, 因此请确保使用的Lennard-Jones截断(<code>rvdw</code>)至少为1.4. 也可以使用更大的截断, 因为超多1.4 nm后Lennard-Jones势能和力几乎为零.</p>
+
+<p><strong>GROMOS&#8211;96文件</strong></p>
+
+<p>GROMACS可以读写GROMOS&#8211;96的坐标文件和轨迹文件. 这些文件的扩展名应为<code>.g96</code>, 文件可以是GROMOS&#8211;96的初始/最终构型文件, 坐标轨迹文件或二者的结合. 文件是固定格式的, 所有浮点数的输出格式为15.9, 因而文件可能会变得非常大. 按给定的顺序, GROMACS支持以下的数据块:</p>
+
+<ul class="incremental">
+<li><p>Header block 文件头数据块:</p>
+
+<p><code>TITLE (mandatory)</code> 标题(必需)</p></li>
+<li><p>Frame blocks 帧数据块:</p>
+
+<p><code>TIMESTEP (optional)</code> 时间步(可选)<br/>
+<code>POSITION/POSITIONRED (mandatory)</code> 位置(必需)<br/>
+<code>VELOCITY/VELOCITYRED (optional)</code> 速度(可选)<br/>
+<code>BOX (optional)</code> 盒子(可选)</p></li>
+</ul>
+
+<p>参看GROMOS&#8211;96手册中对数据块的详细描述[78]. <strong>注意</strong> 所有GROMACS程序都可以读取压缩(.Z)或gzip压缩(.gz)的文件.</p>
+
+<h3 id="4.10.2oplsaa">4.10.2 OPLS/AA</h3>
+
+<h3 id="4.10.3amber">4.10.3 AMBER</h3>
+
+<p>GROMACS原生支持以下AMBER力场:</p>
+
+<ul class="incremental">
+<li>AMBER94 [109]</li>
+<li>AMBER96 [110]</li>
+<li>AMBER99 [111]</li>
+<li>AMBER99SB [112]</li>
+<li>AMBER99SB-ILDN [113]</li>
+<li>AMBER03 [114]</li>
+<li>AMBERGS [115]</li>
+</ul>
+
+<h3 id="4.10.4charmm">4.10.4 CHARMM</h3>
+
+<p>GROMACS支持CHARMM力场, 这些力场可用于蛋白质[116, 117], 脂类[118]和核酸[119, 120]. 其中的蛋白质参数(一定程度上的脂类和核酸参数)进行过彻底的验证, 验证时, 会计算势能并将其与利用CHARMM分子模拟包中的标准参数集计算的势能进行比较, 也会考察蛋白质力场在GROMACS特定技术中的表现, 如虚拟位点(支持较大的时间步长)和最近实现的快速隐式溶剂[73]. 验证的细节及其结果可参看Bjelkmar等人的论文[121]. 核酸及HEME相关参数的转换和测试由Michel Cuendet完成.</p>
+
+<p>当在<code>pdb2gmx</code>中选择CHARMM力场时, 默认的选项是使用CMAP(用于扭转校正映射). 若想排除CMAP, 请使用<code>-nocmap</code>选项. GROMACS中实现的CMAP项的基本形式为骨架扭转角 <span class="math">\(\f\)</span> 和 <span class="math">\(\y\)</span> 的函数. CMAP项在<code>.rtp</code>文件中定义, 对每个支持CMAP的残基, 在结尾处使用<code>[ cmap ]</code>语句定义CMAP. 接着的五个原子名称定义了两个扭转角. 原子1&#8211;4定义 <span class="math">\(\f\)</span>, 原子2&#8211;5定义 <span class="math">\(\y\)</span>. 相应的原子类型会被匹配到<code>cmap.itp</code>文件中正确的CMAP类型, 它们包含了校正映射.</p>
+
+<p>GROMACS中使用的CHARMM36力场可在<a href="http://mackerell.umaryland.edu/charmm_ff.shtml#gromacs">http://mackerell.umaryland.edu/charmm_ff.shtml#gromacs</a>找到.</p>
+
+<h3 id="4.10.5粗粒化力场">4.10.5 粗粒化力场</h3>
+
+<p>粗粒化是减少体系自由度数的一种系统方法. 为此, 典型的做法是以单个珠子代表整个原子组, 粗粒化的力场用于描述珠子之间的有效相互作用. 根据参数化方法的选择, 这些相互作用的函数形式可以很复杂, 且通常使用表格势能.</p>
+
+<p>粗粒模型被设计用于重现参考体系的某些性质, 可以是全原子模型的性质甚至是实验数据. 依据重现的性质, 可使用不同的方法来得到这样的力场. 以下是各种方法的一个不完全列表:</p>
+
+<ul class="incremental">
+<li>守恒自由能
+
+<ul class="incremental">
+<li>单纯形方法</li>
+<li>MARTINI力场(参看下一节)</li>
+</ul></li>
+<li>守恒分布(如径向分布函数), 所谓的基于结构的粗粒化
+
+<ul class="incremental">
+<li>(迭代)Boltzmann逆</li>
+<li>逆Monte Carlo</li>
+</ul></li>
+<li>守恒力
+
+<ul class="incremental">
+<li>力匹配</li>
+</ul></li>
+</ul>
+
+<p>注意, 粗粒势能依赖于状态(例如温度, 密度等), 应该根据体系的特点和模拟条件进行重新参数化. 你可以利用, 例如Versatile Object-oriented Toolkit for Coarse-Graining Applications(VOTCA)[122], 来进行重新参数化. 这个软件包被设计用于协助进行系统的粗粒化, 实现了上面提到的大多数算法, 并且具有经过充分测试的GROMACS界面. 它是开源软件, 更多信息请浏览<a href="http://www.votca.org/">www.votca.org</a>.</p>
+
+<h3 id="4.10.6martini">4.10.6 MARTINI</h3>
+
+<p>MARTINI力场是一组粗粒化参数, 可用于构建许多体系, 包括蛋白质和膜.</p>
+
+<h3 id="4.10.7plum">4.10.7 PLUM</h3>
+
+<p>PLUM力场[123]无溶剂蛋白-膜模型的一个例子, 其中的膜由基于结构的粗粒化导出[124]. 可以在<a href="http://code.google.com/p/plumx/">code.google.com/p/plumx</a>找到GROMACS的实现.</p>
