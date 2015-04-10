@@ -1,0 +1,80 @@
+---
+ layout: posttoc
+ title: GROMACS中文手册
+ categories:
+ - 科
+ tags:
+ - GMX
+---
+
+<h3 id="gmxdistance">gmx distance</h3>
+
+<p><strong>概要</strong></p>
+
+<pre><code>gmx distance [-f [&lt;.xtc/.trr/...&gt;]] [-s [&lt;.tpr/.tpb/...&gt;]] [-n [&lt;.ndx&gt;]]
+             [-oav [&lt;.xvg&gt;]] [-oall [&lt;.xvg&gt;]] [-oxyz [&lt;.xvg&gt;]] [-oh [&lt;.xvg&gt;]]
+             [-oallstat [&lt;.xvg&gt;]] [-b ] [-e ] [-dt ]
+             [-tu ] [-xvg ] [-[no]rmpbc] [-[no]pbc] [-sf ]
+             [-selrpos ] [-select ] [-len ]
+             [-tol ] [-binw ]
+</code></pre>
+
+<p><strong>说明</strong></p>
+
+<p><code>gmx distance</code>计算一对位置间的距离随时间变化的函数. 每个选择指定要计算的一组独立距离. 每个选择应包括位置对, 要计算的, 如位置1&#8211;2, 3&#8211;4等之间的距离.</p>
+
+<p><code>-oav</code>记录下每个选择的平均距离随时间变化的函数. <code>-oall</code>记录下所有独立的间距随时间变化的函数; <code>-oxyz</code>也是记录所有独立的间距, 但会记录距离的x, y, z分量而不是距离向量的大小. <code>-oh</code>记录每个选择的距离的直方图, 直方图的位置由<code>-len</code>和<code>–tol</code>来进行设置, 分格的宽度由<code>-binw</code>设置. <code>-oallstat</code>记录下所有帧的每个单独距离的平均值和标准偏差.</p>
+
+<p><strong>选项</strong></p>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><p><code>-f [&lt;. xtc/. trr/...&gt;]</code> (traj. xtc) 输入选项<br/>
+输入轨迹或单个构型: xtc trr cpt trj gro g96 pdb tng</p></li>
+<li><p><code>-s [&lt;. tpr/. tpb/...&gt;]</code> (topol. tpr) 输入选项<br/>
+输入结构: tpr tpb tpa gro g96 pdb brk ent</p></li>
+<li><p><code>-n [&lt;. ndx&gt;]</code> (index. ndx) 输入选项<br/>
+额外的索引组</p></li>
+<li><p><code>-oav [&lt;. xvg&gt;]</code> (distave. xvg) 输出选项<br/>
+平均距离随时间变化的函数</p></li>
+<li><p><code>-oall [&lt;. xvg&gt;]</code> (dist. xvg) 输出选项<br/>
+间距随时间变化的函数</p></li>
+<li><p><code>-oxyz [&lt;. xvg&gt;]</code> (distxyz. xvg) 输出选项<br/>
+间距(在x y z 方向上的分量)随时间变化的函数</p></li>
+<li><p><code>-oh [&lt;. xvg&gt;]</code> (disthist. xvg) 输出选项<br/>
+距离的直方图</p></li>
+<li><p><code>-oallstat [&lt;. xvg&gt;]</code> (diststat. xvg) 输出选项<br/>
+独立距离的统计</p></li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><p><code>-b &lt;time&gt;</code> (0)<br/>
+从轨迹读取第一帧的时间(ps)</p></li>
+<li><p><code>-e &lt;time&gt;</code> (0)<br/>
+轨迹读取最后一帧的时间(ps)</p></li>
+<li><p><code>-dt &lt;time&gt;</code> (0)<br/>
+如果t/dt的余数==第一帧的时间(PS), 就使用这一帧(相当于是取帧数的间隔)</p></li>
+<li><p><code>-tu &lt;enum&gt;</code> (ps)<br/>
+时间的单位: fs, ps, ns, us, ms, s</p></li>
+<li><p><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+绘制的格式: none, xmgrace, xmgr</p></li>
+<li><p><code>-[no]rmpbc</code> (yes)<br/>
+每一帧使用所有分子</p></li>
+<li><p><code>-[no]pbc</code> (yes)<br/>
+使用周期性边界条件计算距离</p></li>
+<li><p><code>-sf &lt;file&gt;</code><br/>
+从文件中提供选择</p></li>
+<li><p><code>-selrpos &lt;enum&gt;</code> (atom)<br/>
+选择参考的位置: atom, res_com, res_cog, mol_com, mol_cog, whole_res_com, whole_res_cog, whole_mol_com, whole_mol_cog, part_res_com, part_res_cog, part_mol_com, part_mol_cog, dyn_res_com, dyn_res_cog, dyn_mol_com, dyn_mol_cog</p></li>
+<li><p><code>-select &lt;selection&gt;</code><br/>
+计算距离对的位置</p></li>
+<li><p><code>-len &lt;real&gt;</code> (0.1)<br/>
+直方图的平均距离</p></li>
+<li><p><code>-tol &lt;real&gt;</code> (1)<br/>
+直方图分布的宽度关于<code>-len</code>的函数.</p></li>
+<li><p><code>-binw &lt;real&gt;</code> (0.001)<br/>
+直方图单元格的宽度</p></li>
+</ul>
