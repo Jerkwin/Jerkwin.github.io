@@ -7,9 +7,91 @@
  - GMX
 ---
 
-<h2 id="分析轨迹">分析轨迹(翻译: 姚闯)</h2>
+<h2 id="分析轨迹">分析轨迹</h2>
 
-<h3 id="gmxdistance">gmx distance</h3>
+<h3 id="gmxgangle">gmx gangle(翻译: 杨宇)</h3>
+
+<p><strong>概要</strong></p>
+
+<pre><code>gmx gangle [-f [&lt;.xtc/.trr/...&gt;]] [-s [&lt;.tpr/.tpb/...&gt;]] [-n [&lt;.ndx&gt;]]
+           [-oav [&lt;.xvg&gt;]] [-oall [&lt;.xvg&gt;]] [-oh [&lt;.xvg&gt;]] [-b ]
+           [-e ] [-dt ] [-tu ] [-xvg ] [-[no]rmpbc]
+           [-[no]pbc] [-sf ] [-selrpos ] [-g1 ]
+           [-g2 ] [-binw ] [-group1 ]
+           [-group2 ]
+</code></pre>
+
+<p><strong>说明</strong></p>
+
+<p><code>gmx gangle</code>计算矢量之间不同类型的角度, 它支持由两个位置定义的矢量, 也支持由三个位置定义的平面的法线. 矢量还可以是z轴或球面的局部法线. 此外, 选项<code>angle</code>和<code>dihedral</code>可方便地用于计算由三/四个位置定义的键角和二面角.</p>
+
+<p>角度类型通过<code>-g1</code>和<code>-g2</code>指定. 如果<code>-g1</code>为<code>angle</code>或<code>dihedral</code>, 就不应再指定<code>-g2</code>. 在这种情况下, <code>-group1</code>应指定一个或多个选择, 并且每个选择应包括位置的三联对或四联对, 它们定义了要计算的角度.</p>
+
+<p>如果<code>-g1</code>为<code>vector</code>或<code>plane</code>, <code>-group1</code>指定的选择应包含位置对(<code>vector</code>)或位置三元对(<code>plane</code>). 对矢量, 位置设置了矢量的端点, 对平面, 三个位置用于计算平面的法向. 在这两种情况下, <code>-g2</code>指定要使用的其它矢量(见下文).</p>
+
+<p>使用<code>-g2 vector</code>或<code>-g2 plane</code>时, <code>-group2</code>应指定另一组矢量. <code>-group1</code>和<code>-group2</code>应指定相同的选择数目. 对其中的一个选项也可以只有一个选择, 在这种情况下, 对其他组中的每个选择会使用相同的选择. 同样, 对<code>-group1</code>中的每个选择, 相应的<code>-group2</code>中的选择应指定相同数目的矢量或单独一个矢量. 在后一种情况下, 会计算这个单一矢量与其它选择中的每个矢量之间的角度.</p>
+
+<p>使用<code>-g2 sphnorm</code>时, <code>-group2</code>中的每个选择应指定单一的位置, 它是球的中心. 第二个矢量从中心到由<code>-group1</code>指定的位置的中点.</p>
+
+<p>使用<code>-g2 z</code>时, 不需要指定<code>-group2</code>, 会计算第一个矢量与Z轴正半轴之间的角度.</p>
+
+<p>使用<code>-g2 t0</code>时, 不需要指定<code>-group2</code>, 会利用第一帧的矢量计算角度.</p>
+
+<p>有三个输出选项: <code>-oav</code>会将每一帧的时间与平均角度写入一个xvg文件. <code>-oall</code>会输出单独的角度. <code>-oh</code>输出角度的直方图. 分格的宽度由<code>-binw</code>设置. 对<code>-oav</code>和<code>-oh</code>, 会计算<code>-group1</code>中每个选择的单独平均/直方图.</p>
+
+<p><strong>选项</strong></p>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><p><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (Input, Optional)<br/>
+输入轨迹或单一构型: xtc trr cpt trj gro g96 pdb tng</p></li>
+<li><p><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (Input, Optional)
+输入结构: tpr tpb tpa gro g96 pdb brk ent</p></li>
+<li><p><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (Input, Optional)
+额外的索引组</p></li>
+<li><p><code>-oav [&lt;.xvg&gt;]</code> (angaver.xvg) (Output, Optional)
+作为时间函数的平均角度</p></li>
+<li><p><code>-oall [&lt;.xvg&gt;]</code> (angles.xvg) (Output, Optional)
+作为时间函数的所有角度</p></li>
+<li><p><code>-oh [&lt;.xvg&gt;]</code> (anghist.xvg) (Output, Optional)
+角度的直方图</p></li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><p><code>-b</code> <time> (0)<br/>
+从轨迹文件中读取的第一帧(ps)</p></li>
+<li><p><code>-e</code> <time> (0)<br/>
+从轨迹文件中读取的最后一帧(ps)</p></li>
+<li><p><code>-dt</code> <time> (0)<br/>
+只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</p></li>
+<li><p><code>-tu</code> <enum> (ps)
+时间值的单位: fs, ps, ns, us, ms, s</p></li>
+<li><p><code>-xvg</code> <enum> (xmgrace)
+绘图格式: none, xmgrace, xmgr</p></li>
+<li><p><code>-[no]rmpbc</code> (yes)
+对每一帧, 使分子保持完整</p></li>
+<li><p><code>-[no]pbc</code> (yes)
+计算距离时使用周期性边界条件</p></li>
+<li><p><code>-sf</code> <file>
+使用文件提供选择</p></li>
+<li><p><code>-selrpos</code> <enum> (atom)
+选择参考位置: atom, res_com, res_cog, mol_com, mol_cog, whole_res_com, whole_res_cog, whole_mol_com, whole_mol_cog, part_res_com, part_res_cog, part_mol_com, part_mol_cog, dyn_res_com, dyn_res_cog, dyn_mol_com, dyn_mol_cog</p></li>
+<li><p><code>-g1</code> <enum> (angle)
+分析类型/第一矢量组: angle, dihedral, vector, plane</p></li>
+<li><p><code>-g2</code> <enum> (none)
+第二向量组的类型: none, vector, plane, t0, z, sphnorm</p></li>
+<li><p><code>-binw</code> <real> (1)
+<code>-oh</code>的分格宽度, 以度为单位</p></li>
+<li><p><code>-group1</code> <selection>
+第一个分析/矢量选择</p></li>
+<li><p><code>-group2</code> <selection>
+第二个分析/矢量选择</p></li>
+</ul>
+
+<h3 id="gmxdistance">gmx distance(翻译: 姚闯)</h3>
 
 <p><strong>概要</strong></p>
 
@@ -81,7 +163,6 @@
 直方图单元格的宽度</p></li>
 </ul>
 
-
 <h2 id="创建拓扑与坐标">创建拓扑与坐标</h2>
 
 <h2 id="运行模拟">运行模拟</h2>
@@ -99,6 +180,85 @@
 <h2 id="结构中的距离随时间的变化">结构中的距离随时间的变化</h2>
 
 <h2 id="分布性质随时间的变化">分布性质随时间的变化</h2>
+
+<h3 id="gmxrdf">gmx rdf (翻译: 崔西)</h3>
+
+<p><strong>概要</strong></p>
+
+<pre><code>gmx rdf [-f [&lt;.xtc/.trr/...&gt;]] [-s [&lt;.tpr/.tpb/...&gt;]] [-n [&lt;.ndx&gt;]]
+        [-o [&lt;.xvg&gt;]] [-cn [&lt;.xvg&gt;]] [-hq [&lt;.xvg&gt;]] [-nice ] [-b ]
+        [-e ] [-dt ] [-[no]w] [-xvg ] [-bin ]
+        [-[no]com] [-surf ] [-rdf ] [-[no]pbc] [-[no]norm]
+        [-[no]xy] [-cut ] [-ng ] [-fade ]
+</code></pre>
+
+<p><strong>说明</strong></p>
+
+<p>流体的结构可以通过中子散射或者X射线散射进行研究. 描述流体结构的最常用方法是径向分布函数. 但是, 通过散射实验获得径向分布函数并不容易.</p>
+
+<p><code>gmx rdf</code>可利用几种不同的方法来计算径向分布函数. 通常的方法是计算一个(组)粒子周围的径向分布函数, 其他方法包括计算一组粒子质心周围的径向分布函数(<code>-com</code>), 或到最近一组粒子的径向分布函数(<code>-surf</code>). 所有这些方法都可以利用<code>-xy</code>选项计算围绕与z轴平行的轴的RDF. 使用选项<code>-surf</code>时, 不能使用归一化.</p>
+
+<p>选项<code>-rdf</code>用来设置要计算RDF的类型. 默认为原子或粒子, 但也可以选择分子或残基的质心或几何中心. 无论哪种情况, 都只会考虑索引组中的原子. 对于分子和/或质心选项, 需要输入文件. 除COM(质心)或COG(几何中心)外, 其他的加权方法目前只能通过提供具有不同质量的输入文件来实现. 参数<code>-com</code>与<code>-surf</code>也可以与<code>-rdf</code>选项一同使用.</p>
+
+<p>如果已经提供了一个输入文件(<code>-s</code>), 并且<code>-rdf</code>设置为<code>atom</code>, 那么在计算RDF的时候, 会考虑到输入文件中定义的排除. 选项<code>-cut</code>是另外一种可以避免RDF图中出现分子内峰的方法, 但最好还是将输入文件中的排除数设置得高一些. 比如, 对于苯的拓扑, 将nrexcl设置为5就可以全部消除分子内距离对RDF的贡献. 注意, 在计算时会使用已选组中的所有原子, 还包括那些没有Lennard-Jones相互作用的原子.</p>
+
+<p>选项<code>-cn</code>生成RDF累积数, 也就是在r距离范围内的平均粒子数.</p>
+
+<p><strong>选项</strong></p>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><p><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (Input)<br/>
+轨迹文件: xtc trr cpt trj gro g96 pdb tng</p></li>
+<li><p>-s <code>[&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (Input, Optional)<br/>
+结构+质量(db): tpr tpb tpa gro g96 pdb brk ent</p></li>
+<li><p>-n <code>[&lt;.ndx&gt;]</code> (index.ndx) (Input, Optional)<br/>
+索引文件</p></li>
+<li><p>-o <code>[&lt;.xvg&gt;]</code> (rdf.xvg) (Output)<br/>
+xvgr/xmgr文件</p></li>
+<li><p><code>-cn [&lt;.xvg&gt;]</code> (rdf_cn.xvg) (Output, Optional)<br/>
+xvgr/xmgr文件</p></li>
+<li><p><code>-hq [&lt;.xvg&gt;]</code> (hq.xvg) (Output, Optional)<br/>
+xvgr/xmgr文件</p></li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><p><code>-nice</code> <int> (19)<br/>
+设置友好度</p></li>
+<li><p><code>-b</code> <time> (0)<br/>
+从轨迹文件中读取的第一帧(ps)</p></li>
+<li><p><code>-e</code> <time> (0)<br/>
+从轨迹文件中读取的最后一帧(ps)</p></li>
+<li><p><code>-dt</code> <time> (0)<br/>
+只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</p></li>
+<li><p><code>-[no]w</code> (no)<br/>
+查看输出.xvg, .xpm, .eps and .pdb文件</p></li>
+<li><p><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</p></li>
+<li><p><code>-bin</code> <real> (0.002)<br/>
+分格宽度(nm)</p></li>
+<li><p><code>-[no]com</code> (no)<br/>
+相对于第一个组质心的RDF</p></li>
+<li><p><code>-surf</code> <enum> (no)<br/>
+相对于第一组表面的RDF: no, mol, res</p></li>
+<li><p><code>-rdf</code> <enum> (atom)<br/>
+RDF类型: atom, mol_com, mol_cog, res_com, res_cog</p></li>
+<li><p><code>-[no]pbc</code> (yes)<br/>
+计算距离时考虑周期性边界条件(PBC). 如果不使用PBC, 距离的最大值为盒子最长边的三倍.</p></li>
+<li><p><code>-[no]norm</code> (yes)<br/>
+对体积和密度进行归一化</p></li>
+<li><p><code>-[no]xy</code> (no)<br/>
+只使用距离的x和y分量</p></li>
+<li><p><code>-cut</code> <real> (0)<br/>
+计算时所考虑的最短距离(nm)</p></li>
+<li><p><code>-ng</code> <int> (1)<br/>
+计算中心组的RDF时, 其周围的次要组的数目</p></li>
+<li><p><code>-fade</code> <real> (0)<br/>
+从此距离开始, 将使用g&#8217;(r) = 1 + [g(r)&#8211;1] exp(-(r/fade&#8211;1)^2) 对RDF进行变换, 以使RDF曲线光滑地趋向于1, 如果fade设置为0.0, 将不做任何处理.</p></li>
+</ul>
 
 <h2 id="分析键合相互作用">分析键合相互作用</h2>
 
