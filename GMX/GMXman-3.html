@@ -40,8 +40,6 @@
 
 <p>即便使用三斜盒子进行模拟, 为了提高计算效率, GROMAC始终将粒子放在长方体空间内, 对二维体系的图示见图3.1. 因此, 从输出的轨迹来看, 模拟好像是在长方体盒子中进行的. <code>trjconv</code>程序可用于转换轨迹, 以便在不同的元胞中显示.</p>
 
-<hr />
-
 <p>模拟时也可不使用周期性边界条件, 但当模拟孤立的分子团簇时, 使用一个很大的周期性盒子通常效率更高, 这是因为快速的格点搜索只能在周期性体系中使用.</p>
 
 <figure>
@@ -124,7 +122,122 @@
 
 <h2 id="3.4　分子动力学">3.4　分子动力学</h2>
 
+<p>MD的整个流程见图3.3. 每次运行MD或EM都需要体系中所有粒子一组初始坐标和(可选的)初始速度作为输入. 本章不介绍如何获得它们; 对于如何设置并实际运行MD, 请参考<a href="http://www.gromacs.org/">www.gromacs.org</a>上的在线手册.</p>
 
+<figure>
+<img src="3.3.png" alt="图3.3: MD算法流程概览" />
+<figcaption>图3.3: MD算法流程概览</figcaption>
+</figure>
+
+<figure>
+<img src="3.4.png" alt="图3.4: 麦克斯韦-玻尔兹曼速度分布, 通过随机数生成" />
+<figcaption>图3.4: 麦克斯韦-玻尔兹曼速度分布, 通过随机数生成</figcaption>
+</figure>
+
+<h3 id="3.4.1初始条件">3.4.1 初始条件</h3>
+
+<p><strong>拓扑和力场</strong></p>
+
+<p>必须读入体系的拓扑, 它包含了对力场的说明. 力场和拓扑将分别在第四章和第五章进行说明. 所有这些信息都是固定的, 在运行过程中始终不变.</p>
+
+<p><strong>坐标和速度</strong></p>
+
+<p>然后, 在开始运行前, 需要知道盒子的尺寸, 所有粒子的坐标和速度. 盒子的尺寸和形状是由三个矢量(9个数字) <span class="math">\(\bi b_1, \bi b_2, \bi b_3\)</span> 决定的, 它们代表了周期性盒子的三个基矢量.</p>
+
+<p>如果从 <span class="math">\(t=t_0\)</span> 开始运行, 必须知道 <span class="math">\(t=t_0\)</span> 时刻的坐标. 如果以 <span class="math">\(\D t\)</span> 为时间步长, 使用默认的 <strong>蛙跳式算法</strong> 更新时间步(参见3.4.4节), 还需要知道 <span class="math">\(t=t_0-{1\over2}\D t\)</span> 时刻的速度. 如果没有可用的速度, 程序可以根据给定的绝对温度 <span class="math">\(T\)</span> 产生所需要的初始原子速度 <span class="math">\(v_i, i=1 ... 3N\)</span> (图3.4):</p>
+
+<p><span class="math">\[p(v_i)=\sqrt{ {m_i \over 2\p kT } } \exp\left(-{m_iv_i^2 \over 2kT} \right) \tag{3.7}\]</span></p>
+
+<p>其中 <span class="math">\(k\)</span> 为玻耳兹曼常数(见第二章). 为此, 会使用产生12个随机数 <span class="math">\(R_k\)</span>, <span class="math">\(0 \le R_k < 1\)</span> 并从其和中减去6的方法来产生服从正态分布的随机数. 结果会乘上速度分布的标准偏差 <span class="math">\(\sqrt{kT/m_i}\)</span>. 因为由此得到的总能量不会精确地对应于所需的温度 <span class="math">\(T\)</span>, 需要进行校正: 首先移除质心的运动, 然后再对所有的速度进行缩放, 以使总能量恰好对应于 <span class="math">\(T\)</span>(参见公式3.18).</p>
+
+<p><strong>质心运动</strong></p>
+
+<p>正常情况下, 在每一步中都会将质心的速度设置为零, 体系(通常)不受净的合外力作用, 其质心速度应该保持不变. 然而在实际中, 更新算法会导致质心速度发生缓慢的变化, 并因此使得体系的总动能发生变化, 特别是使用温度耦合时. 如果不对这种变化进行处理, 长时间后质心会有明显的运动, 温度也出现显著异常. 体系的整体转动也会导致同样的问题, 但只出现在孤立团簇的模拟中. 在填满盒子的周期性体系中, 整体转动会与其它自由度耦合, 不会导致这个问题.</p>
+
+<h3 id="3.4.3计算力">3.4.3 计算力</h3>
+
+<p><strong>势能</strong></p>
+
+<p>当计算力时, 同时会计算每项相互作用的势能. 总势能是所有项的加和, 如Lennard-Jones项, 库仑项和键合项. 也可以计算 <strong>能量监测组</strong> 对这些项的贡献, 组成能量监测组的原子可以单独定义(参见3.3节).</p>
+
+<p><strong>动能和温度</strong></p>
+
+<p>对含有 <span class="math">\(N\)</span> 个粒子的体系, 温度由总动能给出:</p>
+
+<p><span class="math">\[E_{\text{kin} }={1\over2} \sum_{i=1}^N m_i v_i^2 \tag{3.17}\]</span></p>
+
+<p>由此可计算绝对温度 <span class="math">\(T\)</span>:</p>
+
+<p><span class="math">\[{1\over2}N_{\text{df} }kT=E_{\text{kin} } \tag{3.18}\]</span></p>
+
+<p>其中 <span class="math">\(k\)</span> 为玻尔兹曼常数, <span class="math">\(N_{\text{df} }\)</span> 为自由度数, 可根据下式计算:</p>
+
+<p><span class="math">\[N_{\text{df} } = 3N-N_c-N_{\text{com} } \tag{3.19}\]</span></p>
+
+<p>这里 <span class="math">\(N_c\)</span> 为施加在体系上的 <strong>约束</strong> 的数目. 在进行分子动力学模拟时, 必须去除 <span class="math">\(N_{\text{com} }=3\)</span> 个额外的自由度, 因为三个质心速度是运动常量, 通常设置为零. 当在真空中进行模拟时, 绕质心的转动也可以被去除, 这种情况下 <span class="math">\(N_{\text{com} }=6\)</span>. 当使用一个以上的温度耦合组时, 第 <span class="math">\(i\)</span> 组的自由度数目为:</p>
+
+<p><span class="math">\[N_{\text{df} }^i=(3N^i-N_c^i) {3N-N_c-N_{\text{com} } \over 3N-N_c} \tag{3.20}\]</span></p>
+
+<p>当计算三斜体系的压力, 或者体系受到剪切力作用时, 将动能写成张量形式能带来方便</p>
+
+<p><span class="math">\[\bi E_{\text{kin} }={1\over2}\sum_i^N m_i \bi v_i \otimes \bi v_i \tag{3.21}\]</span></p>
+
+<p><strong>压力和维里</strong></p>
+
+<p>压力张量 <span class="math">\(\bi P\)</span> 可以通过动能 <span class="math">\(E_{\text{kin} }\)</span> 和维里 <span class="math">\(\bi \X\)</span> 的差值来计算:</p>
+
+<p>$$ \bi P={2\over V}(\bi E_{\text{kin}}-\bi \X) \tag{3.22}$$</p>
+
+<p>其中 <span class="math">\(V\)</span> 为盒子的体积. 在各向同性体系中被用于压力耦合的标量压力 <span class="math">\(P\)</span> 为:</p>
+
+<p><span class="math">\[P = \text{trace} (\bi P)/3 \tag{3.23}\]</span></p>
+
+<p>维里张量 <span class="math">\(\bi \X\)</span> 定义为:</p>
+
+<p><span class="math">\[\bi \X = -{1\over2} \Sum_{i < j} \bi r_{ij} \otimes \bi F_{ij} \tag{3.24}\]</span></p>
+
+<p>GROMACS计算维里的实现方法请参考B.1节.</p>
+
+<figure>
+<img src="3.7.png" alt="图3.7: 蛙跳式积分方法. 该算法被称为蛙跳是因为 $\bi r$ 和 $\bi v$ 好像青蛙一样在彼此的背上跳跃." />
+<figcaption>图3.7: 蛙跳式积分方法. 该算法被称为蛙跳是因为 <span class="math">\(\bi r\)</span> 和 <span class="math">\(\bi v\)</span> 好像青蛙一样在彼此的背上跳跃.</figcaption>
+</figure>
+
+<h3 id="3.4.4蛙跳式积分方法">3.4.4 蛙跳式积分方法</h3>
+
+<p>GROMACS中默认的MD积分方法是所谓的 <strong>蛙跳式算法</strong> [20], 用于积分运动方程. 当需要非常精确的积分方法并采用温度和/或压力耦合时, 使用速度Verlet积分方法可能更好(参见3.4.5节). 蛙跳式算法使用了 <span class="math">\(t\)</span> 时刻的位置 <span class="math">\(\bi r\)</span> 和 <span class="math">\(t-{1\over2}\D t\)</span> 时刻的速度 <span class="math">\(\bi v\)</span>, 根据 <span class="math">\(t\)</span> 时刻的位置计算出力 <span class="math">\(\bi F(t)\)</span>, 并利用下面的方法更新位置和速度</p>
+
+<p><span class="math">\(\alg
+\bi v(t+{1\over2}\D t) &= \bi v(t-{1\over2}\D t)+{\D t\over m}\bi F(t) \tag{3.25} \\
+\bi r(t+\D t) &= \bi r(t)+\D t \bi v(t+{1\over2}\D t) \tag{3.26}
+\ealg\)</span></p>
+
+<p>图3.7是蛙跳式算法的形象说明. 它产生的轨迹与Verlet算法[21]完全一样, 它更新位置的方法是</p>
+
+<p><span class="math">\[\bi r(t +\D t)=2 \bi r(t)-\bi r(t-\D t) +{1\over m} \bi F(t)\D t^2 + O(\D t^4) \tag{3.27}\]</span></p>
+
+<p>蛙跳式算法对 <span class="math">\(\bi r\)</span> 具有三阶精度, 并且时间可逆. 关于此算法的优点以及与其他时间积分算法的比较, 请参看文献[22].</p>
+
+<p>为考虑温度耦合和压力耦合并扩展以包含约束守恒, 我们修改了运动方程, 详细情况将在后面进行讨论.</p>
+
+<h3 id="3.4.5速度verlet积分方法">3.4.5 速度verlet积分方法</h3>
+
+<p>GROMACS也实现了速度Verlet算法[23], 尽管它与所有选项的整合还没有完全好. 在速度Verlet方法中, 利用 <span class="math">\(t\)</span> 时刻的位置 <span class="math">\(\bi r\)</span> 和速度 <span class="math">\(\bi v\)</span> 积分运动方程, 并不需要前半步时刻的速度.</p>
+
+<p><span class="math">\(\alg
+\bi v(t+{1\over2}\D t) &= \bi v(t)+{\D t \over 2m} \bi F(t) \tag{3.28} \\
+\bi r(t+\D t) &= \bi r(t)+\D t \bi v(t+{1\over2}\D t) \tag{3.29} \\
+\bi v(t+\D t) &= \bi v(t+{1\over2}\D t)+{\D t \over 2m} \bi F(t+\D t) \tag{3.30}
+\ealg\)</span></p>
+
+<p>或者, 等价地,</p>
+
+<p><span class="math">\(\alg
+\bi r(t+\D t) &= \bi r(t)+\D t \bi v + {\D t^2 \over 2m} \bi F(t) \tag{3.31} \\
+\bi v(t+\D t) &= \bi v(t)+{\D t \over 2m}[\bi F(t)+ \bi F(t+\D t)] \tag{3.32}
+\ealg\)</span></p>
+
+<p>不使用温度或压力耦合, 并从 <strong>对应</strong> 的起始点出发, 蛙跳式方法和速度Verlet方法会给出完全相同的轨迹, 你可以容易地利用上面给出的方程证明这一点. 给定一个具有 <strong>相同</strong> 起始点 <span class="math">\(\bi x(0)\)</span> 和 <span class="math">\(\bi v(0)\)</span> 的起始文件, 蛙跳式方法和速度Verlet方法 <strong>不会</strong> 给出相同的轨迹, 因为蛙跳式方法的速度对应于 <span class="math">\(t=-{1\over2}\D t\)</span> 时刻, 而速度Verlet方法会认为它们对应于 <span class="math">\(t=0\)</span> 时刻.</p>
 
 <h3 id="3.4.8温度耦合">3.4.8 温度耦合</h3>
 
@@ -170,8 +283,6 @@
 
 <p>Berendsen弱耦合算法可以非常高效地将体系弛豫到到目标温度, 但是, 一旦系统达到平衡, 维持正确的正则系综更重要. 很可惜, 弱耦合方案并不能满足这一点.</p>
 
-<hr />
-
 <p>为了使用正则系综模拟, GROMACS还支持扩展系综方法. 这种方法首先由Nose提出[27], 后经Hoover修改[28]. 通过在运动方程中引入一个热容器和一个摩擦项, 方法对体系的哈密顿量进行了扩展. 摩擦力正比于每个粒子的速度和摩擦参数 <span class="math">\(\x\)</span> 的乘积. 这个摩擦参数(或&#8220;热浴&#8221;变量)是一个完全的动力学量, 有着自己是动量(<span class="math">\(p_\x\)</span>)和运动方程; 其时间导数由当前动能和参考温度之间的差值来计算.</p>
 
 <p>在这个公式中, 图3.3中粒子的运动方程被替换为:</p>
@@ -198,8 +309,6 @@
 
 <p>然而, 要特别注意弱耦合方案和Nose-Hoover算法的区别: 使用弱耦合你将得到一个具有强烈阻尼的 <strong>指数弛豫</strong>, 而Nose-Hoover方法产生 <strong>振荡弛豫</strong>. Nose-Hoover耦合需要的实际弛豫时间 比你选择的振荡周期要大几倍. 这些振荡(相比于指数弛豫)也意味着时间常数通常应该比弱耦合所使用的弛豫时间大4&#8211;5倍, 但你可以根据情况改变.</p>
 
-<hr />
-
 <p>Nose-Hoover动力学在简单的体系, 如谐振子集合中, 可能是非遍历的, 这意味着即使模拟运行了无限长时间, 也只能对相空间的一小部分进行采样. 因此, 人们发展了Nose-Hoover链方法, 其中每个的Nose-Hoover控温器都有自己的Nose-Hoover恒温器来控制其温度. 当恒温器链的长度趋向无限时, 可以保证过程是遍历的. 只使用几个链可以大大提高遍历性, 但最近的研究表明, 体系仍然是非遍历的, 并且仍然不完全清楚其实际影响[32]. 目前, 链的默认数目为10, 但用户可以更改. 在使用Nose-Hoover链的情况下, 方程修改为下面的形式以包含恒温粒子链[33]:</p>
 
 <p><span class="math">\(\alg
@@ -221,8 +330,6 @@
 <p>通过再次考查Trotter分解, 我们可以更好地理解这些等温积分方法之间的差异. 对Nose-Hoover动力学(为简单起见, 使用的链长 <span class="math">\(N=1\)</span>, 更多细节请参考文献[34]), 将Liouville算子劈分为</p>
 
 <p><span class="math">\[iL=iL_1+iL_2+iL_{\text{NHC} } \tag{3.54}\]</span></p>
-
-<hr />
 
 <p>其中,</p>
 
@@ -262,8 +369,6 @@ iL_{\text{NHC} } &= \Sum_{i=1}^N -{p_\x \over Q} \bi v_i \cdot \nabla \bi v_i + 
 
 <p>应该提到一种特殊情况: 可以只对体系的一部分进行温度耦合, 而其它部分不进行温度耦合. 这可以通过对那些不进行恒温的组指定&#8211;1的时间常数 <span class="math">\(\t_T\)</span> 来实现. 如果只有体系的一部分进行恒温, 体系最终仍然会收敛到一个NVT体系. 实际上, 有一个建议可尽量降低离散时间步长所造成的温度误差: 如果对水使用了约束, 那么应该只对水的自由度进行恒温, 而不是蛋白质的自由度, 因为蛋白质更高频率的模式可能会导致温度与&#8220;真实&#8221;温度有更大的偏差, 这里的真实温度指的是使用小的时间步长得到的温度[36].</p>
 
-<hr />
-
 <h3 id="3.4.9压力耦合">3.4.9 压力耦合</h3>
 
 <p>与温度耦合类似, 体系也可以耦合到一个&#8220;压力浴&#8221;. GROMACS既支持每步重新缩放坐标与盒矢量的Berendsen算法[25], 扩展系综的Parrinello-Rahman方法[37, 38], 也支持速度Verlet的一种变形, Martyna-Tuckerman-Tobias-Klein (MTTK)方法的压力控制[34]. Parrinello-Rahman和Berendsen方法可以与任何上述的温度耦合方法联用; MTTK只能与Nose-Hoover温度控制方法联用.</p>
@@ -290,8 +395,6 @@ iL_{\text{NHC} } &= \Sum_{i=1}^N -{p_\x \over Q} \bi v_i \cdot \nabla \bi v_i + 
 
 <p>在GROMACS中, Berendsen缩放也可以各向同性地进行, 这意味着, 使用对角元素为 <span class="math">\(\text{trace}(\bi P)/3\)</span> 的对角矩阵代替 <span class="math">\(\bi P\)</span>. 对存在界面的体系, 半各向同性缩放可能有用. 在这种情况下, 在 <span class="math">\(x/y\)</span> 方向上进行各向同性缩放, 而在 <span class="math">\(z\)</span> 方向上进行独立的缩放. 将 <span class="math">\(x/y\)</span> 或 <span class="math">\(z\)</span> 方向上的压缩系数可以设置为零, 以便只在另一方向上进行缩放.</p>
 
-<hr />
-
 <p>如果允许完全的各向异性变形并使用约束, 你可能必须使用更缓慢的缩放, 或是减少时间步长以避免约束算法导致的误差. 需要注意的是, 尽管Berendsen控压算法在模拟时能产生正确的平均压力, 但它不能得到精确的NPT系综, 而且目前尚不完全清楚这种方法可能导致的误差.</p>
 
 <p><strong>Parrinello-Rahman压力耦合</strong></p>
@@ -316,8 +419,6 @@ iL_{\text{NHC} } &= \Sum_{i=1}^N -{p_\x \over Q} \bi v_i \cdot \nabla \bi v_i + 
 <p><span class="math">\[(\bi W^{-1})_{ij} = {4 \p^2 \b_{ij} \over 3 \t_p^2 L} \tag{3.65}\]</span></p>
 
 <p>正如在Nose-Hoover恒温器, 你应该认识到, Parrinello-Rahman时间常数并 <strong>不</strong> 等同于Berendsen压力耦合算法中使用的弛豫时间. 大多数情况下, 对于Parrinello-Rahman耦合, 你需要使用4&#8211;5倍大的时间常数. 如果压力离平衡态非常远, Parrinello-Rahman耦合会导致盒子产生非常大的振荡甚至最终导致运行崩溃. 在这种情况下, 你可能必须增加时间常数, 或(更好的办法)先使用弱耦合方案达到目标压力, 等系统平衡后再切换到Parrinello-Rahman耦合. 此外, 使用蛙跳式算法时, 在整个时间步骤完成之前不能得到 <span class="math">\(t\)</span> 时刻的压力, 因此必须使用上一步中的压力, 这使得算法不是直接可逆的, 并且可能不适合进行高精度的热力学计算.</p>
-
-<hr />
 
 <p><strong>表面张力耦合</strong></p>
 
@@ -517,5 +618,3 @@ iL_{\e,2} &=  G_\e  {\partial \over \partial p_\e} \tag{3.84}
 <p>由于轨迹文件很长, 不要每一步都保存! 为保留所有信息, 每15步输出一帧就够了, 因为对体系中最大频率的每一周期至少使用了30步, 并且Shannon的采样定理指出, 对带限信号, 最大频率的每一周期进行两次采样就包含了所有可用的信息. 但这样做仍然会得到很大的文件! 所以, 如果对最高频率不感兴趣, 每ps进行10或20此采样就够了. 注意由频闪效应导致的高频运动失真, 这被称为混叠: 较高的频率相对采样频率出现镜像, 显得频率较低.</p>
 
 <p>GROMACS也可以将模拟体系一部分坐标的精度进行降低, 并写入到特殊的压缩格式的轨迹文件. 所有其他的工具可以读取和写入这种格式. 参见7.3节关于如何设置<code>.mdp</code>文件以便使用<code>mdrun</code>此功能的详细信息.</p>
-
-

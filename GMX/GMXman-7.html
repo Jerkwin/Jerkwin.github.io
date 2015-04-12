@@ -20,8 +20,6 @@
 <p>表7.1列出了GROMACS使用的文件类型及其简短说明, 你可以在HTML参考手册或其在线版本中找到每类文件更加详细的说明.
 如果系统的XDR库中存在配置脚本, GROMACS 1.6或更高版本可在任何架构上读取XDR格式的GROMACS文件, 这些文件应该永远存放于UNIX系统下, 因为它们必须要有NFS的支持.</p>
 
-<hr />
-
 <table><caption>表7.1: GROMACS的文件类型</caption>
 <tr>
 <th style="text-align:center;">默认名称.扩展名</th>
@@ -322,8 +320,6 @@
 速度Verlet算法积分牛顿运动方程. 对从同样轨迹的对应点开始的恒NVE模拟, 此选项将产生与<code>md</code>选项解析等同的轨迹, 但不是二进制完全等同. 由于动能是从整个积分步的速度计算所得, 因此会稍微过高. 这种积分方法的优点是更精确, 使用了基于Trotter展开的可逆的Nose-Hoover和Parrinello-Rahman耦合积分, 以及(略过小)整步的速度输出. 这些优点的代价是额外的计算量, 特别是当使用约束和并行的额外通讯时. 注意, 对几乎所有的模拟<code>md</code>积分方法都足够精确.</p></li>
 </ul>
 
-<hr />
-
 <ul class="incremental">
 <li><p><code>md-vv-avek</code><br/>
 等同于<code>md-vv</code>的速度Verlet算法, 除了动能是由<code>md</code>积分方法的两半步动能的平均值决定以外, 因而此方法更精确. 当与Nose-Hoover和/或Parrinello-Rahman耦合联用时, 此选项会略微增加计算成本.</p></li>
@@ -342,8 +338,6 @@ Brown或位置Langevin动力学的欧拉积分方法, 粒子速度为所受力�
 <li><p><code>nm</code><br/>
 对<code>tpr</code>文件中的结构进行简正模式分析. 应该使用双精度编译的GROMACS.</p></li>
 </ul>
-
-<hr />
 
 <ul class="incremental">
 <li><p><code>tpi</code><br/>
@@ -370,8 +364,6 @@ Brown或位置Langevin动力学的欧拉积分方法, 粒子速度为所受力�
 <li><code>Linear</code><br/>
 去除质心的平动</li>
 </ul>
-
-<hr />
 
 <ul class="incremental">
 <li><p><code>Angular</code><br/>
@@ -412,8 +404,6 @@ L-BFGS最小化的校正步数. 数值越高(至少理论上)越准确, 但速�
 
 <p>当体系中存在壳层或柔性约束时, 会在每个时间步对壳层的的位置和柔性约束的长度进行优化, 直到在壳层和约束上的力的RMS值小于<code>emtol</code>, 或达到迭代的最大次数(<code>niter</code>)</p>
 
-<hr />
-
 <p><code>emtol</code>: (10.0) [kJ mol<sup>-1</sup> nm<sup>-1</sup>]<br/>
 当最大的力比这个值小时就认为最小化收敛. 对壳层MD这个值最大是1.0, 但由于此变量也用于能量最小化, 所以其默认值为10.0.</p>
 
@@ -448,8 +438,6 @@ L-BFGS最小化的校正步数. 数值越高(至少理论上)越准确, 但速�
 <p><code>nstenergy</code>: (1000) [步]<br/>
 将能量写入能量文件的间隔步数, 最后一步的能量始终会写入, 应是<code>nstcalcenergy</code>的倍数. 注意, 对所有MD步数与<code>nstcalcenergy</code>的模, 精确的能量总和及其涨落都存储在能量文件中, 所以当<code>nstenergy&gt;1</code>时, <code>g_energy</code>仍可以给出精确的能量平均值及其涨落</p>
 
-<hr />
-
 <p><code>nstxout-compressed</code>: (0) [步]<br/>
 利用有损压缩输出位置坐标的间隔步数</p>
 
@@ -481,8 +469,6 @@ L-BFGS最小化的校正步数. 数值越高(至少理论上)越准确, 但速�
 使用<code>cutoff-scheme=Group</code>和非准确的截断, <code>nstlist</code>会影响模拟的精确性, 不能随意选择.</li>
 </ul>
 
-<hr />
-
 <ul class="incremental">
 <li><p><code>0</code><br/>
 邻区列表仅构建一次, 且不再更新. 这主要用于真空中模拟, 这种情况下所有粒子彼此间都能看到对方.</p></li>
@@ -502,8 +488,6 @@ L-BFGS最小化的校正步数. 数值越高(至少理论上)越准确, 但速�
 当进行邻区搜索时计算长程力. 虽然这是默认值, 你可能要考虑更频繁地更新长程力.<br/>
 注意, PP-PME负载均衡可能会自动导致双程力(twin-range force)的计算, 这是为了维持所选择的范德华相互作用半径, 即便负载均衡正在改变静电截断. 如果<code>.mdp</code>文件已经指定了双程相互作用(比如每2&#8211;3步使用比PME静电更长的截断计算Lennard-Jones相互作用), 负载均衡对Lennard-Jones也会有小的影响, 因为短程截断(在其内部每步都计算力)改变了.</p></li>
 </ul>
-
-<hr />
 
 <p><code>ns-type</code>:</p>
 
@@ -538,8 +522,6 @@ L-BFGS最小化的校正步数. 数值越高(至少理论上)越准确, 但速�
 只对<code>cutoff-scheme=Verlet</code>有用. 此选项设置由Verlet缓冲引起的每个粒子配对相互作用的最大允许误差, 间接设置了<code>rlist</code>. 若<code>nstlist</code>和Verlet缓冲大小都固定(出于性能原因), 不在配对列表中的粒子对在<code>nstlist</code>&#8211;1步内能够不时地进入截断距离内. 这将导致非常小的能量跳跃. 对等温系综, 对于给定的截断和<code>rlist</code>可估算出这些非常小的能量跳跃. 估算时假定均相的粒子分布, 因此对多相体系可能会略微低估误差. 对于较长的配对列表寿命(<code>nstlist</code>&#8211;1)*dt, 缓冲会被高估, 因为忽略了粒子之间的相互作用.<br/>
 由于误差抵消, 总能量的实际漂移幅度通常小一到两个数量级. 注意, 与基于简单粒子配对的列表相比, GROMACS的配对列表设置导致漂移降低为原来的1/10, 生成的缓冲大小考虑了这一点影响. 不使用动力学(能量最小化等)时, 缓冲为截断的5%. 对NVE模拟, 会使用初始温度, 除非初始温度为零, 此时使用10%的缓冲. 对NVE模拟通常需要降低容差以便在纳秒的时间尺度达到适当能量守恒. 要覆盖自动缓冲设置, 可使用<code>verlet-buffer-tolerance=-1</code>, 并手动设置<code>rlist</code>.</p>
 
-<hr />
-
 <p><code>rlist</code>: (1) [nm]<br/>
 短程邻区列表的截断距离. 使用<code>cutoff-scheme=Verlet</code>时, 默认由<code>verlet-buffer-tolerance</code>选项设置, 并忽略<code>rlist</code>值.</p>
 
@@ -562,8 +544,6 @@ L-BFGS最小化的校正步数. 数值越高(至少理论上)越准确, 但速�
 粒子粒子粒子网格算法, 具有长程静电相互作用的解析梯度. 除影响函数对格点进行了优化外, 方法和代码与SPME完全相同, 优化使在计算精度略有提高.</p></li>
 </ul>
 
-<hr />
-
 <ul class="incremental">
 <li><p><code>Reaction-Field electrostatics</code><br/>
 库仑截断距离为<code>rcoulomb</code>的反应场, 其中<code>rcoulomb≥rlist</code>. 超过截断距离的介电常数为<code>epsilon-rf</code>. 当<code>epsilon-rf=0</code>时, 介电常数无穷大.</p></li>
@@ -582,8 +562,6 @@ L-BFGS最小化的校正步数. 数值越高(至少理论上)越准确, 但速�
 <li><p><code>User</code><br/>
 <code>mdrun</code>需要使用文件<code>table.xvg</code>, 里面包含用户定义的势能函数, 包括排斥, 色散和库仑相互作用. 当存在对相互作用时, <code>mdrun</code>也需要描述对相互作用的文件<code>tablep.xvg</code>. 当非键和对相互作用需要使用相同的相互作用时, 用户可以为两个表格文件指定相同的文件名. 这些文件应包含7列: <code>x</code>值, <code>f(x)</code>, <code>-f'(x)</code>, <code>g(x)</code>, <code>-g'(x)</code>, <code>h(x)</code>, <code>-h'(x)</code>, 其中<code>f(x)</code>为库仑函数, <code>g(x)</code>为色散函数, <code>h(x)</code>为排斥函数. 当<code>vdwtype</code>不为<code>User</code>时, 会忽略<code>g</code>, <code>-g'</code>, <code>h</code>和<code>-h'</code>. 对非键相互作用, <code>x</code>的取值应该从0到最大截断距离+<code>table-extension</code>, 彼此的间距应均匀. 对于对相互作用会使用文件中的表格长度. 当使用混合精度时, 非用户自定义表格的最佳间距为<code>0.002</code> [nm], 使用双精度时, 最佳值为<code>0.0005</code> [nm]. 在<code>x=0</code>处的函数值并不重要. 更多信息请参考印刷手册.</p></li>
 </ul>
-
-<hr />
 
 <ul class="incremental">
 <li><p><code>PME-Switch</code><br/>
@@ -618,8 +596,6 @@ PME-User和切换函数的组合(参见上文). 对最终粒子之间的相互�
 <p><code>epsilon-rf</code>: (0)<br/>
 反应场的相对介电常数, 仅与反应场静电方法一起使用. 为0时意味着无穷大.</p>
 
-<hr />
-
 <h3 id="7.3.11vdw">7.3.11 VdW</h3>
 
 <p><code>vdwtype</code>:</p>
@@ -647,8 +623,6 @@ LJ(不包括Buckingham)势在整个范围内降低, 使用Encad模拟包中的�
 <li><p><code>Potential-shift</code><br/>
 对VdW势进行固定的移位以使其在截断处为零. 这使得势能可由力的积分得到. 注意这并不影响力或采样.</p></li>
 </ul>
-
-<hr />
 
 <ul class="incremental">
 <li><p><code>None</code><br/>
@@ -683,8 +657,6 @@ LJ或Buckingham的截断距离.</p>
 
 <p><code>energygrp-table</code>:<br/>
 当对静电和/或VdW使用用户表格时, 可以在这里列出能量组之间的配对, 这些配对可以使用单独的用户表格. 两个能量组的名称将被追加到表格的文件名中, 追加时按照它们在<code>energygrps</code>中定义的顺序, 彼此之间以下划线隔开. 例如, 如果<code>energygrps = Na Cl Sol</code>, <code>energygrp-table = Na Na Na Cl</code>, 除常规的<code>table.xvg</code>外, <code>mdrun</code>还会读取<code>table_Na_Na.xvg</code>和<code>table_Na_Cl.xvg</code>, <code>table.xvg</code>将被用于所有其它能量组配对.</p>
-
-<hr />
 
 <h3 id="7.3.13ewald">7.3.13 Ewald</h3>
 
@@ -722,8 +694,6 @@ LJ-PME倒易部分VdW参数的组合规则. 几何规则比Lorentz-Berthelot规�
 倒易部分的加和仍然以3D进行, 但对<code>z</code>方向的力和势能进行校正以产生伪二维的加和. 如果体系在<code>x-y</code>平面具有板状几何结构, 你可以尝试增加盒子在z方向的长度(盒子的长度取为板高的3倍通常是可以的), 并使用这个选项.</p></li>
 </ul>
 
-<hr />
-
 <p><code>epsilon-surface</code>: (0)<br/>
 此选项控制3D Ewald加和的偶极校正. 默认值零意味着不进行校正. 将此值设置为围绕无穷大体系的假想表面的相对介电常数值, 即可进行校正. 小心, 如果你的体系含有自由移动的电荷, 你就不应该使用此选项. 这个值不影响长程校正的板状3DC方法.</p>
 
@@ -748,8 +718,6 @@ LJ-PME倒易部分VdW参数的组合规则. 几何规则比Lorentz-Berthelot规�
 
 <p><code>nsttcouple: (-1)</code><br/>
 与温度耦合的频率. 默认值&#8211;1表示<code>nsttcouple</code>与<code>nstlist</code>相等, 除非<code>nstlist≤0</code>, 此时会使用10. 对速度Verlet积分方法, <code>nsttcouple</code>被设置为1.</p>
-
-<hr />
 
 <p><code>nh-chain-length</code> (10)<br/>
 速度Verlet积分方法中Nose-Hoover恒温链的数目, 蛙跳式<code>md</code>积分方法只支持1. Nose-Hoover链变量的数据不会输出到.edr, 但可使用环境变量<code>GMX_NOSEHOOVER_CHAINS</code>设置输出.</p>
@@ -778,8 +746,6 @@ LJ-PME倒易部分VdW参数的组合规则. 几何规则比Lorentz-Berthelot规�
 
 <p><code>MTTK</code><br/>
 Martyna-Tuckerman-Tobias-Klein实现, 只用于<code>md-vv</code>或<code>md-vv-avek</code>, 非常类似于Parrinello-Rahman. 与Nose-Hoover温度耦合类似, 时间常数<code>tau-p</code> [ps]是平衡时压力的涨落周期. 当你想要在数据收集过程中施加压力缩放时, 这可能是更好的方法, 但需要当心, 如果从不同的压力开始模拟, 你可能会得到非常大的振荡. 目前仅支持各向同性缩放.</p>
-
-<hr />
 
 <p><code>pcoupltype</code>:</p>
 
@@ -812,8 +778,6 @@ Martyna-Tuckerman-Tobias-Klein实现, 只用于<code>md-vv</code>或<code>md-vv-
 <li><code>no</code><br/>
 不修改用于位置限制的参考坐标. 注意, 使用该选项维里和压力将取决于参考坐标的绝对位置.</li>
 </ul>
-
-<hr />
 
 <ul class="incremental">
 <li><p><code>all</code><br/>
@@ -849,8 +813,6 @@ Martyna-Tuckerman-Tobias-Klein实现, 只用于<code>md-vv</code>或<code>md-vv-
 
 <p>很迷惑? 好吧, 让我们举个例子. 假设你有两个温度组, 组的选择设置为<code>annealing = single periodic</code>, 组的点数设置为<code>annealing-npoints = 3 4</code>, 退火时间设置为<code>annealing-time = 0 3 6 0 2 4 6</code>, 温度设置为<code>annealing-temp = 298 280 270 298 320 320 298</code>. 在0 ps第一组将被耦合到298 K, 但参考温度在3 ps内将线性下降到280 K, 然后在3 ps到6 ps这段时间内, 温度将从280 K线性变化到270 K. 在这之后温度保持270 K不变. 0 ps时第二组被耦合到298 K, 在2 ps内温度线性增加到320 K, 并保持不变直到4 ps. 在4 ps和6 ps之间温度降低到298 K, 然后将以同样的方式重新开始, 即在6 ps和8 ps之间从298 K线性上升到320 K. 如果你不确定, 请检查<code>grompp</code>给出的汇总信息!</p>
 
-<hr />
-
 <h3 id="7.3.17速度产生">7.3.17 速度产生</h3>
 
 <p><code>gen-vel</code>:</p>
@@ -884,8 +846,6 @@ Martyna-Tuckerman-Tobias-Klein实现, 只用于<code>md-vv</code>或<code>md-vv-
 <li><p><code>all-angles</code><br/>
 将所有的键和键角都转换为键约束.</p></li>
 </ul>
-
-<hr />
 
 <p><code>constraint-algorithm</code>:</p>
 
@@ -927,8 +887,6 @@ LINCS失效前键能够旋转的最大角度.</p>
 使用Morse势描述键</p></li>
 </ul>
 
-<hr />
-
 <h3 id="7.3.19能量组排除">7.3.19 能量组排除</h3>
 
 <p><code>energygrp-excl</code>:<br/>
@@ -956,8 +914,6 @@ LINCS失效前键能够旋转的最大角度.</p>
 <li><p><code>table</code><br/>
 用户定义的势, 根据与墙的Z距离进行索引, 以类似于<code>energygrp-table</code>的选项读入, 其中的第一个名称为&#8220;正常&#8221;能量组, 第二名称为<code>wall0</code>或<code>wall1</code>, 只使用表中的色散和排斥列.</p></li>
 </ul>
-
-<hr />
 
 <p><code>wall-r-linpot</code>: &#8211;1 [nm]<br/>
 与墙的距离在此值以下时, 势能线性连续, 因此力为常数. 当一些原子超过墙时, 将此选项设置为正值对平衡尤其有用. 当此值 <span class="math">\(\le 0\)</span> (对<code>wall-type=table</code>则是&lt;0)时, 原子超过墙后会产生致命错误.</p>
@@ -1031,8 +987,6 @@ LINCS失效前键能够旋转的最大角度.</p>
 
 <p><code>pull-nstfout</code>: (1)<br/>
 所有牵引组受力的输出频率</p>
-
-<hr />
 
 <p><code>pull-ngroups</code>: (1)<br/>
 牵引组的数量, 使用时不包括绝对参考组. 牵引组可以在多个牵引坐标中重复使用. 下面只给出了第1组的牵引选项, 对其他组的选项, 只需简单地增加组编号即可.</p>

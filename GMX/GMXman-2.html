@@ -54,8 +54,6 @@ r_{ij}     &= \abs {\bi r_{ij}}    \tag{2.2}
 
 <p><span class="math">\[V=f {q^2 \over r}   或   F=f {q^2 \over r^2} \tag{2.4}\]</span></p>
 
-<hr />
-
 <table><caption> 表2.1 GROMACS使用的基本单位. 括号中的数字表示精确度.</caption>
 <tr>
 <th style="text-align:center;">物理量</th>
@@ -144,8 +142,6 @@ r_{ij}     &= \abs {\bi r_{ij}}    \tag{2.2}
 <p><strong>注意</strong>: 这些单位彼此之间是自洽的；改变其中的任何一个都可能使得单位系统不再自洽, 因此 <strong>强烈建议不要</strong> 修改. 特别是, 若使用 <span class="math">\(\AA\)</span> 代替 nm, 单位时间将变为0.1 ps；若使用能量单位kcal mol<sup>-1</sup>代替kJ mol<sup>-1</sup>, 单位时间将变为0.488882 ps, 且单位温度变为4.184 K. 但在这两种情况下, 计算的所有电势能都是错误的, 因为它们仍然是以kJ mol<sup>-1</sup>为单位计算的, 并假定nm为长度单位. 尽管对电荷重新进行细心的标度可能会得到自洽的单位, 但很显然, 所有这些容易引起混淆的做法都应该被严厉禁止.</p>
 
 <p>常用的物理常数以MD单位表示, 其取值可能不同(见表2.3). 所有的物理量都是以mol为单位计算的, 而不是以单个分子为单位计算. 玻尔兹曼常数 <span class="math">\(k\)</span> 和理想气体常数 <span class="math">\(R\)</span> 没有区别, 它们的值都是0.008 314 51 kJ mol<sup>-1</sup> K<sup>-1</sup>.</p>
-
-<hr />
 
 <table><caption> 表 2.3 部分物理常数</caption>
 <tr>
