@@ -181,7 +181,7 @@
 
 <h2 id="分布性质随时间的变化">分布性质随时间的变化</h2>
 
-<h3 id="gmxrdf">gmx rdf (翻译: 崔西)</h3>
+<h3 id="gmxrdf">gmx rdf(翻译: 崔西)</h3>
 
 <p><strong>概要</strong></p>
 
@@ -263,6 +263,161 @@ RDF类型: atom, mol_com, mol_cog, res_com, res_cog</p></li>
 <h2 id="分析键合相互作用">分析键合相互作用</h2>
 
 <h2 id="结构性质">结构性质</h2>
+
+<h3 id="gmxhbond">gmx hbond(翻译: 杨旭云)</h3>
+
+<p><strong>概要</strong></p>
+
+<pre><code>gmx hbond [-f [&lt;.xtc/.trr/...&gt;]] [-s [&lt;.tpr/.tpb/...&gt;]] [-n [&lt;.ndx&gt;]]
+          [-num [&lt;.xvg&gt;]] [-g [&lt;.log&gt;]] [-ac [&lt;.xvg&gt;]] [-dist [&lt;.xvg&gt;]]
+          [-ang [&lt;.xvg&gt;]] [-hx [&lt;.xvg&gt;]] [-hbn [&lt;.ndx&gt;]] [-hbm [&lt;.xpm&gt;]]
+          [-don [&lt;.xvg&gt;]] [-dan [&lt;.xvg&gt;]] [-life [&lt;.xvg&gt;]]
+          [-nhbdist [&lt;.xvg&gt;]] [-nice ] [-b ] [-e ]
+          [-dt ] [-tu ] [-xvg ] [-a ] [-r ]
+          [-[no]da] [-r2 ] [-abin ] [-rbin ] [-[no]nitacc]
+          [-[no]contact] [-shell ] [-fitstart ] [-fitend ]
+          [-temp ] [-smooth ] [-dump ] [-max_hb ]
+          [-[no]merge] [-acflen ] [-[no]normalize] [-P ]
+          [-fitfn ] [-beginfit ] [-endfit ]
+</code></pre>
+
+<p><strong>说明</strong></p>
+
+<p><code>gmx hbond</code>用于计算和分析氢键. 氢键是由氢原子-施体-受体所成角度(0为扩展)的截断值与施体-受体之间距离(当使用<code>-noda</code>时为氢原子-受体距离)的截断值共同决定的. OH和NH被认作氢键施体, O总是作为氢键受体, N默认为受体, 但可以利用<code>-nitacc</code>更改. 哑的氢原子被假定为与前面的第一个非氢原子相连.</p>
+
+<p>你需要指定用于分析的两个组, 它们必须完全相同或者彼此之间无任何重叠. 程序会分析两组间形成的所有氢键.</p>
+
+<p>如果设置了<code>-shell</code>, 就需要指定一个额外的索引组, 其中应该只包含一个原子. 在这种情况下, 计算时只会考虑距离这个原子某一壳层距离范围内的原子之间所形成的氢键.</p>
+
+<p>使用选项<code>-ac</code>, 会给出氢键的速率常数, 计算时采用Luzar和Chandler(Nature 394, 1996; J. Chem. Phys. 113:23, 2000)的模型或Markovitz和Agmon (J. Chem. Phys 129, 2008)的模型. 如果使用<code>-contact</code>选项分析接触动力学, n(t)可以定义为t时刻不处于接触距离r范围内的所有对(对应于<code>-r2</code>选项使用默认值0), 或者处于距离r2范围内的所有对(对应于使用<code>-r2</code>选项设置第二个截断值). 更多细节和定义请参考上面提到的文献.</p>
+
+<pre><code>[ selected ]
+20 21 24
+25 26 29
+1 3 6
+</code></pre>
+
+<p>注意, 三联对需要处于同一行中. 每个原子三联对指定了要分析的氢键, 也要注意计算前不会对原子类型进行核对.</p>
+
+<p><strong>输出</strong></p>
+
+<ul class="incremental">
+<li><code>-num</code>: 随时间变化的氢键数目</li>
+<li><code>-ac</code>: 对所有氢键存在函数(0或1)的自相关函数进行平均</li>
+<li><code>-dist</code>: 所有氢键的距离分布</li>
+<li><code>-ang</code>: 所有氢键的角度分布</li>
+<li><code>-hx</code>: 随时间变化的n-n+i氢键数目, 其中n和n+i代表残基的数目, i的范围从0到6. 这包括了蛋白螺旋中的n-n+3, n-n+4和n-n+5氢键.</li>
+<li><code>-hbn</code>: 所有选择的组, 选择组中的施体, 氢原子和受体, 所有组中形成氢键的所有原子, 所有参与插入的溶剂原子.</li>
+<li><code>-hbm</code>: 所有帧中所有氢键存在矩阵, 也包含了溶剂插入氢键的信息. 顺序与<code>-hbn</code>索引文件中的完全相同.</li>
+<li><code>-dan</code>: 输出分析的每时间帧中氢键施体和受体的数目. 当使用<code>-shell</code>时, 这尤其有用.</li>
+<li><code>-nhbdist</code>: 计算每个氢原子的氢键数, 以便将结果与Raman光谱相比较.</li>
+</ul>
+
+<p>注意: 选项<code>-ac</code>, <code>-life</code>, <code>-hbn</code>和<code>-hbm</code>需要的内存量正比于所选组中施体的总数目乘上受体的总数目.</p>
+
+<p><strong>选项</strong></p>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入)<br/>
+轨迹: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入)<br/>
+运行输入文件: tpr tpb tpa</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入, 可选)<br/>
+索引文件</li>
+<li><code>-num [&lt;.xvg&gt;]</code> (hbnum.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-g [&lt;.log&gt;]</code> (hbond.log) (输出, 可选)<br/>
+Log文件</li>
+<li><code>-ac [&lt;.xvg&gt;]</code> (hbac.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-dist [&lt;.xvg&gt;]</code> (hbdist.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-ang [&lt;.xvg&gt;]</code> (hbang.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-hx [&lt;.xvg&gt;]</code> (hbhelix.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-hbn [&lt;.ndx&gt;]</code> (hbond.ndx) (输出, 可选)<br/>
+索引文件</li>
+<li><code>-hbm [&lt;.xpm&gt;]</code> (hbmap.xpm) (输出, 可选)<br/>
+与X PixMap兼容的矩阵文件</li>
+<li><code>-don [&lt;.xvg&gt;]</code> (donor.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-dan [&lt;.xvg&gt;]</code> (danum.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-life [&lt;.xvg&gt;]</code> (hblife.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-nhbdist [&lt;.xvg&gt;]</code> (nhbdist.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (19)<br/>
+设置友好度</li>
+<li><code>-b &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的第一帧(ps)</li>
+<li><code>-e &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的最后一帧(ps)</li>
+<li><code>-dt &lt;time&gt;</code> (0)<br/>
+只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
+<li><code>-tu &lt;enum&gt;</code> (ps)<br/>
+时间单位: fs, ps, ns, us, ms, s</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-a &lt;real&gt;</code> (30)<br/>
+角度截断值(度, 氢原子-施体-受体)</li>
+<li><code>-r &lt;real&gt;</code> (0.35)<br/>
+半径截断值(nm, X-受体, 见下一选项)</li>
+<li><code>-[no]da</code> (yes)<br/>
+使用施体-受体距离(若为真)或者氢原子-受体距离(若为假)</li>
+<li><code>-r2 &lt;real&gt;</code> (0)<br/>
+第二半径截断值. 主要与<code>-contact</code>和<code>-ac</code>一起使用</li>
+<li><code>-abin &lt;real&gt;</code> (1)<br/>
+角度分布的分格宽度(度)</li>
+<li><code>-rbin &lt;real&gt;</code> (0.005)<br/>
+距离分布的分格宽度(nm)</li>
+<li><code>-[no]nitacc</code> (yes)<br/>
+将N原子视为受体</li>
+<li><code>-[no]contact</code> (no)<br/>
+不查找氢键, 仅查找截断距离内的接触数</li>
+<li><code>-shell &lt;real&gt;</code> (&#8211;1)<br/>
+当&gt;0时, 仅计算在一个粒子周围# nm范围内的氢键</li>
+<li><code>-fitstart &lt;real&gt;</code> (1)<br/>
+拟合相关函数的起始时间(ps), 以便获得氢键断裂和形成的正向与反向速率常数. 与<code>-gemfit</code>同用时, 我们建议使用<code>-fitstart 0</code></li>
+<li><code>-fitend &lt;real&gt;</code> (60)<br/>
+拟合相关函数的终止时间(ps), 以便获得氢键断裂和形成的正向与反向速率常数. (仅与<code>-gemfit</code>同用)</li>
+<li><code>-temp &lt;real&gt;</code> (298.15)<br/>
+计算氢键断裂和形成对应的吉布斯自由能的温度</li>
+<li><code>-smooth &lt;real&gt;</code> (&#8211;1)<br/>
+如果&gt;=0, 会对ACF的尾部进行平滑, 平滑时使用指数函数拟合: y = A exp(-x/τ)</li>
+<li><code>-dump &lt;int&gt;</code> (0)<br/>
+将第一个N氢键的ACF转存到单个的.xvg文件中, 用于调试</li>
+<li><code>-max_hb &lt;real&gt;</code> (0)<br/>
+归一化氢键自相关函数时所用的氢键数目的理论最大值. 在程序估算错误的情况下, 此选项有用.</li>
+<li><code>-[no]merge</code> (yes)<br/>
+相同施体和受体之间的氢键, 但不同氢原子作为单一氢键进行处理. 主要对ACF重要.</li>
+<li><code>-acflen &lt;int&gt;</code> (&#8211;1)<br/>
+ACF的长度, 默认为帧数的一半.</li>
+<li><code>-[no]normalize</code> (yes)<br/>
+对ACF进行归一化</li>
+<li><code>-P &lt;enum&gt;</code> (0)<br/>
+用于ACF的Legendre多项式的阶数(0代表不使用): 0, 1, 2, 3</li>
+<li><code>-fitfn &lt;enum&gt;</code> (none)<br/>
+拟合函数: none, exp, aexp, exp_exp, vac, exp5, exp7, exp9, erffit</li>
+<li><code>-beginfit &lt;real&gt;</code> (0)<br/>
+相关函数指数拟合的起始时间</li>
+<li><code>-endfit &lt;real&gt;</code> (&#8211;1)<br/>
+相关函数指数拟合的终止时间, &#8211;1代表直到最后</li>
+</ul>
+
+<p><strong>已知问题</strong></p>
+
+<ul class="incremental">
+<li>用于所选氢键的选项<code>-sel</code>有问题, 因此暂时无法使用.</li>
+</ul>
 
 <h2 id="动力学性质">动力学性质</h2>
 
