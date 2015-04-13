@@ -239,6 +239,75 @@
 
 <p>不使用温度或压力耦合, 并从 <strong>对应</strong> 的起始点出发, 蛙跳式方法和速度Verlet方法会给出完全相同的轨迹, 你可以容易地利用上面给出的方程证明这一点. 给定一个具有 <strong>相同</strong> 起始点 <span class="math">\(\bi x(0)\)</span> 和 <span class="math">\(\bi v(0)\)</span> 的起始文件, 蛙跳式方法和速度Verlet方法 <strong>不会</strong> 给出相同的轨迹, 因为蛙跳式方法的速度对应于 <span class="math">\(t=-{1\over2}\D t\)</span> 时刻, 而速度Verlet方法会认为它们对应于 <span class="math">\(t=0\)</span> 时刻.</p>
 
+<h3 id="3.4.6理解可逆的积分方法:trotter分解">3.4.6 理解可逆的积分方法: Trotter分解</h3>
+
+<p>为进一步理解速度Verlet和蛙跳式积分方法之间的关系, 我们引入动力学中的可逆Trotter公式, 它对于理解GROMACS的热浴和压力浴的实现也是非常有用的.</p>
+
+<p>对一个耦合一阶微分方程系统, 可利用演化算符用得到体系从 <span class="math">\(t=0\)</span> 时刻到 <span class="math">\(t\)</span> 时刻的演化</p>
+
+<p><span class="math">\(\alg
+\G(t) &= \exp(iLt) \G(0)  \\
+iL &= \dot \G \cdot \nabla_\G \tag{3.33}
+\ealg\)</span></p>
+
+<p>其中 <span class="math">\(L\)</span> 为Liouville算符, <span class="math">\(\G\)</span> 为自变量(位置和速度)的多维向量. 将精确算符的一个短时间近似, 在 <span class="math">\(\D t=t/P\)</span> 时刻是精确的, 连续应用 <span class="math">\(P\)</span> 次可使体系演化为</p>
+
+<p><span class="math">\[\G(t)=\prod_{i=1}^P \exp(iL\D t) \G(0) \tag{3.34}\]</span></p>
+
+<p>对NVE动力学, Liouville算子为</p>
+
+<p><span class="math">\[iL=\Sum_{i=1}^N \bi v_i \cdot \nabla_{\bi r_i} + \Sum_{i=1}^N {1 \over m_i} \bi F(r_i) \cdot \nabla_{\bi v_i} \tag{3.35}\]</span></p>
+
+<p>它可以被分解为两个算符的加和</p>
+
+<p><span class="math">\(\alg
+iL_1 &= \Sum_{i=1}^N {1 \over m_i} \bi F(r_i) \cdot \nabla_{\bi v_i} \\
+iL_2 &= \Sum_{i=1}^N \bi v_i \cdot \nabla_{\bi r_i}  \tag{3.36}
+\ealg\)</span></p>
+
+<p>这样, 真正动力学在短时间内, 对称可逆的近似为</p>
+
+<p><span class="math">\[\exp(iL\D t) = \exp(iL_2{1\over2}\D t) \exp(iL_1 \D t) \exp(iL_2{1\over2}\D t)+O(\D t^3) \tag{3.37}\]</span></p>
+
+<p>这对应于速度Verlet积分方法. 第一个 <span class="math">\({1\over2}\D t\)</span> 指数项对应于半个速度步, 第二个 <span class="math">\(\D t\)</span> 指数项对应于一个完整的速度步, 最后的 <span class="math">\({1\over2}\D t\)</span> 指数项是最终的半个速度步. 对于未来时刻 <span class="math">\(t=n\D t\)</span>, 上式变为</p>
+
+<p><span class="math">\(\alg
+\exp(iLn\D t) &\approx &\left( \exp(iL_2{1\over2}\D t) \exp(iL_1 \D t) \exp(iL_2{1\over2}\D t) \right)^n \\
+& \approx &\exp(iL_2{1\over2}\D t) \left( \exp(iL_1 \D t) \exp(iL_2 \D t) \right)^{n-1}  \\
+& &\exp(iL_1 \D t) \exp(iL_2{1\over2}\D t) \tag{3.38}
+\ealg\)</span></p>
+
+<p>利用这种形式, 我们可以很容易看到的不同Verlet积分方法之间的差异. 蛙跳式积分方法可以看作使用方程3.37的 <span class="math">\(\exp(iL_1 \D t)\)</span> 项代替半步速度项启动, 得到</p>
+
+<p><span class="math">\[\exp(iL n \D t) = \exp(iL_1 \D t) \exp(iL_2 \D t) +O(\D t^3) \tag{3.39}\]</span></p>
+
+<p>这里, 速度的整步处于 <span class="math">\(t-{1\over2}\D t\)</span> 和 <span class="math">\(t+{1\over2}\D t\)</span> 之间, 因为它是速度Verlet中速度半步的组合. 对未来的时刻 <span class="math">\(t=n\D t\)</span>, 此式变为</p>
+
+<p><span class="math">\[\exp(iL n \D t) \approx \left( \exp(iL_1 \D t) \exp(iL_2 \D t) \right)^n \tag{3.40}\]</span></p>
+
+<p>虽然上式初看起来不对称, 只要整个速度步处于 <span class="math">\(t-{1\over2}\D t\)</span> 和 <span class="math">\(t+{1\over2}\D t\)</span> 之间, 这就是在循环中的不同地方启动速度Verlet的一种简单方法.</p>
+
+<p>尽管蛙跳式方法和速度Verlet方法得到的轨迹和势能完全相同, 动能和温度并不一定相同. 标准的速度Verlet方法使用 <span class="math">\(t\)</span> 时刻的速度计算动能, 因而只有 <span class="math">\(t\)</span> 时刻的温度, 动能是对所有粒子的加和</p>
+
+<p><span class="math">\(\alg
+KE_{\text{full} }(t) &= \Sum_i \left({1\over 2m_i}\bi v_i(t) \right)^2 \\
+&=\Sum_i {1\over 2m_i}  \left({1\over 2}\bi v_i(t-{1\over2}\D t) + {1\over 2}\bi v_i(t+{1\over2}\D t) \right)^2  \tag{3.41}
+\ealg\)</span></p>
+
+<p>平方出现于平均的 <strong>外部</strong>. 标准的蛙跳式方法基于时间步 <span class="math">\(t+{1\over2}\D t\)</span> 和 <span class="math">\(t-{1\over2}\D t\)</span> 的平均动能来计算 <span class="math">\(t\)</span> 时刻的动能, 或对所有粒子的加和</p>
+
+<p><span class="math">\[KE_{\text{average} }(t) =\Sum_i {1\over 2m_i}  \left({1\over 2}\bi v_i(t-{1\over2}\D t)^2 + {1\over 2}\bi v_i(t+{1\over2}\D t)^2 \right)  \tag{3.42}\]</span></p>
+
+<p>其中平方处于平均的 <strong>内部</strong>.</p>
+
+<p>速度Verlet方法的非标准形式会对动能 <span class="math">\(KE(t+{1\over2}\D t)\)</span> 和 <span class="math">\(KE(t-{1\over2}\D t)\)</span> 进行平均, 与蛙跳式方法相同. GROMACS现在也实现了这种方法(利用<code>.mdp</code>文件中的<code>md-vv-avek</code>选项). 无温度耦合和压力耦合时, 半步动能平均的速度Verlet方法和蛙跳式方法在数值精度内是完全相同的. 但是, 对于控温和控压方案, 半步动能平均的速度Verlet方法和蛙跳式方法会有所不同, 我们将在控温器和控压器部分对此进行讨论.</p>
+
+<p>对于给定的步长, 半步平均的动能和温度稍微准确一些; 比起整步动能(使用<code>md-vv</code>), 采用半步平均的动能(<code>md</code>和<code>md-vv-avek</code>)得到的平均动能的差异更接近于小步长极限情况下获得的动能. 对NVE模拟, 这种差别通常不明显, 因为粒子的位置与速度仍然完全相同; 差别在于模拟温度含义的 <strong>解释</strong>, 而 <strong>不</strong> 在于所产生的轨迹. 虽然半步平均方法得到的动能更精确, 意味着当时间步长变大时它受的影响小些, 但这种方法的噪声更大. 与整步动能方法相比, 半步平均动能方法得到的体系总能量(动能和势能的总和)的RMS偏差更大(在大多数情况下约高一倍). 漂移仍然是相同的, 并且轨迹也完全相同.</p>
+
+<p>对NVT模拟, 两种方法 <strong>将</strong> 会有差异, 正如控温部分所讨论的, 因为会调节粒子的速度以使得模拟的动能, 以任何一种方式计算,都能达到与设定温度相应的分布. 在这种情况下, 三种方法不会给出完全相同的结果.</p>
+
+<p>由于速度和位置都定义于同一时刻 <span class="math">\(t\)</span>, 速度Verlet积分方法可用于一些方法中, 特别是那些严格正确的控压方法, 实际上这些控压方法不能使用蛙跳式积分方法. 相比蛙跳式积分方法, 速度Verlet方法多耗费的时间可以忽略不计, 但目前需要的通讯调用多一倍. 在大多数情况下, 尤其是对于大的体系,其通讯速度对并行化非常重要, 热力学系综之间的差异以 <span class="math">\(1/N\)</span> 极限消失. 当只需要NVT系综时, 蛙跳式可能是首选的积分方法. 对控压模拟, 热力学细节非常重要, 只有速度Verlet方法能给出真正的系综. 在任一情况下, 都可能需要采用双精度进行模拟以得到正确的热力学校正细节.</p>
+
 <h3 id="3.4.8温度耦合">3.4.8 温度耦合</h3>
 
 <p>直接使用的分子动力学模拟对应于NVE系综(粒子数不变, 体积不变, 能量恒定的系综), 我们希望计算的大多数物理量实际上对应于等温(NVT)系综, 也被称为正则系综. GROMACS可以使用Berendsen的 <strong>弱耦合</strong> 方案[25], 通过Andersen恒温器的随机化[26], 扩展系综的Nose-Hoover方案[27, 28], 或速度重缩放方案[29]来模拟恒温过程, 这些方案各自的优缺点将在下面介绍.</p>
