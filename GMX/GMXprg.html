@@ -179,6 +179,58 @@
 
 <h2 id="结构中的距离随时间的变化">结构中的距离随时间的变化</h2>
 
+<h3 id="gmxmdmat">gmx mdmat(翻译: 陈辰)</h3>
+
+<p><strong>概要</strong></p>
+
+<pre><code>gmx mdmat [-f [&lt;.xtc/.trr/...&gt;]] [-s [&lt;.tpr/.tpb/...&gt;]] [-n [&lt;.ndx&gt;]]
+          [-mean [&lt;.xpm&gt;]] [-frames [&lt;.xpm&gt;]] [-no [&lt;.xvg&gt;]] [-nice ]
+          [-b ] [-e ] [-dt ] [-xvg ] [-t ]
+          [-nlevels ]
+</code></pre>
+
+<p><strong>说明</strong></p>
+
+<p><code>gmx mdmat</code>创建残基对之间的最小距离构成的矩阵. 使用<code>-frames</code>选项时, 可以将这些矩阵按顺序存储下来, 用以查看蛋白质三级结构随着时间的变化. 如果不明智地使用选项, 程序可能会生成非常大的输出文件. 默认只输出对整个轨迹进行平均后的距离矩阵. 同时, 也可以输出整个轨迹中残基间不同原子之间的接触数. 输出文件可以利用<code>gmx xpm2ps</code>进行处理以生成PostScript(tm)图.</p>
+
+<p><strong>选项</strong></p>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入)<br/>
+轨迹: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入)<br/>
+结构+质量(db): tpr tpb tpa gro g96 pdb brk ent</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入, 可选)<br/>
+索引文件</li>
+<li><code>-mean [&lt;.xpm&gt;]</code> (dm.xpm) (输出)<br/>
+与X PixMap兼容的矩阵文件</li>
+<li><code>-frames [&lt;.xpm&gt;]</code> (dmf.xpm) (输出, 可选)<br/>
+与X PixMap兼容的矩阵文件</li>
+<li><code>-no [&lt;.xvg&gt;]</code> (num.xvg) (输出, 可选)
+xvgr/xmgr文件</li>
+</ul>
+
+<p>其它选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (19)<br/>
+设置友好度</li>
+<li><code>-b &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的第一帧(ps)</li>
+<li><code>-e &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的最后一帧(ps)</li>
+<li><code>-dt &lt;time&gt;</code> (0)<br/>
+只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-t &lt;real&gt;</code> (1.5)<br/>
+切断距离</li>
+<li><code>-nlevels &lt;int&gt;</code> (40)<br/>
+距离的离散水平数</li>
+</ul>
+
 <h2 id="分布性质随时间的变化">分布性质随时间的变化</h2>
 
 <h3 id="gmxrdf">gmx rdf(翻译: 崔西)</h3>
