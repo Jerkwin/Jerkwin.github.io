@@ -177,6 +177,81 @@
 
 <h2 id="结构间的距离">结构间的距离</h2>
 
+<h3 id="gmxrmsf">gmx rmsf(翻译: 杨旭云)</h3>
+
+<p><strong>概要</strong></p>
+
+<pre><code>gmx rmsf [-f [&lt;.xtc/.trr/...&gt;]] [-s [&lt;.tpr/.tpb/...&gt;]] [-n [&lt;.ndx&gt;]]
+         [-q [&lt;.pdb&gt;]] [-oq [&lt;.pdb&gt;]] [-ox [&lt;.pdb&gt;]] [-o [&lt;.xvg&gt;]]
+         [-od [&lt;.xvg&gt;]] [-oc [&lt;.xvg&gt;]] [-dir [&lt;.log&gt;]] [-nice ]
+         [-b ] [-e ] [-dt ] [-[no]w] [-xvg ]
+         [-[no]res] [-[no]aniso] [-[no]fit]
+</code></pre>
+
+<p><strong>说明</strong></p>
+
+<p><code>gmx rmsf</code>计算轨迹(使用<code>-f</code>提供)中原子位置的根均方涨落(RMSF, root mean square fluctuation, 即标准偏差), 计算前可以先将构型与参考帧(使用<code>-s</code>提供)的构型进行叠合(并非必须).</p>
+
+<p>使用选项<code>-oq</code>时会将RMSF值转换为B因子值, 并将其与坐标一起写入<code>.pdb</code>文件中, 其中坐标来自结构文件, 或是由<code>-q</code>指定的<code>.pdb</code>文件. 选项<code>-ox</code>会将B因子与平均坐标写入文件中.</p>
+
+<p>使用选项<code>-od</code>时会计算相对于参考结构的根均方偏差.</p>
+
+<p>使用选项<code>-aniso</code>时, <code>gmx rmsf</code>将会计算各项异性温度因子, 还会输出平均坐标和含有ANISOU记录的<code>.pdb</code>文件(对应于<code>-oq</code>或<code>-ox</code>选项). 注意, U值与取向有关, 因此在与实验数据对比之前请确认已经与实验坐标进行了叠合.</p>
+
+<p>当传递给程序一个<code>.pdb</code>文件, 并且设置了<code>-aniso</code>选项时, 如果<code>.pdb</code>文件中含有任何各向异性温度因子, 将会创建Uij的相关图.</p>
+
+<p>使用选项<code>-dir</code>时会对平均MSF(3x3)矩阵进行对角化. 这可用于显示原子在哪个方向上涨落最大, 哪个方向上涨落最小.</p>
+
+<p><strong>选项</strong></p>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入)<br/>
+轨迹文件: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入)<br/>
+结构+质量(db): tpr tpb tpa gro g96 pdb brk ent</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入, 可选)<br/>
+索引文件</li>
+<li><code>-q [&lt;.pdb&gt;]</code> (eiwit.pdb) (输入, 可选)<br/>
+蛋白质数据信息文件</li>
+<li>`-oq <a href="bfac.pdb">&lt;.pdb&gt;</a> (输出, 可选)<br/>
+蛋白质数据信息文件</li>
+<li><code>-ox [&lt;.pdb&gt;]</code> (xaver.pdb) (输出, 可选)<br/>
+蛋白质数据信息文件</li>
+<li><code>-o [&lt;.xvg&gt;]</code> (rmsf.xvg) (输出)<br/>
+xvgr/xmgr 文件</li>
+<li><code>-od [&lt;.xvg&gt;]</code> (rmsdev.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-oc [&lt;.xvg&gt;]</code> (correl.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-dir [&lt;.log&gt;]</code> (rmsf.log) (输出, 可选)<br/>
+Log文件</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (19)<br/>
+设置友好度</li>
+<li><code>-b &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的第一帧(ps)</li>
+<li><code>-e &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的最后一帧(ps)</li>
+<li><code>-dt &lt;time&gt;</code> (0)<br/>
+只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
+<li><code>-[no]w</code> (no)<br/>
+查看输出文件 .xvg, .xpm, .eps和.pdb</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-[no]res</code> (no)<br/>
+计算每个残基的均值</li>
+<li><code>-[no]aniso</code> (no)<br/>
+计算各向异性温度因子</li>
+<li><code>-[no]fit</code> (yes)<br/>
+计算RMSF之前进行最小二乘叠合. 如果不使用这个选项, 你必须确保参考结构与轨迹匹配.</li>
+</ul>
+
 <h2 id="结构中的距离随时间的变化">结构中的距离随时间的变化</h2>
 
 <h3 id="gmxmdmat">gmx mdmat(翻译: 陈辰)</h3>
