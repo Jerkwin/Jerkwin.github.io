@@ -742,10 +742,9 @@ LJ-PME倒易部分VdW参数的组合规则. 几何规则比Lorentz-Berthelot规�
 指数弛豫的压力耦合, 时间常数为<code>tau-p</code> [ps]. 在每个时间步对盒子进行缩放. 有人认为, 这并不能得到正确的热力学系综, 但在模拟的开始阶段这是缩放盒子的最有效方式.</p></li>
 <li><p><code>Parrinello-Rahman</code><br/>
 扩展系综的压力耦合, 盒矢量服从运动方程. 原子的运动方程也耦合到此方程. 没有瞬时的缩放. 与Nose-Hoover温度耦合类似, 时间常数<code>tau-p</code> [ps]是平衡时压力的涨落周期. 当你想要在数据收集过程中施加压力缩放时, 这可能是更好的方法, 但需要当心, 如果从不同的压力开始模拟, 你可能会得到非常大的振荡. 对那些精确涨落非常重要的NPT系综的模拟, 或者如果压力耦合时间非常短, 这种方法可能不合适, 因为前面时间步的压力会被GROMACS用于计算当前时间步的压力.</p></li>
+<li><p><code>MTTK</code><br/>
+Martyna-Tuckerman-Tobias-Klein实现, 只用于<code>md-vv</code>或<code>md-vv-avek</code>, 非常类似于Parrinello-Rahman. 与Nose-Hoover温度耦合类似, 时间常数<code>tau-p</code> [ps]是平衡时压力的涨落周期. 当你想要在数据收集过程中施加压力缩放时, 这可能是更好的方法, 但需要当心, 如果从不同的压力开始模拟, 你可能会得到非常大的振荡. 目前仅支持各向同性缩放.</p></li>
 </ul>
-
-<p><code>MTTK</code><br/>
-Martyna-Tuckerman-Tobias-Klein实现, 只用于<code>md-vv</code>或<code>md-vv-avek</code>, 非常类似于Parrinello-Rahman. 与Nose-Hoover温度耦合类似, 时间常数<code>tau-p</code> [ps]是平衡时压力的涨落周期. 当你想要在数据收集过程中施加压力缩放时, 这可能是更好的方法, 但需要当心, 如果从不同的压力开始模拟, 你可能会得到非常大的振荡. 目前仅支持各向同性缩放.</p>
 
 <p><code>pcoupltype</code>:</p>
 
