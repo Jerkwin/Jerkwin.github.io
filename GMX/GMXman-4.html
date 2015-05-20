@@ -578,6 +578,522 @@ V_d(\phi_{ijkl}) &= k f_n^d(\phi_{ijkl}) \tag{4.73}
 
 <p><strong>二面角</strong>: <span class="math">\(x\)</span> 是以度为单位的二面角. 表格应从&#8211;180直到并包括180度, 使用IUPAC/IUB约定, 即零为顺式, 导数以度为单位.</p>
 
+<h2 id="4.3限制">4.3 限制</h2>
+
+<p>可以使用一些特殊的势能函数对体系的运动施加限制, 这样可以避免模拟中出现灾难性的偏差, 或是可以包含来自实验数据的知识. 无论哪种情况, 限制都不是力场的一部分, 并且所用参数的合理性也不重要. 提到GROMACS中实现的势能形式只是为了保持完整性. 在GROMACS中限制和约束所用的算法差异很大.</p>
+
+<h3 id="4.3.1位置限制">4.3.1 位置限制</h3>
+
+<p>位置限制用于将粒子限制在固定的参考位置 <span class="math">\(\bi R_i\)</span>. 在平衡过程中可利用它们来避免体系关键部分的位置产生剧烈的变化(例如, 当溶剂还未达到平衡时, 蛋白质会受到来自溶剂分子的很大的力, 这时就可以限制蛋白质中的一些运行). 位置限制的另一个应用是将粒子限制在围绕某个区域的壳层中, 以便对此区域进行细致的模拟. 壳层只是近似的, 因为它们缺少由壳层外面缺失粒子引起的适当的相互作用. 位置限制只是为了维持体系内部的完整性. 对球形壳层, 更好的做法是让力常数随半径变化, 由内部边界从零开始增加, 一直达到外部边界上的很大值. 但这一功能尚未在GROMACS中实现.</p>
+
+<p>位置限制使用下面的势能形式</p>
+
+<p><span class="math">\[V_{pr}(\bi r_i)={1\over2} k_{pr} \left| \bi r_i-\bi R_i \right|^2 \tag{4.74}\]</span></p>
+
+<p>此势能的图形见图4.14.</p>
+
+<p>不失一般性, 可将势能改写为:</p>
+
+<p><span class="math">\[V_{pr}(\bi r_i)={1\over2}\left[ k_{pr}^x(x_i-X_i)^2 \hat x + k_{pr}^y (y_i-Y_i)^2 \hat y +k_{pr}^z (z_i-Z_i)^2 \hat z \right] \tag{4.75}\]</span></p>
+
+<p>相应的力为</p>
+
+<p><span class="math">\[\alg
+F_i^x &=-k_{pr}^x (x_i-X_i) \\
+F_i^y &=-k_{pr}^y (y_i-Y_i) \\
+F_i^z &=-k_{pr}^z (z_i-Z_i) \\
+\ealg\tag{4.76}\]</span></p>
+
+<p>使用三个不同的力常数就可以在每个空间方向上打开或关闭位置限制, 这意味着原子可以简谐地限制于平面或直线上. 位置限制施加于指定的固定原子列表上, 这一列表通常使用<code>pdb2gmx</code>程序产生.</p>
+
+<figure>
+<img src="4.14.png" alt="图4.14: 位置限制势" />
+<figcaption>图4.14: 位置限制势</figcaption>
+</figure>
+
+<figure>
+<img src="4.15.png" alt="图4.15: 平底位置限制势. (A) 未反转, (B) 反转" />
+<figcaption>图4.15: 平底位置限制势. (A) 未反转, (B) 反转</figcaption>
+</figure>
+
+<h3 id="4.3.2平底位置限制势">4.3.2 平底位置限制势</h3>
+
+<p>平底位置限制可用于将粒子限制在模拟体积的某一部分中. 在势能的平底区域中限制粒子不受力的作用, 但当粒子处于平底区域之外时会受到一个简谐力, 这个力会驱使粒子向平底区域运动. 对同一粒子可以同时施加常规的位置限制和平底的位置限制(但只用于相同的参考位置 <span class="math">\(\bi R_i\)</span>). 平底位置限制使用下面的通用势能函数(图4.15 A):</p>
+
+<p><span class="math">\[V_\text{fb}(\bi r_i)={1\over2}k_\text{fb}[ d_g(\bi r_i; \bi R_i)-r_\text{fb}]^2 H[d_g(\bi r_i; \bi R_i)-r_\text{fb}] \tag{4.77}\]</span></p>
+
+<p>其中 <span class="math">\(\bi R_i\)</span> 为参考位置, <span class="math">\(r_\text{fb}\)</span> 为平势离中心的距离, <span class="math">\(k_\text{fb}\)</span> 为力常数, <span class="math">\(H\)</span> 为Heaviside阶梯函数. 到参考位置的距离 <span class="math">\(d_g(\bi r_i; \bi R_i)\)</span> 取决于平底势的几何构造 <span class="math">\(g\)</span>.</p>
+
+<p>对平底势, GROMACS支持下面几种几何构造:</p>
+
+<p><strong>球</strong> (<span class="math">\(g=1\)</span>): 粒子被限制于给定半径的球中. 所受平底势的力指向球的中心, 距离的计算方法如下:</p>
+
+<p><span class="math">\[d_g(\bi r_i; \bi R_i)=\left| \bi r_i- \bi R_i \right| \tag{4.78}\]</span></p>
+
+<p><strong>圆柱</strong> (<span class="math">\(g=2\)</span>): 粒子被限制于给定半径的圆柱中. 圆柱的轴平行于 <span class="math">\(z\)</span> 轴, 所受平底势的力指向圆柱的轴, 力的 <span class="math">\(z\)</span> 分量为零. 距离的计算方法如下:</p>
+
+<p><span class="math">\[d_g(\bi r_i; \bi R_i)=\sqrt{(x_i-X_i)^2+(y_i-Y_i)^2} \tag{4.79}\]</span></p>
+
+<p><strong>层</strong> (<span class="math">\(g=3, 4,5\)</span>): 粒子限制于层中. 层由其厚度与法线定义, 法线可平行于 <span class="math">\(x\)</span>, <span class="math">\(y\)</span> 或 <span class="math">\(z\)</span> 轴, 作用力平行于层的法线. 距离的计算方法如下:</p>
+
+<p>$$ d_g(\bi r_i; \bi R_i)=\left| x_i-X_i \right| \;\; 或 d_g(\bi r_i; \bi R_i)=\left| y_i-Y_i \right| \;\; d_g(\bi r_i; \bi R_i)=\left| z_i-Z_i \right| \tag{4.80}$$</p>
+
+<p>对同一粒子可施加多个独立的, 具有不同几何构造的平底位置限制. 例如, 沿 <span class="math">\(z\)</span> 方向同时施加圆柱和层限制可使粒子限制于一个圆盘中; 在 <span class="math">\(x\)</span>, <span class="math">\(y\)</span>, <span class="math">\(z\)</span> 方向施加三个层限制可使粒子限制于立方体中.</p>
+
+<p>此外, 可以反转限制区域和未限制区域, 这样得到的势能会使粒子处于 <span class="math">\(\bi R_i\)</span>, <span class="math">\(g\)</span> 和 <span class="math">\(r_\text{fb}\)</span> 定义的体积之 <strong>外</strong>. 在拓扑中定义负值的 <span class="math">\(r_\text{fb}\)</span> 可启用此功能, 使用下面的势能:</p>
+
+<p><span class="math">\[V_\text{fb}^\text{inv}={1\over2}k_\text{fb}[ d_g(\bi r_i; \bi R_i)-\left|r_\text{fb}\right|]^2 H[-(d_g(\bi r_i; \bi R_i)-\left|r_\text{fb} \right|)] \tag{4.81}\]</span></p>
+
+<h3 id="4.3.3角限制">4.3.3 角限制</h3>
+
+<p>角限制用于限制两对粒子间或一对粒子与 <span class="math">\(z\)</span> 轴之间的角度. 所用的函数形式类似于恰当二面角, 对两对原子之间的角:</p>
+
+<p><span class="math">\[V_{ar}(\bi r_i, \bi r_j, \bi r_k, \bi r_l)=k_{ar}(1-\cos(n(\q-\q_0))), \;\;  \q=\arccos\left( {\bi r_j-\bi r_i \over \| \bi r_j-\bi r_i \|} \cdot {\bi r_l-\bi r_k \over \|\bi r_l-\bi r_k \|} \right) \tag{4.82}\]</span></p>
+
+<p>对一对原子与 <span class="math">\(z\)</span> 轴之间的角:</p>
+
+<p><span class="math">\[V_{ar}(\bi r_i, \bi r_j)=k_{ar}(1-\cos(n(\q-\q_0))), \;\; \q =\arccos\left( {\bi r_j-\bi r_i \over \| \bi r_j-\bi r_i \|} \cdot \pmat 0 \\ 0 \\ 1 \epmat \right) \tag{4.83}\]</span></p>
+
+<p>当不需要区分平行与反平行向量时, 多重性 <span class="math">\(n\)</span> 可设为2. 当多重性为1时, 平衡角度 <span class="math">\(\q\)</span> 应处于0度和180度之间; 当多重性为2时, <span class="math">\(\q\)</span> 应处于0度和90度之间.</p>
+
+<h3 id="4.3.4二面角限制">4.3.4 二面角限制</h3>
+
+<p>二面角限制用于限制由四个粒子定义的二面角, 如不当二面角(4.2.12节), 但使用了稍加修改的势能:</p>
+
+<p><span class="math">\[\phi'=(\phi-\phi_0)\; \text{MOD} \; 2\pi \tag{4.84}\]</span></p>
+
+<p>其中 <span class="math">\(\f_0\)</span> 为参考角度, 势能的定义为:</p>
+
+<p><span class="math">\[V_{dihr}(\f')=\begin{cases}
+{1\over2} k_{dihr}(\f'-\f_0-\D \f)^2 &\qquad 当\; \f' > \D \f  \\
+                                   0 &\qquad 当\; \f' \le \D \f
+\end{cases}  \tag{4.85}\]</span></p>
+
+<p>其中 <span class="math">\(\D \f\)</span> 为用户定义的角度, <span class="math">\(k_{dihr}\)</span> 为力常数. <strong>注意</strong>, 在拓扑文件的输入中, 角度的单位为度, 力常数的单位为kJ/mol/rad<sup>2</sup>.</p>
+
+<h3 id="4.3.5距离限制">4.3.5 距离限制</h3>
+
+<p>当指定的一对原子之间的距离超过一个阈值时, 距离限制会给势能增加一个惩罚项. 它们通常用于施加来自实验的限制, 例如核磁共振(NMR, nuclear magnetic resonance)实验中对体系运动的限制. 因此, MD可用于NMR数据的结构精修. 在GROAMCS中, 有三种方式对原子对施加距离限制:</p>
+
+<ul class="incremental">
+<li>简单的简谐限制: 使用<code>[ bonds ]</code>类型6. (见5.4节)</li>
+<li>分段线性/简谐限制: <code>[ bonds ]</code>类型10.</li>
+<li>复杂的NMR距离限制, 可选的原子对, 时间和/或系综平均</li>
+</ul>
+
+<p>下面将叙述后面两个选项.</p>
+
+<p>当低于指定的下界或处于指定的两个上界之间时, 距离限制的势能形式为二次; 当超过最大边界时, 势能为线性(见图4.16).</p>
+
+<p><span class="math">\[V_{dr}(r_{ij})= \begin{cases}
+{1\over2} k_{dr}(r_{ij}-r_0)^2             &\qquad 当\; & \phantom{r_0 \le{} } r_{ij} < r_0  \\
+0                                          &\qquad 当\; & r_0 \le r_{ij} < r_1  \\
+{1\over2} k_{dr}(r_{ij}-r_1)^2             &\qquad 当\; & r_1 \le r_{ij} < r_0  \\
+{1\over2} k_{dr}(r_2-r_1)(2r_{ij}-r_2-r_1) &\qquad 当\; & r_2 \le r_{ij}
+\end{cases}  \tag{4.86}\]</span></p>
+
+<p>相应的力为</p>
+
+<p><span class="math">\[F_i = \begin{cases}
+-k_{dr}(r_{ij}-r_0){\bi r_{ij} \over r_{ij} } &\qquad 当\; & \phantom{r_0 \le{} } r_{ij} < r_0  \\
+0                                             &\qquad 当\; & r_0 \le r_{ij} < r_1  \\
+-k_{dr}(r_{ij}-r_1){\bi r_{ij} \over r_{ij} } &\qquad 当\; & r_1 \le r_{ij} < r_0  \\
+-k_{dr}(r_2-r_1){\bi r_{ij} \over r_{ij} }    &\qquad 当\; & r_2 \le r_{ij}
+\end{cases}  \tag{4.87}\]</span></p>
+
+<p>对不是由NMR数据导出的限制, 这个函数通常足够了, <code>[ bonds ]</code>类型10的段可用于在原子对之间施加独立的限制, 见5.7.1节. 对由NMR测量导出的限制, 可能需要更复杂的函数, 这可通过<code>[ distance_restraints ]</code>段提供, 具体将在下面论述.</p>
+
+<figure>
+<img src="4.16.png" alt="图4.16: 距离限制势" />
+<figcaption>图4.16: 距离限制势</figcaption>
+</figure>
+
+<p><strong>时间平均</strong></p>
+
+<p>基于瞬时距离的距离限制可能会显著地减弱分子内的涨落. 采用 <strong>时间平均</strong> 的限制距离可以解决这个问题[91]. 时间平均的力为</p>
+
+<p><span class="math">\[F_i = \begin{cases}
+-k_{dr}^a (\bar r_{ij}-r_0){\bi r_{ij} \over r_{ij} } &\qquad 当\; & \phantom{r_0 \le{} } \bar r_{ij} < r_0  \\
+0                                                     &\qquad 当\; & r_0 \le \bar r_{ij} < r_1  \\
+-k_{dr}^a (\bar r_{ij}-r_1){\bi r_{ij} \over r_{ij} } &\qquad 当\; & r_1 \le \bar r_{ij} < r_0  \\
+-k_{dr}^a (r_2-r_1){\bi r_{ij} \over r_{ij} }         &\qquad 当\; & r_2 \le \bar r_{ij}
+\end{cases}  \tag{4.88}\]</span></p>
+
+<p>其中 <span class="math">\(\bar r_{ij}\)</span> 由衰减时间为 <span class="math">\(\t\)</span> 的指数运行平均给出:</p>
+
+<p><span class="math">\[\bar r_{ij}=\lt r_{ij}^{-3} \gt^{-1/3}  \tag{4.89}\]</span></p>
+
+<p>缓慢打开力常数 <span class="math">\(k_{dr}^a\)</span>, 以弥补模拟开始时缺少历史数据的问题:</p>
+
+<p><span class="math">\[k_{dr}^a=k_{dr} \left( 1-\exp\left(-{t\over\t}\right)\right)  \tag{4.90}\]</span></p>
+
+<p>由于时间平均, 我们无法再定义距离限制势了.</p>
+
+<p>采用这种方式, 一个原子可以通过在两个位置之间移动 <strong>平均地</strong> 满足两个不兼容的距离限制. 例如围绕 <span class="math">\(\c\)</span> 二面角旋转的氨基酸支链会因此接近其他各种基团. 这样的活动支链可导致多个NOE, 不能由单一结构满足.</p>
+
+<p><code>mdrun</code>程序计算时间平均距离的方法如下:</p>
+
+<p><span class="math">\[\begin{align}
+\overline{r^{-3} }_{ij}(0) &= r_{ij}(0)^{-3} \\
+\overline{r^{-3} }_{ij}(t) &=\overline{r^{-3} }_{ij}(t-\D t) \exp\left(-{\D t \over \t}\right)+r_{ij}(t)^{-3}\left[1-\exp\left(-{\D t \over \t}\right)\right]
+\end{align}  \tag{4.91}\]</span></p>
+
+<p>当原子对处于边界之内时可能仍会受到力的作用, 因为时间平均的距离可能仍然超过了边界. 为防止质子彼此靠得太近, 可以使用一种混合的方法. 在这种方法中, 当瞬时距离处于边界之内时, 惩罚项为零, 在其他情况下惩罚项为瞬时偏离与时间平均偏离乘积的平方根:</p>
+
+<p><span class="math">\[\bi F_i=\begin{cases}
+ k_{dr}^a \sqrt{(r_{ij}-r_0) (\bar r_{ij}-r_0)} {\bi r_{ij} \over r_{ij} }  & 当\;\; r_{ij} < r_0 \;且\; \bar r_{ij} < r_0 \\
+-k_{dr}^a \min\left(\sqrt{(r_{ij}-r_1)(\bar r_{ij}-r_1)}, r_2-r_1 \right) {\bi r_{ij} \over r_{ij} } & 当\;\; r_{ij}>r_1 \;且\; \bar r_{ij}>r_1  \\
+ 0 & 其他情况
+\end{cases}  \tag{4.92}\]</span></p>
+
+<p><strong>多对平均</strong></p>
+
+<p>根据实验数据, 有时不清楚是哪些原子对导致了单个NOE, 在其他一些情况下, 由于体系的对称性, 很显然地有多余一对的原子有贡献, 例如含有三个质子的甲基. 对这样一个基团, 不可能区分不同的质子, 因此当计算此甲基与其他质子(或一组质子)之间的距离时, 所有三个质子都要考虑. 由于磁共振的物理本性, NOE信号的强度与原子间距离的6次方成反比, 因此, 当联合原子对时, <span class="math">\(N\)</span> 个限制的固定列表要放在一起, 表现出的&#8220;距离&#8221;为:</p>
+
+<p><span class="math">\[r_N(t)=\left[ \Sum_{n=1}^N \bar r_n(t)^{-6} \right]^{-1/6} \tag{4.93}\]</span></p>
+
+<p>其中对 <span class="math">\(\bar r_n\)</span> 我们可以使用 <span class="math">\(r_{ij}\)</span> 或方程4.89. 瞬时距离和时间平均的距离 <span class="math">\(r_N\)</span> 可以联合起来施加混合约束, 如上所述. 由于更多的质子对对相同的NOE信号有贡献, 其强度会增大, 由于是倒数加和, 累加的&#8220;距离&#8221;会小于距离的任何一个分量.</p>
+
+<p>将力分布到原子对上时, 有两个选项. 对第一个守恒选项, 力定义为限制势对坐标的导数, 当不使用时间平均时, 得到的势能是守恒的. 分布到原子对上的力与 <span class="math">\(r^{-6}\)</span> 成正比, 这意味着互相靠近的原子对比互相远离的原子对受到更大的力, 这可能导致分子&#8220;过于刚性&#8221;. 另一个选项是等力分配. 这种情况下, 每对原子受到的力为限制势对 <span class="math">\(r_N\)</span> 导数的 <span class="math">\(1/N\)</span>. 这种方法的优势在于可以对更多的构型进行抽样, 但不守恒的力可能导致对质子的局部加热.</p>
+
+<p>也可以使用多个(蛋白质)分子的 <strong>系综平均</strong>. 在这种情况下, 界限应当降低:</p>
+
+<p><span class="math">\[\begin{align}
+r_1 &= r_1*M^{-1/6} \\
+r_2 &= r_2*M^{-1/6} \\
+\end{align} \tag{4.94}\]</span></p>
+
+<p>其中 <span class="math">\(M\)</span> 为分子数. 当给出适当的选项时, GROMACS预处理器<code>grompp</code>可自动进行这些处理. 得到的&#8220;距离&#8221;用于计算标量力:</p>
+
+<p><span class="math">\[\bi F_i=\begin{cases}
+\begin{array}{cl} 0                                       & r_N < r_1  \\
+k_{dr}(r_N-r_1) {r_{ij} \over r_{ij} }  & r_1 \le r_N < r_2  \\
+k_{dr}(r_2-r_1) {r_{ij} \over r_{ij} }  & r_N \ge r_2
+\end{array}
+\end{cases}\tag{4.95}\]</span></p>
+
+<p>其中 <span class="math">\(i\)</span>, <span class="math">\(j\)</span> 代表所有对NOE信号有贡献的原子对.</p>
+
+<p><strong>使用距离限制</strong></p>
+
+<p>在拓扑文件中可以将基于NOE数据的距离限制添加到分子定义中, 如下面的示例:</p>
+
+<pre><code>[ distance_restraints ]
+; ai    aj    type    index    type'    low    up1    up2    fac
+  10    16       1        0        1    0.0    0.3    0.4    1.0
+  10    28       1        1        1    0.0    0.3    0.4    1.0
+  10    46       1        1        1    0.0    0.3    0.4    1.0
+  16    22       1        2        1    0.0    0.3    0.4    2.5
+  16    34       1        3        1    0.0    0.5    0.6    1.0
+</code></pre>
+
+<p>在这个例子中, 可以发现很多特性. <code>ai</code>列与<code>aj</code>列为限制粒子的原子编号. <code>type</code>列总是为1. 如在4.3.5节解释的那样, 多个距离可以对单个NOE信号有贡献. 在拓扑中, 这可使用<code>index</code>列指定. 在我们的例子中, 限制10&#8211;28和10&#8211;64的索引都是1, 因此它们会被同时处理. 一起处理的一个额外要求是几个限制必须位于连续的行中, 中间不能有其他限制. <code>type'</code>列通常为1, 但也可设为2, 以便不对距离限制进行时间平均与系综平均, 这适用于限制氢键. 列<code>low</code>, <code>up1</code>和<code>up2</code>分别为方程4.86中的 <span class="math">\(r_0\)</span>, <span class="math">\(r_1\)</span> 和 <span class="math">\(r_2\)</span> 值. 在一些情况下, 对一些限制使用不同的力常数可能有用, 这可通过<code>fac</code>列进行控制. 对每个限制, 参数文件中的力常数会乘上<code>fac</code>列中的值.</p>
+
+<h3 id="4.3.6取向限制">4.3.6 取向限制</h3>
+
+<p>本节论述在MD模拟中如何计算和限制向量间的取向, 如一些NMR实验中测量的. 这里论述的精修方法, 以及使用与不使用时间和系综平均对结果的影响已经发表[92].</p>
+
+<p><strong>理论</strong></p>
+
+<p>在NMR实验中, 当一个分子在溶剂中的翻滚并非完全各向同性时可测量矢量间的取向. 这种取向测量的两个例子是残基偶极耦合(两个原子核之间)或化学位移各向异性. 向量 <span class="math">\(\bi r\)</span> 的可观测量可写为:</p>
+
+<p><span class="math">\[\d_i = {2\over3}\text{tr}(\mathbf{SD}_i) \tag{4.96}\]</span></p>
+
+<p>其中 <span class="math">\(\mathbf S\)</span> 为无量纲的分子序张量, 张量 <span class="math">\(\mathbf D_i\)</span> 为</p>
+
+<p><span class="math">\[\mathbf D_i = {c_i \over \|\bi r_i\|^\alpha} \pmat
+   3xx-1 & 3xy   & 3xz    \\
+   3xy   & 3yy-1 & 3yz    \\
+   3xz   & 3yz   & 3zz-1  \\
+\epmat \tag{4.97}\]</span></p>
+
+<p>其中</p>
+
+<p><span class="math">\[x={r_{i,x} \over \|\bi r_i \|}, y={r_{i,y} \over \|\bi r_i \|}, z={r_{i,z} \over \|\bi r_i\|} \tag{4.98}\]</span></p>
+
+<p>对一个偶极耦合 <span class="math">\(\bi r_i\)</span> 为连接两个原子核间的向量, <span class="math">\(\a=3\)</span>, 常数 <span class="math">\(c_i\)</span> 为:</p>
+
+<p><span class="math">\[c_i={\m_0 \over 4\p} \g_1^i \g_2^i {\hbar \over 4\p} \tag{4.99}\]</span></p>
+
+<p>其中为 <span class="math">\(\g_1^i\)</span> 和 <span class="math">\(\g_2^i\)</span> 为两个核的旋磁比.</p>
+
+<p>序张量是对称的, 迹为零. 使用旋转矩阵 <span class="math">\(\mathbf T\)</span> 可将其变换为下面的形式:</p>
+
+<p><span class="math">\[\mathbf T^T \mathbf{ST}=s \pmat
+   -{1\over2}(1-\h) & 0 & 0  \\
+   0 & -{1\over2}(1+\h) & 0  \\
+   0 & 0 & 1
+\epmat \tag{4.100}\]</span></p>
+
+<p>其中 <span class="math">\(-1 \le s \le 1\)</span>, <span class="math">\(0 \le \h \le 1\)</span>. <span class="math">\(s\)</span> 称为序参数, <span class="math">\(\h\)</span> 称为序张量 <span class="math">\(\mathbf S\)</span> 的非对称性. 当分子在溶剂中的翻滚各向同性时, <span class="math">\(s\)</span> 为零, 无法观测到取向效应, 因为所有的 <span class="math">\(\d_i\)</span> 都是零.</p>
+
+<p><strong>模拟中取向的计算</strong></p>
+
+<p>由于下面将要解释的原因, <span class="math">\(\mathbf D\)</span> 矩阵是相对于分子的参考取向计算的. 取向由旋转矩阵 <span class="math">\(\mathbf R\)</span> 定义, 计算它时需要使用最小二乘方法将选定的一组原子的当前坐标拟合到参考构型, 参考构型为模拟的初始构型. 对后面将要处理的系综平均, 参考结构来自第一个子体系. <span class="math">\(\mathbf D_i^c\)</span> 矩阵的计算方法为:</p>
+
+<p><span class="math">\[\mathbf D_i^c(t)= \mathbf R(t) \mathbf D_i(t) \mathbf R^T(t) \tag{4.101}\]</span></p>
+
+<p>向量 <span class="math">\(i\)</span> 的取向为:</p>
+
+<p><span class="math">\[\d_i^c(t)={2\over 3} \text{tr}( \mathbf S(t) \mathbf D_i^c(t)) \tag{4.102}\]</span></p>
+
+<p>序张量 <span class="math">\(\mathbf S(t)\)</span> 通常是未知的, 对它的一个合理选择是能够使计算与观测到的取向的(加权)平均方差最小的张量:</p>
+
+<p><span class="math">\[MSD(t)=\left( \Sum_{i=1}^N w_i\right)^{-1} \Sum_{i=1}^N w_i(\d_i^c(t)-\d_i^{exp})^2 \tag{4.103}\]</span></p>
+
+<p>为正确地联合不同类型的测量, <span class="math">\(w_i\)</span> 的单位应使得所有项都是无量纲的. 这意味着 <span class="math">\(w_i\)</span> 单位的次数为 <span class="math">\(\d_i\)</span> 单位的次数&#8211;2. <strong>注意</strong> 使用常数因子缩放所有 <span class="math">\(w_i\)</span> 并不影响序张量.</p>
+
+<p><strong>时间平均</strong></p>
+
+<p>由于张量 <span class="math">\(\mathbf D\)</span> 随时间迅速涨落, 比能在实验中观测到的快得多, 在模拟中它们应当对时间进行平均. 然而, 在模拟中时间与分子数都是有限的, 通常不能得到对分子所有取向收敛的 <span class="math">\(\mathbf D_i\)</span> 张量的平均值. 如果假定分子内 <span class="math">\(\bi r_i\)</span> 向量平均取向的收敛比分子的翻滚时间快得多, 这一张量可以在随分子旋转的坐标系中进行平均, 如方程4.101所示. 时间平均的张量使用指数衰减记忆函数进行计算:</p>
+
+<p><span class="math">\[\mathbf D_i^a(t) = {\int_{u=t_0}^t \mathbf D_i^c(u)\exp\left(-{t-u \over \t}\right) \rmd u \over \int_{u=t_0}^t \exp\left(-{t-u \over \t}\right) \rmd u } \tag{4.104}\]</span></p>
+
+<p>假定序张量 <span class="math">\(\mathbf S\)</span> 的涨落慢于 <span class="math">\(\mathbf D_i\)</span>, 时间平均的取向为:</p>
+
+<p><span class="math">\[\d_i^a(t)={2\over3} \text{tr}(\mathbf S(t) \mathbf D_i^a(t)) \tag{4.105}\]</span></p>
+
+<p>其中序张量 <span class="math">\(\mathbf S\)</span> 使用表达式4.103进行计算, 但将其中的 <span class="math">\(\d_i^c(t)\)</span> 替换为 <span class="math">\(\d_i^a(t)\)</span>.</p>
+
+<p><strong>限制</strong></p>
+
+<p>可以对模拟结构施加力进行限制, 施加的力正比于计算与实验取向之间差异. 无时间平均时, 恰当的势能可定义为:</p>
+
+<p><span class="math">\[V={1\over2} k\Sum_{i=1}^N w_i(\d_i^c(t)-\d_i^{exp})^2 \tag{4.106}\]</span></p>
+
+<p>其中 <span class="math">\(k\)</span> 的单位为能量单位, 这样限制 <span class="math">\(i\)</span> 的有效力常数为 <span class="math">\(kw_i\)</span>. 力是势能 <span class="math">\(V\)</span> 的梯度的负值. 作用于向量 <span class="math">\(\bi r_i\)</span> 上的力 <span class="math">\(\bi F_i\)</span> 为:</p>
+
+<p><span class="math">\[\alg
+\bi F_i(t) &= -{\rmd V \over \rmd {\bi r_i} } \\
+&= -k w_i(\d_i^c(t)-\d_i^{exp}) {\rmd {\d_i(t)} \over \rmd {\bi r_i} } \\
+&= -k w_i(\d_i^c(t)-\d_i^{exp}) {2 c_i \over \|\bi r\|^{2+\a} } \left(2\mathbf R^T \mathbf S \mathbf R \bi r_i -  {2 +\a \over \|\bi r\|^2} \text{tr}(R^T \mathbf S \mathbf R \bi r_i \bi r_i^T) \bi r_i \right)
+\ealg\]</span></p>
+
+<p><strong>系综平均</strong></p>
+
+<p>系综平均可通过模拟一个具有 <span class="math">\(M\)</span> 个子体系的体系来实现, 其中每个子体系包含了完全相同的取向限制. 体系只通过取向限制势进行相互作用:</p>
+
+<p><span class="math">\[V=M{1\over2} k \Sum_{i=1}^N w_i < \d_i^c(t)-\d_i^{exp}>^2 \tag{4.107}\]</span></p>
+
+<p>子体系 <span class="math">\(m\)</span> 中向量 <span class="math">\(\bi r_{i,m}\)</span> 上的力为:</p>
+
+<p><span class="math">\[\bi F_{i,m}(t)=-{\rmd V \over \rmd {\bi r_{i,m} } }=-k w_i < \d_i^c(t)-\d_i^{exp} > {\rmd {\d_{i,m}^c(t)} \over \rmd {\bi r_{i,m} } } \tag{4.108}\]</span></p>
+
+<p><strong>时间平均</strong></p>
+
+<p>当使用时间平均时, 无法定义势能. 但我们仍可以定义一个量, 它粗略地表示了限制的能量:</p>
+
+<p><span class="math">\[V=M{1\over2} k^a \Sum_{i=1}^N w_i < \d_i^a(t)-\d_i^{exp}>^2 \tag{4.109}\]</span></p>
+
+<p>缓慢打开力常数 <span class="math">\(k^a\)</span>, 以弥补时间接近 <span class="math">\(t_0\)</span> 时缺少历史数据的问题. 它精确地正比于已积累的平均量:</p>
+
+<p><span class="math">\[k^a =k {1\over \t} \int_{u=t_0}^t \exp\left(-{t-u \over \t}\right) \rmd u \tag{4.110}\]</span></p>
+
+<p>真正关键的是力的定义, 它正比于时间平均与瞬时偏差乘积的平方根. 只使用时间平均的偏差会导致大的振荡. 力的计算方式如下:</p>
+
+<p><span class="math">\[\bi F_{i,m}(t)= \begin{cases}
+   0  &当\; ab \le 0  \\
+   k^a w_i {a \over |a|} \sqrt{ab} {\rmd {\d_{i,m}^c(t)} \over \rmd {\bi r_{i,m} } }  &当\; ab > 0  \\
+\end{cases}
+\tag{4.111} \\
+a =< \d_i^a(t)-\d_i^{exp} >\\
+b =< \d_i^c(t)-\d_i^{exp} >\]</span></p>
+
+<p><strong>使用取向限制</strong></p>
+
+<p>在拓扑文件的<code>[ orientation_restraints ]</code>段中可以将取向限制添加到分子的定义中. 这里我们给出一个示例段, 包含了五个N-H残基的偶极耦合限制:</p>
+
+<pre><code>[ orientation_restraints ]
+; ai   aj   type   exp.   label   alpha   const.   obs.   weight
+;                                    Hz     nm^3     Hz    Hz^-2
+  31   32      1      1       3       3    6.083  -6.73      1.0
+  43   44      1      1       4       3    6.083  -7.87      1.0
+  55   56      1      1       5       3    6.083  -7.13      1.0
+  65   66      1      1       6       3    6.083  -2.57      1.0
+  73   74      1      1       7       3    6.083  -2.10      1.0
+</code></pre>
+
+<p>观测量的单位为Hz, 但也可以选择任何其他单位. <code>ai</code>列与<code>aj</code>列为限制粒子的原子编号. <code>type</code>列总是为1. <code>exp.</code>列代表实验编号, 从1开始. 对每次实验, 会优化单独的序张量 <span class="math">\(\mathbf S\)</span>. 对每个限制, 其标签应为大于零的唯一数字. <code>alpha</code>列包含了方程4.97中用于计算取向的次数 <span class="math">\(\a\)</span>. <code>const.</code>列包含相同方程中使用的常数 <span class="math">\(c_i\)</span>. 这些常数的单位应为观测量乘上 <span class="math">\(\text{nm}^\a\)</span>. <code>obs.</code>列包含了观测量, 单位任意. 最后一列包含权重 <span class="math">\(w_i\)</span>, 其单位为观测量单位平方的倒数.</p>
+
+<p>取向限制的一些参数可在<code>grompp.mdp</code>文件中设定. 不同力常数, 平均时间和系综平均对结果的影响, 请参考论文[92].</p>
+
+<h2 id="4.4极化">4.4 极化</h2>
+
+<p>GROMACS可处理极化, 采用的方法是将壳层(Drude)粒子附着到原子和/或虚拟位点上. 然后在每个时间步对壳层粒子的能量进行最小化, 以维持体系处于Born-Oppenheimer势能面上.</p>
+
+<h3 id="4.4.1简单极化">4.4.1 简单极化</h3>
+
+<p>只是平衡距离为零的简谐势.</p>
+
+<h3 id="4.4.2水极化">4.4.2 水极化</h3>
+
+<p>用于水的特殊势能, 允许单个壳层粒子的各向异性极化[43].</p>
+
+<h3 id="4.4.3thole极化">4.4.3 Thole极化</h3>
+
+<p>基于Thole的早期工作[93], Roux及其合作者实现了对乙醇这样分子的势能[94, 95, 96]. 在这些分子中, 壳层粒子之间存在分子内的相互作用, 然而, 必须对这些相互作用进行屏蔽, 因为完全的库仑作用太强了. 两个壳层粒子 <span class="math">\(i\)</span> 和 <span class="math">\(j\)</span> 之间的势能为:</p>
+
+<p><span class="math">\[V_{thole}={q_i q_j \over r_{ij} } \left[ 1-\left(1+{\bar r_{ij}\over 2}\right) \exp(-\bar r_{ij}) \right] \tag{4.112}\]</span></p>
+
+<p><strong>注意</strong>, 在Noskov等人的文章中[96], 方程1有一个符号错误:</p>
+
+<p><span class="math">\[\bar r_{ij}=a {r_{ij} \over (\a_i \a_j)^{1/6} } \tag{4.113}\]</span></p>
+
+<p>其中 <span class="math">\(a\)</span> 为一个魔术常数(无量纲), 通常取2.6[96]; <span class="math">\(\a_i\)</span> 和 <span class="math">\(\a_j\)</span> 分别为壳层粒子的极化率.</p>
+
+<h2 id="4.5自由能相互作用">4.5 自由能相互作用</h2>
+
+<p>本节叙述自由能计算中, 势能对 <span class="math">\(\l\)</span> 的依赖关系(见3.12节). 所有常见的势能类型与约束类型都可以在状态A(<span class="math">\(\l=0\)</span>)和状态B(<span class="math">\(\l=1\)</span>)之间光滑地进行插值, 反之亦然. 所有键合相互作用都利用对相互作用参数的线性插值进行插值, 非键相互作用可以使用线性插值或软核相互作用.</p>
+
+<p>从GROMACS4.6开始, <span class="math">\(\l\)</span> 是一个向量, 允许自由能转变的不同分量以不同速率进行. 库仑, Lennard-Jones, 键合和限制项都可以使用<code>.mdp</code>文件中的选项独立地进行控制.</p>
+
+<p><strong>简谐势</strong></p>
+
+<p>这里给出的例子针对键势能, 在GROMACS中使用的是简谐势. 然而, 这些方程也同样适用于键角势与不当二面角势.</p>
+
+<p><span class="math">\(\alg
+V_b &=  {1\over 2} \left[ (1-\l) k_b^A+\l k_b^B \right] \left[b-(1-\l)b_0^A-\l b_0^B \right]^2 \tag{4.114} \\
+\opar{V_B}{\l} &= {1\over 2} (k_b^B-k_b^A)\left[ b-(1-\l)b_0^A+\l b_0^B \right]^2 + \\
+& \qquad (b_0^A-b_0^B) \left[ b-(1-\l)b_0^A-\l b_0^B \right] \left[ (1-\l) k_b^A+\l k_b^B \right] \tag{4.115}
+\ealg\)</span></p>
+
+<p><strong>GROMOS&#8211;96键和键角</strong></p>
+
+<p>对四次键伸缩势与基于余弦的键角势, 通过对力常数与平衡位置的线性插值进行插值, 这里就不给出相应的公式了.</p>
+
+<p><strong>恰当二面角</strong></p>
+
+<p>对恰当二面角, 这些方程更复杂一些:</p>
+
+<p><span class="math">\(\alg
+V_d &= \left[ (1-\l) k_d^A+\l k_d^B \right] \left(1+\cos\left[n_\f \f -(1-\l)\f_s^A-\l \f_s^B \right] \right) \tag{4.116} \\
+\opar{V_d}{\l} &= (k_d^B-k_d^A) \left(1+\cos\left[n_\f \f-(1-\l)b_s^A-\l \f_s^B \right] \right) + \\
+& \quad (\f_s^B-\f_s^A) \left[ (1-\l)k_d^A-\l k_d^B \right] \sin\left[n_\f \f-(1-\l) \f_s^A-\l \f_s^B \right] \tag{4.117}
+\ealg\)</span></p>
+
+<p><strong>注意</strong>, 多重性 <span class="math">\(n_\f\)</span> 不能参数化, 因为函数在 <span class="math">\([0,2\p]\)</span> 区间内应当保持周期性.</p>
+
+<p><strong>表格键相互作用</strong></p>
+
+<p>对表格键合相互作用, 只对力常数进行插值:</p>
+
+<p><span class="math">\(\alg
+V &= \left( (1-\l)k^A+\l k^B \right)f \tag{4.118} \\
+\opar V \l &= (k^B-k^A)f \tag{4.119}
+\ealg\)</span></p>
+
+<p><strong>库仑相互作用</strong></p>
+
+<p>对两个粒子之间的库仑相互作用, 粒子电荷随 <span class="math">\(\l\)</span> 的变化关系如下:</p>
+
+<p><span class="math">\(\alg
+V_c &= {f \over \ve_{rf} r_{ij} } \left[ (1-\l) q_i^A q_j^A +\l q_i^B q_j^B \right] \tag{4.120} \\
+\opar {V_c} \l &= {f \over \ve_{rf} r_{ij} } \left[-q_i^A q_j^A +\l q_i^B q_j^B \right] \tag{4.121}
+\ealg\)</span></p>
+
+<p>其中 <span class="math">\(f={1\over 4\p\ve_0}= 138.935\ 485\)</span>(见第二章).</p>
+
+<p><strong>反应场库仑相互作用</strong></p>
+
+<p>对两个粒子间包含反应场的库仑相互作用, 粒子电荷随 <span class="math">\(\l\)</span> 的变化关系如下:</p>
+
+<p><span class="math">\(\alg
+V_c &= f\left[{1\over r_{ij} }+k_{rf} r_{ij}^2-c_{rf} \right] \left[(1-\l) q_i^A q_j^A +\l q_i^B q_j^B \right] \tag{4.122} \\
+\opar {V_c} \l &= f\left[ {1\over r_{ij} } +k_{rf}r_{ij}^2 -c_{rf} \right] \left[-q_i^A q_j^A + q_i^B q_j^B \right] \tag{4.123}
+\ealg\)</span></p>
+
+<p><strong>注意</strong>, 常数 <span class="math">\(k_{rf}\)</span> 和 <span class="math">\(c_{rf}\)</span> 是利用介质的介电常数 <span class="math">\(\ve_{rf}\)</span> 进行定义的(参看4.1.4节).</p>
+
+<p><strong>Lennard-Jones相互作用</strong></p>
+
+<p>对两个粒子间的Lennard-Jones相互作用, <strong>原子类型</strong> 随 <span class="math">\(\l\)</span> 的变化关系可写为:</p>
+
+<p><span class="math">\(\alg
+V_{LJ} &= {(1-\l) C_{12}^A + \l C_{12}^B \over r_{ij}^{12} } - {(1-\l)C_6^A+\l C_6^B \over r_{ij}^6} \tag{1.124} \\
+\opar{V_{LJ} } \l &= {C_{12}^B - C_{12}^A \over r_{ij}^{12} } - {C_6^B-C_6^A \over r_{ij}^6} \tag{1.125}
+\ealg\)</span></p>
+
+<p>应当指出, 从状态A到状态B的途径也可以利用 <span class="math">\(\s\)</span> 和 <span class="math">\(\e\)</span> 进行表达(见方程4.5). 看起来改变力场参数 <span class="math">\(\s\)</span> 和 <span class="math">\(\e\)</span> 而不是导出参数 <span class="math">\(C_{12}\)</span>, <span class="math">\(C_6\)</span> 物理上可能更合理, 但在参数空间中这两种途径之间的差别并不大, 而且自由能自身与途径无关, 因此我们使用了上面的简单公式.</p>
+
+<p><strong>动能</strong></p>
+
+<p>当粒子的质量改变时, 动能对自由能也有贡献(注意, 我们不能将动量 <span class="math">\(\bi p\)</span> 写为 <span class="math">\(m \bi v\)</span>, 因为那样会导致 <span class="math">\(\opar {E_k} \l\)</span> 的符号错误[97]):</p>
+
+<p><span class="math">\(\alg
+E_k &= {1\over2} {\bi p^2 \over (1-\l)m^A+\l m^B } \tag{4.126} \\
+\opar{E_k} \l &= -{1\over 2} {\bi p^2(m^B-m^A)  \over((1-\l)m^A+\l m^B)^2 } \tag{4.127}
+\ealg\)</span></p>
+
+<p>求导后, <strong>可以</strong> 代入 <span class="math">\(\bi p=m \bi v\)</span>, 得到</p>
+
+<p><span class="math">\[\opar {E_k} \l = -{1\over2} \bi v^2 (m^B-m^A) \tag{4.128}\]</span></p>
+
+<p><strong>约束</strong></p>
+
+<p>约束是哈密顿量正式的一部分, 因此对自由能也有贡献. 在GROMACS中这可以使用LINCS或SHAKE算法进行计算. 如果我们有一些约束方程 <span class="math">\(g_k\)</span>:</p>
+
+<p><span class="math">\[g_k=\bi r_k-d_k \tag{4.129}\]</span></p>
+
+<p>其中 <span class="math">\(\bi r_k\)</span> 为两粒子间的距离向量, <span class="math">\(d_k\)</span> 为两粒子间的约束距离. 利用距离与 <span class="math">\(\l\)</span> 的关系, 我们可将方程改写为</p>
+
+<p><span class="math">\[g_k=\bi r_k-\left((1-\l)d_k^A+\l d_k^B \right) \tag{4.130}\]</span></p>
+
+<p>使用Lagrange乘子, <span class="math">\(C_\l\)</span> 对哈密顿量的贡献</p>
+
+<p><span class="math">\(\alg
+C_\l &= \Sum_k \l_k g_k \tag{4.131} \\
+\opar {C_\l} \l &= \Sum_k \l_k \left(d_k^B-d_k^A \right) \tag{4.132}
+\ealg\)</span></p>
+
+<h3 id="4.5.1软核相互作用">4.5.1 软核相互作用</h3>
+
+<p>在自由能计算中, 当有粒子出现或消失时, 对Lennard-Jones势和库仑势使用方程4.125和4.123中的简单线性插值, 可能收敛很差. 当粒子几乎消失或接近消失时(<span class="math">\(\l\)</span> 接近0或1), 相互作用能会变得足够弱, 粒子彼此可能非常接近, 致使得到的 <span class="math">\(\partial V/\partial \l\)</span> 值的涨落非常大(因为简单线性插值同时取决于 <span class="math">\(\l\)</span> 两端点的值).</p>
+
+<figure>
+<img src="4.17.png" alt="图4.17: $\l=0.5$ 时的软核作用势, 其中 $p=2$, $C_6^A=C_{12}^A=C_6^B=C_{12}^B=1$." />
+<figcaption>图4.17: <span class="math">\(\l=0.5\)</span> 时的软核作用势, 其中 <span class="math">\(p=2\)</span>, <span class="math">\(C_6^A=C_{12}^A=C_6^B=C_{12}^B=1\)</span>.</figcaption>
+</figure>
+
+<p>为避免这些问题, 需要去除势能的奇异性. 这可以通过利用&#8220;软核&#8221;势修改常规的Lennard-Jones势和库仑势来实现, 软核势限制了 <span class="math">\(\l\)</span> 值处于0和1之间的能量和力, 但不改变 <span class="math">\(\l=0\)</span> 或1时的势能和力.</p>
+
+<p>在GROMACS中, 软核势是常规势能的偏移, 因此势能及其导数的奇点完全不可能出现在 <span class="math">\(r=0\)</span> 处:</p>
+
+<p><span class="math">\(\alg
+V_{sc} &= (1-\l)V^A(r_A) + \l V^B(r_B) \tag{4.133} \\
+r_A &= \left(\a \s_A^6 \l^p+r^6 \right)^{1\over6} \tag{4.134} \\
+r_B &= \left(\a \s_B^6(1-\l)^p+r^6 \right)^{1\over6} \tag{4.135} \\
+\ealg\)</span></p>
+
+<p>其中 <span class="math">\(V^A\)</span> 和 <span class="math">\(V^B\)</span> 分别为状态A(<span class="math">\(\l=0\)</span>)和状态B(<span class="math">\(\l=1\)</span>)中正常的&#8220;硬核&#8221;Van der Waals势或静电势, <span class="math">\(\a\)</span> 为软核参数(在<code>.mdp</code>文件中利用<code>sc_alpha</code>进行设置), <span class="math">\(p\)</span> 为软核 <span class="math">\(\l\)</span> 的次数(使用<code>sc_power</code>进行设置), <span class="math">\(\s\)</span> 为相互作用半径, 其值为 <span class="math">\((C_{12}/C_6)^{1/6}\)</span>, 当 <span class="math">\(C_6\)</span> 或 <span class="math">\(C_{12}\)</span> 为零时, <span class="math">\(\s\)</span> 是一个输入参数(由<code>sc_sigma</code>设置).</p>
+
+<p>对中等大小的 <span class="math">\(\l\)</span>, <span class="math">\(r_A\)</span> 和 <span class="math">\(r_B\)</span> 对 <span class="math">\(r>\a^{1/6}\s\)</span> 范围的势能改变很小, 对更小的 <span class="math">\(r\)</span> 它们可使软核相互作用快速地变为一个常数(图4.17). 相应的力为:</p>
+
+<p><span class="math">\[F_{sc}(r) = -\opar { V_{sc}(r)} r =(1-\l)F^A(r_A)\left({r\over r_A}\right)^5 +\l F^B(r_B) \left({r\over r_B}\right)^5 \tag{4.136}\]</span></p>
+
+<p>其中 <span class="math">\(F^A\)</span> 和 <span class="math">\(F^B\)</span> 为&#8220;硬核&#8221;力. 对自由能导数的贡献为:</p>
+
+<p><span class="math">\[\alg
+\opar{V_{sc}(r)} \l &= V^B(r_B)-V^A(r_A)+(1-\l) \opar{V^A(r_A)} {r_A} \opar{r_A} \l + \l \opar{V^B(r_B)}{r_B} \opar {r_B} \l \\
+&= V^B(r_B)-V^A(r_A) + \\
+&\quad {p\a \over 6} \left[ \l F^B(r_B) r_B^{-5} \s_B^6(1-\l)^{p-1}-(1-\l)F^A(r_A) r_A^{-5} \s_A^6 \l^{p-1} \right] \tag{4.137}
+\ealg\]</span></p>
+
+<p>GROMACS原始的Lennard-Jones软核函数使用的 <span class="math">\(p=2\)</span>, 但 <span class="math">\(p=1\)</span> 给出的 <span class="math">\(\partial H/\partial \l\)</span> 曲线更光滑.</p>
+
+<p>另一个应当考虑的事情是, 软核对那些无Lennard-Jones相互作用的氢原子的影响. 它们的软核参数 <span class="math">\(\s\)</span> 使用<code>.mdp</code>文件中的<code>sc-sigma</code>选项设置. 对 <span class="math">\(p=1\)</span>, 当 <span class="math">\(\l=0\)</span> 和/或1时, 或对 <span class="math">\(p=2\)</span>, 当 <span class="math">\(\l\)</span> 接近0或1时, 这些氢原子会使 <span class="math">\(\partial H/\partial \l\)</span> 曲线产生峰值. 降低<code>sc-sigma</code>的值可减小这种效应, 但相对于软核状态中其他的相互作用, 这种做法会增加与氢原子的相互作用.</p>
+
+<p>当选择软核势时(设置<code>sc-alpha</code>&gt;0), 依次打开和关闭库仑和Lennard-Jones, 然后线性地关闭库仑相互作用, 而不使用软核相互作用, 在大多数情况下, 这种做法的统计噪声会更小. 可将mdp选项<code>sc-coul</code>设为<code>yes</code>来取消这种行为. 此外, 软核相互作用只用于当A或B状态具有零相互作用的情况. 若A和B状态都具有非零的相互作用势, 会使用上文所说的线性缩放方法. 当同时关闭库仑和Lennard-Jones相互作用时, 会使用软核势, 并引入或删除一个氢原子, 将sigma参数设置为<code>sc-sigma-min</code>, 其自身默认值为<code>sc-sigma-default</code>.</p>
+
+<p>最近, 有人推导了软核方法一个新公式, 与上面所述的标准软核途径相比, 在大多数情况下, 它给出的统计方差更低[99, 100].</p>
+
+<p><span class="math">\(\alg
+V_{sc}(r) &= (1-\l) v^A(r_A)+\l V^B(r_B) \tag{4.138} \\
+r_A &= \left( \a \s_A^{48} \l^p + r^{48} \right)^{1\over 48} \tag{4.139} \\
+r_B &= \left( \a \s_B^{48}(1-\l)^p + r^{48} \right)^{1\over 48} \tag{4.140}
+\ealg\)</span></p>
+
+<p>GROMACS也实现了这种&#8220;1&#8211;1&#8211;48&#8221;途径. 注意对这种途径, 软核参数应满足 <span class="math">\(0.001 \lt \a \lt 0.003\)</span>, 而不是 <span class="math">\(\a \approx 0.5\)</span>.</p>
+
 <h2 id="4.6方法">4.6 方法</h2>
 
 <h3 id="4.6.1排除和1-4相互作用">4.6.1 排除和1&#8211;4相互作用</h3>
