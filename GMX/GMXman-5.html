@@ -9,8 +9,6 @@
 
 <h1 id="第五章　拓扑文件">第五章　拓扑文件</h1>
 
-<h2 id="感谢网友崔西翻译前三节">感谢网友崔西翻译前三节</h2>
-
 <h2 id="5.1简介">5.1 简介</h2>
 
 <p>GROMACS运行时需要知道哪些原子及其组合对势能函数有贡献(参见第四章). 此外, 它还需要知道对于不同函数必需的参数. 所有这些都利用 <strong>拓扑文件</strong> <code>*.top</code>进行描述, 它列出了每个原子的 <strong>固定属性</strong>. 原子类型比元素种类多得多, 但力场只对存在于生物系统中的原子类型, 外加一些金属, 离子和硅进行了参数化. 键合相互作用和一些特殊的相互作用由拓扑文件中的固定配对所决定, 必须排除某些非键相互作用(第一和第二近邻), 因为它们已经在键合相互作用中处理过了. 另外, 原子还具有 <strong>动态属性</strong>, 如位置, 速度和力. 严格地说, 这些不属于分子拓扑, 而是存储在坐标文件<code>*.gro</code>(位置和速度)或轨迹文件<code>*.trr</code>(位置, 速度, 力).</p>
@@ -25,19 +23,19 @@
 
 <table><caption> 表 5.1: GROMACS的粒子类型</caption>
 <tr>
-<th style="text-align:center;">粒子</th>
+<th style="text-align:center;"> 粒子              </th>
 <th style="text-align:center;">符号</th>
 </tr>
 <tr>
-<td style="text-align:center;">原子</td>
+<td style="text-align:center;"> 原子              </td>
 <td style="text-align:center;">A</td>
 </tr>
 <tr>
-<td style="text-align:center;">壳层</td>
+<td style="text-align:center;"> 壳层              </td>
 <td style="text-align:center;">S</td>
 </tr>
 <tr>
-<td style="text-align:center;">虚拟相互作用位点</td>
+<td style="text-align:center;"> 虚拟相互作用位点  </td>
 <td style="text-align:center;">V(或D)</td>
 </tr>
 </table>
@@ -124,34 +122,34 @@ CH3 15.03500 ;   aliphatic CH3-group
 
 <table><caption> 表 5.2: GROMACS中的静态原子类型性质</caption>
 <tr>
-<th style="text-align:center;">性质</th>
+<th style="text-align:center;"> 性质    </th>
 <th style="text-align:center;">符号</th>
-<th style="text-align:center;">单位</th>
+<th style="text-align:center;"> 单位</th>
 </tr>
 <tr>
-<td style="text-align:center;">类型</td>
+<td style="text-align:center;"> 类型    </td>
 <td style="text-align:center;">-</td>
-<td style="text-align:center;">-</td>
+<td style="text-align:center;"> -</td>
 </tr>
 <tr>
-<td style="text-align:center;">质量</td>
+<td style="text-align:center;"> 质量    </td>
 <td style="text-align:center;">m</td>
-<td style="text-align:center;">a.m.u</td>
+<td style="text-align:center;"> a.m.u</td>
 </tr>
 <tr>
-<td style="text-align:center;">电荷</td>
+<td style="text-align:center;"> 电荷    </td>
 <td style="text-align:center;">q</td>
-<td style="text-align:center;">e</td>
+<td style="text-align:center;"> e</td>
 </tr>
 <tr>
-<td style="text-align:center;">epsilon</td>
+<td style="text-align:center;"> epsilon </td>
 <td style="text-align:center;">\(\e\)</td>
-<td style="text-align:center;">kJ/mol</td>
+<td style="text-align:center;"> kJ/mol</td>
 </tr>
 <tr>
-<td style="text-align:center;">sigma</td>
+<td style="text-align:center;"> sigma   </td>
 <td style="text-align:center;">\(\s\)</td>
-<td style="text-align:center;">nm</td>
+<td style="text-align:center;"> nm</td>
 </tr>
 </table>
 
@@ -417,82 +415,82 @@ NR5*  NR5*       2    0.000    167.360
 
 <table><caption> 表 5.3 GROMACS内部的残基名称约定</caption>
 <tr>
-<th style="text-align:center;">简写</th>
+<th style="text-align:center;"> 简写 </th>
 <th style="text-align:center;">英文名称</th>
-<th style="text-align:center;">含义</th>
+<th style="text-align:center;"> 含义</th>
 </tr>
 <tr>
-<td style="text-align:center;">ARG</td>
+<td style="text-align:center;"> ARG  </td>
 <td style="text-align:center;">protonated arginine</td>
-<td style="text-align:center;">质子化精氨酸</td>
+<td style="text-align:center;"> 质子化精氨酸</td>
 </tr>
 <tr>
-<td style="text-align:center;">ARGN</td>
+<td style="text-align:center;"> ARGN </td>
 <td style="text-align:center;">neutral arginine</td>
-<td style="text-align:center;">中性精氨酸</td>
+<td style="text-align:center;"> 中性精氨酸</td>
 </tr>
 <tr>
-<td style="text-align:center;">ASP</td>
+<td style="text-align:center;"> ASP  </td>
 <td style="text-align:center;">negatively charged aspartic acid</td>
-<td style="text-align:center;">带负电的天冬氨酸</td>
+<td style="text-align:center;"> 带负电的天冬氨酸</td>
 </tr>
 <tr>
-<td style="text-align:center;">ASPH</td>
+<td style="text-align:center;"> ASPH </td>
 <td style="text-align:center;">neutral aspartic acid</td>
-<td style="text-align:center;">中性天冬氨酸</td>
+<td style="text-align:center;"> 中性天冬氨酸</td>
 </tr>
 <tr>
-<td style="text-align:center;">CYS</td>
+<td style="text-align:center;"> CYS  </td>
 <td style="text-align:center;">neutral cysteine</td>
-<td style="text-align:center;">中性半胱氨酸</td>
+<td style="text-align:center;"> 中性半胱氨酸</td>
 </tr>
 <tr>
-<td style="text-align:center;">CYS2</td>
+<td style="text-align:center;"> CYS2 </td>
 <td style="text-align:center;">cysteine with sulfur bound to another cysteine or a heme</td>
-<td style="text-align:center;">通过硫与另一个半胱氨酸或血红素结合的半胱氨酸</td>
+<td style="text-align:center;"> 通过硫与另一个半胱氨酸或血红素结合的半胱氨酸</td>
 </tr>
 <tr>
-<td style="text-align:center;">GLU</td>
+<td style="text-align:center;"> GLU  </td>
 <td style="text-align:center;">negatively charged glutamic acid</td>
-<td style="text-align:center;">带负电的谷氨酸</td>
+<td style="text-align:center;"> 带负电的谷氨酸</td>
 </tr>
 <tr>
-<td style="text-align:center;">GLUH</td>
+<td style="text-align:center;"> GLUH </td>
 <td style="text-align:center;">neutral glutamic acid</td>
-<td style="text-align:center;">中性谷氨酸</td>
+<td style="text-align:center;"> 中性谷氨酸</td>
 </tr>
 <tr>
-<td style="text-align:center;">HISD</td>
+<td style="text-align:center;"> HISD </td>
 <td style="text-align:center;">neutral histidine with \(\text N_\d\) protonated</td>
-<td style="text-align:center;">\(\text N_\d\) 质子化的中性组氨酸</td>
+<td style="text-align:center;"> \(\text N_\d\) 质子化的中性组氨酸</td>
 </tr>
 <tr>
-<td style="text-align:center;">HISE</td>
+<td style="text-align:center;"> HISE </td>
 <td style="text-align:center;">neutral histidine with \(\text N_\e\) protonated</td>
-<td style="text-align:center;">\(\text N_\e\) 质子化的中性组氨酸</td>
+<td style="text-align:center;"> \(\text N_\e\) 质子化的中性组氨酸</td>
 </tr>
 <tr>
-<td style="text-align:center;">HISH</td>
+<td style="text-align:center;"> HISH </td>
 <td style="text-align:center;">positive histidine with both  \(\text N_\d\) and \(\text N_\e\) protonated</td>
-<td style="text-align:center;">\(\text N_\d\) 和 \(\text N_\e\) 质子化的带正电的组氨酸</td>
+<td style="text-align:center;"> \(\text N_\d\) 和 \(\text N_\e\) 质子化的带正电的组氨酸</td>
 </tr>
 <tr>
-<td style="text-align:center;">HIS1</td>
+<td style="text-align:center;"> HIS1 </td>
 <td style="text-align:center;">histidine bound to a heme</td>
-<td style="text-align:center;">结合到血红素的组氨酸</td>
+<td style="text-align:center;"> 结合到血红素的组氨酸</td>
 </tr>
 <tr>
-<td style="text-align:center;">LYSN</td>
+<td style="text-align:center;"> LYSN </td>
 <td style="text-align:center;">neutral lysine</td>
-<td style="text-align:center;">中性赖氨酸</td>
+<td style="text-align:center;"> 中性赖氨酸</td>
 </tr>
 <tr>
-<td style="text-align:center;">LYS</td>
+<td style="text-align:center;"> LYS  </td>
 <td style="text-align:center;">protonated lysine</td>
-<td style="text-align:center;">质子化赖氨酸</td>
+<td style="text-align:center;"> 质子化赖氨酸</td>
 </tr>
 <tr>
-<td style="text-align:center;">HEME</td>
+<td style="text-align:center;"> HEME </td>
 <td style="text-align:center;">heme</td>
 <td style="text-align:center;">血红素</td>
 </tr>
@@ -671,124 +669,124 @@ C   CA   O2   O1   gi_1
 
 <table><caption> 表5.4: 拓扑(<code>*.top</code>)文件</caption>
 <tr>
-<td colspan="6" style="text-align:center;"><h6>参数</h6></td>
+<td colspan="6" style="text-align:center;"> <h6>参数</h6> </td>
 </tr>
 <tr>
-<th style="text-align:center;">相互作用类型</th>
+<th style="text-align:center;"> 相互作用类型 </th>
 <th style="text-align:center;">指令</th>
-<th style="text-align:center;">原子数</th>
+<th style="text-align:center;"> 原子数 </th>
 <th style="text-align:center;">函数类型</th>
 <th style="text-align:center;">参数</th>
 <th style="text-align:center;">自由能</th>
 </tr>
 <tr>
-<td style="text-align:center;">必需</td>
+<td style="text-align:center;"> 必需         </td>
 <td style="text-align:center;"><code>defaults</code></td>
-<td colspan="2" style="text-align:center;"></td>
+<td colspan="2" style="text-align:center;"> </td>
 <td style="text-align:center;">非键函数类型; 组合规则<sup>cr</sup>; 生成对(no/yes); fudge LJ(); fudge QQ()</td>
 <td style="text-align:center;"></td>
 </tr>
 <tr>
-<td style="text-align:center;">必需</td>
+<td style="text-align:center;"> 必需         </td>
 <td style="text-align:center;"><code>atomtypes</code></td>
-<td colspan="2" style="text-align:center;"></td>
+<td colspan="2" style="text-align:center;"> </td>
 <td style="text-align:left;">原子类型; 质量m(u); 电荷q(e); 粒子类型; V<sup>cr</sup>; W<sup>cr</sup></td>
 <td style="text-align:center;"></td>
 </tr>
 <tr>
-<td style="text-align:center;"></td>
+<td style="text-align:center;">              </td>
 <td style="text-align:center;"><code>bondtypes</code></td>
-<td colspan="4" style="text-align:center;">(参考表 5.5 <code>bonds</code>指令)</td>
+<td colspan="4" style="text-align:center;"> (参考表 5.5 <code>bonds</code>指令)       </td>
 </tr>
 <tr>
-<td style="text-align:center;"></td>
+<td style="text-align:center;">              </td>
 <td style="text-align:center;"><code>pairtypes</code></td>
-<td colspan="4" style="text-align:center;">(参考表 5.5 <code>pairs</code>指令)</td>
+<td colspan="4" style="text-align:center;"> (参考表 5.5 <code>pairs</code>指令)       </td>
 </tr>
 <tr>
-<td style="text-align:center;"></td>
+<td style="text-align:center;">              </td>
 <td style="text-align:center;"><code>angletypes</code></td>
-<td colspan="4" style="text-align:center;">(参考表 5.5 <code>angles</code>指令)</td>
+<td colspan="4" style="text-align:center;"> (参考表 5.5 <code>angles</code>指令)      </td>
 </tr>
 <tr>
-<td style="text-align:center;"></td>
+<td style="text-align:center;">              </td>
 <td style="text-align:center;"><code>dihedraltypes</code><sup>*</sup></td>
-<td colspan="4" style="text-align:center;">(参考表 5.5 <code>dihedrals</code>指令)</td>
+<td colspan="4" style="text-align:center;"> (参考表 5.5 <code>dihedrals</code>指令)   </td>
 </tr>
 <tr>
-<td style="text-align:center;"></td>
+<td style="text-align:center;">              </td>
 <td style="text-align:center;"><code>constrainttypes</code></td>
-<td colspan="4" style="text-align:center;">(参考表 5.5 <code>constraints</code>指令)</td>
+<td colspan="4" style="text-align:center;"> (参考表 5.5 <code>constraints</code>指令) </td>
 </tr>
 <tr>
-<td style="text-align:center;">LJ</td>
+<td style="text-align:center;"> LJ           </td>
 <td style="text-align:center;"><code>nonbond_params</code></td>
-<td style="text-align:center;">2</td>
+<td style="text-align:center;"> 2 </td>
 <td style="text-align:center;">1</td>
 <td style="text-align:center;">V<sup>cr</sup>; W<sup>cr</sup></td>
 <td style="text-align:center;"></td>
 </tr>
 <tr>
-<td style="text-align:center;">Buckingham</td>
+<td style="text-align:center;"> Buckingham   </td>
 <td style="text-align:center;"><code>nonbond_params</code></td>
-<td style="text-align:center;">2</td>
+<td style="text-align:center;"> 2 </td>
 <td style="text-align:center;">2</td>
 <td style="text-align:center;">a(kJ mol<sup>-1</sup>); b(nm<sup>-1</sup>); c6(kJ mol<sup>-1</sup> nm<sup>6</sup>)</td>
 <td style="text-align:center;"></td>
 </tr>
 <tr>
-<td colspan="6" style="text-align:center;"><h6>分子定义</h6></td>
+<td colspan="6" style="text-align:center;"> <h6>分子定义</h6>  </td>
 </tr>
 <tr>
-<th style="text-align:center;">相互作用类型</th>
+<th style="text-align:center;"> 相互作用类型 </th>
 <th style="text-align:center;">指令</th>
-<th style="text-align:center;">原子数</th>
+<th style="text-align:center;"> 原子数 </th>
 <th style="text-align:center;">函数类型</th>
 <th style="text-align:center;">参数</th>
 <th style="text-align:center;">自由能</th>
 </tr>
 <tr>
-<td style="text-align:center;">必需</td>
+<td style="text-align:center;"> 必需         </td>
 <td style="text-align:center;"><code>moleculetype</code></td>
-<td style="text-align:center;"></td>
+<td style="text-align:center;">   </td>
 <td style="text-align:center;"></td>
 <td style="text-align:center;">分子名称; n<sub>ex</sub><sup>nrexcl</sup></td>
 <td style="text-align:center;"></td>
 </tr>
 <tr>
-<td style="text-align:center;">必需</td>
+<td style="text-align:center;"> 必需         </td>
 <td style="text-align:center;"><code>atoms</code></td>
-<td style="text-align:center;">1</td>
+<td style="text-align:center;"> 1 </td>
 <td style="text-align:center;"></td>
 <td style="text-align:center;">原子类型; 残基编号; 残基名称; 原子名称; 电荷组编号; 电荷q(e); 质量m(u)</td>
 <td style="text-align:center;">类型, q, m</td>
 </tr>
 <tr>
-<td colspan="6" style="text-align:center;">分子内相互作用和几何构型定义见表 5.5</td>
+<td colspan="6" style="text-align:center;"> 分子内相互作用和几何构型定义见表 5.5 </td>
 </tr>
 <tr>
-<td colspan="6" style="text-align:center;"><h6>系统</h6></td>
+<td colspan="6" style="text-align:center;"> <h6>系统</h6>  </td>
 </tr>
 <tr>
-<th style="text-align:center;">相互作用类型</th>
+<th style="text-align:center;"> 相互作用类型 </th>
 <th style="text-align:center;">指令</th>
-<th style="text-align:center;">原子数</th>
+<th style="text-align:center;"> 原子数 </th>
 <th style="text-align:center;">函数类型</th>
 <th style="text-align:center;">参数</th>
 <th style="text-align:center;">自由能</th>
 </tr>
 <tr>
-<td style="text-align:center;">必需</td>
+<td style="text-align:center;"> 必需         </td>
 <td style="text-align:center;"><code>system</code></td>
-<td style="text-align:center;"></td>
+<td style="text-align:center;">   </td>
 <td style="text-align:center;"></td>
 <td style="text-align:center;">系统名称</td>
 <td style="text-align:center;"></td>
 </tr>
 <tr>
-<td style="text-align:center;">必需</td>
+<td style="text-align:center;"> 必需         </td>
 <td style="text-align:center;"><code>molecules</code></td>
-<td style="text-align:center;"></td>
+<td style="text-align:center;">   </td>
 <td style="text-align:center;"></td>
 <td style="text-align:center;">分子名称; 分子数</td>
 <td style="text-align:center;"></td>
@@ -807,458 +805,458 @@ C   CA   O2   O1   gi_1
 
 <table><caption> 表 5.5: <code>[ moleculetype ]</code>指令详解</caption>
 <tr>
-<th style="text-align:center;">相互作用名称</th>
+<th style="text-align:center;"> 相互作用名称 </th>
 <th style="text-align:center;">拓扑文件指令</th>
-<th style="text-align:center;">原子数<sup>*</sup></th>
+<th style="text-align:center;"> 原子数<sup>*</sup> </th>
 <th style="text-align:center;">函数类型<sup>†</sup></th>
 <th style="text-align:center;">参数顺序及其单位</th>
 <th style="text-align:center;">用于自由能计算?<sup>‡</sup></th>
 <th style="text-align:center;">交叉参考(节)</th>
 </tr>
 <tr>
-<td style="text-align:center;">键</td>
+<td style="text-align:center;"> 键      </td>
 <td style="text-align:center;"><code>bonds</code><sup>§,¶</sup></td>
-<td style="text-align:center;">2</td>
+<td style="text-align:center;"> 2 </td>
 <td style="text-align:center;">1</td>
 <td style="text-align:center;">\(b_0\)(nm); \(k_b\) (kJ mol<sup>-1</sup> nm<sup>-2</sup>)</td>
 <td style="text-align:center;">所有</td>
 <td style="text-align:center;">4.2.1</td>
 </tr>
 <tr>
-<td style="text-align:center;">G96键</td>
+<td style="text-align:center;"> G96键   </td>
 <td style="text-align:center;"><code>bonds</code><sup>§,¶</sup></td>
-<td style="text-align:center;">2</td>
+<td style="text-align:center;"> 2 </td>
 <td style="text-align:center;">2</td>
 <td style="text-align:center;">\(b_0\)(nm); \(k_b\)(kJ mol<sup>-1</sup> nm<sup>-4</sup>)</td>
 <td style="text-align:center;">所有</td>
 <td style="text-align:center;">4.2.1</td>
 </tr>
 <tr>
-<td style="text-align:center;">Morse键</td>
+<td style="text-align:center;"> Morse键 </td>
 <td style="text-align:center;"><code>bonds</code><sup>§,¶</sup></td>
-<td style="text-align:center;">2</td>
+<td style="text-align:center;"> 2 </td>
 <td style="text-align:center;">3</td>
 <td style="text-align:center;">\(b_0\)(nm); \(D\)(kJ mol<sup>-1</sup>); \(\b\)(nm<sup>-1</sup>)</td>
 <td style="text-align:center;">所有</td>
 <td style="text-align:center;">4.2.2</td>
 </tr>
 <tr>
-<td style="text-align:center;">立方键</td>
+<td style="text-align:center;"> 立方键  </td>
 <td style="text-align:center;"><code>bonds</code><sup>§,¶</sup></td>
-<td style="text-align:center;">2</td>
+<td style="text-align:center;"> 2 </td>
 <td style="text-align:center;">4</td>
 <td style="text-align:center;">\(b_0\)(nm); \(C_{i&#61;2,3}\)(kJ mol<sup>-1</sup> nm<sup>-i</sup>)</td>
 <td style="text-align:center;"></td>
 <td style="text-align:center;">4.2.3</td>
 </tr>
 <tr>
-<td style="text-align:center;">连接</td>
+<td style="text-align:center;"> 连接    </td>
 <td style="text-align:center;"><code>bonds</code><sup>§</sup></td>
-<td style="text-align:center;">2</td>
+<td style="text-align:center;"> 2 </td>
 <td style="text-align:center;">5</td>
 <td colspan="2" style="text-align:center;"></td>
 <td style="text-align:center;">5.4</td>
 </tr>
 <tr>
-<td style="text-align:center;">简谐势</td>
+<td style="text-align:center;"> 简谐势  </td>
 <td style="text-align:center;"><code>bonds</code></td>
-<td style="text-align:center;">2</td>
+<td style="text-align:center;"> 2 </td>
 <td style="text-align:center;">6</td>
 <td style="text-align:center;">\(b_0\)(nm); \(k_b\) (kJ mol<sup>-1</sup> nm<sup>-2</sup>)</td>
 <td style="text-align:center;">所有</td>
 <td style="text-align:center;">4.2.1, 5.4</td>
 </tr>
 <tr>
-<td style="text-align:center;">FENE键</td>
+<td style="text-align:center;"> FENE键  </td>
 <td style="text-align:center;"><code>bonds</code><sup>§</sup></td>
-<td style="text-align:center;">2</td>
+<td style="text-align:center;"> 2 </td>
 <td style="text-align:center;">7</td>
 <td style="text-align:center;">\(b_m\)(nm); \(k_b\) (kJ mol<sup>-1</sup> nm<sup>-2</sup>)</td>
 <td style="text-align:center;"></td>
 <td style="text-align:center;">4.2.4</td>
 </tr>
 <tr>
-<td style="text-align:center;">表格键</td>
+<td style="text-align:center;"> 表格键  </td>
 <td style="text-align:center;"><code>bonds</code><sup>§</sup></td>
-<td style="text-align:center;">2</td>
+<td style="text-align:center;"> 2 </td>
 <td style="text-align:center;">8</td>
 <td style="text-align:center;">表号(≥0); \(k\)(kJ mol<sup>-1</sup>)</td>
 <td style="text-align:center;">\(k\)</td>
 <td style="text-align:center;">4.2.14</td>
 </tr>
 <tr>
-<td style="text-align:center;">表格键\(^\lVert\)</td>
+<td style="text-align:center;"> 表格键\(^\lVert\) </td>
 <td style="text-align:center;"><code>bonds</code></td>
-<td style="text-align:center;">2</td>
+<td style="text-align:center;"> 2 </td>
 <td style="text-align:center;">9</td>
 <td style="text-align:center;">表号(≥0); \(k\)(kJ mol<sup>-1</sup>)</td>
 <td style="text-align:center;">\(k\)</td>
 <td style="text-align:center;">4.2.14, 5.4</td>
 </tr>
 <tr>
-<td style="text-align:center;">约束势</td>
+<td style="text-align:center;"> 约束势  </td>
 <td style="text-align:center;"><code>bonds</code></td>
-<td style="text-align:center;">2</td>
+<td style="text-align:center;"> 2 </td>
 <td style="text-align:center;">10</td>
 <td style="text-align:center;">下限,上限1,上限2(nm); \(k_{dr}\)(kJ mol<sup>-1</sup> nm<sup>-2</sup>)</td>
 <td style="text-align:center;">所有</td>
 <td style="text-align:center;">4.3.5</td>
 </tr>
 <tr>
-<td style="text-align:center;">额外LJ或库仑</td>
+<td style="text-align:center;"> 额外LJ或库仑 </td>
 <td style="text-align:center;"><code>pairs</code></td>
-<td style="text-align:center;">2</td>
+<td style="text-align:center;"> 2 </td>
 <td style="text-align:center;">1</td>
 <td style="text-align:center;">V<sup>**</sup>; W<sup>**</sup></td>
 <td style="text-align:center;">所有</td>
 <td style="text-align:center;">5.3.4</td>
 </tr>
 <tr>
-<td style="text-align:center;">额外LJ或库仑</td>
+<td style="text-align:center;"> 额外LJ或库仑 </td>
 <td style="text-align:center;"><code>pairs</code></td>
-<td style="text-align:center;">2</td>
+<td style="text-align:center;"> 2 </td>
 <td style="text-align:center;">2</td>
 <td style="text-align:center;">fudge QQ(); q<sub>i</sub>, q<sub>j</sub>(e); V<sup>**</sup>; W<sup>**</sup></td>
 <td style="text-align:center;"></td>
 <td style="text-align:center;">5.3.4</td>
 </tr>
 <tr>
-<td style="text-align:center;">额外LJ或库仑</td>
+<td style="text-align:center;"> 额外LJ或库仑 </td>
 <td style="text-align:center;"><code>pairs_nb</code></td>
-<td style="text-align:center;">2</td>
+<td style="text-align:center;"> 2 </td>
 <td style="text-align:center;">1</td>
 <td style="text-align:center;">q<sub>i</sub>, q<sub>j</sub>(e); V<sup>**</sup>; W<sup>**</sup></td>
 <td style="text-align:center;"></td>
 <td style="text-align:center;">5.3.4</td>
 </tr>
 <tr>
-<td style="text-align:center;">键角</td>
+<td style="text-align:center;"> 键角             </td>
 <td style="text-align:center;"><code>angles</code><sup>¶</sup></td>
-<td style="text-align:center;">3</td>
+<td style="text-align:center;"> 3 </td>
 <td style="text-align:center;">1</td>
 <td style="text-align:center;">\(\q_0\)(deg); \(k_\q\)(kJ mol<sup>-1</sup> rad<sup>-2</sup>)</td>
 <td style="text-align:center;">所有</td>
 <td style="text-align:center;">4.2.5</td>
 </tr>
 <tr>
-<td style="text-align:center;">G96键角</td>
+<td style="text-align:center;"> G96键角          </td>
 <td style="text-align:center;"><code>angles</code><sup>¶</sup></td>
-<td style="text-align:center;">3</td>
+<td style="text-align:center;"> 3 </td>
 <td style="text-align:center;">2</td>
 <td style="text-align:center;">\(\q_0\)(deg); \(k_\q\)(kJ mol<sup>-1</sup>)</td>
 <td style="text-align:center;">所有</td>
 <td style="text-align:center;">4.2.6</td>
 </tr>
 <tr>
-<td style="text-align:center;">键-键交叉项</td>
+<td style="text-align:center;"> 键-键交叉项      </td>
 <td style="text-align:center;"><code>angles</code></td>
-<td style="text-align:center;">3</td>
+<td style="text-align:center;"> 3 </td>
 <td style="text-align:center;">3</td>
 <td style="text-align:center;">\(r_{1e},r_{2e}\)(nm); \(k_{rr'}\)(kJ mol<sup>-1</sup> nm<sup>-2</sup>)</td>
 <td style="text-align:center;"></td>
 <td style="text-align:center;">4.2.9</td>
 </tr>
 <tr>
-<td style="text-align:center;">键-角交叉项</td>
+<td style="text-align:center;"> 键-角交叉项      </td>
 <td style="text-align:center;"><code>angles</code></td>
-<td style="text-align:center;">3</td>
+<td style="text-align:center;"> 3 </td>
 <td style="text-align:center;">4</td>
 <td style="text-align:center;">\(r_{1e},r_{2e},r_{3e}\)(nm); \(k_{r\q}\)(kJ mol<sup>-1</sup> nm<sup>-2</sup>)</td>
 <td style="text-align:center;"></td>
 <td style="text-align:center;">4.2.10</td>
 </tr>
 <tr>
-<td style="text-align:center;">Urey-Bradley键角</td>
+<td style="text-align:center;"> Urey-Bradley键角 </td>
 <td style="text-align:center;"><code>angles</code><sup>¶</sup></td>
-<td style="text-align:center;">3</td>
+<td style="text-align:center;"> 3 </td>
 <td style="text-align:center;">5</td>
 <td style="text-align:center;">\(\q_0\)(deg); \(k_\q\)(kJ mol<sup>-1</sup> rad<sup>-2</sup>); \(r_{13}\)(nm); </br>\(k_{UB}\)(kJ mol<sup>-1</sup> nm<sup>-2</sup>)</td>
 <td style="text-align:center;">所有</td>
 <td style="text-align:center;">4.2.8</td>
 </tr>
 <tr>
-<td style="text-align:center;">四次键角</td>
+<td style="text-align:center;"> 四次键角         </td>
 <td style="text-align:center;"><code>angles</code><sup>¶</sup></td>
-<td style="text-align:center;">3</td>
+<td style="text-align:center;"> 3 </td>
 <td style="text-align:center;">6</td>
 <td style="text-align:center;">\(\q_0\)(deg); \(C_{i&#61;0,1,2,3,4}\)(kJ mol<sup>-1</sup> rad<sup>-i</sup>)</td>
 <td style="text-align:center;"></td>
 <td style="text-align:center;">4.2.11</td>
 </tr>
 <tr>
-<td style="text-align:center;">表格角</td>
+<td style="text-align:center;"> 表格角           </td>
 <td style="text-align:center;"><code>angles</code></td>
-<td style="text-align:center;">3</td>
+<td style="text-align:center;"> 3 </td>
 <td style="text-align:center;">8</td>
 <td style="text-align:center;">表号(≥0); \(k\)(kJ mol<sup>-1</sup>)</td>
 <td style="text-align:center;">\(k\)</td>
 <td style="text-align:center;">4.2.14</td>
 </tr>
 <tr>
-<td style="text-align:center;">限制弯曲势</td>
+<td style="text-align:center;"> 限制弯曲势       </td>
 <td style="text-align:center;"><code>angles</code></td>
-<td style="text-align:center;">3</td>
+<td style="text-align:center;"> 3 </td>
 <td style="text-align:center;">10</td>
 <td style="text-align:center;">\(\q_0\)(deg); \(k_\q\)(kJ mol<sup>-1</sup>)</td>
 <td style="text-align:center;"></td>
 <td style="text-align:center;">4.2.7</td>
 </tr>
 <tr>
-<td style="text-align:center;">正常二面角</td>
+<td style="text-align:center;"> 正常二面角               </td>
 <td style="text-align:center;"><code>dihedrals</code></td>
-<td style="text-align:center;">4</td>
+<td style="text-align:center;"> 4 </td>
 <td style="text-align:center;">1</td>
 <td style="text-align:center;">\(\f_s\)(deg); \(k_\f\)(kJ mol<sup>-1</sup>); 多重数</td>
 <td style="text-align:center;">\(\f,k\)</td>
 <td style="text-align:center;">4.2.13</td>
 </tr>
 <tr>
-<td style="text-align:center;">异常二面角</td>
+<td style="text-align:center;"> 异常二面角               </td>
 <td style="text-align:center;"><code>dihedrals</code></td>
-<td style="text-align:center;">4</td>
+<td style="text-align:center;"> 4 </td>
 <td style="text-align:center;">2</td>
 <td style="text-align:center;">\(\x_0\)(deg); \(k_\x\)(kJ mol<sup>-1</sup> rad<sup>-2</sup>)</td>
 <td style="text-align:center;">所有</td>
 <td style="text-align:center;">4.2.12</td>
 </tr>
 <tr>
-<td style="text-align:center;">Ryckaert-Bellemans二面角</td>
+<td style="text-align:center;"> Ryckaert-Bellemans二面角 </td>
 <td style="text-align:center;"><code>dihedrals</code></td>
-<td style="text-align:center;">4</td>
+<td style="text-align:center;"> 4 </td>
 <td style="text-align:center;">3</td>
 <td style="text-align:center;">\(C_0, C_1, C_2, C_3, C_4, C_5\)(kJ mol<sup>-1</sup>)</td>
 <td style="text-align:center;">所有</td>
 <td style="text-align:center;">4.2.13</td>
 </tr>
 <tr>
-<td style="text-align:center;">周期异常二面角</td>
+<td style="text-align:center;"> 周期异常二面角           </td>
 <td style="text-align:center;"><code>dihedrals</code></td>
-<td style="text-align:center;">4</td>
+<td style="text-align:center;"> 4 </td>
 <td style="text-align:center;">4</td>
 <td style="text-align:center;">\(\f_s\)(deg); \(k_\f\)(kJ mol<sup>-1</sup>); 多重数</td>
 <td style="text-align:center;">\(\f,k\)</td>
 <td style="text-align:center;">4.2.12</td>
 </tr>
 <tr>
-<td style="text-align:center;">傅立叶二面角</td>
+<td style="text-align:center;"> 傅立叶二面角             </td>
 <td style="text-align:center;"><code>dihedrals</code></td>
-<td style="text-align:center;">4</td>
+<td style="text-align:center;"> 4 </td>
 <td style="text-align:center;">5</td>
 <td style="text-align:center;">\(C_0, C_1, C_2, C_3, C_4\)(kJ mol<sup>-1</sup>)</td>
 <td style="text-align:center;">所有</td>
 <td style="text-align:center;">4.2.13</td>
 </tr>
 <tr>
-<td style="text-align:center;">表格二面角</td>
+<td style="text-align:center;"> 表格二面角               </td>
 <td style="text-align:center;"><code>dihedrals</code></td>
-<td style="text-align:center;">4</td>
+<td style="text-align:center;"> 4 </td>
 <td style="text-align:center;">8</td>
 <td style="text-align:center;">表号(≥0); \(k\)(kJ mol<sup>-1</sup>)</td>
 <td style="text-align:center;">\(k\)</td>
 <td style="text-align:center;">4.2.14</td>
 </tr>
 <tr>
-<td style="text-align:center;">正常二面角(多重)</td>
+<td style="text-align:center;"> 正常二面角(多重)         </td>
 <td style="text-align:center;"><code>dihedrals</code></td>
-<td style="text-align:center;">4</td>
+<td style="text-align:center;"> 4 </td>
 <td style="text-align:center;">9</td>
 <td style="text-align:center;">\(\f_s\)(deg); \(k_\f\)(kJ mol<sup>-1</sup>); 多重数</td>
 <td style="text-align:center;">\(\f,k\)</td>
 <td style="text-align:center;">4.2.13</td>
 </tr>
 <tr>
-<td style="text-align:center;">限制二面角</td>
+<td style="text-align:center;"> 限制二面角               </td>
 <td style="text-align:center;"><code>dihedrals</code></td>
-<td style="text-align:center;">4</td>
+<td style="text-align:center;"> 4 </td>
 <td style="text-align:center;">11</td>
 <td style="text-align:center;">\(\f_0\)(deg); \(k_\f\)(kJ mol<sup>-1</sup>)</td>
 <td style="text-align:center;"></td>
 <td style="text-align:center;">4.2.13</td>
 </tr>
 <tr>
-<td style="text-align:center;">结合弯区扭转势</td>
+<td style="text-align:center;"> 结合弯区扭转势           </td>
 <td style="text-align:center;"><code>dihedrals</code></td>
-<td style="text-align:center;">4</td>
+<td style="text-align:center;"> 4 </td>
 <td style="text-align:center;">10</td>
 <td style="text-align:center;">\(a_0, a_1, a_2, a_3, a_4\)(kJ mol<sup>-1</sup>)</td>
 <td style="text-align:center;"></td>
 <td style="text-align:center;">4.2.13</td>
 </tr>
 <tr>
-<td style="text-align:center;">排除</td>
+<td style="text-align:center;"> 排除               </td>
 <td style="text-align:center;"><code>exclusions</code></td>
-<td style="text-align:center;">1</td>
+<td style="text-align:center;"> 1 </td>
 <td style="text-align:center;"></td>
 <td style="text-align:center;">一个或多个原子索引号</td>
 <td style="text-align:center;"></td>
 <td style="text-align:center;">5.4</td>
 </tr>
 <tr>
-<td style="text-align:center;">约束</td>
+<td style="text-align:center;"> 约束               </td>
 <td style="text-align:center;"><code>constraints</code><sup>§</sup></td>
-<td style="text-align:center;">2</td>
+<td style="text-align:center;"> 2 </td>
 <td style="text-align:center;">1</td>
 <td style="text-align:center;">\(b_0\)(nm)</td>
 <td style="text-align:center;">所有</td>
 <td style="text-align:center;">4.5, 5.5</td>
 </tr>
 <tr>
-<td style="text-align:center;">约束\(^\lVert\)</td>
+<td style="text-align:center;"> 约束\(^\lVert\)      </td>
 <td style="text-align:center;"><code>constraints</code></td>
-<td style="text-align:center;">2</td>
+<td style="text-align:center;"> 2 </td>
 <td style="text-align:center;">2</td>
 <td style="text-align:center;">\(b_0\)(nm)</td>
 <td style="text-align:center;">所有</td>
 <td style="text-align:center;">4.5, 5.5, 5.4</td>
 </tr>
 <tr>
-<td style="text-align:center;">SETTLE</td>
+<td style="text-align:center;"> SETTLE             </td>
 <td style="text-align:center;"><code>settles</code></td>
-<td style="text-align:center;">1</td>
+<td style="text-align:center;"> 1 </td>
 <td style="text-align:center;">1</td>
 <td style="text-align:center;">\(d_{\text{oh}}, d_{\text{HH}}\)(nm)</td>
 <td style="text-align:center;"></td>
 <td style="text-align:center;">3.6.1, 5.5</td>
 </tr>
 <tr>
-<td style="text-align:center;">二体虚拟站点</td>
+<td style="text-align:center;"> 二体虚拟站点       </td>
 <td style="text-align:center;"><code>virtual_sites2</code></td>
-<td style="text-align:center;">3</td>
+<td style="text-align:center;"> 3 </td>
 <td style="text-align:center;">1</td>
 <td style="text-align:center;">\(a\)()</td>
 <td style="text-align:center;"></td>
 <td style="text-align:center;">4.7</td>
 </tr>
 <tr>
-<td style="text-align:center;">三体虚拟站点</td>
+<td style="text-align:center;"> 三体虚拟站点       </td>
 <td style="text-align:center;"><code>virtual_sites3</code></td>
-<td style="text-align:center;">4</td>
+<td style="text-align:center;"> 4 </td>
 <td style="text-align:center;">1</td>
 <td style="text-align:center;">\(a,b\)()</td>
 <td style="text-align:center;"></td>
 <td style="text-align:center;">4.7</td>
 </tr>
 <tr>
-<td style="text-align:center;">三体虚拟站点(fd)</td>
+<td style="text-align:center;"> 三体虚拟站点(fd)   </td>
 <td style="text-align:center;"><code>virtual_sites3</code></td>
-<td style="text-align:center;">4</td>
+<td style="text-align:center;"> 4 </td>
 <td style="text-align:center;">2</td>
 <td style="text-align:center;">\(a\)(); \(d\)(nm)</td>
 <td style="text-align:center;"></td>
 <td style="text-align:center;">4.7</td>
 </tr>
 <tr>
-<td style="text-align:center;">三体虚拟站点(fad)</td>
+<td style="text-align:center;"> 三体虚拟站点(fad)  </td>
 <td style="text-align:center;"><code>virtual_sites3</code></td>
-<td style="text-align:center;">4</td>
+<td style="text-align:center;"> 4 </td>
 <td style="text-align:center;">3</td>
 <td style="text-align:center;">\(\q\)(deg); \(d\)(nm)</td>
 <td style="text-align:center;"></td>
 <td style="text-align:center;">4.7</td>
 </tr>
 <tr>
-<td style="text-align:center;">三体虚拟站点(out)</td>
+<td style="text-align:center;"> 三体虚拟站点(out)  </td>
 <td style="text-align:center;"><code>virtual_sites3</code></td>
-<td style="text-align:center;">4</td>
+<td style="text-align:center;"> 4 </td>
 <td style="text-align:center;">4</td>
 <td style="text-align:center;">\(a,b\)(); \(c\)(nm<sup>-1</sup>)</td>
 <td style="text-align:center;"></td>
 <td style="text-align:center;">4.7</td>
 </tr>
 <tr>
-<td style="text-align:center;">四体虚拟站点(fdn)</td>
+<td style="text-align:center;"> 四体虚拟站点(fdn)  </td>
 <td style="text-align:center;"><code>virtual_sites4</code></td>
-<td style="text-align:center;">5</td>
+<td style="text-align:center;"> 5 </td>
 <td style="text-align:center;">2</td>
 <td style="text-align:center;">\(a,b\)(); \(c\)(nm)</td>
 <td style="text-align:center;"></td>
 <td style="text-align:center;">4.7</td>
 </tr>
 <tr>
-<td style="text-align:center;">N体虚拟站点(COG)</td>
+<td style="text-align:center;"> N体虚拟站点(COG)   </td>
 <td style="text-align:center;"><code>virtual_sitesn</code></td>
-<td style="text-align:center;">1</td>
+<td style="text-align:center;"> 1 </td>
 <td style="text-align:center;">1</td>
 <td style="text-align:center;">一个或多个构建原子索引号</td>
 <td style="text-align:center;"></td>
 <td style="text-align:center;">4.7</td>
 </tr>
 <tr>
-<td style="text-align:center;">N体虚拟站点(COM)</td>
+<td style="text-align:center;"> N体虚拟站点(COM)   </td>
 <td style="text-align:center;"><code>virtual_sitesn</code></td>
-<td style="text-align:center;">1</td>
+<td style="text-align:center;"> 1 </td>
 <td style="text-align:center;">2</td>
 <td style="text-align:center;">一个或多个构建原子索引号</td>
 <td style="text-align:center;"></td>
 <td style="text-align:center;">4.7</td>
 </tr>
 <tr>
-<td style="text-align:center;">N体虚拟站点(COW)</td>
+<td style="text-align:center;"> N体虚拟站点(COW)   </td>
 <td style="text-align:center;"><code>virtual_sitesn</code></td>
-<td style="text-align:center;">1</td>
+<td style="text-align:center;"> 1 </td>
 <td style="text-align:center;">3</td>
 <td style="text-align:center;">一对或多对构建原子的索引号与权重</td>
 <td style="text-align:center;"></td>
 <td style="text-align:center;">4.7</td>
 </tr>
 <tr>
-<td style="text-align:center;">位置约束</td>
+<td style="text-align:center;"> 位置约束           </td>
 <td style="text-align:center;"><code>position_restraints</code></td>
-<td style="text-align:center;">1</td>
+<td style="text-align:center;"> 1 </td>
 <td style="text-align:center;">1</td>
 <td style="text-align:center;">\(k_x,k_y,k_z\)(kJ mol<sup>-1</sup> nm<sup>-2</sup>)</td>
 <td style="text-align:center;">所有</td>
 <td style="text-align:center;">4.3.1</td>
 </tr>
 <tr>
-<td style="text-align:center;">平底位置约束</td>
+<td style="text-align:center;"> 平底位置约束       </td>
 <td style="text-align:center;"><code>position_restraints</code></td>
-<td style="text-align:center;">1</td>
+<td style="text-align:center;"> 1 </td>
 <td style="text-align:center;">2</td>
 <td style="text-align:center;">\(g,r\)(nm), \(k\)(kJ mol<sup>-1</sup> nm<sup>-2</sup>)</td>
 <td style="text-align:center;"></td>
 <td style="text-align:center;">4.3.2</td>
 </tr>
 <tr>
-<td style="text-align:center;">距离约束</td>
+<td style="text-align:center;"> 距离约束           </td>
 <td style="text-align:center;"><code>distance_restraints</code></td>
-<td style="text-align:center;">2</td>
+<td style="text-align:center;"> 2 </td>
 <td style="text-align:center;">1</td>
 <td style="text-align:center;">类型; 标签; 下限, 上限1, 上限2(nm); 权重()</td>
 <td style="text-align:center;"></td>
 <td style="text-align:center;">4.3.5</td>
 </tr>
 <tr>
-<td style="text-align:center;">二面角约束</td>
+<td style="text-align:center;"> 二面角约束         </td>
 <td style="text-align:center;"><code>dihedral_restraints</code></td>
-<td style="text-align:center;">4</td>
+<td style="text-align:center;"> 4 </td>
 <td style="text-align:center;">1</td>
 <td style="text-align:center;">\(\f_0\)(deg); \(\D\f\)(deg);</td>
 <td style="text-align:center;">所有</td>
 <td style="text-align:center;">4.3.4</td>
 </tr>
 <tr>
-<td style="text-align:center;">方向约束</td>
+<td style="text-align:center;"> 方向约束           </td>
 <td style="text-align:center;"><code>orientation_restraints</code></td>
-<td style="text-align:center;">2</td>
+<td style="text-align:center;"> 2 </td>
 <td style="text-align:center;">1</td>
 <td style="text-align:center;">exp.; 标签; \(\a\); \(c\)(U nm<sup>\(\a\)</sup>); obs.(U); 权重(U<sup>-1</sup>)</td>
 <td style="text-align:center;"></td>
 <td style="text-align:center;">4.3.6</td>
 </tr>
 <tr>
-<td style="text-align:center;">角度约束</td>
+<td style="text-align:center;"> 角度约束          </td>
 <td style="text-align:center;"><code>angle_restraints</code></td>
-<td style="text-align:center;">4</td>
+<td style="text-align:center;"> 4 </td>
 <td style="text-align:center;">1</td>
 <td style="text-align:center;">\(\q_0\)(deg); \(k_c\)(kJ mol<sup>-1</sup>); 多重数</td>
 <td style="text-align:center;">\(\q,k\)</td>
 <td style="text-align:center;">4.3.3</td>
 </tr>
 <tr>
-<td style="text-align:center;">角度约束(z)</td>
+<td style="text-align:center;"> 角度约束(z)       </td>
 <td style="text-align:center;"><code>angle_restraints_z</code></td>
-<td style="text-align:center;">2</td>
+<td style="text-align:center;"> 2 </td>
 <td style="text-align:center;">1</td>
 <td style="text-align:center;">\(\q_0\)(deg); \(k_c\)(kJ mol<sup>-1</sup>); 多重数</td>
 <td style="text-align:center;">\(\q,k\)</td>
@@ -1551,23 +1549,23 @@ SOL               1000
 
 <table><caption> 表 5.6: 用于自由能拓扑的键合参数, 位于定义键合相互作用的行, 或基于原子类型在键类型中查找. A和B表示分别用于状态A和B的参数, +和-表示拓扑中(不)存在的参数, x表示存在没有影响.</caption>
 <tr>
-<th style="text-align:center;">B状态与A状态的原子类型完全相同?</th>
+<th style="text-align:center;"> B状态与A状态的原子类型完全相同? </th>
 <th style="text-align:center;">行参数</br>A　B</th>
-<th style="text-align:center;">A原子类型的键合类型参数</br>A　B</th>
+<th style="text-align:center;"> A原子类型的键合类型参数</br>A　B </th>
 <th style="text-align:center;">B原子类型的键合类型参数</br> A　B</th>
 <th style="text-align:center;">信息</th>
 </tr>
 <tr>
-<td style="text-align:center;">yes</td>
+<td style="text-align:center;"> yes </td>
 <td style="text-align:center;">+AB　-</br>+A　+B</br>-　-</br>-　-</br>-　-</td>
-<td style="text-align:center;">x　x</br>x　x</br>-　-</br>+AB　-</br>+A　+B</td>
+<td style="text-align:center;"> x　x</br>x　x</br>-　-</br>+AB　-</br>+A　+B </td>
 <td style="text-align:center;"></td>
 <td style="text-align:center;">错误</td>
 </tr>
 <tr>
-<td style="text-align:center;">no</td>
+<td style="text-align:center;"> no  </td>
 <td style="text-align:center;">+AB　-</br>+A　+B</br>-　-</br>-　-</br>-　-</br>-　-</br>-　-</td>
-<td style="text-align:center;">x　x</br>x　x</br>-　-</br>+AB　-</br>+A　+B</br>+A　x</br>+A　x</td>
+<td style="text-align:center;"> x　x</br>x　x</br>-　-</br>+AB　-</br>+A　+B</br>+A　x</br>+A　x </td>
 <td style="text-align:center;">x　x</br>x　x</br>x　x</br>-　-</br>-　-</br>+B　-</br>+　+B</td>
 <td style="text-align:center;">警告</br>　</br>错误</br>警告</br>警告</br>　</br>　</td>
 </tr>

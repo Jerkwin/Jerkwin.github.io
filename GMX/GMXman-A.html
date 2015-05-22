@@ -55,7 +55,7 @@
 <p><strong>性能和运行控制</strong></p>
 
 <ol class="incremental">
-<li><code>GMX_DO_GALACTIC_DYNAMICS</code>: 设置此环境变量可启用行星模拟(只是为了好玩), 允许在<code>.mdp</code>文件中设置<code>epsilon_r = -1</code>. 正常情况下, <code>epsilon_r</code>必须大于零, 以防止出现致命错误. 参见<a href="">www.gromacs.org</a>上行星模拟的输入文件的例子.</li>
+<li><code>GMX_DO_GALACTIC_DYNAMICS</code>: 设置此环境变量可启用行星模拟(只是为了好玩), 允许在<code>.mdp</code>文件中设置<code>epsilon_r = -1</code>. 正常情况下, <code>epsilon_r</code>必须大于零, 以防止出现致命错误. 参见<a href="http://www.gromacs.org/">www.gromacs.org</a>上行星模拟的输入文件的例子.</li>
 <li><code>GMX_ALLOW_CPT_MISMATCH</code>: 设置后, 如果在<code>.tpr</code>文件中的系综设置与<code>.cpt</code>文件中的不匹配, 运行也不会退出.</li>
 <li><code>GMX_CUDA_NB_EWALD_TWINCUT</code>: 强制使用双程截断内核, 即使PP-PME负载均衡后<code>rvdw=rcoulomb</code>. 会自动切换到双程截断内核, 所以此变量只能用于校准.</li>
 <li><code>GMX_CUDA_NB_ANA_EWALD</code>: 强制使用解析的Ewald内核. 只能用于校准.</li>

@@ -9,13 +9,13 @@
 
 <h1 id="第三章　算法">第三章　算法</h1>
 
-<h2 id="3.1　简介">3.1　简介</h2>
+<h2 id="3.1简介">3.1 简介</h2>
 
 <p>在本章中, 我们首先介绍GROMACS用到的一些基本概念: <strong>周期性边界条件</strong> (3.2节)和 <strong>组</strong> (3.3节). MD算法将在3.4节介绍: 首先给出算法的整体形式, 然后在后面的小节中进行详细说明. (简单的)EM(Energy minimization, 能量最小化)算法在3.10节说明. 用于特殊目的动力学的一些其他算法在此后进行说明.</p>
 
 <p>有几个问题是人们普遍关心的. 在所有情况下, 必须定义由分子组成的 <strong>体系</strong>. 而分子又是由定义了相互作用形式的粒子组成. 关于分子 <strong>拓扑结构</strong> 和 <strong>力场</strong> 的详细描述以及力的计算将在第四章讨论. 在本章中, 我们只讨论算法的其他方面, 如配对列表(pair list)的生成, 速度和位置的更新, 与外部温度和压力的耦合, 约束的保持. 对MD模拟数据的 <strong>分析</strong> 将在第八章讨论.</p>
 
-<h2 id="3.2　周期性边界条件">3.2　周期性边界条件</h2>
+<h2 id="3.2周期性边界条件">3.2 周期性边界条件</h2>
 
 <figure>
 <img src="3.1.png" alt="图3.1 二维的周期性边界条件" />
@@ -100,7 +100,7 @@
 
 <p>每个元胞(立方, 长方或三斜)都被26个平移的映像所包围. 因此一个特定的映像始终可以用指向27个 <strong>平移矢量</strong> 之一的索引来指认, 并通过对索引矢量进行平移来构建(见3.4.3). 约束式(3.5)保证了只需要考虑26个映像.</p>
 
-<h2 id="3.3　组的概念">3.3　组的概念</h2>
+<h2 id="3.3组的概念">3.3 组的概念</h2>
 
 <p>GROMACS的MD和分析程序可对用户自定义的原子 <strong>组</strong> 进行一些操作. 组的最大数目为256, 但每个原子最多只能属于六类不同的组. 这六类组如下:</p>
 
@@ -120,7 +120,7 @@
 
 <p>GROMACS工具中组的使用将在8.1节详述.</p>
 
-<h2 id="3.4　分子动力学">3.4　分子动力学</h2>
+<h2 id="3.4分子动力学">3.4 分子动力学</h2>
 
 <p>MD的整个流程见图3.3. 每次运行MD或EM都需要体系中所有粒子一组初始坐标和(可选的)初始速度作为输入. 本章不介绍如何获得它们; 对于如何设置并实际运行MD, 请参考<a href="http://www.gromacs.org/">www.gromacs.org</a>上的在线手册.</p>
 
@@ -687,3 +687,299 @@ iL_{\e,2} &=  G_\e  {\partial \over \partial p_\e} \tag{3.84}
 <p>由于轨迹文件很长, 不要每一步都保存! 为保留所有信息, 每15步输出一帧就够了, 因为对体系中最大频率的每一周期至少使用了30步, 并且Shannon的采样定理指出, 对带限信号, 最大频率的每一周期进行两次采样就包含了所有可用的信息. 但这样做仍然会得到很大的文件! 所以, 如果对最高频率不感兴趣, 每ps进行10或20此采样就够了. 注意由频闪效应导致的高频运动失真, 这被称为混叠: 较高的频率相对采样频率出现镜像, 显得频率较低.</p>
 
 <p>GROMACS也可以将模拟体系一部分坐标的精度进行降低, 并写入到特殊的压缩格式的轨迹文件. 所有其他的工具可以读取和写入这种格式. 参见7.3节关于如何设置<code>.mdp</code>文件以便使用<code>mdrun</code>此功能的详细信息.</p>
+
+<h2 id="3.5壳层分子动力学">3.5 壳层分子动力学</h2>
+
+<p>GROMACS可以使用Dick和Overhauser的壳层模型来模拟极化率[41]. 在这个模型中, 表示电子自由度的壳层粒子通过弹性势连接到原子核上. 在模拟的每一步, 都会对相对于壳层位置的势能进行最小化(见后面). GROMACS中的壳层模型已经成功用于N<sub>2</sub>[42]和水[43].</p>
+
+<h3 id="3.5.1优化壳层位置">3.5.1 优化壳层位置</h3>
+
+<p>壳层粒子 <span class="math">\(S\)</span> 上的力 <span class="math">\(\bi F_S\)</span> 可分解为两部分,</p>
+
+<p><span class="math">\[\bi F_S=\bi F_{bond}+\bi F_{nb} \tag{3.94}\]</span></p>
+
+<p>其中 <span class="math">\(\bi F_{bond}\)</span> 代表表示极化能量的分量, 通常以简谐势代替, <span class="math">\(\bi F_{nb}\)</span> 为库仑与van der Waals相互作用的加和. 如果我们假定 <span class="math">\(\bi F_{nb}\)</span> 几乎为常数, 就可以解析地导出壳层的最佳位置, 即 <span class="math">\(bi F_S=0\)</span> 的位置. 若壳层S连接到原子A:</p>
+
+<p><span class="math">\[\bi F_{bond}=k_b(\bi x_S-\bi x_A) \tag{3.95}\]</span></p>
+
+<p>在迭代求解过程中, 设 <span class="math">\(n\)</span> 次迭代的位置为 <span class="math">\(\bi x_S(n)\)</span>, 则在第 <span class="math">\(n\)</span> 次迭代中,</p>
+
+<p><span class="math">\[\bi F_{nb}=\bi F_S-k_b(\bi x_S(n)-\bi x_A) \tag{3.96}\]</span></p>
+
+<p>由此壳层的最佳位置符合下面的关系</p>
+
+<p><span class="math">\[\bi F_S-k_b(\bi x_S(n)-\bi x_A)+k_b(\bi x_S(n+1)-\bi x_A)=0 \tag{3.97}\]</span></p>
+
+<p>若记</p>
+
+<p><span class="math">\[\D \bi x_S=\bi x_S(n+1)-\bi x_S(n) \tag{3.98}\]</span></p>
+
+<p>最终得到</p>
+
+<p><span class="math">\[\D x_S=\bi F_S/k_b \tag{3.99}\]</span></p>
+
+<p>这样就得到了优化壳层位置时计算下一步尝试的算法</p>
+
+<p><span class="math">\[\bi x_S(n+1)=\bi x_S(n)+\bi F_S/k_b \tag{3.100}\]</span></p>
+
+<h2 id="3.6约束算法">3.6 约束算法</h2>
+
+<p>在GROMACS中可以使用LINCS(默认)或传统的SHAKE方法来施加约束.</p>
+
+<h3 id="3.6.1shake">3.6.1 SHAKE</h3>
+
+<p>SHAKE算法[44]将一组不受约束的坐标 <span class="math">\(\bi r'\)</span> 转变为一组坐标 <span class="math">\(\bi r''\)</span>, 使其满足一系列距离约束条件, 使用一组 <span class="math">\(\bi r\)</span> 作为参考,</p>
+
+<p><span class="math">\[\text{SHAKE}(\bi r' \rightarrow \bi r''; \bi r) \tag{3.101}\]</span></p>
+
+<p>算法所起的作用与求解一组约束运动方程的Lagrange乘子相同. SHAKE需要指定 <strong>相对容差</strong>. 算法会继续直到所有的约束都处于相对容差之内. 若由于偏差太大, SHAKE不能重置坐标, 或迭代次数超过指定数目, 会给出错误信息.</p>
+
+<p>假定运动方程必须满足 <span class="math">\(K\)</span> 个完整可积分约束, 表述为</p>
+
+<p><span class="math">\[\s_k(\bi r_1...\bi r_N)=0; \; k=1...K \tag{3.102}\]</span></p>
+
+<p>例如 <span class="math">\((\bi r_1-\bi r_2)^2-b^2=0\)</span>. 力的定义为:</p>
+
+<p><span class="math">\[-{\partial \over \partial \bi r_i} \left(V+\Sum_{k=1}^K \l_k \s_k\right) \tag{3.103}\]</span></p>
+
+<p>其中 <span class="math">\(\l_k\)</span> 为Lagrange乘子, 必须求解它们以满足约束方程. 上面求和的第二部分决定了 <strong>约束力</strong> <span class="math">\(\bi G_i\)</span>, 定义为:</p>
+
+<p><span class="math">\[\bi G_i=-\Sum_{k=1}^K \l_k \opar {\s_k}{\bi r_i} \tag{3.104}\]</span></p>
+
+<p>在蛙跳式或Verlet算法中, 由约束力引起的位移为 <span class="math">\((\bi G_i/m_i)(\D t)^2\)</span>. 求解Lagrange乘子(进而位移)需要求解一组二度耦合的方程, 这可使用SHAKE方法迭代求解. 对于刚性水分子的特殊情况, 这种模拟构成了超过了80%的模拟体系, 我们已经实现了SETTLE算法(见5.5节)[45].</p>
+
+<p>对速度Verlet, 必须施加额外的约束, 以约束第二个半速度步的速度, 并去除平行于键向量的任何速度分量, 这一步骤被称为RATTLE, Andersen的论文中对其有更详细的论述[46].</p>
+
+<h3 id="3.6.2lincs">3.6.2 LINCS</h3>
+
+<p><strong>LINCS算法</strong></p>
+
+<p>在未约束的一步更新之后, LINCS算法会将键重置为它们的正确长度. 这个方法不进行迭代, 总是包含两个步骤. 尽管LINCS方法基于矩阵, 但并不需要进行矩阵乘法. LINCS方法比SHAKE方法更稳定, 也更快, 但只能用于键约束和孤立的键角约束, 如OH的质子键角. 由于其稳定性, LINCS特别适用于Brown动力学. LINCS有两个参数, 在后文的参数节中将会解释. 并行版本的LINCS, P-LINCS, 将在3.17.3节介绍.</p>
+
+<p><strong>LINCS公式</strong></p>
+
+<p>考虑 <span class="math">\(N\)</span> 个粒子的体系, 粒子位置由 <span class="math">\(3N\)</span> 向量 <span class="math">\(\bi r(t)\)</span> 给出. 分子动力学中的运动方程由牛顿定律给出:</p>
+
+<p><span class="math">\[{\mathrm d^2 \bi r \over \mathrm d t^2} = \bi M^{-1} \bi F \tag{3.105}\]</span></p>
+
+<p>其中 <span class="math">\(\bi F\)</span> 为 <span class="math">\(3N\)</span> 个力向量, <span class="math">\(\bi M\)</span> 为 <span class="math">\(3N \times 3N\)</span> 的对角矩阵, 包含了粒子的质量. 体系受到 <span class="math">\(K\)</span> 个与时间无关的约束方程</p>
+
+<p><span class="math">\[g_i(\bi r) =|\bi r_{i_1}-\bi r_{i_2}|-d_i=0 \;\; i=0,...,K \tag{3.106}\]</span></p>
+
+<figure>
+<img src="3.10.png" alt="图 3.10: 一个时间步中进行的三次位置更新. 虚线为原先的键, 长度为 $d$, 实线为新的键. $l=d\cos\q$, $p=(2d^2-l^2)^{1\over2}$" />
+<figcaption>图 3.10: 一个时间步中进行的三次位置更新. 虚线为原先的键, 长度为 <span class="math">\(d\)</span>, 实线为新的键. <span class="math">\(l=d\cos\q\)</span>, <span class="math">\(p=(2d^2-l^2)^{1\over2}\)</span></figcaption>
+</figure>
+
+<p>在数值积分方案中, LINCS会在一个未约束的更新之后施加, 如SHAKE一样. LINCS算法分两步工作(见图3.10). 在第一步中, 新键到旧键的投影被设置为零, 在第二步中, 对因旋转导致的键伸长进行校正. 第一步与第二步的计算非常相似. 算法的完整推导见[47], 这里只给出第一步的一个简短说明.</p>
+
+<p>对约束方程的梯度矩阵使用新的记号, 记为</p>
+
+<p><span class="math">\[B_{hi}=\opar {g_H}{r_i} \tag{3.107}\]</span></p>
+
+<p>注意 <span class="math">\(\bi B\)</span> 为 <span class="math">\(K\times 3N\)</span> 的矩阵, 包含了约束的方向. 下列方程显示了新的约束坐标 <span class="math">\(\bi r_{n+1}\)</span> 与未约束坐标 <span class="math">\(\bi r_{n+1}^{unc}\)</span> 的关系</p>
+
+<p><span class="math">\[\bi r_{n+1}=(\bi I-\bi T_n \bi B_n)\bi r_{n+1}^{unc}+\bi T_n \bi d = \\
+\bi r_{n+1}^{unc}-\bi M^{-1}\bi B_n (\bi B_n \bi M^{-1} \bi B_n^T)^{-1} (\bi B_n \bi r_{n+1}^{unc}-\bi d) \tag{3.108}\]</span></p>
+
+<p>其中 <span class="math">\(\bi T=\bi M^{-1}\bi B^T(\bi B\bi M^{-1}\bi B^T)^{-1}\)</span>. 由方程3.105, 3.106推导此方程的过程可参见[47].</p>
+
+<p>第一步并未将实际键的长度设置为需要的长度, 而是将新键投影到旧键的方向上. 为校正键 <span class="math">\(i\)</span> 的旋转, 键在原先方向上的投影 <span class="math">\(p_i\)</span> 被设置为</p>
+
+<p><span class="math">\[p_i=\sqrt{2d_i^2-l_i^2} \tag{3.109}\]</span></p>
+
+<p>其中 <span class="math">\(l_i\)</span> 为经第一步投影后键的长度. 校正后的位置为</p>
+
+<p><span class="math">\[\bi r_{n+1}^* =(\bi I -\bi T_n\bi B_n)\bi r_{n+1}+\bi T_n \bi p \tag{3.110}\]</span></p>
+
+<p>对旋转效应的校正实际上是一个迭代过程, 但在MD过程中只进行了一步. 对每一约束, 经过这一校正后, 约束的相对偏差将小于0.0001. 在能量最小化中, 这可能不够精确, 因此, 迭代次数被设置为展开的阶数(见后文).</p>
+
+<p>约一半的CPU时间被用于对约束耦合矩阵 <span class="math">\(\bi B_n \bi M^{-1}\bi B_n^T\)</span> 进行求逆, 而且必须每步进行一次. <span class="math">\(K\times K\)</span> 矩阵的对角元素为 <span class="math">\(1/m_{i_1}+1/m_{i_2}\)</span>. 只有当两个键相连时非对角元素才不为零, 而是 <span class="math">\(\cos\f/m_c\)</span>, 其中 <span class="math">\(m_c\)</span> 为连接两个键的原子质量, <span class="math">\(\f\)</span> 为键之间的夹角.</p>
+
+<p>使用幂展开方法对矩阵 <span class="math">\(\bi T\)</span> 求逆. 为此引入 <span class="math">\(K\times K\)</span> 的矩阵 <span class="math">\(\bi S\)</span>, 其元素为矩阵 <span class="math">\(\bi B_n \bi M^{-1}\bi B_n^T\)</span> 对角元素平方根的倒数. 这一矩阵可用于将耦合矩阵的对角元素变换为1:</p>
+
+<p><span class="math">\[(\bi B_n \bi M^{-1}\bi B_n^T)^{-1}=\bi S \bi S^{-1} (\bi B_n \bi M^{-1}\bi B_n^T)^{-1} \bi S^{-1} \bi S \\
+=\bi S (\bi S \bi B_n \bi M^{-1}\bi B_n^T \bi S)^{-1} \bi S=\bi S(\bi I-\bi A_n)^{-1} \bi S \tag{3.111}\]</span></p>
+
+<p>矩阵 <span class="math">\(\bi A_n\)</span> 是对称的稀疏矩阵, 对角元素中含有零, 因此可以使用一个简单的技巧来计算其逆矩阵</p>
+
+<p><span class="math">\[(\bi I-\bi A_n)^{-1}=\bi I+\bi A_n+\bi A_n^2+\bi A_n^3+... \tag{3.112}\]</span></p>
+
+<p>这种求逆方法只有当所有 <span class="math">\(\bi A_n\)</span> 本征值的绝对值都小于1时才使用. 对只含有键约束的分子, 其连接度非常低, 这个条件总是成立, 即使有环状结构出现也是一样. 对含有键角约束的分子, 可能会有问题. 使用额外的距离约束来约束键角, 可以引入多个小的环状结构. 这样分子的连接度变高, 本征值变大. 因此LINCS方法 <strong>不能</strong> 应用于耦合键角约束.</p>
+
+<p>对所有键都进行约束的分子, <span class="math">\(\bi A_n\)</span> 的本征值约为0.4, 这意味着在展开方程3.112中, 每增大一个阶数, 偏差会下降为原来的0.4. 但对相对孤立的三角约束, 最大的本征值大约为0.7. 当使用额外的角约束移除醇类基团中含氢的键角振动, 或当使用LINCS约束水分子, 如使用柔性约束时, 会导致这些三角约束出现. 这些三角约束的收敛速度比其他约束慢两倍. 因此, 从GROMACS 4.0版本开始, 一些额外的项被添加到这些三角约束的展开中</p>
+
+<p><span class="math">\[(\bi I-\bi A_n)^{-1} \approx \bi I+\bi A_n+...+\bi A_n^{N_i}+\left(\bi A_n^*+...+\bi A_n^{*N_i} \right) \bi A_n^{N_i} \tag{3.113}\]</span></p>
+
+<p>其中 <span class="math">\(N_i\)</span> 为正常的展开阶数, <span class="math">\(\bi A^*\)</span> 只包含 <span class="math">\(\bi A\)</span> 中处于刚性三角耦合约束内的元素, 所有其他元素为零. 使用这种方法, 角约束的精度接近其他约束的精度, 同时确定展开所需要的一系列矩阵矢量乘法只需要对几个约束耦合进行. 这一过程在P-LINCS的论文[48]中有说明.</p>
+
+<p><strong>LINCS参数</strong></p>
+
+<p>LINCS精度取决于展开方程3.112中矩阵的数目. 对MD计算四阶展开就足够了; 对Brown动力学, 使用大的时间步长时, 可能需要八阶展开. 展开阶数是<code>*.mdp</code>文件中的一个参数. LINCS的实现方式使得其算法不可能失败. 即使不可能重置约束时, LINCS也将创建一个尽可能满足约束构型. 然而, 当在某一步中键的旋转超过了预先定义的角度时, LINCS会给警告. 这一角度用户可以在<code>*.mdp</code>文件中设置.</p>
+
+<h2 id="3.7模拟退火">3.7 模拟退火</h2>
+
+<p>GROMACS支持众所周知的模拟退火方法. 你甚至可以独立地将多个原子组和任意数目的参考温度进行耦合, 参考温度在模拟中会改变. 对温度耦合中的每一组, 退火是通过简单地改变当前的参考温度实现的. 因此, 实际的弛豫和耦合性质取决于你使用的热浴类型与耦合强度. 由于参考温度会变化, 请务必记住体系温度 <strong>不会</strong> 瞬时达到参考值&#8211;你必须考虑到耦合算法内在的弛豫时间. 如果退火参考温度的改变快于温度弛豫, 当它们之间相差过大时, 模拟可能会崩溃.</p>
+
+<p>退火策略是对每个组指定一系列相应的时间和参考温度. 你还可以选择只使用单个序列(退火完成后温度将耦合到最后的参考值), 或是使用周期性退火, 当退火序列完成后重新从第一个参考温度开始. 在模拟中, 你可以混合配合使用两种退火类型和不退火的组.</p>
+
+<h2 id="3.8随机动力学">3.8 随机动力学</h2>
+
+<p>随机或速度Langevin动力学在牛顿运动方程中增加了摩擦项和噪声项:</p>
+
+<p><span class="math">\[m_i {\mathrm d^2 \bi r_i \over \rmd {t^2} } = -m_i \g_i {\rmd {\bi r_i} \over \rmd t}+\bi F_i(\bi r)+\mathring{\bi r}_i \tag{3.114}\]</span></p>
+
+<p>其中 <span class="math">\(\g_i\)</span> 为摩擦常数[1/ps], <span class="math">\(\mathring {\bi r}_i\)</span> 为噪声过程, 满足 <span class="math">\(\langle \mathring r_i(t) \mathring r_j(t+s) \rangle=2m_i \g_i k_B T \d(s)\d_{ij}\)</span>. 当与体系的时间尺度相比, <span class="math">\(1/\g_i\)</span> 较大时, 随机动力学可视为具有随机温度耦合的分子动力学. 与使用Berendsen温度耦合的MD相比, SD的优势在于它产生的系综是已知的. 模拟真空中的体系时, SD还有另外一个优点: 对整个平动转动自由度不存在误差累积. 当 <span class="math">\(1/\g_i\)</span> 小于体系的时间尺度时, 动力学与MD完全不同, 但取样仍然正确.</p>
+
+<p>在GROMACS中有两种算法可用于积分方程3.114: 简单有效的方法和更复杂的蛙跳式算法[49]. 后一方法现在已经废弃. 这两种积分方法的精度等价于常规MD的蛙跳式积分方法与速度Verlet积分方法的精度, 不同在于存在约束时复杂SD积分方法的采样温度稍微过高(尽管误差小于使用整步速度动能项的速度Verlet积分方法). 简单积分方法几乎与等同于常用的离散Langevin方程方法, 但以脉冲方式施加摩擦项与速度项[50]. 简单积分方法如下:</p>
+
+<p><span class="math">\[\alg
+\bi v' &= \bi v(t-{1\over2}\D t)+{1\over m}\bi F(t) \D t \tag{3.115} \\
+\D \bi v &= -\a \bi v'(t+{1\over2}\D t)+\sqrt{ {k_B T\over m}(1-\a^2)} \bi r_i^G  \tag{3.116} \\
+\bi r(t+\D t) &= \bi r(t)+ \left(\bi v'+{1\over2}\D t\right) \D t \tag{3.117} \\
+\bi r(t+{1\over2}\D t) &= \bi v'+\D \bi v \tag{3.118} \\
+\a &= 1-e^{-\g \D t} \tag{3.119}
+\ealg\]</span></p>
+
+<p>其中 <span class="math">\(\bi r_i^G\)</span> 为服从高斯分布的噪声, 其 <span class="math">\(\m=0\)</span>, <span class="math">\(\s=1\)</span>. 算法首先在无摩擦与噪声的情况下更新整个时间步的速度, 获得 <span class="math">\(\bi v'\)</span>, 这完全与蛙跳式的常规更新相同. 然后在 <span class="math">\(t+\D t\)</span> 步以脉冲方式施加摩擦与噪声. 这种方案的优点在于依赖速度的项在整个时间步中都起作用, 由于对力的积分取决于坐标与速度, 这样就使得方案对力进行正确积分很简单, 如在约束和耗散粒子动力学(DPD, dissipative particle dynamics, 还未实现)情况下. 有约束时, 坐标更新方程3.117会被划分为常规的蛙跳式更新与 <span class="math">\(\D \bi v\)</span>. 这些更新都完成后, 再对坐标和速度施加约束.</p>
+
+<p>在已废弃的复杂方法中, 在每个积分步对每个自由度需要四个高斯随机数, 有约束时, 每个积分步坐标需要约束两次. 取决于力的计算代价, 这可能会占用显著一部分模拟时间. 精确地对随机动力学进行继续运行是不可能的, 因为在模拟过程中没有存储随机数产生器的状态.</p>
+
+<p>当使用SD控温时, <span class="math">\(\g\)</span> 的合适值可取0.5 ps<sup>-1</sup>, 因为这样得到的摩擦低于水的内摩擦, 同时仍能提供有效的控温.</p>
+
+<h2 id="3.9brown动力学">3.9 Brown动力学</h2>
+
+<p>在高摩擦的极限情况下, 随机动力学退化为Brown动力学, 也被称为位置Langevin动力学. 它施加于过阻尼体系, 即惯性效应可忽略的体系. 方程为</p>
+
+<p><span class="math">\[{\mathrm d \bi r_i \over \rmd t}={1\over \g_i} \bi F_i(\bi r)+\mathring {\bi r}_i \tag{3.120}\]</span></p>
+
+<p>其中 <span class="math">\(\g_i\)</span> 为摩擦系数[amu/ps], <span class="math">\(\mathring {\bi r}_i(t)\)</span> 为噪声过程, 满足 <span class="math">\(\langle \mathring r_i(t) \mathring r_j(t+s) \rangle=2\d(s)\d_{ij} k_B T/\g_i\)</span>. 在GROMACS中, 使用简单的显示方案进行上面的方程进行积分:</p>
+
+<p><span class="math">\[\bi r_i(t+\D t) = \bi r_i(t) +{\D t\over \g_i} \bi F_i(\bi r(t)) +\sqrt{ 2k_B T{\D t\over \g_i} } \bi r_i^G  \tag{3.121}\]</span></p>
+
+<p>其中 <span class="math">\(\bi r_i^G\)</span> 为服从高斯分布的噪声, 其 <span class="math">\(\m=0\)</span>, <span class="math">\(\s=1\)</span>. 摩擦系数 <span class="math">\(\g_i\)</span> 可以取为对所有粒子相同, 或者取为 <span class="math">\(\g_i=m_i \g_i\)</span>, 其中的摩擦系数 <span class="math">\(\g_i\)</span> 对不同组的原子可取不同值. 由于假定体系处于过阻尼状态, 因此可以使用大的时间步长. 应使用LINCS方法进行约束, 因为SHAKE方法对大的原子位移不收敛. BD是<code>mdrun</code>程序的一个选项.</p>
+
+<h2 id="3.10能量最小化">3.10 能量最小化</h2>
+
+<p>GROMACS中的能量最小化可以使用最速下降, 共轭梯度, 或L-BFGS(有限内存的Broyden-Fletcher-Goldfarb-Shanno准牛顿最小化, 我们倾向于使用简称). EM只是<code>mdrun</code>程序的一个选项.</p>
+
+<h3 id="3.10.1最速下降">3.10.1 最速下降</h3>
+
+<p>尽管最速下降方法确实不是最有效的搜索算法, 它很稳健, 并且易于实现.</p>
+
+<p>定义代表所有 <span class="math">\(3N\)</span> 个坐标的向量 <span class="math">\(\bi r\)</span>. 初始时, 必须给出的最大位移值 <span class="math">\(h_0\)</span> (例如0.01 nm).</p>
+
+<p>首先计算力 <span class="math">\(\bi F\)</span> 和势能. 新位置的计算方法如下:</p>
+
+<p><span class="math">\[\bi r_{n+1}=\bi r_n+{\bi F_n \over \max(|\bi F_n|)} h_n \tag{3.122}\]</span></p>
+
+<p>其中 <span class="math">\(h_n\)</span> 为最大位移, <span class="math">\(\bi F_n\)</span> 为力, 也即势能 <span class="math">\(V\)</span> 的负梯度. <span class="math">\(\max(|\bi F_n|)\)</span> 表示力分量绝对值的最大值. 再次计算新位置的力与能量,</p>
+
+<ul class="incremental">
+<li>若 <span class="math">\(V_{n+1} \lt V_n\)</span>, 则接受新位置, 令 <span class="math">\(h_{n+1}=1.2h_n\)</span></li>
+<li>若 <span class="math">\(V_{n+1} \ge V_n\)</span>, 则拒绝新位置, 令 <span class="math">\(h_{n+1}=0.2h_n\)</span></li>
+</ul>
+
+<p>当力的计算次数达到用户指定的数目(如100), 或力(梯度)分量绝对值的最大值小于设定值 <span class="math">\(\e\)</span> 后, 算法停止. 由于力的截断会使能量计算产生一些噪声, 停止条件不应该设得过高, 以免算法迭代无法结束. <span class="math">\(\e\)</span> 的合理值可以根据简谐振子在温度 <span class="math">\(T\)</span> 下的受到的根均方力 <span class="math">\(f\)</span> 来估计, 其值为</p>
+
+<p><span class="math">\[f=2\p\n \sqrt{2mkT} \tag{3.123}\]</span></p>
+
+<p>其中 <span class="math">\(\n\)</span> 为振子频率, <span class="math">\(m\)</span> 为(约化)质量, <span class="math">\(k\)</span> 为Boltzmann常数. 对波数为100 cm<sup>-1</sup>, 质量为10 原子单位, 温度 1 K时的弱振子, <span class="math">\(f=7.7\)</span> kJ mol<sup>-1</sup> nm<sup>-1</sup>. <span class="math">\(\e\)</span> 的值在1到10之间是可以接受的.</p>
+
+<h3 id="3.10.2共轭梯度">3.10.2 共轭梯度</h3>
+
+<p>共轭梯度在最小化早期慢于最速下降, 但靠近能量最低点时更高效. 方法的参数和停止条件与最速下降相同. 在GROMACS中, 共轭梯度不能与约束一起使用, 包括用于刚性水的SETTLE算法[45], 因为还未实现. 若体系中存在水分子, 必须使用柔性水模型, 这可以在<code>*.mdp</code>文件中利用<code>define = -DFLEXIBLE</code>指定.</p>
+
+<p>这真的不是一个限制, 因为只有在简正模式分析前的能量最小化中才需要共轭梯度的精度, 简正分析时不能使用约束. 对大多数其他目的, 最速下降足够高效.</p>
+
+<h3 id="3.10.3l-bfgsd">3.10.3 L-BFGSD</h3>
+
+<p>原始的BFGS算法会逐步产生更好的逆Hess矩阵的近似, 并将体系移动到当前的估计的最小点. 这种方法需要的内存正比于粒子数的平方, 因此实用中不能用于大体系如生物分子. 作为替代, 我们使用了Nocedal的L-BFGS算法[51, 52]. 它使用来自前一步的固定数目的校正得到近似的逆Hess矩阵. 这种滑动窗技术几乎与原始方法一样有效, 但所需内存要少得多&#8211;正比于粒子数与校正步数的乘积. 实用中, 我们发现它比共轭梯度收敛得更快, 但由于存在校正步, 此方法还未并行化. 也需要指出, 切换或移位相互作用通常可以提高收敛性, 因为明显的截断意味着当前坐标下的势能函数与前一步用于构建逆Hess矩阵近似的势能函数稍有不同.</p>
+
+<h2 id="3.11简正模式分析">3.11 简正模式分析</h2>
+
+<p>GROMACS可以进行简正模式分析[53, 54, 55], 计算是通过对角化质量加权的Hess矩阵 <span class="math">\(H\)</span> 进行的:</p>
+
+<p><span class="math">\[\alg
+R^T M^{-1/2} H M^{-1/2} R &= \text{diag}(\l1, ..., \l_{3N}) \tag{3.124} \\
+\l_i &= (2\p \w_i)^2 \tag{3.125}
+\ealg\]</span></p>
+
+<p>其中 <span class="math">\(M\)</span> 包含了原子质量, <span class="math">\(R\)</span> 的列为本征向量, <span class="math">\(\l_i\)</span> 为本征值, <span class="math">\(\w_i\)</span> 为相应的频率.</p>
+
+<p>首先需要计算Hess矩阵, 它是一个 <span class="math">\(3N\times 3N\)</span> 的矩阵, 其中 <span class="math">\(N\)</span> 为原子数,</p>
+
+<p><span class="math">\[H_{ij}={\partial^2 V \over \partial x_i \partial x_j} \tag{3.126}\]</span></p>
+
+<p>其中 <span class="math">\(x_i\)</span> 和 <span class="math">\(x_j\)</span> 代表原子的x, y或z坐标. 实际计算时并不使用上面的方程, 而是根据得到的力, 利用数值方法计算Hess矩阵</p>
+
+<p><span class="math">\[\alg
+H_{ij} &= -{f_i(\bi x+h\bi e_j) - f_i(\bi x-h\bi e_j) \over 2h} \tag{3.127} \\
+f_i &=-\opar V {x_i} \tag{3.128}
+\ealg\]</span></p>
+
+<p>其中 <span class="math">\(\bi e_j\)</span> 为 <span class="math">\(j\)</span> 方向的单位向量. 应当指出, 对通常的简正模式计算, 在计算Hess矩阵前需要进行彻底的能量最小化, 需要的能量容差取决于体系的类型, 粗略的指示值为0.001 kJ mol<sup>-1</sup>. 应当使用共轭梯度或L-BFGS方法进行能量最小化, 并使用双精度版本.</p>
+
+<p>在这些计算中会涉及多个GROMACS程序. 首先应该使用<code>mdrun</code>进行能量最小化, 其次再使用<code>mdrun</code>计算Hess矩阵. <strong>注意</strong>, 创建运行输入文件时, 应使用来自全精度轨迹文件中的最小化的构型, 因为结构文件不够精确. <code>g_nmeig</code>程序进行对角化计算, 并将简正模式按其频率进行排序. <code>mdrun</code>和<code>g_nmeig</code>都应当使用双精度版本. 可以使用<code>g_anaeig</code>程序分析简正模式. 要创建任意温度下的结构系综中的任意一组简正模式, 可使用<code>g_nmens</code>程序. 关于简正模式分析及其相关的主成分分析(见8.10节)的概述可参见[56].</p>
+
+<h2 id="3.12自由能计算">3.12 自由能计算</h2>
+
+<figure>
+<img src="3.11.png" alt="图3.11: 自由能循环. A: 计算 $\D G_{12}$, 抑制剂I分别与酶E, E结合时的自由能差值. B: 计算 $\D G_{12}$, 抑制剂I, I分别与酶结合时的自由能差值." />
+<figcaption>图3.11: 自由能循环. A: 计算 <span class="math">\(\D G_{12}\)</span>, 抑制剂I分别与酶E, E&#8217;结合时的自由能差值. B: 计算 <span class="math">\(\D G_{12}\)</span>, 抑制剂I, I&#8217;分别与酶结合时的自由能差值.</figcaption>
+</figure>
+
+<h3 id="3.12.1慢增长方法">3.12.1 慢增长方法</h3>
+
+<p>GROAMCS可使用几种不同的方法计算自由能, 其中包括&#8220;慢增长&#8221;方法. 自由能计算的一个例子是计算抑制剂I分别与酶E, 突变后的酶E&#8217;结合时的自由能差值. 对这样的大体系, 利用计算机模拟来进行对接计算是不可行的, 即便是在合理的计算时间内以合理的计算精度模拟抑制剂从酶中释放的过程, 也是不可行的. 然而, 如果我们考虑图3.11 A中的热力学循环, 可得到</p>
+
+<p><span class="math">\[\D G_1-\D G_2 =\D G_3 -\D G_4 \tag{3.129}\]</span></p>
+
+<p>若对左边的项感兴趣, 我们也可以同样好地计算右边的项.</p>
+
+<p>如果我们要计算两个抑制剂I和I&#8217;与酶E&#8217;结合时的自由能差值(图3.11 B), 我们仍然可以使用方程3.129来计算所需要的性质.</p>
+
+<p>在GROMACS中可以利用&#8220;慢增长&#8221;方法计算两个分子物种之间的自由能差值. 不同分子物种之间的这种自由能差值没有物理意义, 但利用热力学循环, 可由它们获得有意义的量. 这种方法要求在模拟中体系的哈密顿量缓慢地从描述一个体系(A)转变到描述另一个体系(B). 变化必须足够缓慢. 以保证体系在这个过程中仍保持平衡状态. 若能满足这些要求, 变化是可逆的, 并且从B到A的慢增长模拟与从A到B的慢增长模拟会得到同样的结果(但符号相反). 这是一个有用的核查方法, 但用户应当心, 正向与反向增长结果的相等并不能确保结果的正确性.</p>
+
+<p>对哈密顿量所需的修改是通过将 <span class="math">\(H\)</span> 作为 <strong>耦合参数</strong> <span class="math">\(\l\)</span> 的函数实现的: <span class="math">\(H=H(p,q;\l)\)</span>. 这样 <span class="math">\(\l=0\)</span> 描述体系A, <span class="math">\(\l=1\)</span> 描述体系B:</p>
+
+<p><span class="math">\[H(p,q;0)=H^A(p,q); \;\; H(p,q;1)=H^B(p,q) \tag{3.130}\]</span></p>
+
+<p>在GROMACS中, <span class="math">\(\l\)</span> 依赖的函数形式对各种力场贡献是不同的, 对此的说明请参看4.5节.</p>
+
+<p>Helmholtz自由能 <span class="math">\(A\)</span> 与 <span class="math">\(N\)</span>, <span class="math">\(V\)</span>, <span class="math">\(T\)</span> 系综的配分函数 <span class="math">\(Q\)</span> 有关, 这一系综被认为是等容等温MD模拟产生的平衡系综. 一般更有用的Gibbs自由能 <span class="math">\(G\)</span> 与 <span class="math">\(N\)</span>, <span class="math">\(P\)</span>, <span class="math">\(T\)</span> 系综的配分函数 <span class="math">\(\D\)</span> 有关, 这一系综被认为是等压等温MD模拟产生的平衡系综.</p>
+
+<p><span class="math">\[\alg
+A(\l) &= -k_B T\ln Q \tag{3.131} \\
+Q &= c\iint \exp[-\b H(p,q;\l)] \rmd p \rmd q    \tag{3.132} \\
+G(\l) &= -k_BT\ln \D \tag{3.133} \\
+\D &= c\iiint \exp[-\b H(p,q;\l)-\b pV] \rmd p \rmd q \rmd V    \tag{3.134} \\
+G &= A+pV    \tag{3.135}
+\ealg\]</span></p>
+
+<p>其中 <span class="math">\(\b=1/(k_B T)\)</span>, <span class="math">\(c=(N!h^{3N})^{-1}\)</span>. 这些对相空间的积分不能由模拟得到, 但可以计算它们对 <span class="math">\(\l\)</span> 的导数作为系综平均:</p>
+
+<p>$${\rmd A \over \rmd \l}={\iint (\partial H/\partial \l) \exp[-\b H(p,q;\l)] \rmd p \rmd q \over \iint \exp[-\b H(p,q;\l)] \rmd p \rmd q} = \left&lt; \opar H \l \right&gt;_{NVT;\l} \tag{3.136} $$</p>
+
+<p>在 <span class="math">\(N\)</span>, <span class="math">\(p\)</span>, <span class="math">\(T\)</span> 系综中的关系与此类似. A和B之间的自由能差值可通过积分对 <span class="math">\(\l\)</span> 的导数获得:</p>
+
+<p><span class="math">\[\alg
+A^B(V,T)-A^A(V,T) &= \int_0^1  \left< \opar H \l \right>_{NVT;\l} \rmd \l \tag{3.137} \\
+G^B(p,T)-G^A(p,T) &= \int_0^1  \left< \opar H \l \right>_{NpT;\l} \rmd \l \tag{3.138} \\
+\ealg\]</span></p>
+
+<p>若要计算 <span class="math">\(G^B(p,T)-G^A(p,T)\)</span>, 自然的选择是等压模拟. 然而, 也可以从等容的慢增长模拟计算这个量, 模拟由压力为 <span class="math">\(p\)</span> 体积为 <span class="math">\(V\)</span> 的体系A开始, 到压力为 <span class="math">\(p_B\)</span> 的体系B结束, 并进行下面的小(但原则上精确)校正:</p>
+
+<p><span class="math">\[G^B(p)-G^A(p) = A^B(V)-A^A(V)-\int_p^{p^B} [V^B(p')-V] \rmd {p'} \tag{3.139}\]</span></p>
+
+<p>这里的记号中忽略了温度 <span class="math">\(T\)</span>. 这一校正粗略地等于 <span class="math">\(-{1\over2}(p^B-p)\D V=(\D V)^2/(2 \k V)\)</span>, 其中 <span class="math">\(\D V\)</span> 为 <span class="math">\(p\)</span> 时的体积变化, <span class="math">\(\k\)</span> 为等温压缩率. 这一校正通常很小, 例如, 等容情况下, 在1000个水分子的体系中凭空产生一个水分子增加的额外压力最大为22 bar, 但对Helmholtz自由能的校正只有&#8211;1 kJ mol<sup>-1</sup>.</p>
+
+<p>在直角坐标系中, 哈密顿量的动能项只取决于动量, 可独立进行积分, 并且实际上可从方程中去除. 当质量不变时, 动能对自由能完全没有贡献. 当质量变化时, 对自由能的累计贡献为 <span class="math">\(-{3\over2}k_B T\ln(m^B/m^A)\)</span>. <strong>注意</strong> 这只对无约束的情况适用.</p>
+
+<h3 id="3.12.2热力学积分">3.12.2 热力学积分</h3>
+
+<p>GROMACS也可以在一个模拟中对方程3.137或3.138从A到B的整个范围内进行积分. 然而, 若变化太大, 采样可能不充分, 用户可能更倾向于在仔细选择的中间的 <span class="math">\(\l\)</span> 值上精确地确定 <span class="math">\(\langle \rmd G/\rmd \l \rangle\)</span> 的值. 通过将步长<code>delta_lambda</code>设定为零, 这很容易实现. 每一模拟都可以先进行平衡, 由 <span class="math">\(\partial H/\partial \l\)</span> 的涨落可以得到每个 <span class="math">\(\langle \rmd G/\rmd \l \rangle\)</span> 值的合适的误差估计. 然后, 可以通过适当的数值积分获得总的自由能变化.</p>
+
+<p>GROMACS现在也支持使用<code>g_bar</code>程序计算从状态A转变到状态B的 <span class="math">\(\D G\)</span> 值, 计算时利用BAR(Bennett&#8217;s Acceptance Ratio)方法. 相同的数据也可用MBAR[58]方法来计算自由能, 但目前分析时需要来自外部<code>pybar</code>程序包中的工具, 可从<a href="https://SimTK.org/home/pymbar">https://SimTK.org/home/pymbar</a>下载.</p>
+
+<p>力场贡献与 <span class="math">\(\l\)</span> 的依赖关系将在4.5节详细讨论.</p>

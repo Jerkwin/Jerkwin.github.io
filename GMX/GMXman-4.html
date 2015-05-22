@@ -19,7 +19,7 @@
 <li><p><strong>约束项</strong>: 位置约束, 角度约束, 距离约束, 方向约束和二面角约束, 均基于固定的列表进行计算.</p></li>
 </ol>
 
-<h2 id="4.1　非键相互作用">4.1　非键相互作用</h2>
+<h2 id="4.1非键相互作用">4.1 非键相互作用</h2>
 
 <p>GROMACS的非键相互作用是对势累加的(pair-additive), 并满足中心对称:</p>
 
@@ -230,7 +230,7 @@ B &= {(\a+3)r_c - (\a+1)r_1 \over r_c^{\a+2} (r_c-r_1)^3}
 <figcaption>图4.5: 键伸缩的原理（左）以及键伸缩的势能（右）. </figcaption>
 </figure>
 
-<h2 id="4.2　键合相互作用">4.2　键合相互作用</h2>
+<h2 id="4.2键合相互作用">4.2 键合相互作用</h2>
 
 <p>键合相互作用基于固定的原子列表. 它们不仅包括对相互作用(pair interactions), 也包括三体和四体相互作用. 键合相互作用包括 <strong>键伸缩</strong>(双体), <strong>键角</strong>(三体)和 <strong>二面角</strong>(四体)相互作用. 一种特殊类型的二面角相互作用(称为 <strong>异常二面角</strong>)可用于将原子保持在同一平面上, 或是避免将分子转变为相反手性（镜像）的结构.</p>
 
@@ -477,14 +477,14 @@ V_{morse}(r_{ij}) &= D_{ij} [1 - \exp(-\beta_{ij} (r_{ij}-b_{ij}))]^2 \\
 
 <table><caption>表4.1: Ryckaert-Bellemans势的常数值(\(\text{kJ mol}^{-1}\))</caption>
 <tr>
-<td style="text-align:center;">C0  9.28</td>
+<td style="text-align:center;"> C0  9.28 </td>
 <td style="text-align:center;">C2 -13.12</td>
-<td style="text-align:center;">C4 26.24</td>
+<td style="text-align:center;"> C4 26.24 </td>
 </tr>
 <tr>
-<td style="text-align:center;">C1 12.16</td>
+<td style="text-align:center;"> C1 12.16 </td>
 <td style="text-align:center;">C3  -3.06</td>
-<td style="text-align:center;">C5 -31.5</td>
+<td style="text-align:center;"> C5 -31.5 </td>
 </tr>
 </table>
 
@@ -1125,38 +1125,38 @@ r_B &= \left( \a \s_B^{48}(1-\l)^p + r^{48} \right)^{1\over 48} \tag{4.140}
 
 <table><caption>表4.2: 非键相互作用不同函数形式的参数</caption>
 <tr>
-<th colspan="2" style="text-align:center;">类型</th>
-<th colspan="2" style="text-align:center;">参数</th>
+<th colspan="2" style="text-align:center;">   类型       </th>
+<th colspan="2" style="text-align:center;">      参数  </th>
 </tr>
 <tr>
-<td rowspan="4" style="text-align:center;">库仑</td>
+<td rowspan="4" style="text-align:center;"> 库仑 </td>
 <td style="text-align:center;">普通截断</td>
-<td colspan="3" style="text-align:left;">\(r_c, \ve_r\)</td>
+<td colspan="2" style="text-align:center;">\(r_c, \ve_r\)  </td>
 </tr>
 <tr>
 <td style="text-align:center;">反应场</td>
-<td colspan="3" style="text-align:left;">\(r_c, \ve_{rf}\)</td>
+<td colspan="2" style="text-align:center;">\(r_c, \ve_{rf}\)  </td>
 </tr>
 <tr>
 <td style="text-align:center;">移位函数</td>
-<td colspan="3" style="text-align:left;">\(r_1, r_c, \ve_r\)</td>
+<td colspan="2" style="text-align:center;">\(r_1, r_c, \ve_r\)  </td>
 </tr>
 <tr>
 <td style="text-align:center;">切换函数</td>
-<td colspan="3" style="text-align:left;">\(r_1, r_c, \ve_r\)</td>
+<td colspan="2" style="text-align:center;">\(r_1, r_c, \ve_r\)  </td>
 </tr>
 <tr>
-<td rowspan="3" style="text-align:center;">VdW</td>
+<td rowspan="3" style="text-align:center;">  VdW </td>
 <td style="text-align:center;">普通截断</td>
-<td colspan="3" style="text-align:left;">\(r_c\)</td>
+<td colspan="2" style="text-align:center;">\(r_c\)  </td>
 </tr>
 <tr>
 <td style="text-align:center;">移位函数</td>
-<td colspan="3" style="text-align:left;">\(r_1, r_c\)</td>
+<td colspan="2" style="text-align:center;">\(r_1, r_c\)  </td>
 </tr>
 <tr>
 <td style="text-align:center;">切换函数</td>
-<td colspan="3" style="text-align:left;">\(r_1, r_c\)</td>
+<td colspan="2" style="text-align:center;">\(r_1, r_c\)  </td>
 </tr>
 </table>
 

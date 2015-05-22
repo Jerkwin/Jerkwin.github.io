@@ -9,7 +9,7 @@
 
 <h1 id="第二章　定义与单位">第二章　定义与单位</h1>
 
-<h2 id="2.1　符号标记">2.1　符号标记</h2>
+<h2 id="2.1符号标记">2.1 符号标记</h2>
 
 <p>对数学符号, 在整个文档中都将遵循以下约定:</p>
 
@@ -44,7 +44,7 @@ r_{ij}     &= \abs {\bi r_{ij}}    \tag{2.2}
 
 <p>请注意, 自从GROMACS 2.0版本我们已将标记改为 <span class="math">\(\bi r_{ij}=\bi r_j-\bi r_i\)</span>. 因为这是常用的约定. 如果你遇到错误, 请告知我们.</p>
 
-<h2 id="2.2　md单位">2.2　MD单位</h2>
+<h2 id="2.2md单位">2.2 MD单位</h2>
 
 <p>GROMACS使用一系列自洽的单位, 以便使相关分子性质的计算值接近单位1. 我们称其为 <strong>MD单位</strong>. 这个系统的基本单位是 nm, ps, K, 电子电荷(e)和原子质量单位(u), 参看表2.1.</p>
 
@@ -233,7 +233,7 @@ r_{ij}     &= \abs {\bi r_{ij}}    \tag{2.2}
 </tr>
 </table>
 
-<h2 id="2.3　约化单位">2.3　约化单位</h2>
+<h2 id="2.3约化单位">2.3 约化单位</h2>
 
 <p>当模拟Lennard-Jones(LJ)系统时, 使用约化单位(即设某类原子的 <span class="math">\(\e_{ii}=\s_{ii}=m_i=k_B=1\)</span>)可能会方便, 也是可行的. 当以约化单位输入时, GROMACS将会以约化单位输出. 但 <strong>温度</strong> 是唯一的例外, 它是以0.008 314 51倍的约化单位表示的. 这是由于在代码中使用玻尔兹曼常数计算温度引起的. 因此, 不是温度 <span class="math">\(T\)</span>, 而是 <span class="math">\(k_BT\)</span> 表示约化温度. GROMACS的温度 <span class="math">\(T=1\)</span> 意味着约化温度为0.008&#8230;单位; 如果约化温度是1, GROMACS的温度应该是120.2717.</p>
 
@@ -241,4 +241,4 @@ r_{ij}     &= \abs {\bi r_{ij}}    \tag{2.2}
 
 <p><span class="math">\[V_{LJ}=4 \e \left[ \left({\s \over r}\right)^{12}-\left({\s \over r}\right)^6 \right] \tag{2.7}\]</span></p>
 
-<p>的约化物理量.
+<p>的约化物理量.</p>
