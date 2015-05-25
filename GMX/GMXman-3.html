@@ -154,6 +154,192 @@
 
 <p>正常情况下, 在每一步中都会将质心的速度设置为零, 体系(通常)不受净的合外力作用, 其质心速度应该保持不变. 然而在实际中, 更新算法会导致质心速度发生缓慢的变化, 并因此使得体系的总动能发生变化, 特别是使用温度耦合时. 如果不对这种变化进行处理, 长时间后质心会有明显的运动, 温度也出现显著异常. 体系的整体转动也会导致同样的问题, 但只出现在孤立团簇的模拟中. 在填满盒子的周期性体系中, 整体转动会与其它自由度耦合, 不会导致这个问题.</p>
 
+<h3 id="3.4.2近邻搜索">3.4.2 近邻搜索</h3>
+
+<p>正如在第四章提到的, 内力或者由固定(静态)列表产生, 或者由动态列表产生. 后者包含了任意粒子对之间的非键相互作用. 当计算非键力时, 将所有粒子置于长方体盒子中计算更容易. 如图3.1所示, 可以通过一定的方法将三斜盒转换为长方盒. 所以GROMACS的输出坐标总是处于一个长方盒中, 即使模拟时使用了十二面体盒子或三斜盒子. 方程3.1保证了我们可以通过如下方法重置粒子使其处于长方盒中: 先沿盒矢量 <span class="math">\(\bi c\)</span> 移动, 再沿 <span class="math">\(\bi b\)</span> 移动, 最后沿 <span class="math">\(\bi a\)</span> 移动. 根据三个限制性方程3.3, 3.4和3.5, 我们可以利用不超过一倍盒矢量的线性组合找到14个最近的三斜盒子映象.</p>
+
+<p><strong>配对列表的生成</strong></p>
+
+<p>只需要对一些粒子对 <span class="math">\(i, j\)</span> 之间的非键配对力进行计算, 在这些粒子对中, 粒子 <span class="math">\(i\)</span> 和 <span class="math">\(j\)</span> 的最近映象之间的距离 <span class="math">\(r_{ij}\)</span> 小于给定的截断半径 <span class="math">\(R_c\)</span>. 如果彼此之间的相互作用已完全被键合作用所考虑, 一些满足这一条件的粒子对仍然会被排除. GROMACS使用了一个 <strong>配对列表</strong>, 其中包含了那些必须计算彼此之间非键力的粒子对. 这个列表中包含原子 <span class="math">\(i\)</span>, 原子 <span class="math">\(i\)</span> 的位移向量, 距离原子 <span class="math">\(i\)</span> 的这个特殊映象<code>rlist</code>范围内的所有粒子 <span class="math">\(j\)</span>. 该列表每<code>nstlist</code>步更新一次, <code>nstlist</code>的典型值为10. 有一个选项可用来计算每个粒子所受到的总的非键力, 这些力来源于围绕列表截断值, 即距离在<code>rlist</code>和<code>rlistlong</code>之间的壳层中的所有粒子. 在更新配对列表时, 会计算这些力, 并在随后的<code>nstlist</code>中保持不变.</p>
+
+<p>为创建邻区列表, 必须找到与给定粒子相近(即在邻居列表截断内)的所有粒子. 这种搜索通常被称为邻区搜索(NS, neighbor search)或对搜索(pair search), 涉及到周期性边界条件和映象的确定(参见3.2节). 搜索算法的复杂度为 <span class="math">\(O(N)\)</span>, 尽管更简单的 <span class="math">\(O(N^2)\)</span> 算法在一定条件下仍然可用.</p>
+
+<p><strong>邻区截断方案: 原子组与Verlet缓冲</strong></p>
+
+<p>从4.6版本开始, GROMACS支持两种不同的截断方案设置: 最初的基于原子组的方案和使用Verlet缓冲区的方案. 它们之间存在一些非常重要的区别, 这些区别可能会影响计算结果, 计算性能和某些功能的支持情况. 组方案(几乎)可以像Verlet方案一样运行, 但这将导致性能降低. 对在模拟中常用的水分子, 组方案特别快, 但在最近的x86处理器中, 这种优势消失了, 因为可以在Verlet方案的实现中使用更好的指令级并行. 在5.0版本中已经不再提倡使用组方案了, 将来的版本中将会删除此方案.</p>
+
+<p>在组方案中, 近邻列表由至少含一个原子的原子对构成. 这些原子组最初是电荷组(参见3.4.2节), 但对长程静电进行了妥善处理, 性能是它们唯一的优势. 几何中心在截断距离内的两个组会被放入近邻列表中. 在一定数目的MD模拟步中, 会计算所有原子对(每个电荷组一个)之间的相互作用力, 直到下一次更新近邻列表. 这种设置高效, 因为近邻搜索只检查电荷组对, 而不是原子对(对三原子水模型可节约 <span class="math">\(3\times 3=9\)</span> 倍), 而且还可以优化非键合力的计算内核, 比如说一个水分子&#8220;组&#8221;. 没有明确的缓冲时, 由于一些原子对处于截断距离之内却没有相互作用, 而一些原子对处于截断距离之外却有相互作用, 这种设置会导致能量的漂移. 可能有以下原因:</p>
+
+<ul class="incremental">
+<li>原子在两次近邻搜索之间穿过了截断区域, 和/或</li>
+<li>对包含一个以上原子的电荷组, 当电荷组的几何中心移动到截断距离以外/内时, 会导致一部分原子对移动到截断距离以内/外.</li>
+</ul>
+
+<p>显式地为近邻列表增加一个缓冲会消除这些问题, 但这需要较高的计算成本. 问题的严重程度取决于体系, 你感兴趣的性质, 以及截断距离的设置.</p>
+
+<p>Verlet截断方案默认使用缓冲对列表. 它也使用了原子团簇, 但这些不像在组方案中是静态的. 相反, 团簇以空间定义, 包含4个或8个原子, 使用如SSE, AVX和GPU的CUDA等可方便地对此进行流计算. 在近邻搜索步骤中, 使用Verlet缓冲创建对列表, 即对列表的截断距离大于相互作用的截断距离. 在计算非键力的内核中, 只有当一个原子对在特定时间步处于截断距离之内时, 这个力才会被加入到近邻列表中. 当原子在两次对搜索步骤中移动时, 这确保了几乎所有处于截断距离内的原子之间的力都会被计算. 我们说, <strong>几乎</strong> 所有的原子, 是因为GROMACS使用了一个固定的对列表更新频率以提高效率. 一个处于截断距离外的原子对, 在这样固定的步数中, 可能移动得足够多以致处于截断距离之内. 这种小概率事件会导致小的能量漂移, 而且概率的大小取决于温度. 当使用温度耦合时, 给定能量漂移的一定容差, 可以自动确定缓冲大小.</p>
+
+<p>在<code>mdp</code>文件中Verlet方案的设置为:</p>
+
+<pre><code>cutoff-scheme             = Verlet
+Verlet-buffer-tolerance   = 0.005
+</code></pre>
+
+<p>Verlet缓冲的大小由后一选项决定, 这里使用了默认设置: 在一对原子中每个原子的能量误差为0.005 kJ/mol/ps. 需要注意的是, 在配对能量的误差会相互抵消, 这对总能量漂移的影响通常至少比容差小一个数量级. 此外, 总能量的漂移受许多其他因素影响, 通常, 来自约束算法的贡献占主导地位.</p>
+
+<p>对等能量(NVE)模拟, 缓冲大小由对应于速度(无论由何种合适的方法产生, 或由输入文件提供)的温度来决定. 此外, 容差可以设置为&#8211;1, 并手动指定缓冲: <code>rlist &gt; max(rcoulomb, rvdw)</code>. 得到合理缓冲大小的最简单方法是: 利用NVT的<code>mdp</code>文件并将目标温度设定为NVE模拟中你希望使用的温度, 然后将<code>grompp</code>打印出的缓冲大小移植到NVE的<code>mdp</code>文件中.</p>
+
+<p>基于粒子团簇实现的Verlet截断方案非常高效. 最简单的例子是包含4个粒子的团簇. 然后基于团簇对构建对列表. 团簇对搜索比基于粒子对的搜索快得多, 因为一次可以将 <span class="math">\(4 \times 4= 16\)</span> 个粒子置于列表中. 然后就可以一次计算这16个粒子对之间的非键相互作用, 这可以很好地映射到SIMD单元, 它一次可以执行多个浮点运算(例如基于SSE, AVX, GPU的CUDA, BlueGene FPUs). 在绝大多数类型的体系中, 这种非键相互作用的计算内核要比组方案的内核快很多, 除了在短SIMD宽度的处理器上, 对水分子不使用缓冲对列表时. 后者在(生物)分子模拟中很常见, 所以为了达到最快速度, 值得比较两种方案的性能.</p>
+
+<p>由于Verlet截断方案在4.6版本的GROMACS中才推出, 所以它并不支持组方案中的所有功能. Verlet截断方案支持一些组方案不支持的功能, 表3.2给出了两种截断方案中不(完全)支持的功能.</p>
+
+<table><caption> 表3.2: 组方案与Verlet截断方案之间(仅)在非键功能上支持的区别</caption>
+<tr>
+<th style="text-align:center;">非键相互作用特性</th>
+<th style="text-align:center;">组</th>
+<th style="text-align:center;"> Verlet</th>
+</tr>
+<tr>
+<td style="text-align:left;">无缓冲截断方式</td>
+<td style="text-align:center;">√</td>
+<td colspan="2" style="text-align:center;">非默认</td>
+</tr>
+<tr>
+<td style="text-align:left;">精确截断</td>
+<td style="text-align:center;">移位/切换</td>
+<td colspan="2" style="text-align:center;">√</td>
+</tr>
+<tr>
+<td style="text-align:left;">移位相互作用</td>
+<td style="text-align:center;">力+能量</td>
+<td colspan="2" style="text-align:center;">能量</td>
+</tr>
+<tr>
+<td style="text-align:left;">切换势能</td>
+<td style="text-align:center;">√</td>
+<td colspan="2" style="text-align:center;">√</td>
+</tr>
+<tr>
+<td style="text-align:left;">切换力</td>
+<td style="text-align:center;">√</td>
+<td colspan="2" style="text-align:center;">√</td>
+</tr>
+<tr>
+<td style="text-align:left;">非周期性体系</td>
+<td style="text-align:center;">√</td>
+<td colspan="2" style="text-align:center;">Z+墙</td>
+</tr>
+<tr>
+<td style="text-align:left;">隐式溶剂</td>
+<td style="text-align:center;">√</td>
+<td colspan="2" style="text-align:center;"></td>
+</tr>
+<tr>
+<td style="text-align:left;">自由能微扰的非键相互作用</td>
+<td style="text-align:center;">√</td>
+<td colspan="2" style="text-align:center;">√</td>
+</tr>
+<tr>
+<td style="text-align:left;">组能量贡献</td>
+<td style="text-align:center;">√</td>
+<td colspan="2" style="text-align:center;">CPU(而非GPU)</td>
+</tr>
+<tr>
+<td style="text-align:left;">能量组排除</td>
+<td style="text-align:center;">√</td>
+<td colspan="2" style="text-align:center;"></td>
+</tr>
+<tr>
+<td style="text-align:left;">AdResS多尺度</td>
+<td style="text-align:center;">√</td>
+<td colspan="2" style="text-align:center;"></td>
+</tr>
+<tr>
+<td style="text-align:left;">OpenMP多线程</td>
+<td style="text-align:center;">仅PME</td>
+<td colspan="2" style="text-align:center;">√</td>
+</tr>
+<tr>
+<td style="text-align:left;">GPU原生支持</td>
+<td style="text-align:center;"></td>
+<td colspan="2" style="text-align:center;">√</td>
+</tr>
+<tr>
+<td style="text-align:left;">Lennard-Jones PME</td>
+<td style="text-align:center;">√</td>
+<td colspan="2" style="text-align:center;">√</td>
+</tr>
+</table>
+
+<p><strong>能源漂移与对列表缓冲</strong></p>
+
+<p>对于一个正则系综(NVT), 由有限的Verlet缓冲大小所造成的平均能量误差, 可以由截断处的原子位移和势能形状来确定. 在温度 <span class="math">\(T\)</span> 下, 一个质量为 <span class="math">\(m\)</span> 的自由粒子, 其一维方向上的位移在时间 <span class="math">\(t\)</span> 内的分布为高斯分布, 均值为0, 方差为 <span class="math">\(\s^2=tk_BT/m\)</span>. 对两个原子之间的距离, 其方差变为 <span class="math">\(\s^2 = \s_{12}^2 = t k_B T(1/m_1 +1/m_2)\)</span>. 注意, 在实际过程中, 时间 <span class="math">\(t\)</span> 内粒子通常还会与其他粒子相互作用, 所以实际的位移分布会窄得多. 给定非键相互作用的截断距离 <span class="math">\(r_c\)</span>, 对列表截断距离 <span class="math">\(r_l=r_c+r_b\)</span>. 当类型为1的粒子被数密度为 <span class="math">\(\r_2\)</span> 的粒子类型2包围, 粒子间距从 <span class="math">\(r_0\)</span> 变到 <span class="math">\(r_t\)</span> 时, 我们可以得到在时间 <span class="math">\(t\)</span> 之后1和2两种类型的粒子之间的相互作用的平均能量误差:</p>
+
+<p><span class="math">\[\alg
+\langle \D V \rangle & = \int_0^{r_c} \int_{r_l}^\infty 4 \p r_0^2 \r_2 V(r_t)G\left({r_t-r_0 \over \s} \right) \rmd {r_0} \rmd{r_t} \tag{3.8} \\
+& \approx \int_{-\infty}^{r_c} \int_{r_l}^\infty 4 \p r_0^2 \r_2 \bigg[              V'(r_c)(r_t-r_c)+ \\
+&\phantom{\approx \int_{-\infty}^{r_c} \int_{r_l}^\infty 4 \p r_0^2 \r_2 \bigg[{}\ } V''(r_c){1\over2}(r_t-r_c)^2 \bigg] G\left({r_t-r_0 \over \s}\right) \rmd {r_0} \rmd{r_t} \tag{3.9} \\
+&         \approx 4\p(r_l+\s)^2 \r_2 \int_{-\infty}^{r_c} \int_{r_l}^\infty \bigg[               V'(r_c)(r_t-r_c)+ \\
+&\phantom{\approx 4\p(r_l+\s)^2 \r_2 \int_{-\infty}^{r_c} \int_{r_l}^\infty \bigg[{}\ } V''(r_c){1\over2}(r_t-r_c)^2 + \\
+&\phantom{\approx 4\p(r_l+\s)^2 \r_2 \int_{-\infty}^{r_c} \int_{r_l}^\infty \bigg[{}\ } V'''(r_c){1\over6}(r_t-r_c)^3 \bigg] G\left({r_t-r_0 \over \s}\right) \rmd {r_0} \rmd{r_t} \tag{3.10} \\
+& = 4\p(r_l+\s)^2 \r_2 \bigg\{ {1\over2} V'(r_c) \left[ r_b \s G\left(r_b\over\s\right)-(r_b^2+\s^2)E\left(r_b\over\s\right) \right] + \\
+&\phantom{= 4\p(r_l+\s)^2 \r_2 \bigg\{ {}\ } {1\over6} V''(r_c) \left[ \s(r_b^2+2\s^2) G\left(r_b\over\s\right)-r_b(r_b^2+3\s^2)E\left(r_b\over\s\right) \right] + \\
+&\phantom{= 4\p(r_l+\s)^2 \r_2 \bigg\{ {}\ } {1\over24} V'''(r_c) \left[ r_b\s(r_b^2+5\s^2) G\left(r_b\over\s\right)-(r_b^4+6r_b^2\s^2+3\s^2)E\left(r_b\over\s\right)\right] \bigg\} \tag{3.11}
+\ealg\]</span></p>
+
+<p>其中 <span class="math">\(G\)</span> 为零均值单位方差的高斯分布, <span class="math">\(E(x)={1\over2}\text{erfc}(x/\sqrt 2)\)</span>. 我们总是希望得到的误差很小, 所以 <span class="math">\(\s\)</span> 比 <span class="math">\(r_c\)</span> 和 <span class="math">\(r_l\)</span> 都小, 这样上述方程中的近似很好, 因为高斯分布衰减很快. 能量误差需要对所有粒子对类型进行平均, 并对粒子数进行加权. 在GROMACS中我们不允许粒子对类型之间的误差抵消, 所以我们对绝对值进行平均. 为获得单位时间的平均能量误差, 需要将平均能量误差除以近邻列表时间长度 <span class="math">\(t=(\text{nslist}-1)\times \text{dt}\)</span>. 此函数不能解析地得到, 因此对给定的目标漂移, 我们使用二分法来获得缓冲大小 <span class="math">\(r_b\)</span>. 我们还注意到, 在实际中误差通常比这里估计的小很多, 如凝聚相中粒子的位移会比自由移动粒子的位移小得多, 这里使用了这个假定.</p>
+
+<p>当存在(键)约束时, 一些粒子的自由度会变少. 这会减少能量误差. 一个具有两个自由度的粒子任意方向上的位移并不是高斯分布, 而是服从余误差函数:</p>
+
+<p><span class="math">\[{\sqrt \p \over  2\sqrt 2 \s} \text{erfc}\left({|r| \over \sqrt 2 \s} \right) \tag{3.12}\]</span></p>
+
+<p>其中 <span class="math">\(\s^2\)</span> 为 <span class="math">\(k_BT/m\)</span>. 没有办法解析地对此分布进行积分以获得能量误差. 但我们可以使用缩放和移位高斯分布来得到紧上界(这里未给出). 这种高斯分布可用于计算能量误差, 如上所述. 现在我们来考虑约束粒子, 即具有2个或更少自由度的粒子, 它们通过约束连接到其他粒子上, 其他粒子的总质量至少为约束粒子本身质量1.5倍. 对具有单个约束的粒子, 沿约束方向的总质量至少是2.5倍, 这样沿约束方向的位移方差至少减少为原来的1/6.25. 由于高斯分布衰减非常迅速, 这有效地移除了来自位移的一个自由度. 多重约束会减少更多位移, 但因为会变得非常复杂, 我们将那些粒子视为只有2个自由度的粒子.</p>
+
+<p>还有一个重要的实现细节, 可减少因有限的Verlet缓冲列表大小造成的能量误差. 上述推导假定了粒子对列表. 然而, GROMACS实现时使用了团簇对列表以提高效率. 在大多数情况下, 对列表包含4个粒子组成的团簇之间的对, 也称为 <span class="math">\(4\times4\)</span> 列表, 但也可以是 <span class="math">\(4\times8\)</span>(GPU CUDA内核和AVX 256位单精度内核)或 <span class="math">\(4\times2\)</span>(SSE双精度内核). 这意味着对列表比相应的 <span class="math">\(1\times1\)</span> 列表高效得多. 这样稍微超出对列表截断时, 列表中仍然会有一大部分粒子. 这些粒子所占的总粒子的分数可以在模拟中确定, 并精确地根据一些合理的假设进行估计. 随着对列表范围的增加, 这些粒子分数减小, 意味着可以使用较小的缓冲. 对于典型的全原子模拟, 使用0.9 nm截断, 这个分数大约是0.9, 可使能量误差减少到原来的1/10. 在自动Verlet的缓冲计算时考虑了这种减少, 这样得到的缓冲尺寸较小.</p>
+
+<p>由图3.5可以看出, 对小的缓冲大小, 由于误差抵消, 总能量漂移比对能量误差容差小得多. 对于较大的缓冲大小, 误差估计比总能量漂移高6倍, 或者缓冲估计大0.024 nm. 这是因为质子自由移动不能超过18 fs, 但振动可以.</p>
+
+<figure>
+<img src="3.5.png" alt="图3.5: 温度 300 K时, SPC/E水体系中每个原子的能量漂移, 模拟使用的时间步长为2 fs, 对列表更新周期为10步(对列表更新时间长度: 18 fs). 使用了PME方法, ewald-rtol设置为 $10^{-5}$; 该参数影响截断处的势能形状. 图中显示了因有限Verlet缓冲大小, 对 $1\times1$ 和 $4\times4$ 原子对列表, 不使用和使用(虚线)正负误差抵消时引起的误差估计. 图中显示的实际能源漂移在模拟时使用了双精度和混合精度. 使用单精度时, 由SETTLE约束算法的舍入误差引起的漂移在缓冲尺寸很大时变为负值. 注意, 缓冲大小为零时, 实际漂移很小, 因为正的(H-H)和负的(O-H)能量误差会相互抵消." />
+<figcaption>图3.5: 温度 300 K时, SPC/E水体系中每个原子的能量漂移, 模拟使用的时间步长为2 fs, 对列表更新周期为10步(对列表更新时间长度: 18 fs). 使用了PME方法, <code>ewald-rtol</code>设置为 <span class="math">\(10^{-5}\)</span>; 该参数影响截断处的势能形状. 图中显示了因有限Verlet缓冲大小, 对 <span class="math">\(1\times1\)</span> 和 <span class="math">\(4\times4\)</span> 原子对列表, 不使用和使用(虚线)正负误差抵消时引起的误差估计. 图中显示的实际能源漂移在模拟时使用了双精度和混合精度. 使用单精度时, 由SETTLE约束算法的舍入误差引起的漂移在缓冲尺寸很大时变为负值. 注意, 缓冲大小为零时, 实际漂移很小, 因为正的(H-H)和负的(O-H)能量误差会相互抵消.</figcaption>
+</figure>
+
+<p><strong>截断假象与切换相互作用</strong></p>
+
+<p>使用Verlet方案时, 可以平移对势使其在截断处为零, 以保证势能等于力的积分. 在组方案中, 只有当势能满足在截断距离处的值为零时, 才可以保证势能等于力的积分. 然而, 当力在截断处不为零时仍会引起能量漂移. 这种影响非常小, 通常觉察不到, 因为其它积分误差(如来自约束的)可能占主到地位. 为完全避免截断假象, 可以将非键力在到达近邻列表截断前精确地切换至零(在GROMACS中有几种方式完成, 见4.1.5节). 这样就形成一个大小等于近邻列表截断, 小于最长相互作用截断的缓冲.</p>
+
+<p>使用组截断方案, 也可以选择让<code>mdrun</code>只在需要时才更新近邻列表, 也就是当一个或多个粒子从它们所属的电荷组(见3.4.2节)的几何中心移动的距离超过半个缓冲大小时, 中心由前一步的近邻搜索决定. 此选项可保证没有截断假象, <strong>注意</strong>, 对较大的体系, 这种计算的代价很高, 因为近邻列表更新频率将由移动稍微超过半个缓冲长度的一两个粒子决定(这甚至都不意味着近邻列表无效), 而99.99%的粒子近邻列表依然有效.</p>
+
+<p><strong>简单搜索</strong></p>
+
+<p>由于方程3.1和3.6, 连接处于截断距离 <span class="math">\(R_c\)</span> 内的映象的向量 <span class="math">\(\bi r_{ij}\)</span> 可通过下面方法获得:</p>
+
+<p><span class="math">\[\alg
+\bi r''' &= \bi r_j-\bi r_i \tag{3.13} \\
+\bi r'' &= \bi r'''-\bi c * \text{round}(r_z'''/c_z) \tag{3.14} \\
+\bi r'  &= \bi r''-\bi b * \text{round}(r_y''/b_y) \tag{3.15} \\
+\bi r_{ij} &= \bi r'-\bi a * \text{round}(r_x'/a_x) \tag{3.16} \\
+\ealg\]</span></p>
+
+<p>当需要计算三斜盒子中两粒子间的距离时, 它们不服从方程3.1, 需要将许多盒向量的组合进行移位, 以找到最近的映象.</p>
+
+<figure>
+<img src="3.6.png" alt="图3.6: 二维格点搜索. 箭头为盒向量." />
+<figcaption>图3.6: 二维格点搜索. 箭头为盒向量.</figcaption>
+</figure>
+
+<p><strong>格点搜索</strong></p>
+
+<p>格点搜索示意图见图3.6. 所有粒子被置于NS格点上, 每一方向上的最小间距 <span class="math">\(\ge R_c/2\)</span>. 在每一盒向量方向上, 粒子 <span class="math">\(i\)</span> 有三个映象. 对每一方向映象可能是&#8211;1, 0或1, 相应于平移&#8211;1, 0或+1个盒向量. 对 <span class="math">\(i\)</span> 的近邻, 我们不是先搜索周围的NS格点单元再计算映象, 而是先构造映象再搜索对应 <span class="math">\(i\)</span> 的映象的近邻. 如图3.6所示, 对 <span class="math">\(i\)</span> 的不同映象, 一些格点单元的搜索次数会查过一. 这并不是一个问题, 因为由于最小映象约定, 最多只有一个映象能够&#8220;看到&#8221;粒子 <span class="math">\(j\)</span>. 对每个粒子, 搜索的近邻单元少于125(5<sup>3</sup>)个. 因此, 算法对粒子数是线性标度的. 虽然前因子很大, 当粒子数超过几百时, 标度行为使得算法远优于标准的 <span class="math">\(O(N^2)\)</span> 算法. 格点搜索对长方盒子与三斜盒子同样快. 这样对大多数蛋白质和多肽模拟, 使用菱形十二面体盒子更好.</p>
+
+<p><strong>电荷组</strong></p>
+
+<p>最初引入电荷组是为了减少库仑相互作用的截断假象. 使用普通截断时, 当带(部分)电荷的原子移进移出截断半径时, 势能与力会出现明显的跃变. 当所有化学基团的净电荷为零时, 通过移动净电荷为零的原子组进出近邻列表可以减小这些跃变. 这些原子组被称为电荷组. 这种方法将截断效应从电荷电荷水平降低到衰减快得多的偶极偶极水平. 随着全范围静电方法的出现, 如粒子网格Ewald方法(见4.8.2节), 不再需要使用电荷组来提高精度了. 依赖于如何创建近邻列表, 如何计算相互作用, 电荷组甚至可能对精度和效率有小的负面影响.</p>
+
+<p>但仍然有一个重要原因来使用&#8220;电荷组&#8221;: 组截断方案的效率. 当适用时, 近邻搜索基于在分子拓扑中定义的电荷组进行. 若两个电荷组原子的 <strong>几何中心</strong> 之间的最近映象距离小于截断半径, 对列表中会包含电荷组之间的所有原子对. 例如, 对水体系的近邻搜索, 当每个分子被视为一个电荷组时 会快3<sup>2</sup>=9倍. 另外, 计算水中原子受力的高度优化的循环只能用于水分子中的所有原子形成单个电荷组的情况. 目前使用 <strong>近邻搜索组</strong> 可能更合适, 但由于历史原因仍保留了名称电荷组. 当发展新的力场时, 建议使用3到4个原子的电荷组以获得最佳性能. 对全原子力场这相对容易, 因为可以简单地把氢原子, 一些情况下的氧原子, 置于与其相连的重原子相同的电荷组中, 如CH<sub>3</sub>, CH<sub>2</sub>, CH, NH<sub>2</sub>, NH, OH, CO<sub>2</sub>, CO.</p>
+
+<p>使用Verlet截断方案时, 电荷组被忽略.</p>
+
 <h3 id="3.4.3计算力">3.4.3 计算力</h3>
 
 <p><strong>势能</strong></p>
@@ -307,6 +493,27 @@ KE_{\text{full} }(t) &= \Sum_i \left({1\over 2m_i}\bi v_i(t) \right)^2 \\
 <p>对NVT模拟, 两种方法 <strong>将</strong> 会有差异, 正如控温部分所讨论的, 因为会调节粒子的速度以使得模拟的动能, 以任何一种方式计算,都能达到与设定温度相应的分布. 在这种情况下, 三种方法不会给出完全相同的结果.</p>
 
 <p>由于速度和位置都定义于同一时刻 <span class="math">\(t\)</span>, 速度Verlet积分方法可用于一些方法中, 特别是那些严格正确的控压方法, 实际上这些控压方法不能使用蛙跳式积分方法. 相比蛙跳式积分方法, 速度Verlet方法多耗费的时间可以忽略不计, 但目前需要的通讯调用多一倍. 在大多数情况下, 尤其是对于大的体系,其通讯速度对并行化非常重要, 热力学系综之间的差异以 <span class="math">\(1/N\)</span> 极限消失. 当只需要NVT系综时, 蛙跳式可能是首选的积分方法. 对控压模拟, 热力学细节非常重要, 只有速度Verlet方法能给出真正的系综. 在任一情况下, 都可能需要采用双精度进行模拟以得到正确的热力学校正细节.</p>
+
+<h3 id="3.4.7双程截断">3.4.7 双程截断</h3>
+
+<p>为了节省计算时间, 相比变化迅速的力, 对变化缓慢的力计算时所用的频率可以低些. 在GROMACS中, 可以对短程和长程非键相互作用采用这样的多重时间步长分解. 直到GROMACS 4.0版本, 对此都采用了一种不可逆的积分方案, 这种方案也被用于GROMOS模拟包: 每 <span class="math">\(n\)</span> 步计算一次长程力, 随后将这些值(不加修改)用于方程3.25中的后面 <span class="math">\(n-1\)</span> 积分步. 这种不可逆的方案能量守恒性不好, 取样可能不充分. 从4.5版本开始, 采用了可逆Trotter分解方案的蛙跳式方法[24]. 在这种积分方法中, 每 <span class="math">\(n\)</span> 步计算一次长程力, 然后使用时间步长 <span class="math">\(\D t_{LR}=n\D t\)</span> 将其应用到方程3.25中的速度,</p>
+
+<p><span class="math">\[\bi v(t+{1\over2}\D t)=\begin{cases}
+\bi v(t-{1\over2}\D t)+{1\over m}[\bi F_\text{SR}(t)+n\bi F_\text{LR}(t)\D t]&, &\; \text{step} \% n=0 \\
+\bi v(t-{1\over2}\D t)+{1\over m}\bi F_\text{SR}(t)\D t &, &\; \text{step} \% n \ne 0 \\
+\end{cases}
+\tag{3.43}\]</span></p>
+
+<p>参数 <span class="math">\(n\)</span> 等于近邻列表的更新频率. 在4.5版本中, 多重时间步的速度Verlet方案进尚未完全实现.</p>
+
+<p>一些其他的模拟程序对键合力和/或PME网格力使用多重时间步长方法. 在GROMACS中, 我们(还)没有实现这个方法, 因为我们有着不同的想法. 键可以被约束(这也是对物理量子振子的更佳近似), 这允许将最小时间步长增加至更大值. 这不仅将计算力的次数减半, 也将更新计算的次数减半. 对于更大的时间步长, 涉及氢原子的键角振动可以使用虚拟相互作用位点移除(见6.8节), 这使得最短时间步达到多时间步方案中PME网格的更新频率.</p>
+
+<figure>
+<img src="3.8.png" alt="图3.8: SPC/E水模型模拟中每个自由度的能量漂移和长程时间步长的关系, 使用双程截断时, 不可逆的GROMOS方案和可逆Trotter方案的对比: (左)反应场; (右) Lennard-Jones相互作用." />
+<figcaption>图3.8: SPC/E水模型模拟中每个自由度的能量漂移和长程时间步长的关系, 使用双程截断时, 不可逆的&#8220;GROMOS&#8221;方案和可逆Trotter方案的对比: (左)反应场; (右) Lennard-Jones相互作用.</figcaption>
+</figure>
+
+<p>作为一个例子, 我们在如3.8中展示了积分300 K温度下SPC/E水体系运动方程的能量守恒性. 为避免截断效应, 使用了反应场, <span class="math">\(\e_{RF}=\infty\)</span> 和移位Lennard-Jones相互作用. 二者都使用了缓冲. 长程相互作用在1.0和1.4 nm之间进行计算. 从图3.7可以看到, 对静电相互作用, 直到 <span class="math">\(\D t_{LR}=16\)</span> fs, Trotter方案的能量守恒性都要好一个数量级. 静电相互作用强烈地依赖于水分子变化很快的取向. 对Lennard-Jones相互作用, 能量漂移与 <span class="math">\(\D t_{LR}\)</span> 呈线性关系, 大致比静电小两个数量级. Lennard-Jones力比库仑力小, 它们主要受水分子的平动影响, 而不是转动.</p>
 
 <h3 id="3.4.8温度耦合">3.4.8 温度耦合</h3>
 
@@ -983,3 +1190,18 @@ G^B(p,T)-G^A(p,T) &= \int_0^1  \left< \opar H \l \right>_{NpT;\l} \rmd \l \tag{3
 <p>GROMACS现在也支持使用<code>g_bar</code>程序计算从状态A转变到状态B的 <span class="math">\(\D G\)</span> 值, 计算时利用BAR(Bennett&#8217;s Acceptance Ratio)方法. 相同的数据也可用MBAR[58]方法来计算自由能, 但目前分析时需要来自外部<code>pybar</code>程序包中的工具, 可从<a href="https://SimTK.org/home/pymbar">https://SimTK.org/home/pymbar</a>下载.</p>
 
 <p>力场贡献与 <span class="math">\(\l\)</span> 的依赖关系将在4.5节详细讨论.</p>
+
+<div class="footnotes">
+<hr />
+<ol class="incremental">
+
+<li id="fn:1">
+<p>注意, 在一些推导, 会使用另一种符号 <span class="math">\(\x_{\text{alt} }=v_\x=p_\x/Q\)</span>. <a href="#fnref:1" title="return to article" class="reversefootnote">&#160;&#8617;</a></p>
+</li>
+
+<li id="fn:2">
+<p>GROMACS中的盒矩阵表示 <span class="math">\(\bi b\)</span> 对应于Nose和Klein论文中盒矩阵表示 <span class="math">\(\bi h\)</span> 的转置. 因此, 我们的一些方程看起来与原论文中的略有不同. <a href="#fnref:2" title="return to article" class="reversefootnote">&#160;&#8617;</a></p>
+</li>
+
+</ol>
+</div>
