@@ -1191,6 +1191,218 @@ G^B(p,T)-G^A(p,T) &= \int_0^1  \left< \opar H \l \right>_{NpT;\l} \rmd \l \tag{3
 
 <p>力场贡献与 <span class="math">\(\l\)</span> 的依赖关系将在4.5节详细讨论.</p>
 
+<h2 id="3.13副本交换动力学">3.13 副本交换动力学</h2>
+
+<p>副本交换分子动力学(REMD, replica exchange molecular dynamics)是一种加速抽样的方法, 可用于任何类型的模拟, 特别适用于不同构象之间存在较高能量势垒的情况. 它对同一体系处于不同温度下的多个副本进行模拟, 并以一定的时间间隔随机地完全交换两个副本的状态, 交换的概率为:</p>
+
+<p>$$ P(1 \leftrightarrow 2)=\min\left(1, \exp\left[ \left({1\over k_B T_1} -{1\over k_B T_2} \right)(U_1-U_2) \right] \right) \tag{3.140}$$</p>
+
+<p>其中 <span class="math">\(T_1\)</span> 和 <span class="math">\(T_2\)</span> 为参考温度, <span class="math">\(U_1\)</span> 和 <span class="math">\(U_2\)</span> 分别为副本1和2的瞬时势能. 交换后, 使用 <span class="math">\((T_1/T_2)^{\pm 0.5}\)</span> 对速度进行缩放, 并在下一步进行近邻搜索. 这方法将快速采样和最高温度频繁跨垒方法结合起来, 在所有不同温度下都使用了正确的玻耳兹曼抽样[59, 60]. 由于随着温差的增大概率下降非常迅速, 我们只会尝试交换相邻的温度. 在一步中我们不应尝试对所有可能的副本对进行交换. 例如, 如果交换副本1和2, 交换副本2和3的机会不仅取决于副本2和3的能量, 还取决于副本1的能量. 在GROMACS中这个问题的解决方法是, 在&#8220;奇数&#8221;次尝试试着交换所有的&#8220;奇数&#8221;副本对, 在&#8220;偶数&#8221;次尝试试着交换所有的&#8220;偶数&#8221;副本对. 如果我们有四个按温度排序的副本: 0, 1, 2和3, 并且每1000步尝试进行一次交换, 那么将会在1000, 3000等步尝试对副本对0&#8211;1和2&#8211;3进行交换, 在2000, 4000等步尝试对副本对1&#8211;2进行交换.</p>
+
+<p>应该如何选择温度呢? 能量差可以写成:</p>
+
+<p>$$ U_1-U_2=N_{df} {c \over2} k_B (T_1-T_2) \tag{3.141}$$</p>
+
+<p>其中 <span class="math">\(N_{df}\)</span> 为一个副本的总自由度数, 对简谐势 <span class="math">\(c\)</span> 为1, 对蛋白质/水体系 <span class="math">\(c\)</span> 为2左右. 如果 <span class="math">\(T_2=(1+\e)T_1\)</span> 则概率变为:</p>
+
+<p><span class="math">\[P(1 \leftrightarrow 2)=\exp\left(-{\e^2 c N_{df} \over 2(1+\e)} \right) \approx \exp\left(-\e^2 {c\over2}N_{df}\right)      \tag{3.142}\]</span></p>
+
+<p>这样, 对于大小为 <span class="math">\(e^{-2} \approx 0.135\)</span> 的概率, 可得到 <span class="math">\(\e \approx 2/\sqrt{c N_{df} }\)</span>. 对所有键都进行约束时, <span class="math">\(N_{df}\approx 2 N_{atoms}\)</span>, 这样对于 <span class="math">\(c=2\)</span> 我们应选择的 <span class="math">\(\e\)</span> 为 <span class="math">\(1/\sqrt{N_{atoms} }\)</span>. 然而, 当我们使用压力耦合时会出现一个问题. 更高温时密度会下降, 并导致能量增加[61], 这些情况我们需要考虑到. GROMACS网站提供了一个被称为&#8220;REMD calculator&#8221;的计算器, 它可以根据你输入的温度范围和原子数给出一组温度.</p>
+
+<p>Okabe等人提出了等压等温系综的REMD扩展[62]. 他们将交换概率修改为:</p>
+
+<p>$$ P(1 \leftrightarrow 2)=\min\left(1, \exp\left[ \left({1\over k_B T_1} -{1\over k_B T_2} \right)(U_1-U_2) + \left({P_1\over k_B T_1} -{P_2\over k_B T_2} \right)(V_1-V_2)\right] \right) \tag{3.143}$$</p>
+
+<p>其中 <span class="math">\(P_1\)</span> 和 <span class="math">\(P_2\)</span> 为各自的参考压力, <span class="math">\(V_1\)</span> 和 <span class="math">\(V_2\)</span> 为模拟中各自的瞬时体积. 在大多数情况下, 体积的差别很小以至于可以忽略第二项. 只有在 <span class="math">\(P_1\)</span> 和 <span class="math">\(P_2\)</span> 之间相差很大或者存在相变的情况下第二项才起作用.</p>
+
+<p>GROMACS也支持哈密顿量副本交换. 在哈密顿量副本交换中, 每个副本的哈密顿量不同, 并根据模拟指定的自由能途径进行定义. 用来维持正确系综概率的交换概率为:</p>
+
+<p>$$ P(1 \leftrightarrow 2)=\min\left(1, \exp\left[ \left({1\over k_B T_1} -{1\over k_B t_2} \right)( (U_1(x_2)-U_1(x_1)) +(U_2(x_1)-U_2(x_2)) )\right] \right) \tag{3.144}$$</p>
+
+<p>各自的哈密顿量由GROMCAS内置的自由能函数定义, 并在不同 <span class="math">\(\l\)</span> 值之间进行交换, <span class="math">\(\l\)</span> 在mdp文件中定义.</p>
+
+<p>也可以同时进行哈密顿量副本交换和温度副本交换, 使用的接受标准为:</p>
+
+<p>$$ P(1 \leftrightarrow 2)=\min\left(1, \exp\left[ \left({1\over k_B T_1} - \right)({U_1(x_2)-U_1(x_1) \over k_B T} + {U_2(x_1)-U_2(x_2) \over k_B T_2})\right] \right) \tag{3.145}$$</p>
+
+<p>GROMACS还实现了吉布斯抽样副本交换[63]. 在吉布斯抽样副本交换中, 会测试所有可能交换的副本对, 并允许交换不相邻的副本.</p>
+
+<p>吉布斯抽样副本交换不需要额外的势能计算. 然而, 在吉布斯抽样副本交换中存在额外的通讯成本, 对一些排列, 肯定会发生超过一轮的交换. 在某些情况下, 这些额外的通讯成本可能会影响效率.</p>
+
+<p><code>mdrun</code>程序的包含了所有不同副本交换方法的选项. 由于算法中内在的并行化, 只有安装了MPI时候才能运行副本交换模拟. 为提高效率, 每个副本可以在一个独立的队列上运行. 想了解如何使用这些多节点功能, 可以参考<code>mdrun</code>的帮助文档.</p>
+
+<h2 id="3.14主成分动力学抽样">3.14 主成分动力学抽样</h2>
+
+<p>蛋白质主成分动力学(参见8.10节)的结果可用于指导MD模拟. 基本思想是, 我们可以从初始MD模拟(或源自其他途径)中获得拥有最大振幅的集约涨落. 对沿一个或多个这些集约模式的那些位置, 在接下来的(第二次)MD模拟中可以使用约束, 约束时可根据不同的目的使用不同的方法. 例如, 可以固定沿一个特定模式的位置以监测在此位置坐标上的平均力(自由能梯度). 另外一个应用是提高相对于普通MD的抽样效率[64, 65]. 在这种情况下, 与蛋白质通常采用的类扩散途径相比, 对体系构型空间的采样更系统.</p>
+
+<p>另外一个提高抽样效率的可能方法是洪泛方法, 将洪泛势添加到一些(集约)自由度上, 以将体系排除到在某些相空间区域之外[66].</p>
+
+<p>主成分动力学抽样或洪泛方法的步骤如下. 首先使用协方差分析(<code>g_covar</code>)或者简正模式分析(<code>g_nmeig</code>)确定特征向量和特征值. 然后将这些信息用于<code>make_edi</code>, 这个命令有很多用于选择向量和设定参数的选项, 请参考<code>gmx make_edi -h</code>. 最后将生成的<code>edi</code>输入文件传递给<code>mdrun</code>.</p>
+
+<h2 id="3.15扩展系综动力学">3.15 扩展系综动力学</h2>
+
+<p>在扩展系综模拟[67]中, 坐标和热力学系综都可以被视为构型变量进行抽样. 任何给定状态的概率可写为:</p>
+
+<p>$$ P(\vec x, k) \propto \exp(-\b_k U_k +g_k) \tag{3.146}$$</p>
+
+<p>其中 <span class="math">\(\b_k={1\over k_B T_k}\)</span> 为对应于第 <span class="math">\(k\)</span> 个热力学状态 <span class="math">\(\b\)</span>, <span class="math">\(g_k\)</span> 为用户定义的对应于第 <span class="math">\(k\)</span> 个状态的权重因子. 因此, 这一空间是 <strong>混合</strong>, <strong>通用</strong>, 或 <strong>扩展</strong> 的系综, 是对多个热力学系综同时抽样得到的. <span class="math">\(g_k\)</span> 用于为扩展系综中的每个子系综指定权重, 既可以是固定的, 也可以由迭代程序确定. 通常选择的 <span class="math">\(g_k\)</span> 集合对每个热力学系综会给出相同的概率, 在这种情况下, <span class="math">\(g_k\)</span> 等于无量纲的自由能, 但根据需要也可以将它们设定为任意值. 在mdp选项列表中有好几种算法可以用来平衡这些权重.</p>
+
+<p>在GROMACS中, 这个空间通过交替地在 <span class="math">\(k\)</span> 和 <span class="math">\(\vec x\)</span> 方向上采样得到. <span class="math">\(\vec x\)</span> 方向的采样是由标准的分子动力学采样完成; 不同热力学状态之间的采样由Monte Carlo完成, 且支持几种不同的Monte Carlo移动方法. <span class="math">\(k\)</span> 状态可以根据温度的不同进行定义, 或根据自由能 <span class="math">\(\l\)</span> 变量的选择进行定义, 或者同时根据两者进行定义. 因此扩展系综模拟是系列化的副本交换形式, 单次模拟就能探索多个热力学状态.</p>
+
+<h2 id="3.16并行">3.16 并行</h2>
+
+<p>通过在多个核上并行地进行计算, 可以缩短模拟所需要的CPU时间. 理想情况下, 我们能够得到线性标度: 在 <span class="math">\(N\)</span> 个核上运算就能使计算速度加快 <span class="math">\(N\)</span> 倍. 但实际上, 只有当CPU核数目很少时才能达到这种效果. 计算的标度行为与所使用的算法关系很大. 此外, 不同算法对原子间的相互作用范围有不同的限制.</p>
+
+<h2 id="3.17区域分解">3.17 区域分解</h2>
+
+<p>由于分子模拟中的大部分相互作用都是局部的, 区域分解是分解体系的的自然方法. 在区域分解中, 每个队列分配一个空间区域, 然后对当前处于局部区域内粒子的运动方程进行积分. 使用区域分解, 你必须要做两个选择: 将单位晶胞分成多个区域和将力分配给各个区域. 绝大部分分子模拟软件都是使用半壳层方法来分配力. 但还有另外两种需要通讯更少的方法: 八壳层方法[68]和中点法[69]. GROMACS目前使用的是八壳层法, 但对于某些体系或者硬件架构来说, 中点法可能更合适. 因此, 将来我们可能会实现中点法. 绝大部分区域分解的技术细节可以在GROMACS 4的论文[5]中找到.</p>
+
+<h3 id="3.17.1通讯坐标和力">3.17.1 通讯坐标和力</h3>
+
+<p>对三斜单元晶胞的最一般情况, 我们用1D, 2D或3D格点将空间分成平行六边体, 并称其为区域分解晶胞. 每个晶胞被分配到一个粒子-粒子队列. 在每个MD步的开始, 整个体系被分到多个队列, 并在那里执行近邻搜索. 由于近邻搜索基于电荷组, 因此电荷组也是区域分解的基本单位. 电荷组被分配到其几何中心所在的晶胞. 在计算力之前, 需要对一些来自近邻晶胞的坐标进行通讯, 在力的计算完成之后, 需要将力以相反的方向进行通讯. 通讯和力的分配基于能覆盖一个或多个晶胞的区域. 图3.12展示了一个区域设置的例子.</p>
+
+<figure>
+<img src="3.12.png" alt="图3.12: $3\times2\times2$ 晶胞无交错的区域分解格点. 区域1到7中的坐标被通讯到区域0中拥有自己粒子的边角晶胞. $r_c$ 为截断半径." />
+<figcaption>图3.12: <span class="math">\(3\times2\times2\)</span> 晶胞无交错的区域分解格点. 区域1到7中的坐标被通讯到区域0中拥有自己粒子的边角晶胞. <span class="math">\(r_c\)</span> 为截断半径.</figcaption>
+</figure>
+
+<p>坐标通讯是通过将数据沿 <span class="math">\(x\)</span>, <span class="math">\(y\)</span> 或 <span class="math">\(z\)</span> 的&#8220;负&#8221;方向移动到下一个近邻完成的. 这可以在一个或多个脉冲内完成. 在图3.12中, <span class="math">\(x\)</span> 方向需要两个脉冲, 然后 <span class="math">\(y\)</span> 方向需要1个脉冲, 然后 <span class="math">\(z\)</span> 方向需要1个脉冲. 而力的通讯步骤则与此过程相反. 要想了解确定哪些非键力和键合力需要在哪个队列上进行计算的细节, 请参考GROMACS 4论文[5].</p>
+
+<h3 id="3.17.2动态负载均衡">3.17.2 动态负载均衡</h3>
+
+<p>当不同队列的计算负载不同(负载失衡)时, 所有队列都必须等待最耗时的那个队列. 这是我们极力要避免的情况. 负载失衡可能由以下三个原因造成:</p>
+
+<ul class="incremental">
+<li>不均匀的粒子分布</li>
+<li>不均匀的相互作用计算时间分布(带电/不带电, 由GROMACS内部的水计算循环造成的水/非水计算)</li>
+<li>统计涨落(仅当粒子数目较少时)</li>
+</ul>
+
+<p>因此我们需要一个动态负载均衡算法, 它能够 <strong>独立地</strong> 调整每个区域分解晶胞的体积. 为了达到这个目的, 需要交错2D或3D区域分解的格点. 图3.13显示了2D中的最一般情况. 由于交错, 我们可能需要两个距离检查, 以决定一个电荷组是否需要通讯: 非键距离检查和键合距离检查.</p>
+
+<figure>
+<img src="3.13.png" alt="图3.13: 通讯到区域0队列的各个区域, 详情见正文. $r_c$ 和 $r_b$ 分别为非键截断半径和键合截断半径, $d$ 为晶胞交错边界之间的距离." />
+<figcaption>图3.13: 通讯到区域0队列的各个区域, 详情见正文. <span class="math">\(r_c\)</span> 和 <span class="math">\(r_b\)</span> 分别为非键截断半径和键合截断半径, <span class="math">\(d\)</span> 为晶胞交错边界之间的距离.</figcaption>
+</figure>
+
+<p>默认情况下, 在模拟中, 当由力计算失衡造成的总体性能损失达到5%或更多时, <code>mdrun</code>会自动开启动态负载均衡. <strong>注意</strong>, 由于在一个积分步中, 力的计算只是所需要工作的一部分, 所以报告中力的负载失衡数据可能会偏高. 负载失衡会记录日志文件中, 输出频率由设定的日志输出步决定, 当使用<code>-v</code>选项时, 也会在屏幕上输出负载失衡. 平均负载失衡和由负载失衡导致的总性能损失会记录在日志文件的结尾处.</p>
+
+<p>最小允许缩放比例是动态负载均衡的一项重要参数. 默认情况下, 在每个方向上区域分解晶胞至少能够缩小为原来的0.8. 对于3D区域分解, 这相当于允许晶胞的体积缩小为原来的0.5, 补偿100%的负载失衡. 这个最小允许缩放比例可以通过<code>mdrun</code>的<code>-dds</code>选项进行调整.</p>
+
+<h3 id="3.17.3并行中的约束">3.17.3 并行中的约束</h3>
+
+<p>由于使用区域分解时, 分子的各个部分可以处于不同的队列上, 键约束可以跨越晶胞的边界. 因此需要一个并行的约束算法. GROMACS使用了P-LINCS算法[48], 它LINCS算法[47]的并行版(参见3.6.2节). P-LINCS算法过程的示意见图3.14. 当分子跨越晶胞边界时, 会在晶胞边界中对此分子中相邻直到(<code>lincs_order + 1</code>)键远的原子进行通讯. 然后, 会对局部的键和通讯得到的键施加正常的LINCS算法. 经过这个步骤之后, 已经正确地被约束了局部的键, 尽管额外通讯得到的键还没有. LNICS的初始步需要一个坐标通讯步. 不需要对力进行通讯.</p>
+
+<figure>
+<img src="3.14.png" alt="图3.14: P-LINCS算法并行设置示例. 一个分子被划分到3个区域分解晶胞中, 使用的矩阵展开阶数为3. 上面部分展示了需要通讯的原子坐标及其要通讯到的晶胞. 下面部分展示了三个晶胞中各自的局部约束(实线)和非局部约束(虚线)." />
+<figcaption>图3.14: P-LINCS算法并行设置示例. 一个分子被划分到3个区域分解晶胞中, 使用的矩阵展开阶数为3. 上面部分展示了需要通讯的原子坐标及其要通讯到的晶胞. 下面部分展示了三个晶胞中各自的局部约束(实线)和非局部约束(虚线).</figcaption>
+</figure>
+
+<h3 id="3.17.4相互作用范围">3.17.4 相互作用范围</h3>
+
+<p>区域分解利用了相互作用的局域性. 这就意味着对相互作用的范围有所限制. 默认情况下, <code>mdrun</code>程序会试着找到相互作用范围和效率之间的最佳平衡. 但也有可能发生模拟停止并给出缺失相互作用的错误信息, 或者当使用更短的相互作用范围时, 模拟运行稍微快一些的情况. 相互作用范围及其默认值都列在表3.3中.</p>
+
+<table><caption> 表3.3: 区域分解的相互作用范围</caption>
+<tr>
+<th style="text-align:center;">相互作用</th>
+<th style="text-align:center;">范围</th>
+<th style="text-align:center;"> 选项 </th>
+<th style="text-align:center;">默认</th>
+</tr>
+<tr>
+<td style="text-align:left;">非键</td>
+<td style="text-align:center;">\(r_c &#61; \max(r_\text{list}, r_\text{VdW},r_\text{Coul})\)</td>
+<td style="text-align:center;"><code>mdp</code>文件</td>
+<td colspan="2" style="text-align:center;">   </td>
+</tr>
+<tr>
+<td style="text-align:center;">双体键合</td>
+<td style="text-align:center;">\(\max(r_\text{mb},r_c)\)</td>
+<td style="text-align:center;"><code>mdrun -rdd</code></td>
+<td colspan="2" style="text-align:center;"> 初始构型 + 10%    </td>
+</tr>
+<tr>
+<td style="text-align:center;">多体键合</td>
+<td style="text-align:center;">\(r_\text{mb}\)</td>
+<td style="text-align:center;"><code>mdrun -rdd</code></td>
+<td colspan="2" style="text-align:center;"> 初始构型 + 10%  </td>
+</tr>
+<tr>
+<td style="text-align:left;">约束</td>
+<td style="text-align:center;">\(r_\text{con}\)</td>
+<td style="text-align:center;"><code>mdrun -rcon</code></td>
+<td colspan="2" style="text-align:center;"> 由键长估计  </td>
+</tr>
+<tr>
+<td style="text-align:center;">虚拟位点</td>
+<td style="text-align:center;">\(r_\text{con}\)</td>
+<td style="text-align:center;"><code>mdrun -rcon</code></td>
+<td colspan="2" style="text-align:center;">  0 </td>
+</tr>
+</table>
+
+<p>在大多数情况下, <code>mdrun</code>的默认设置不会导致模拟停止并给出缺失相互作用的出错信息. 键合相互用作的范围由初始构型中键合的电荷组之间的距离, 再加上10%确定. 对约束, <span class="math">\(r_\text{con}\)</span> 的值由(<code>lincs_order + 1</code>)个键所能覆盖的最大距离决定, 并且所有这些键以120度的角相连接. 实际的约束通讯并不受 <span class="math">\(r_\text{con}\)</span> 限制, 而是受最小晶胞尺寸 <span class="math">\(L_C\)</span> 限制:</p>
+
+<p><span class="math">\[L_C \ge \max(r_\text{mb}, r_\text{com})     \tag{3.147}\]</span></p>
+
+<p>不使用动态负载均衡, 并使用压力缩放时, 实际上允许体系的缩放超过这个限制. <strong>注意</strong>, 对于三斜盒子, <span class="math">\(L_C\)</span> 并不是简单地取盒子对角分量与此方向晶胞数目的比值, 而是三斜晶胞边界之间的最小距离. 对于菱形十二面体盒子, 此距离是沿 <span class="math">\(x\)</span> 和 <span class="math">\(y\)</span> 方向长度的 <span class="math">\(\sqrt{3/2}\)</span>.</p>
+
+<p>当 <span class="math">\(r_\text{mb} \gt r_c\)</span> 时, <code>mdrun</code>会采用一个灵巧的算法以减少通讯. 如果只是简单地通讯 <span class="math">\(r_\text{mb}\)</span> 之内的所有电荷组, 这将大大增加通讯次数. 因此只会对那些与不在局部出现的电荷组之间存在键合相互作用连接的电荷组进行通讯. 这将导致很少的额外通讯, 也会稍微增加区域分解设置的成本. 在某些情况下, 例如粗粒化模拟中使用非常短的截断, 可能需要手动设置 <span class="math">\(r_\text{mb}\)</span> 以减小这个成本.</p>
+
+<h3 id="3.17.5多程序多数据pme并行">3.17.5 多程序多数据PME并行</h3>
+
+<p>静电相互作用是长程的, 因此需要使用特殊的算法来避免对许多原子对进行加和. 在GROMACS中通常使用的方法是PME(参见4.8.2节). 由于在PME算法中, 所有粒子彼此之间都存在相互作用, 因此需要全局通讯. 这通常就是区域分解标度行为的限制因素. 为了减小这个问题带来的影响, 我们提出了多程序多数据(Multiple-Program, Multiple-Data)方法[5]. 在这个方法中, 我们选择一些队列只进行PME网格计算, 而其他被称为粒子-粒子(PP)队列的队列则用于完成所有剩余的其他任务. 对于长方体盒子, PP队列与PME队列的最佳比例通常是3:1, 而对于菱形十二面体盒子最佳比例是2:1. 当PME队列的数量减少为原来的1/4时, 通讯调用的次数大约减少到原来的1/16. 或者换句话说, 现在我们可以使用4倍多的队列. 另外, 对于网络中4核或8核的现代设备来说, PME的有效网络带宽将提高4倍, 因为在PME计算中, 每个机器上只有四分之一的核在使用网络连接.</p>
+
+<figure>
+<img src="3.15.png" alt="图3.15: 8个队列不使用MPMD(左边)和使用MPMD(右边)的例子. 左边的PME通讯(红箭头)比右边的多得多. 对MPMD算法, 虽然需要额外的PP-PME坐标和力通讯(蓝箭头), 但是通讯复杂度更低." />
+<figcaption>图3.15: 8个队列不使用MPMD(左边)和使用MPMD(右边)的例子. 左边的PME通讯(红箭头)比右边的多得多. 对MPMD算法, 虽然需要额外的PP-PME坐标和力通讯(蓝箭头), 但是通讯复杂度更低.</figcaption>
+</figure>
+
+<p><code>mdrun</code>默认会交错运行PP和PME队列. 如果设备中的队列没有依次编号, 可以使用<code>mdrun -ddorder pp_pme</code>命令. 对带有真正的三维环及相应的合适的队列分配通讯软件的设备, 我们应该使用<code>mdrun -ddorder cartesian</code>命令.</p>
+
+<p>为了优化性能, 我们通常应该设置截断和PME格点使得PME负载达到总计算负载的25%到33%. <code>grompp</code>会在末尾输出此负载的估计值, 并且<code>mdrun</code>也会计算相同的估计值以确定使用的PME队列的最佳数目. 对高度并行化计算, 利用<code>mdp</code>设置和/或由<code>mdrun</code>的<code>-npme</code>选项设定的PME队列数目来优化PME负载是值得的. 为了改变静电设置, 了解当对库仑截断和PME格点间距使用相同的比例进行缩放时, 静电的精度几乎保持不变, 对我们是很有用的. <strong>注意</strong>, 由于PME队列数目比PP队列数目的小, 所以通常在我们估算PME队列数目的时候最好多算一些, 这样可以减少总的等待时间.</p>
+
+<p>PME区域分解可以是沿 <span class="math">\(x\)</span> 和/或 <span class="math">\(y\)</span> 方向的1D或2D分解. 因为在高度并行化中, 2D分解的区域形状和铅笔很相似, 所以2D分解也被称为铅笔分解. 只有当PP分解沿 <span class="math">\(x\)</span> 方向有唯一一个区域时, 才能使用沿 <span class="math">\(y\)</span> 方向的1D分解. 2D PME分解沿 <span class="math">\(x\)</span> 方向的区域数目必须等于PP分解数目. <code>mdrun</code>会自动选择1D或2D PME分解(当可以使用给定的全部队列数时), 基于PME中坐标再分布通讯加上格点重叠和转置通讯的最小数目. 为了避免PP和PME队列之间坐标和力的多余通讯, 理想情况下 <span class="math">\(x\)</span> 方向上的DD晶胞数目应等于PME队列的数目或其倍数. 默认情况下, <code>mdrun</code>会考虑这些情况.</p>
+
+<h3 id="3.17.6区域分解流程图">3.17.6 区域分解流程图</h3>
+
+<p>流程图3.16显示了区域分解中不同算法所有可能的通讯. 对于简单点的模拟, 流程图也一样, 只是不包含未使用的算法及与其相应的通讯.</p>
+
+<figure>
+<img src="3.16.png" alt="图 3.16: 标准MD模拟中算法和通讯(箭头)的流程图, 模拟使用了虚拟位点, 约束和独立PME网格队列." />
+<figcaption>图 3.16: 标准MD模拟中算法和通讯(箭头)的流程图, 模拟使用了虚拟位点, 约束和独立PME网格队列.</figcaption>
+</figure>
+
+<h2 id="3.18隐式溶剂模型">3.18 隐式溶剂模型</h2>
+
+<p>隐式溶剂模型提供了一种表示溶剂分子静电效应的有效方式, 同时在分子动力学模拟中避免了大量计算, 这些计算涉及对周围水分子进行精确的, 溶剂化的描述. 相比于显式溶剂模型, 隐式溶剂模型有以下几个优点: 不需要对溶质周围的水分子进行平衡; 不存在粘度, 蛋白质能够更快地探索构型空间.</p>
+
+<p>GROMACS中的隐式溶剂计算利用广义Born公式, Born半径的计算可使用Still[70], HCT[71]和OBC[72]模型.</p>
+
+<p>溶剂化自由能 <span class="math">\(G_\text{solv}\)</span> 是三项的加和, 溶剂-溶剂空穴项(<span class="math">\(G_\text{cav}\)</span>), 溶剂-溶质范德华项(<span class="math">\(G_\text{vdw}\)</span>), 还有溶剂-溶质静电极化项(<span class="math">\(G_\text{pol}\)</span>).</p>
+
+<p><span class="math">\(G_\text{cav}\)</span> 和 <span class="math">\(G_\text{vdw}\)</span> 的总和对应于移除所有电荷的分子的(未极化)溶剂化自由能, 通常称作 <span class="math">\(G_\text{np}\)</span>, 等于总的溶剂可及表面积乘上表面张力. 因此溶剂化自由能的总表达式可写为:</p>
+
+<p><span class="math">\[G_\text{solv}=G_\text{np}+G_\text{pol}     \tag{3.148}\]</span></p>
+
+<p>对于广义Born模型, <span class="math">\(G_\text{pol}\)</span> 可由广义Born方程计算[70]:</p>
+
+<p><span class="math">\[G_\text{pol}=\left(1-{1\over \e}\right) \Sum_{i=1}^n \Sum_{j \gt i}^n {q_i q_j \over \sqrt{r_{ij}^2+b_i b_j \exp\left({-r_{ij}^2 \over 4 b_i b_j}\right)} }     \tag{3.149}\]</span></p>
+
+<p>在GROMCAS中, 我们引入了代换[73]:</p>
+
+<p><span class="math">\[c_i={1\over \sqrt{b_i} }      \tag{3.150}\]</span></p>
+
+<p>这样当计算每项相互作用时, 可通过简单变换得到新变量 <span class="math">\(x\)</span>:</p>
+
+<p><span class="math">\[x={r_{ij} \over \sqrt{b_i b_j} }=r_{ij} c_i c_j     \tag{3.151}\]</span></p>
+
+<p>最后, 改写后3.149的完整的公式如下:</p>
+
+<p><span class="math">\[G_\text{pol}=\left(1-{1\over\e}\right)\Sum_{i=1}^n \Sum_{j \lt i}^n {q_i q_j \over \sqrt{b_i b_j} } \x(x)=\left(1-{1\over\e}\right)\Sum_{i=1}^n q_i c_i \Sum_{j \lt i}^n q_j c_j \x(x) \tag{3.152}\]</span></p>
+
+<p>方程3.148的非极化部分(<span class="math">\(G_\text{np}\)</span>)直接根据每个原子的Born半径计算, 计算时使用了Schaefer等人的简单ACE类型近似[74], 包含了对所有原子的一个简单循环. 这只需要一个额外的溶剂化参数, 与原子类型无关, 但三种Born半径模型之间有稍微的差别.</p>
+
 <div class="footnotes">
 <hr />
 <ol class="incremental">
