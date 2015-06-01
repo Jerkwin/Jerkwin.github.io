@@ -1,15 +1,19 @@
 ---
  layout: posttoc
- title: GROMACS各类程序
+ title: GROMACS各类程序(名称排序)
  categories:
  - 科
  tags:
  - GMX
 ---
 
-<h2 id="分析轨迹">分析轨迹</h2>
+<h2 id="gmxanadock-clusterstructuresfromautodockruns">gmx anadock - Cluster structures from Autodock runs</h2>
 
-<h3 id="gmxgangle">gmx gangle(翻译: 杨宇)</h3>
+<h2 id="gmxanaeig-analyzeeigenvectorsnormalmodes">gmx anaeig - Analyze eigenvectors/normal modes</h2>
+
+<h2 id="gmxanalyze-analyzedatasets">gmx analyze - Analyze data sets</h2>
+
+<h2 id="gmxgangle:计算键角和二面角的分布及相关翻译:杨宇">gmx gangle: 计算键角和二面角的分布及相关(翻译: 杨宇)</h2>
 
 <p><strong>概要</strong></p>
 
@@ -44,54 +48,86 @@
 <p>指定输入和输出文件的选项:</p>
 
 <ul class="incremental">
-<li><p><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (Input, Optional)<br/>
-输入轨迹或单一构型: xtc trr cpt trj gro g96 pdb tng</p></li>
-<li><p><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (Input, Optional)
-输入结构: tpr tpb tpa gro g96 pdb brk ent</p></li>
-<li><p><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (Input, Optional)
-额外的索引组</p></li>
-<li><p><code>-oav [&lt;.xvg&gt;]</code> (angaver.xvg) (Output, Optional)
-作为时间函数的平均角度</p></li>
-<li><p><code>-oall [&lt;.xvg&gt;]</code> (angles.xvg) (Output, Optional)
-作为时间函数的所有角度</p></li>
-<li><p><code>-oh [&lt;.xvg&gt;]</code> (anghist.xvg) (Output, Optional)
-角度的直方图</p></li>
+<li><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入, 可选)<br/>
+输入轨迹或单一构型: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入, 可选)<br/>
+输入结构: tpr tpb tpa gro g96 pdb brk ent</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入, 可选)<br/>
+额外的索引组</li>
+<li><code>-oav [&lt;.xvg&gt;]</code> (angaver.xvg) (输出, 可选)<br/>
+作为时间函数的平均角度</li>
+<li><code>-oall [&lt;.xvg&gt;]</code> (angles.xvg) (输出, 可选)<br/>
+作为时间函数的所有角度</li>
+<li><code>-oh [&lt;.xvg&gt;]</code> (anghist.xvg) (输出, 可选)<br/>
+角度的直方图</li>
 </ul>
 
 <p>其他选项:</p>
 
 <ul class="incremental">
-<li><p><code>-b</code> <time> (0)<br/>
-从轨迹文件中读取的第一帧(ps)</p></li>
-<li><p><code>-e</code> <time> (0)<br/>
-从轨迹文件中读取的最后一帧(ps)</p></li>
-<li><p><code>-dt</code> <time> (0)<br/>
-只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</p></li>
-<li><p><code>-tu</code> <enum> (ps)
-时间值的单位: fs, ps, ns, us, ms, s</p></li>
-<li><p><code>-xvg</code> <enum> (xmgrace)
-绘图格式: none, xmgrace, xmgr</p></li>
-<li><p><code>-[no]rmpbc</code> (yes)
-对每一帧, 使分子保持完整</p></li>
-<li><p><code>-[no]pbc</code> (yes)
-计算距离时使用周期性边界条件</p></li>
-<li><p><code>-sf</code> <file>
-使用文件提供选择</p></li>
-<li><p><code>-selrpos</code> <enum> (atom)
-选择参考位置: atom, res_com, res_cog, mol_com, mol_cog, whole_res_com, whole_res_cog, whole_mol_com, whole_mol_cog, part_res_com, part_res_cog, part_mol_com, part_mol_cog, dyn_res_com, dyn_res_cog, dyn_mol_com, dyn_mol_cog</p></li>
-<li><p><code>-g1</code> <enum> (angle)
-分析类型/第一矢量组: angle, dihedral, vector, plane</p></li>
-<li><p><code>-g2</code> <enum> (none)
-第二向量组的类型: none, vector, plane, t0, z, sphnorm</p></li>
-<li><p><code>-binw</code> <real> (1)
-<code>-oh</code>的分格宽度, 以度为单位</p></li>
-<li><p><code>-group1</code> <selection>
-第一个分析/矢量选择</p></li>
-<li><p><code>-group2</code> <selection>
-第二个分析/矢量选择</p></li>
+<li><code>-b</code> <time> (0)<br/>
+从轨迹文件中读取的第一帧(ps)</li>
+<li><code>-e</code> <time> (0)<br/>
+从轨迹文件中读取的最后一帧(ps)</li>
+<li><code>-dt</code> <time> (0)<br/>
+只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
+<li><code>-tu</code> <enum> (ps)<br/>
+时间值的单位: fs, ps, ns, us, ms, s</li>
+<li><code>-xvg</code> <enum> (xmgrace)<br/>
+绘图格式: none, xmgrace, xmgr</li>
+<li><code>-[no]rmpbc</code> (yes)<br/>
+对每一帧, 使分子保持完整</li>
+<li><code>-[no]pbc</code> (yes)<br/>
+计算距离时使用周期性边界条件</li>
+<li><code>-sf</code> <file><br/>
+使用文件提供选择</li>
+<li><code>-selrpos</code> <enum> (atom)<br/>
+选择参考位置: atom, res_com, res_cog, mol_com, mol_cog, whole_res_com, whole_res_cog, whole_mol_com, whole_mol_cog, part_res_com, part_res_cog, part_mol_com, part_mol_cog, dyn_res_com, dyn_res_cog, dyn_mol_com, dyn_mol_cog</li>
+<li><code>-g1</code> <enum> (angle)<br/>
+分析类型/第一矢量组: angle, dihedral, vector, plane</li>
+<li><code>-g2</code> <enum> (none)<br/>
+第二向量组的类型: none, vector, plane, t0, z, sphnorm</li>
+<li><code>-binw</code> <real> (1)<br/>
+<code>-oh</code>的分格宽度, 以度为单位</li>
+<li><code>-group1</code> <selection><br/>
+第一个分析/矢量选择</li>
+<li><code>-group2</code> <selection><br/>
+第二个分析/矢量选择</li>
 </ul>
 
-<h3 id="gmxdistance">gmx distance(翻译: 姚闯)</h3>
+<h2 id="gmxbar-calculatefreeenergydifferenceestimatesthroughbennettsacceptanceratio">gmx bar - Calculate free energy difference estimates through Bennett&#8217;s acceptance ratio</h2>
+
+<h2 id="gmxbundle-analyzebundlesofaxese.g.helices">gmx bundle - Analyze bundles of axes, e.g., helices</h2>
+
+<h2 id="gmxcheck-checkandcomparefiles">gmx check - Check and compare files</h2>
+
+<h2 id="gmxchi-calculateeverythingyouwanttoknowaboutchiandotherdihedrals">gmx chi - Calculate everything you want to know about chi and other dihedrals</h2>
+
+<h2 id="gmxcluster-clusterstructures">gmx cluster - Cluster structures</h2>
+
+<h2 id="gmxclustsize-calculatesizedistributionsofatomicclusters">gmx clustsize - Calculate size distributions of atomic clusters</h2>
+
+<h2 id="gmxconfrms-fittwostructuresandcalculatesthermsd">gmx confrms - Fit two structures and calculates the RMSD</h2>
+
+<h2 id="gmxconvert-tpr-makeamodifedrun-inputfile">gmx convert-tpr - Make a modifed run-input file</h2>
+
+<h2 id="gmxcovar-calculateanddiagonalizethecovariancematrix">gmx covar - Calculate and diagonalize the covariance matrix</h2>
+
+<h2 id="gmxcurrent-calculatedielectricconstantsandcurrentautocorrelationfunction">gmx current - Calculate dielectric constants and current autocorrelation function</h2>
+
+<h2 id="gmxdensity-calculatethedensityofthesystem">gmx density - Calculate the density of the system</h2>
+
+<h2 id="gmxdensmap-calculate2dplanaroraxial-radialdensitymaps">gmx densmap - Calculate 2D planar or axial-radial density maps</h2>
+
+<h2 id="gmxdensorder-calculatesurfacefluctuations">gmx densorder - Calculate surface fluctuations</h2>
+
+<h2 id="gmxdielectric-calculatefrequencydependentdielectricconstants">gmx dielectric - Calculate frequency dependent dielectric constants</h2>
+
+<h2 id="gmxdipoles-computethetotaldipoleplusfluctuations">gmx dipoles - Compute the total dipole plus fluctuations</h2>
+
+<h2 id="gmxdisre-analyzedistancerestraints">gmx disre - Analyze distance restraints</h2>
+
+<h2 id="gmxdistance:计算两个位置之间的距离翻译:姚闯">gmx distance: 计算两个位置之间的距离(翻译: 姚闯)</h2>
 
 <p><strong>概要</strong></p>
 
@@ -114,284 +150,92 @@
 <p>指定输入和输出文件的选项:</p>
 
 <ul class="incremental">
-<li><p><code>-f [&lt;. xtc/. trr/...&gt;]</code> (traj. xtc) 输入选项<br/>
-输入轨迹或单个构型: xtc trr cpt trj gro g96 pdb tng</p></li>
-<li><p><code>-s [&lt;. tpr/. tpb/...&gt;]</code> (topol. tpr) 输入选项<br/>
-输入结构: tpr tpb tpa gro g96 pdb brk ent</p></li>
-<li><p><code>-n [&lt;. ndx&gt;]</code> (index. ndx) 输入选项<br/>
-额外的索引组</p></li>
-<li><p><code>-oav [&lt;. xvg&gt;]</code> (distave. xvg) 输出选项<br/>
-平均距离随时间变化的函数</p></li>
-<li><p><code>-oall [&lt;. xvg&gt;]</code> (dist. xvg) 输出选项<br/>
-间距随时间变化的函数</p></li>
-<li><p><code>-oxyz [&lt;. xvg&gt;]</code> (distxyz. xvg) 输出选项<br/>
-间距(在x y z 方向上的分量)随时间变化的函数</p></li>
-<li><p><code>-oh [&lt;. xvg&gt;]</code> (disthist. xvg) 输出选项<br/>
-距离的直方图</p></li>
-<li><p><code>-oallstat [&lt;. xvg&gt;]</code> (diststat. xvg) 输出选项<br/>
-独立距离的统计</p></li>
+<li><code>-f [&lt;. xtc/. trr/...&gt;]</code> (traj. xtc) 输入选项<br/>
+输入轨迹或单个构型: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-s [&lt;. tpr/. tpb/...&gt;]</code> (topol. tpr) 输入选项<br/>
+输入结构: tpr tpb tpa gro g96 pdb brk ent</li>
+<li><code>-n [&lt;. ndx&gt;]</code> (index. ndx) 输入选项<br/>
+额外的索引组</li>
+<li><code>-oav [&lt;. xvg&gt;]</code> (distave. xvg) 输出选项<br/>
+平均距离随时间变化的函数</li>
+<li><code>-oall [&lt;. xvg&gt;]</code> (dist. xvg) 输出选项<br/>
+间距随时间变化的函数</li>
+<li><code>-oxyz [&lt;. xvg&gt;]</code> (distxyz. xvg) 输出选项<br/>
+间距(在x y z 方向上的分量)随时间变化的函数</li>
+<li><code>-oh [&lt;. xvg&gt;]</code> (disthist. xvg) 输出选项<br/>
+距离的直方图</li>
+<li><code>-oallstat [&lt;. xvg&gt;]</code> (diststat. xvg) 输出选项<br/>
+独立距离的统计</li>
 </ul>
 
 <p>其他选项:</p>
 
 <ul class="incremental">
-<li><p><code>-b &lt;time&gt;</code> (0)<br/>
-从轨迹读取第一帧的时间(ps)</p></li>
-<li><p><code>-e &lt;time&gt;</code> (0)<br/>
-轨迹读取最后一帧的时间(ps)</p></li>
-<li><p><code>-dt &lt;time&gt;</code> (0)<br/>
-如果t/dt的余数==第一帧的时间(PS), 就使用这一帧(相当于是取帧数的间隔)</p></li>
-<li><p><code>-tu &lt;enum&gt;</code> (ps)<br/>
-时间的单位: fs, ps, ns, us, ms, s</p></li>
-<li><p><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
-绘制的格式: none, xmgrace, xmgr</p></li>
-<li><p><code>-[no]rmpbc</code> (yes)<br/>
-每一帧使用所有分子</p></li>
-<li><p><code>-[no]pbc</code> (yes)<br/>
-使用周期性边界条件计算距离</p></li>
-<li><p><code>-sf &lt;file&gt;</code><br/>
-从文件中提供选择</p></li>
-<li><p><code>-selrpos &lt;enum&gt;</code> (atom)<br/>
-选择参考的位置: atom, res_com, res_cog, mol_com, mol_cog, whole_res_com, whole_res_cog, whole_mol_com, whole_mol_cog, part_res_com, part_res_cog, part_mol_com, part_mol_cog, dyn_res_com, dyn_res_cog, dyn_mol_com, dyn_mol_cog</p></li>
-<li><p><code>-select &lt;selection&gt;</code><br/>
-计算距离对的位置</p></li>
-<li><p><code>-len &lt;real&gt;</code> (0.1)<br/>
-直方图的平均距离</p></li>
-<li><p><code>-tol &lt;real&gt;</code> (1)<br/>
-直方图分布的宽度关于<code>-len</code>的函数.</p></li>
-<li><p><code>-binw &lt;real&gt;</code> (0.001)<br/>
-直方图单元格的宽度</p></li>
-</ul>
-
-<h2 id="创建拓扑与坐标">创建拓扑与坐标</h2>
-
-<h2 id="运行模拟">运行模拟</h2>
-
-<h2 id="查看轨迹">查看轨迹</h2>
-
-<h2 id="处理能量">处理能量</h2>
-
-<h2 id="转换文件">转换文件</h2>
-
-<h2 id="各类工具">各类工具</h2>
-
-<h2 id="结构间的距离">结构间的距离</h2>
-
-<h3 id="gmxrmsf">gmx rmsf(翻译: 杨旭云)</h3>
-
-<p><strong>概要</strong></p>
-
-<pre><code>gmx rmsf [-f [&lt;.xtc/.trr/...&gt;]] [-s [&lt;.tpr/.tpb/...&gt;]] [-n [&lt;.ndx&gt;]]
-         [-q [&lt;.pdb&gt;]] [-oq [&lt;.pdb&gt;]] [-ox [&lt;.pdb&gt;]] [-o [&lt;.xvg&gt;]]
-         [-od [&lt;.xvg&gt;]] [-oc [&lt;.xvg&gt;]] [-dir [&lt;.log&gt;]] [-nice ]
-         [-b ] [-e ] [-dt ] [-[no]w] [-xvg ]
-         [-[no]res] [-[no]aniso] [-[no]fit]
-</code></pre>
-
-<p><strong>说明</strong></p>
-
-<p><code>gmx rmsf</code>计算轨迹(使用<code>-f</code>提供)中原子位置的根均方涨落(RMSF, root mean square fluctuation, 即标准偏差), 计算前可以先将构型与参考帧(使用<code>-s</code>提供)的构型进行叠合(并非必须).</p>
-
-<p>使用选项<code>-oq</code>时会将RMSF值转换为B因子值, 并将其与坐标一起写入<code>.pdb</code>文件中, 其中坐标来自结构文件, 或是由<code>-q</code>指定的<code>.pdb</code>文件. 选项<code>-ox</code>会将B因子与平均坐标写入文件中.</p>
-
-<p>使用选项<code>-od</code>时会计算相对于参考结构的根均方偏差.</p>
-
-<p>使用选项<code>-aniso</code>时, <code>gmx rmsf</code>将会计算各项异性温度因子, 还会输出平均坐标和含有ANISOU记录的<code>.pdb</code>文件(对应于<code>-oq</code>或<code>-ox</code>选项). 注意, U值与取向有关, 因此在与实验数据对比之前请确认已经与实验坐标进行了叠合.</p>
-
-<p>当传递给程序一个<code>.pdb</code>文件, 并且设置了<code>-aniso</code>选项时, 如果<code>.pdb</code>文件中含有任何各向异性温度因子, 将会创建Uij的相关图.</p>
-
-<p>使用选项<code>-dir</code>时会对平均MSF(3x3)矩阵进行对角化. 这可用于显示原子在哪个方向上涨落最大, 哪个方向上涨落最小.</p>
-
-<p><strong>选项</strong></p>
-
-<p>指定输入和输出文件的选项:</p>
-
-<ul class="incremental">
-<li><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入)<br/>
-轨迹文件: xtc trr cpt trj gro g96 pdb tng</li>
-<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入)<br/>
-结构+质量(db): tpr tpb tpa gro g96 pdb brk ent</li>
-<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入, 可选)<br/>
-索引文件</li>
-<li><code>-q [&lt;.pdb&gt;]</code> (eiwit.pdb) (输入, 可选)<br/>
-蛋白质数据信息文件</li>
-<li>`-oq <a href="bfac.pdb">&lt;.pdb&gt;</a> (输出, 可选)<br/>
-蛋白质数据信息文件</li>
-<li><code>-ox [&lt;.pdb&gt;]</code> (xaver.pdb) (输出, 可选)<br/>
-蛋白质数据信息文件</li>
-<li><code>-o [&lt;.xvg&gt;]</code> (rmsf.xvg) (输出)<br/>
-xvgr/xmgr 文件</li>
-<li><code>-od [&lt;.xvg&gt;]</code> (rmsdev.xvg) (输出, 可选)<br/>
-xvgr/xmgr文件</li>
-<li><code>-oc [&lt;.xvg&gt;]</code> (correl.xvg) (输出, 可选)<br/>
-xvgr/xmgr文件</li>
-<li><code>-dir [&lt;.log&gt;]</code> (rmsf.log) (输出, 可选)<br/>
-Log文件</li>
-</ul>
-
-<p>其他选项:</p>
-
-<ul class="incremental">
-<li><code>-nice &lt;int&gt;</code> (19)<br/>
-设置友好度</li>
 <li><code>-b &lt;time&gt;</code> (0)<br/>
-从轨迹文件中读取的第一帧(ps)</li>
+从轨迹读取第一帧的时间(ps)</li>
 <li><code>-e &lt;time&gt;</code> (0)<br/>
-从轨迹文件中读取的最后一帧(ps)</li>
+轨迹读取最后一帧的时间(ps)</li>
 <li><code>-dt &lt;time&gt;</code> (0)<br/>
-只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
-<li><code>-[no]w</code> (no)<br/>
-查看输出文件 .xvg, .xpm, .eps和.pdb</li>
+如果t/dt的余数==第一帧的时间(PS), 就使用这一帧(相当于是取帧数的间隔)</li>
+<li><code>-tu &lt;enum&gt;</code> (ps)<br/>
+时间的单位: fs, ps, ns, us, ms, s</li>
 <li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
-xvg绘图格式: xmgrace, xmgr, none</li>
-<li><code>-[no]res</code> (no)<br/>
-计算每个残基的均值</li>
-<li><code>-[no]aniso</code> (no)<br/>
-计算各向异性温度因子</li>
-<li><code>-[no]fit</code> (yes)<br/>
-计算RMSF之前进行最小二乘叠合. 如果不使用这个选项, 你必须确保参考结构与轨迹匹配.</li>
+绘制的格式: none, xmgrace, xmgr</li>
+<li><code>-[no]rmpbc</code> (yes)<br/>
+每一帧使用所有分子</li>
+<li><code>-[no]pbc</code> (yes)<br/>
+使用周期性边界条件计算距离</li>
+<li><code>-sf &lt;file&gt;</code><br/>
+从文件中提供选择</li>
+<li><code>-selrpos &lt;enum&gt;</code> (atom)<br/>
+选择参考的位置: atom, res_com, res_cog, mol_com, mol_cog, whole_res_com, whole_res_cog, whole_mol_com, whole_mol_cog, part_res_com, part_res_cog, part_mol_com, part_mol_cog, dyn_res_com, dyn_res_cog, dyn_mol_com, dyn_mol_cog</li>
+<li><code>-select &lt;selection&gt;</code><br/>
+计算距离对的位置</li>
+<li><code>-len &lt;real&gt;</code> (0.1)<br/>
+直方图的平均距离</li>
+<li><code>-tol &lt;real&gt;</code> (1)<br/>
+直方图分布的宽度关于<code>-len</code>的函数.</li>
+<li><code>-binw &lt;real&gt;</code> (0.001)<br/>
+直方图单元格的宽度</li>
 </ul>
 
-<h2 id="结构中的距离随时间的变化">结构中的距离随时间的变化</h2>
+<h2 id="gmxdo_dssp-assignsecondarystructureandcalculatesolventaccessiblesurfacearea">gmx do_dssp - Assign secondary structure and calculate solvent accessible surface area</h2>
 
-<h3 id="gmxmdmat">gmx mdmat(翻译: 陈辰)</h3>
+<h2 id="gmxdos-analyzedensityofstatesandpropertiesbasedonthat">gmx dos - Analyze density of states and properties based on that</h2>
 
-<p><strong>概要</strong></p>
+<h2 id="gmxdump-makebinaryfileshumanreadable">gmx dump - Make binary files human readable</h2>
 
-<pre><code>gmx mdmat [-f [&lt;.xtc/.trr/...&gt;]] [-s [&lt;.tpr/.tpb/...&gt;]] [-n [&lt;.ndx&gt;]]
-          [-mean [&lt;.xpm&gt;]] [-frames [&lt;.xpm&gt;]] [-no [&lt;.xvg&gt;]] [-nice ]
-          [-b ] [-e ] [-dt ] [-xvg ] [-t ]
-          [-nlevels ]
-</code></pre>
+<h2 id="gmxdyecoupl-extractdyedynamicsfromtrajectories">gmx dyecoupl - Extract dye dynamics from trajectories</h2>
 
-<p><strong>说明</strong></p>
+<h2 id="gmxdyndom-interpolateandextrapolatestructurerotations">gmx dyndom - Interpolate and extrapolate structure rotations</h2>
 
-<p><code>gmx mdmat</code>创建残基对之间的最小距离构成的矩阵. 使用<code>-frames</code>选项时, 可以将这些矩阵按顺序存储下来, 用以查看蛋白质三级结构随着时间的变化. 如果不明智地使用选项, 程序可能会生成非常大的输出文件. 默认只输出对整个轨迹进行平均后的距离矩阵. 同时, 也可以输出整个轨迹中残基间不同原子之间的接触数. 输出文件可以利用<code>gmx xpm2ps</code>进行处理以生成PostScript(tm)图.</p>
+<h2 id="gmxeditconf-convertandmanipulatesstructurefiles">gmx editconf - Convert and manipulates structure files</h2>
 
-<p><strong>选项</strong></p>
+<h2 id="gmxeneconv-convertenergyfiles">gmx eneconv - Convert energy files</h2>
 
-<p>指定输入和输出文件的选项:</p>
+<h2 id="gmxenemat-extractanenergymatrixfromanenergyfile">gmx enemat - Extract an energy matrix from an energy file</h2>
 
-<ul class="incremental">
-<li><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入)<br/>
-轨迹: xtc trr cpt trj gro g96 pdb tng</li>
-<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入)<br/>
-结构+质量(db): tpr tpb tpa gro g96 pdb brk ent</li>
-<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入, 可选)<br/>
-索引文件</li>
-<li><code>-mean [&lt;.xpm&gt;]</code> (dm.xpm) (输出)<br/>
-与X PixMap兼容的矩阵文件</li>
-<li><code>-frames [&lt;.xpm&gt;]</code> (dmf.xpm) (输出, 可选)<br/>
-与X PixMap兼容的矩阵文件</li>
-<li><code>-no [&lt;.xvg&gt;]</code> (num.xvg) (输出, 可选)
-xvgr/xmgr文件</li>
-</ul>
+<h2 id="gmxenergy-writesenergiestoxvgfilesanddisplayaverages">gmx energy - Writes energies to xvg files and display averages</h2>
 
-<p>其它选项:</p>
+<h2 id="gmxfilter-frequencyfiltertrajectoriesusefulformakingsmoothmovies">gmx filter - Frequency filter trajectories, useful for making smooth movies</h2>
 
-<ul class="incremental">
-<li><code>-nice &lt;int&gt;</code> (19)<br/>
-设置友好度</li>
-<li><code>-b &lt;time&gt;</code> (0)<br/>
-从轨迹文件中读取的第一帧(ps)</li>
-<li><code>-e &lt;time&gt;</code> (0)<br/>
-从轨迹文件中读取的最后一帧(ps)</li>
-<li><code>-dt &lt;time&gt;</code> (0)<br/>
-只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
-<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
-xvg绘图格式: xmgrace, xmgr, none</li>
-<li><code>-t &lt;real&gt;</code> (1.5)<br/>
-切断距离</li>
-<li><code>-nlevels &lt;int&gt;</code> (40)<br/>
-距离的离散水平数</li>
-</ul>
+<h2 id="gmxfreevolume-calculatefreevolume">gmx freevolume - Calculate free volume</h2>
 
-<h2 id="分布性质随时间的变化">分布性质随时间的变化</h2>
+<h2 id="gmxgangle-calculateangles">gmx gangle - Calculate angles</h2>
 
-<h3 id="gmxrdf">gmx rdf(翻译: 崔西)</h3>
+<h2 id="gmxgenconf-multiplyaconformationinrandomorientations">gmx genconf - Multiply a conformation in &#8216;random&#8217; orientations</h2>
 
-<p><strong>概要</strong></p>
+<h2 id="gmxgenion-generatemonoatomicionsonenergeticallyfavorablepositions">gmx genion - Generate monoatomic ions on energetically favorable positions</h2>
 
-<pre><code>gmx rdf [-f [&lt;.xtc/.trr/...&gt;]] [-s [&lt;.tpr/.tpb/...&gt;]] [-n [&lt;.ndx&gt;]]
-        [-o [&lt;.xvg&gt;]] [-cn [&lt;.xvg&gt;]] [-hq [&lt;.xvg&gt;]] [-nice ] [-b ]
-        [-e ] [-dt ] [-[no]w] [-xvg ] [-bin ]
-        [-[no]com] [-surf ] [-rdf ] [-[no]pbc] [-[no]norm]
-        [-[no]xy] [-cut ] [-ng ] [-fade ]
-</code></pre>
+<h2 id="gmxgenrestr-generatepositionrestraintsordistancerestraintsforindexgroups">gmx genrestr - Generate position restraints or distance restraints for index groups</h2>
 
-<p><strong>说明</strong></p>
+<h2 id="gmxgrompp-makearuninputfile">gmx grompp - Make a run input file</h2>
 
-<p>流体的结构可以通过中子散射或者X射线散射进行研究. 描述流体结构的最常用方法是径向分布函数. 但是, 通过散射实验获得径向分布函数并不容易.</p>
+<h2 id="gmxgyrate-calculatetheradiusofgyration">gmx gyrate - Calculate the radius of gyration</h2>
 
-<p><code>gmx rdf</code>可利用几种不同的方法来计算径向分布函数. 通常的方法是计算一个(组)粒子周围的径向分布函数, 其他方法包括计算一组粒子质心周围的径向分布函数(<code>-com</code>), 或到最近一组粒子的径向分布函数(<code>-surf</code>). 所有这些方法都可以利用<code>-xy</code>选项计算围绕与z轴平行的轴的RDF. 使用选项<code>-surf</code>时, 不能使用归一化.</p>
+<h2 id="gmxh2order-computetheorientationofwatermolecules">gmx h2order - Compute the orientation of water molecules</h2>
 
-<p>选项<code>-rdf</code>用来设置要计算RDF的类型. 默认为原子或粒子, 但也可以选择分子或残基的质心或几何中心. 无论哪种情况, 都只会考虑索引组中的原子. 对于分子和/或质心选项, 需要输入文件. 除COM(质心)或COG(几何中心)外, 其他的加权方法目前只能通过提供具有不同质量的输入文件来实现. 参数<code>-com</code>与<code>-surf</code>也可以与<code>-rdf</code>选项一同使用.</p>
-
-<p>如果已经提供了一个输入文件(<code>-s</code>), 并且<code>-rdf</code>设置为<code>atom</code>, 那么在计算RDF的时候, 会考虑到输入文件中定义的排除. 选项<code>-cut</code>是另外一种可以避免RDF图中出现分子内峰的方法, 但最好还是将输入文件中的排除数设置得高一些. 比如, 对于苯的拓扑, 将nrexcl设置为5就可以全部消除分子内距离对RDF的贡献. 注意, 在计算时会使用已选组中的所有原子, 还包括那些没有Lennard-Jones相互作用的原子.</p>
-
-<p>选项<code>-cn</code>生成RDF累积数, 也就是在r距离范围内的平均粒子数.</p>
-
-<p><strong>选项</strong></p>
-
-<p>指定输入和输出文件的选项:</p>
-
-<ul class="incremental">
-<li><p><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (Input)<br/>
-轨迹文件: xtc trr cpt trj gro g96 pdb tng</p></li>
-<li><p>-s <code>[&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (Input, Optional)<br/>
-结构+质量(db): tpr tpb tpa gro g96 pdb brk ent</p></li>
-<li><p>-n <code>[&lt;.ndx&gt;]</code> (index.ndx) (Input, Optional)<br/>
-索引文件</p></li>
-<li><p>-o <code>[&lt;.xvg&gt;]</code> (rdf.xvg) (Output)<br/>
-xvgr/xmgr文件</p></li>
-<li><p><code>-cn [&lt;.xvg&gt;]</code> (rdf_cn.xvg) (Output, Optional)<br/>
-xvgr/xmgr文件</p></li>
-<li><p><code>-hq [&lt;.xvg&gt;]</code> (hq.xvg) (Output, Optional)<br/>
-xvgr/xmgr文件</p></li>
-</ul>
-
-<p>其他选项:</p>
-
-<ul class="incremental">
-<li><p><code>-nice</code> <int> (19)<br/>
-设置友好度</p></li>
-<li><p><code>-b</code> <time> (0)<br/>
-从轨迹文件中读取的第一帧(ps)</p></li>
-<li><p><code>-e</code> <time> (0)<br/>
-从轨迹文件中读取的最后一帧(ps)</p></li>
-<li><p><code>-dt</code> <time> (0)<br/>
-只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</p></li>
-<li><p><code>-[no]w</code> (no)<br/>
-查看输出.xvg, .xpm, .eps and .pdb文件</p></li>
-<li><p><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
-xvg绘图格式: xmgrace, xmgr, none</p></li>
-<li><p><code>-bin</code> <real> (0.002)<br/>
-分格宽度(nm)</p></li>
-<li><p><code>-[no]com</code> (no)<br/>
-相对于第一个组质心的RDF</p></li>
-<li><p><code>-surf</code> <enum> (no)<br/>
-相对于第一组表面的RDF: no, mol, res</p></li>
-<li><p><code>-rdf</code> <enum> (atom)<br/>
-RDF类型: atom, mol_com, mol_cog, res_com, res_cog</p></li>
-<li><p><code>-[no]pbc</code> (yes)<br/>
-计算距离时考虑周期性边界条件(PBC). 如果不使用PBC, 距离的最大值为盒子最长边的三倍.</p></li>
-<li><p><code>-[no]norm</code> (yes)<br/>
-对体积和密度进行归一化</p></li>
-<li><p><code>-[no]xy</code> (no)<br/>
-只使用距离的x和y分量</p></li>
-<li><p><code>-cut</code> <real> (0)<br/>
-计算时所考虑的最短距离(nm)</p></li>
-<li><p><code>-ng</code> <int> (1)<br/>
-计算中心组的RDF时, 其周围的次要组的数目</p></li>
-<li><p><code>-fade</code> <real> (0)<br/>
-从此距离开始, 将使用g&#8217;(r) = 1 + [g(r)&#8211;1] exp(-(r/fade&#8211;1)^2) 对RDF进行变换, 以使RDF曲线光滑地趋向于1, 如果fade设置为0.0, 将不做任何处理.</p></li>
-</ul>
-
-<h2 id="分析键合相互作用">分析键合相互作用</h2>
-
-<h2 id="结构性质">结构性质</h2>
-
-<h3 id="gmxhbond">gmx hbond(翻译: 杨旭云)</h3>
+<h2 id="gmxhbond:计算分析氢键翻译:杨旭云">gmx hbond: 计算分析氢键(翻译: 杨旭云)</h2>
 
 <p><strong>概要</strong></p>
 
@@ -546,14 +390,462 @@ ACF的长度, 默认为帧数的一半.</li>
 <li>用于所选氢键的选项<code>-sel</code>有问题, 因此暂时无法使用.</li>
 </ul>
 
-<h2 id="动力学性质">动力学性质</h2>
+<h2 id="gmxhelix-calculatebasicpropertiesofalphahelices">gmx helix - Calculate basic properties of alpha helices</h2>
 
-<h2 id="静电性质">静电性质</h2>
+<h2 id="gmxhelixorient-calculatelocalpitchbendingrotationorientationinsidehelices">gmx helixorient - Calculate local pitch/bending/rotation/orientation inside helices</h2>
 
-<h2 id="蛋白质分析">蛋白质分析</h2>
+<h2 id="gmxhelp-printhelpinformation">gmx help - Print help information</h2>
 
-<h2 id="界面">界面</h2>
+<h2 id="gmxhydorder-computetetrahedralityparametersaroundagivenatom">gmx hydorder - Compute tetrahedrality parameters around a given atom</h2>
 
-<h2 id="协方差分析">协方差分析</h2>
+<h2 id="gmxinsert-molecules-insertmoleculesintoexistingvacancies">gmx insert-molecules - Insert molecules into existing vacancies</h2>
 
-<h2 id="简正模式">简正模式</h2>
+<h2 id="gmxlie-estimatefreeenergyfromlinearcombinations">gmx lie - Estimate free energy from linear combinations</h2>
+
+<h2 id="gmxmake_edi-generateinputfilesforessentialdynamicssampling">gmx make_edi - Generate input files for essential dynamics sampling</h2>
+
+<h2 id="gmxmake_ndx-makeindexfiles">gmx make_ndx - Make index files</h2>
+
+<h2 id="gmxmdmat:计算残基接触映射图翻译:陈辰">gmx mdmat:计算残基接触映射图(翻译: 陈辰)</h2>
+
+<p><strong>概要</strong></p>
+
+<pre><code>gmx mdmat [-f [&lt;.xtc/.trr/...&gt;]] [-s [&lt;.tpr/.tpb/...&gt;]] [-n [&lt;.ndx&gt;]]
+          [-mean [&lt;.xpm&gt;]] [-frames [&lt;.xpm&gt;]] [-no [&lt;.xvg&gt;]] [-nice ]
+          [-b ] [-e ] [-dt ] [-xvg ] [-t ]
+          [-nlevels ]
+</code></pre>
+
+<p><strong>说明</strong></p>
+
+<p><code>gmx mdmat</code>创建残基对之间的最小距离构成的矩阵. 使用<code>-frames</code>选项时, 可以将这些矩阵按顺序存储下来, 用以查看蛋白质三级结构随着时间的变化. 如果不明智地使用选项, 程序可能会生成非常大的输出文件. 默认只输出对整个轨迹进行平均后的距离矩阵. 同时, 也可以输出整个轨迹中残基间不同原子之间的接触数. 输出文件可以利用<code>gmx xpm2ps</code>进行处理以生成PostScript(tm)图.</p>
+
+<p><strong>选项</strong></p>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入)<br/>
+轨迹: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入)<br/>
+结构+质量(db): tpr tpb tpa gro g96 pdb brk ent</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入, 可选)<br/>
+索引文件</li>
+<li><code>-mean [&lt;.xpm&gt;]</code> (dm.xpm) (输出)<br/>
+与X PixMap兼容的矩阵文件</li>
+<li><code>-frames [&lt;.xpm&gt;]</code> (dmf.xpm) (输出, 可选)<br/>
+与X PixMap兼容的矩阵文件</li>
+<li><code>-no [&lt;.xvg&gt;]</code> (num.xvg) (输出, 可选)
+xvgr/xmgr文件</li>
+</ul>
+
+<p>其它选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (19)<br/>
+设置友好度</li>
+<li><code>-b &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的第一帧(ps)</li>
+<li><code>-e &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的最后一帧(ps)</li>
+<li><code>-dt &lt;time&gt;</code> (0)<br/>
+只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-t &lt;real&gt;</code> (1.5)<br/>
+切断距离</li>
+<li><code>-nlevels &lt;int&gt;</code> (40)<br/>
+距离的离散水平数</li>
+</ul>
+
+<h2 id="gmxmdrun-performasimulationdoanormalmodeanalysisoranenergyminimization">gmx mdrun - Perform a simulation, do a normal mode analysis or an energy minimization</h2>
+
+<h2 id="gmxmindist-calculatetheminimumdistancebetweentwogroups">gmx mindist - Calculate the minimum distance between two groups</h2>
+
+<h2 id="gmxmk_angndx-generateindexfilesforgmxangle">gmx mk_angndx - Generate index files for &#8216;gmx angle&#8217;</h2>
+
+<h2 id="gmxmorph-interpolatelinearlybetweenconformations">gmx morph - Interpolate linearly between conformations</h2>
+
+<h2 id="gmxmsd-calculatesmeansquaredisplacements">gmx msd - Calculates mean square displacements</h2>
+
+<h2 id="gmxnmeig-diagonalizethehessianfornormalmodeanalysis">gmx nmeig - Diagonalize the Hessian for normal mode analysis</h2>
+
+<h2 id="gmxnmens-generateanensembleofstructuresfromthenormalmodes">gmx nmens - Generate an ensemble of structures from the normal modes</h2>
+
+<h2 id="gmxnmtraj-generateavirtualoscillatingtrajectoryfromaneigenvector">gmx nmtraj - Generate a virtual oscillating trajectory from an eigenvector</h2>
+
+<h2 id="gmxorder-computetheorderparameterperatomforcarbontails">gmx order - Compute the order parameter per atom for carbon tails</h2>
+
+<h2 id="gmxpdb2gmx-convertcoordinatefilestotopologyandff-compliantcoordinatefiles">gmx pdb2gmx - Convert coordinate files to topology and FF-compliant coordinate files</h2>
+
+<h2 id="gmxpme_error-estimatetheerrorofusingpmewithagiveninputfile">gmx pme_error - Estimate the error of using PME with a given input file</h2>
+
+<h2 id="gmxpolystat-calculatestaticpropertiesofpolymers">gmx polystat - Calculate static properties of polymers</h2>
+
+<h2 id="gmxpotential-calculatetheelectrostaticpotentialacrossthebox">gmx potential - Calculate the electrostatic potential across the box</h2>
+
+<h2 id="gmxprincipal-calculateprincipalaxesofinertiaforagroupofatoms">gmx principal - Calculate principal axes of inertia for a group of atoms</h2>
+
+<h2 id="gmxprotonate-protonatestructures">gmx protonate - Protonate structures</h2>
+
+<h2 id="gmxrama-computeramachandranplots">gmx rama - Compute Ramachandran plots</h2>
+
+<h2 id="gmxrdf-calculateradialdistributionfunctions">gmx rdf - Calculate radial distribution functions</h2>
+
+<h2 id="gmxrdf:计算径向分布函数翻译:严立京">gmx rdf:计算径向分布函数(翻译: 严立京)</h2>
+
+<p><strong>概要</strong></p>
+
+<pre><code>gmx rdf [-f [&lt;.xtc/.trr/...&gt;]] [-s [&lt;.tpr/.tpb/...&gt;]] [-n [&lt;.ndx&gt;]]
+        [-o [&lt;.xvg&gt;]] [-cn [&lt;.xvg&gt;]] [-hq [&lt;.xvg&gt;]] [-nice ] [-b ]
+        [-e ] [-dt ] [-[no]w] [-xvg ] [-bin ]
+        [-[no]com] [-surf ] [-rdf ] [-[no]pbc] [-[no]norm]
+        [-[no]xy] [-cut ] [-ng ] [-fade ]
+</code></pre>
+
+<p><strong>说明</strong></p>
+
+<p>流体的结构可以通过中子散射或者X射线散射进行研究. 描述流体结构的最常用方法是径向分布函数. 但是, 通过散射实验获得径向分布函数并不容易.</p>
+
+<p><code>gmx rdf</code>可利用几种不同的方法来计算径向分布函数. 通常的方法是计算一个(组)粒子周围的径向分布函数, 其他方法包括计算一组粒子质心周围的径向分布函数(<code>-com</code>), 或到最近一组粒子的径向分布函数(<code>-surf</code>). 所有这些方法都可以利用<code>-xy</code>选项计算围绕与z轴平行的轴的RDF. 使用选项<code>-surf</code>时, 不能使用归一化.</p>
+
+<p>选项<code>-rdf</code>用来设置要计算RDF的类型. 默认为原子或粒子, 但也可以选择分子或残基的质心或几何中心. 无论哪种情况, 都只会考虑索引组中的原子. 对于分子和/或质心选项, 需要输入文件. 除COM(质心)或COG(几何中心)外, 其他的加权方法目前只能通过提供具有不同质量的输入文件来实现. 参数<code>-com</code>与<code>-surf</code>也可以与<code>-rdf</code>选项一同使用.</p>
+
+<p>如果已经提供了一个输入文件(<code>-s</code>), 并且<code>-rdf</code>设置为<code>atom</code>, 那么在计算RDF的时候, 会考虑到输入文件中定义的排除. 选项<code>-cut</code>是另外一种可以避免RDF图中出现分子内峰的方法, 但最好还是将输入文件中的排除数设置得高一些. 比如, 对于苯的拓扑, 将nrexcl设置为5就可以全部消除分子内距离对RDF的贡献. 注意, 在计算时会使用已选组中的所有原子, 还包括那些没有Lennard-Jones相互作用的原子.</p>
+
+<p>选项<code>-cn</code>生成RDF累积数, 也就是在r距离范围内的平均粒子数.</p>
+
+<p><strong>选项</strong></p>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (Input)<br/>
+轨迹文件: xtc trr cpt trj gro g96 pdb tng</li>
+<li>-s <code>[&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (Input, Optional)<br/>
+结构+质量(db): tpr tpb tpa gro g96 pdb brk ent</li>
+<li>-n <code>[&lt;.ndx&gt;]</code> (index.ndx) (Input, Optional)<br/>
+索引文件</li>
+<li>-o <code>[&lt;.xvg&gt;]</code> (rdf.xvg) (Output)<br/>
+xvgr/xmgr文件</li>
+<li><code>-cn [&lt;.xvg&gt;]</code> (rdf_cn.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-hq [&lt;.xvg&gt;]</code> (hq.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice</code> <int> (19)<br/>
+设置友好度</li>
+<li><code>-b</code> <time> (0)<br/>
+从轨迹文件中读取的第一帧(ps)</li>
+<li><code>-e</code> <time> (0)<br/>
+从轨迹文件中读取的最后一帧(ps)</li>
+<li><code>-dt</code> <time> (0)<br/>
+只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
+<li><code>-[no]w</code> (no)<br/>
+查看输出.xvg, .xpm, .eps and .pdb文件</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-bin</code> <real> (0.002)<br/>
+分格宽度(nm)</li>
+<li><code>-[no]com</code> (no)<br/>
+相对于第一个组质心的RDF</li>
+<li><code>-surf</code> <enum> (no)<br/>
+相对于第一组表面的RDF: no, mol, res</li>
+<li><code>-rdf</code> <enum> (atom)<br/>
+RDF类型: atom, mol_com, mol_cog, res_com, res_cog</li>
+<li><code>-[no]pbc</code> (yes)<br/>
+计算距离时考虑周期性边界条件(PBC). 如果不使用PBC, 距离的最大值为盒子最长边的三倍.</li>
+<li><code>-[no]norm</code> (yes)<br/>
+对体积和密度进行归一化</li>
+<li><code>-[no]xy</code> (no)<br/>
+只使用距离的x和y分量</li>
+<li><code>-cut</code> <real> (0)<br/>
+计算时所考虑的最短距离(nm)</li>
+<li><code>-ng</code> <int> (1)<br/>
+计算中心组的RDF时, 其周围的次要组的数目</li>
+<li><code>-fade</code> <real> (0)<br/>
+从此距离开始, 将使用g&#8217;(r) = 1 + [g(r)&#8211;1] exp(-(r/fade&#8211;1)^2) 对RDF进行变换, 以使RDF曲线光滑地趋向于1, 如果fade设置为0.0, 将不做任何处理.</li>
+</ul>
+
+<h2 id="gmxrms-calculatermsdswithareferencestructureandrmsdmatrices">gmx rms - Calculate RMSDs with a reference structure and RMSD matrices</h2>
+
+<h2 id="gmxrmsdist-calculateatompairdistancesaveragedwithpower-2-3or-6">gmx rmsdist - Calculate atom pair distances averaged with power &#8211;2, &#8211;3 or &#8211;6</h2>
+
+<h2 id="gmxrmsf:计算原子涨落翻译:杨旭云">gmx rmsf: 计算原子涨落(翻译: 杨旭云)</h2>
+
+<p><strong>概要</strong></p>
+
+<pre><code>gmx rmsf [-f [&lt;.xtc/.trr/...&gt;]] [-s [&lt;.tpr/.tpb/...&gt;]] [-n [&lt;.ndx&gt;]]
+         [-q [&lt;.pdb&gt;]] [-oq [&lt;.pdb&gt;]] [-ox [&lt;.pdb&gt;]] [-o [&lt;.xvg&gt;]]
+         [-od [&lt;.xvg&gt;]] [-oc [&lt;.xvg&gt;]] [-dir [&lt;.log&gt;]] [-nice ]
+         [-b ] [-e ] [-dt ] [-[no]w] [-xvg ]
+         [-[no]res] [-[no]aniso] [-[no]fit]
+</code></pre>
+
+<p><strong>说明</strong></p>
+
+<p><code>gmx rmsf</code>计算轨迹(使用<code>-f</code>提供)中原子位置的根均方涨落(RMSF, root mean square fluctuation, 即标准偏差), 计算前可以先将构型与参考帧(使用<code>-s</code>提供)的构型进行叠合(并非必须).</p>
+
+<p>使用选项<code>-oq</code>时会将RMSF值转换为B因子值, 并将其与坐标一起写入<code>.pdb</code>文件中, 其中坐标来自结构文件, 或是由<code>-q</code>指定的<code>.pdb</code>文件. 选项<code>-ox</code>会将B因子与平均坐标写入文件中.</p>
+
+<p>使用选项<code>-od</code>时会计算相对于参考结构的根均方偏差.</p>
+
+<p>使用选项<code>-aniso</code>时, <code>gmx rmsf</code>将会计算各项异性温度因子, 还会输出平均坐标和含有ANISOU记录的<code>.pdb</code>文件(对应于<code>-oq</code>或<code>-ox</code>选项). 注意, U值与取向有关, 因此在与实验数据对比之前请确认已经与实验坐标进行了叠合.</p>
+
+<p>当传递给程序一个<code>.pdb</code>文件, 并且设置了<code>-aniso</code>选项时, 如果<code>.pdb</code>文件中含有任何各向异性温度因子, 将会创建Uij的相关图.</p>
+
+<p>使用选项<code>-dir</code>时会对平均MSF(3x3)矩阵进行对角化. 这可用于显示原子在哪个方向上涨落最大, 哪个方向上涨落最小.</p>
+
+<p><strong>选项</strong></p>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入)<br/>
+轨迹文件: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入)<br/>
+结构+质量(db): tpr tpb tpa gro g96 pdb brk ent</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入, 可选)<br/>
+索引文件</li>
+<li><code>-q [&lt;.pdb&gt;]</code> (eiwit.pdb) (输入, 可选)<br/>
+蛋白质数据信息文件</li>
+<li><code>-oq [&lt;.pdb&gt;] (bfac.pdb)</code> (输出, 可选)<br/>
+蛋白质数据信息文件</li>
+<li><code>-ox [&lt;.pdb&gt;]</code> (xaver.pdb) (输出, 可选)<br/>
+蛋白质数据信息文件</li>
+<li><code>-o [&lt;.xvg&gt;]</code> (rmsf.xvg) (输出)<br/>
+xvgr/xmgr 文件</li>
+<li><code>-od [&lt;.xvg&gt;]</code> (rmsdev.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-oc [&lt;.xvg&gt;]</code> (correl.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-dir [&lt;.log&gt;]</code> (rmsf.log) (输出, 可选)<br/>
+Log文件</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (19)<br/>
+设置友好度</li>
+<li><code>-b &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的第一帧(ps)</li>
+<li><code>-e &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的最后一帧(ps)</li>
+<li><code>-dt &lt;time&gt;</code> (0)<br/>
+只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
+<li><code>-[no]w</code> (no)<br/>
+查看输出文件 .xvg, .xpm, .eps和.pdb</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-[no]res</code> (no)<br/>
+计算每个残基的均值</li>
+<li><code>-[no]aniso</code> (no)<br/>
+计算各向异性温度因子</li>
+<li><code>-[no]fit</code> (yes)<br/>
+计算RMSF之前进行最小二乘叠合. 如果不使用这个选项, 你必须确保参考结构与轨迹匹配.</li>
+</ul>
+
+<h2 id="gmxrotacf-calculatetherotationalcorrelationfunctionformolecules">gmx rotacf - Calculate the rotational correlation function for molecules</h2>
+
+<h2 id="gmxrotmat-plottherotationmatrixforfittingtoareferencestructure">gmx rotmat - Plot the rotation matrix for fitting to a reference structure</h2>
+
+<h2 id="gmxsaltbr-computesaltbridges">gmx saltbr - Compute salt bridges</h2>
+
+<h2 id="gmxsans-computesmallangleneutronscatteringspectra">gmx sans - Compute small angle neutron scattering spectra</h2>
+
+<h2 id="gmxsasa-computesolventaccessiblesurfacearea">gmx sasa - Compute solvent accessible surface area</h2>
+
+<h2 id="gmxsaxs-computesmallanglex-rayscatteringspectra">gmx saxs - Compute small angle X-ray scattering spectra</h2>
+
+<h2 id="gmxselect-printgeneralinformationaboutselections">gmx select - Print general information about selections</h2>
+
+<h2 id="gmxsham-computefreeenergiesorotherhistogramsfromhistograms">gmx sham - Compute free energies or other histograms from histograms</h2>
+
+<h2 id="gmxsigeps-convertc612orc6cncombinationstoandfromsigmaepsilon">gmx sigeps - Convert c6/12 or c6/cn combinations to and from sigma/epsilon</h2>
+
+<h2 id="gmxsolvate-solvateasystem">gmx solvate - Solvate a system</h2>
+
+<h2 id="gmxsorient:分析溶质周围的溶剂取向">gmx sorient: 分析溶质周围的溶剂取向</h2>
+
+<p><strong>概要</strong></p>
+
+<pre><code>gmx sorient [-f [&lt;.xtc/.trr/...&gt;]] [-s [&lt;.tpr/.tpb/...&gt;]] [-n [&lt;.ndx&gt;]]
+            [-o [&lt;.xvg&gt;]] [-no [&lt;.xvg&gt;]] [-ro [&lt;.xvg&gt;]] [-co [&lt;.xvg&gt;]]
+            [-rc [&lt;.xvg&gt;]] [-nice ] [-b ] [-e ] [-dt ]
+            [-[no]w] [-xvg ] [-[no]com] [-[no]v23] [-rmin ]
+            [-rmax ] [-cbin ] [-rbin ] [-[no]pbc]
+</code></pre>
+
+<p><strong>说明</strong></p>
+
+<p><code>gmx sorient</code>用于分析溶质分子周围的溶剂分子的取向. 它可以计算从一个或多个参考位置到每个溶剂分子第一个原子的向量(向量 <span class="math">\(\vec A\)</span>)与另外两个向量之间的角度:</p>
+
+<ul class="incremental">
+<li><span class="math">\(\q_1\)</span>: 向量 <span class="math">\(\vec A\)</span> 与从溶剂分子第一个原子到第二和第三个原子中点的向量之间的夹角</li>
+<li><span class="math">\(\q_2\)</span>: 向量 <span class="math">\(\vec A\)</span> 与由三个原子定义的溶剂分子平面的法线之间的夹角, 或者, 当使用<code>-v23</code>选项时, 向量 <span class="math">\(\vec A\)</span> 与从原子2到原子3的向量之间的夹角.</li>
+</ul>
+
+<p>参考位置可以是一组原子或是一组原子的质心. 溶剂原子组中的每个溶剂分子只能包含3个原子. 对每一帧, <code>-o</code>和<code>-no</code>选项只会考虑处于<code>-rmin</code>和<code>-rmax</code>之间的溶剂分子.</p>
+
+<ul class="incremental">
+<li><code>-o</code>: <span class="math">\(r_\text{min}\le r \le r_\text{max}\)</span> 范围内 <span class="math">\(\cos\q_1\)</span> 的分布</li>
+<li><code>-no</code>: <span class="math">\(r_\text{min} \le r \le r_\text{max}\)</span> 范围内 <span class="math">\(\cos\q_2\)</span> 的分布</li>
+<li><code>-ro</code>: <span class="math">\(\langle \cos \q_1 \rangle\)</span> 和 <span class="math">\(\langle 3\cos^2\q_2-1 \rangle\)</span> 与距离 <span class="math">\(r\)</span> 的函数关系</li>
+<li><code>-co</code>: 对距离 <span class="math">\(r\)</span> 范围内所有溶剂分子的 <span class="math">\(\cos\q_1\)</span> 和 <span class="math">\(3\cos^2\q_2-1\)</span> 进行加和, 得到它们与 <span class="math">\(r\)</span> 的函数关系</li>
+<li><code>-rc</code>: 溶剂分子的分布与 <span class="math">\(r\)</span> 的函数关系</li>
+</ul>
+
+<p><strong>选项</strong></p>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入)<br/>
+轨迹: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入)<br/>
+结构+质量(db): tpr tpb tpa gro g96 pdb brk ent</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入, 可选)<br/>
+索引文件</li>
+<li><code>-o [&lt;.xvg&gt;]</code> (sori.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-no [&lt;.xvg&gt;]</code> (snor.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-ro [&lt;.xvg&gt;]</code> (sord.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-co [&lt;.xvg&gt;]</code> (scum.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-rc [&lt;.xvg&gt;]</code> (scount.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+</ul>
+
+<p>其它选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (19)<br/>
+设置友好度</li>
+<li><code>-b &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的第一帧(ps)</li>
+<li><code>-e &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的最后一帧(ps)</li>
+<li><code>-dt &lt;time&gt;</code> (0)<br/>
+只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
+<li><code>-[no]w</code> (no)<br/>
+查看输出的.xvg, .xpm, .eps和.pdb文件</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-[no]com</code> (no)<br/>
+使用质心作为参考位置</li>
+<li><code>-[no]v23</code> (no)<br/>
+使用原子2和3之间的向量</li>
+<li><code>-rmin &lt;real&gt;</code> (0)<br/>
+最小距离(nm)</li>
+<li><code>-rmax &lt;real&gt;</code> (0.5)<br/>
+最大距离(nm)</li>
+<li><code>-cbin &lt;real&gt;</code> (0.02)<br/>
+余弦的分格宽度</li>
+<li><code>-rbin &lt;real&gt;</code> (0.02)<br/>
+距离 <span class="math">\(r\)</span> 的分格宽度(nm)</li>
+<li><code>-[no]pbc</code> (no)<br/>
+计算质心时检查PBC. 只有当你的参考组包含多个分子时, 才需要使用此选项.</li>
+</ul>
+
+<p><strong>补充说明</strong></p>
+
+<p>此程序特别适用于计算溶质分子周围水分子的角度分布.</p>
+
+<figure>
+<img src="gmx_sorient.png" alt="" />
+</figure>
+
+<p>设溶质为单原子离子或分子质心Ref, 溶剂为水分子原子1为O, 原子2和3为H, 则 <span class="math">\(\q_1\)</span> 对应Ref至O的向量 <span class="math">\(\vec A=\vec R_\text{Ref}-\vec R_\text{O}\)</span> 与O至两个H连线中点的向量 <span class="math">\({\vec R_\text{OH2}+\vec R_\text{OH3} \over 2}\)</span> 之间的夹角, 后一向量的方向与水分子偶极矩的方向相同. 因此, <span class="math">\(\q_1\)</span> 可视为溶质分子周围水分子偶极矩的取向. <span class="math">\(\q_2\)</span> 对应 <span class="math">\(\vec A\)</span> 与水分子平面法线的夹角. 当使用<code>-v23</code>选项时, 则为 <span class="math">\(\vec A\)</span> 与两个H连线 <span class="math">\(\vec R_\text{H3}-\vec R_\text{H2}\)</span> 之间的夹角.</p>
+
+<h2 id="gmxspatial-calculatethespatialdistributionfunction">gmx spatial - Calculate the spatial distribution function</h2>
+
+<h2 id="gmxspol:分析溶质周围溶剂的偶极取向及极化">gmx spol: 分析溶质周围溶剂的偶极取向及极化</h2>
+
+<p><strong>概要</strong></p>
+
+<pre><code>gmx spol [-f [&lt;.xtc/.trr/...&gt;]] [-s [&lt;.tpr/.tpb/...&gt;]] [-n [&lt;.ndx&gt;]]
+         [-o [&lt;.xvg&gt;]] [-nice ] [-b ] [-e ] [-dt ]
+         [-[no]w] [-xvg ] [-[no]com] [-refat ] [-rmin ]
+         [-rmax ] [-dip ] [-bw ]
+</code></pre>
+
+<p><strong>说明</strong></p>
+
+<p><code>gmx spol</code>程序用于分析溶质分子周围的偶极, 特别适用于极化水模型. 计算时需要一组参考原子或参考质心(<code>-com</code>选项), 还有一组溶剂原子, 程序会先将溶剂原子组划分为分子, 然后确定每一溶剂分子到参考组原子或其质心的最近距离, 并给出这些距离的累积分布. 对处于<code>-rmin</code>和<code>-rmax</code>之间的每一距离, 确定距离向量与溶剂分子偶极的內积. 对带有净电荷的溶剂分子(离子), 会均匀地将净电荷从每一所选离子的所有原子中会减去. 输出这些偶极分量的平均值. 对极化的处理类似, 并从瞬时偶极中减去平均偶极. 平均偶极的大小由<code>-dip</code>选项指定, 方向由从所选溶剂组的第一个原子到第二和第三个原子连线中点的向量确定.</p>
+
+<p><strong>选项</strong></p>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入)<br/>
+轨迹: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入)<br/>
+运行输入文件: tpr tpb tpa</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入, 可选)<br/>
+索引文件</li>
+<li><code>-o [&lt;.xvg&gt;]</code> (scdist.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+</ul>
+
+<p>其它选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (19)<br/>
+设置友好度</li>
+<li><code>-b &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的第一帧(ps)</li>
+<li><code>-e &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的最后一帧(ps)</li>
+<li><code>-dt &lt;time&gt;</code> (0)<br/>
+只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
+<li><code>-[no]w</code> (no)<br/>
+查看输出的.xvg, .xpm, .eps和.pdb文件</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-[no]com</code> (no)<br/>
+使用质心作为参考位置</li>
+<li><code>-refat &lt;int&gt;</code> (1)<br/>
+溶剂分子的参考原子</li>
+<li><code>-rmin &lt;real&gt;</code> (0)<br/>
+最小距离(nm)</li>
+<li><code>-rmax &lt;real&gt;</code> (0.32)<br/>
+最大距离(nm)</li>
+<li><code>-dip &lt;real&gt;</code> (0)<br/>
+平均偶极(D)</li>
+<li><code>-bw &lt;real&gt;</code> (0.01)<br/>
+分格宽度(nm)</li>
+</ul>
+
+<h2 id="gmxtcaf-calculateviscositiesofliquids">gmx tcaf - Calculate viscosities of liquids</h2>
+
+<h2 id="gmxtraj-plotxvfboxtemperatureandrotationalenergyfromtrajectories">gmx traj - Plot x, v, f, box, temperature and rotational energy from trajectories</h2>
+
+<h2 id="gmxtrjcat-concatenatetrajectoryfiles">gmx trjcat - Concatenate trajectory files</h2>
+
+<h2 id="gmxtrjconv-convertandmanipulatestrajectoryfiles">gmx trjconv - Convert and manipulates trajectory files</h2>
+
+<h2 id="gmxtrjorder-ordermoleculesaccordingtotheirdistancetoagroup">gmx trjorder - Order molecules according to their distance to a group</h2>
+
+<h2 id="gmxtune_pme-timemdrunasafunctionofpmerankstooptimizesettings">gmx tune_pme - Time mdrun as a function of PME ranks to optimize settings</h2>
+
+<h2 id="gmxvanhove-computevanhovedisplacementandcorrelationfunctions">gmx vanhove - Compute Van Hove displacement and correlation functions</h2>
+
+<h2 id="gmxvelacc-calculatevelocityautocorrelationfunctions">gmx velacc - Calculate velocity autocorrelation functions</h2>
+
+<h2 id="gmxview-viewatrajectoryonanx-windowsterminal">gmx view - View a trajectory on an X-Windows terminal</h2>
+
+<h2 id="gmxwham-performweightedhistogramanalysisafterumbrellasampling">gmx wham - Perform weighted histogram analysis after umbrella sampling</h2>
+
+<h2 id="gmxwheel-plothelicalwheels">gmx wheel - Plot helical wheels</h2>
+
+<h2 id="gmxx2top-generateaprimitivetopologyfromcoordinates">gmx x2top - Generate a primitive topology from coordinates</h2>
+
+<h2 id="gmxxpm2ps-convertxpmxpixelmapmatricestopostscriptorxpm">gmx xpm2ps - Convert XPM (XPixelMap) matrices to postscript or XPM</h2>
