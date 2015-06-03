@@ -95,7 +95,7 @@ Sequential assignment and structure determination of spider toxin omega-Aga-IVB.
 
 <p><strong>说明</strong>: 无论何时将一个文本文件从Windows系统复制到unix系统, 一定要转换成unix文本文件. 像MS Word这类Windows编辑器会在文件中加入控制符, 这可能会使unix程序产生错误. 你可以用<code>to_unix</code>命令(如<code>to_unix filename filename</code>将<code>filename</code>文件转换成unix文本文件. 在RedHat Linux中, 还可以使用<code>dos2unix</code>命令.)</p>
 
-<h3 id="第二步:用pdb2gmx获得拓扑文件">第二步: 用<code>pdb2gmx</code>获得拓扑文件</h3>
+<h3 id="第二步:用pdb2gmx获得拓扑文件">第二步: 用pdb2gmx获得拓扑文件</h3>
 
 <p><code>pdb2gmx</code>命令(使用<code>pdb2gmx -h</code>查看选项; 其实可以用<code>-h</code>选项查看所有GROMACS命令的帮助文档)可利用pdb文件创建GROMACS的输入坐标和拓扑文件. 拓扑文件包含了所有力场参数(基于所选择的力场), 因此非常重要.</p>
 
@@ -740,7 +740,7 @@ Performance:       30.231        0.794
 
 <p>GROMACS的一个主要优点(不是指它遵循GNU公共协议而免费!)是有一系列分析轨迹文件的小程序. 下面我们就讨论一些比较常用的分析工具.</p>
 
-<h3 id="1.ngmx查看轨迹">1. <code>ngmx</code>查看轨迹</h3>
+<h3 id="1.ngmx查看轨迹">1. ngmx查看轨迹</h3>
 
 <p>很多时候, 我们需要粗略地查看一下模拟轨迹, 以确定模拟过程中没有出现明显的问题. 可以用GROAMCS自带的<code>ngmx</code>来快速查看轨迹.</p>
 
@@ -775,7 +775,7 @@ Performance:       30.231        0.794
 
 <p>可以对蛋白质, 水和离子使用不同的表示模式. 要查看轨迹动画, 点击右下角的<code>play forward</code>按钮.</p>
 
-<h3 id="2.g_energy抽取性质数据">2. <code>g_energy</code>抽取性质数据</h3>
+<h3 id="2.g_energy抽取性质数据">2. g_energy抽取性质数据</h3>
 
 <p>此命令可用于抽取能量输出文件中的数据, 如动能, 势能, 压力, 体积, 密度等, 以用于作图.</p>
 
@@ -833,7 +833,7 @@ Temperature                 299.932      0.053    2.62809 0.00744002  (K)
 <img src="GMXtut-0_Temp.png" alt="" />
 </figure>
 
-<h3 id="3.g_confrms比较结构差异">3. <code>g_confrms</code>比较结构差异</h3>
+<h3 id="3.g_confrms比较结构差异">3. g_confrms比较结构差异</h3>
 
 <p>要比较模拟完成后的结构与初始PDB文件中结构的差异, 可使用<code>g_confrms</code>命令(用<code>g_confrms -h</code>查看详细信息).</p>
 
@@ -850,7 +850,7 @@ Temperature                 299.932      0.053    2.62809 0.00744002  (K)
 
 <p><strong>说明</strong>: 也可以使用<code>editconf</code>将两个结构转换为PDB文件, 然后都加载到PyMOL中, 使用<code>align</code>命令进行叠合.</p>
 
-<h3 id="4.g_covar计算平均结构">4. <code>g_covar</code>计算平均结构</h3>
+<h3 id="4.g_covar计算平均结构">4. g_covar计算平均结构</h3>
 
 <p><code>g_covar</code>命令可计算协方差矩阵(参见手册), 也可用于根据模拟轨迹计算平均结构. 如果要计算1 ns模拟轨迹中后200 ps的平均结构, 可使用</p>
 
@@ -858,7 +858,7 @@ Temperature                 299.932      0.053    2.62809 0.00744002  (K)
 
 <p>注意, 平均结构往往比较粗糙, 需要进一步进行能量最小化.</p>
 
-<h3 id="5.g_rms与g_rmsdist计算根均方偏差rmsd">5. <code>g_rms</code>与<code>g_rmsdist</code>计算根均方偏差RMSD</h3>
+<h3 id="5.g_rms与g_rmsdist计算根均方偏差rmsd">5. g_rms与g_rmsdist计算根均方偏差RMSD</h3>
 
 <p>这两个程序用于计算结构的RMSD值, 它可用于查看模拟的收敛性和蛋白的稳定性. 用<code>g_rms</code>计算模拟过程中的结构与初始结构的RMSD:</p>
 
@@ -882,7 +882,7 @@ Temperature                 299.932      0.053    2.62809 0.00744002  (K)
 
 <p><strong>说明</strong>: 上面两个命令也可以使用索引文件选择需要计算的原子.</p>
 
-<h3 id="6.g_rmsf计算根均方涨落rmsf和温度因子">6. <code>g_rmsf</code>计算根均方涨落RMSF和温度因子</h3>
+<h3 id="6.g_rmsf计算根均方涨落rmsf和温度因子">6. g_rmsf计算根均方涨落RMSF和温度因子</h3>
 
 <p><code>g_rmsf</code>程序用于计算原子位置的根均方波动(RMSF). 均方根涨落的公式如下:</p>
 
@@ -930,7 +930,7 @@ Temperature                 299.932      0.053    2.62809 0.00744002  (K)
 <figcaption>温度因子填色结构图, 蓝色为冷区域, 绿色为中等区域, 红色为热区域.</figcaption>
 </figure>
 
-<h3 id="7.g_gyrate计算回旋半径">7. <code>g_gyrate</code>计算回旋半径</h3>
+<h3 id="7.g_gyrate计算回旋半径">7. g_gyrate计算回旋半径</h3>
 
 <p>回旋半径取决于某(些)原子质量与分子重心的关系, 可用于表征蛋白质结构的密实度.</p>
 
@@ -942,13 +942,13 @@ Temperature                 299.932      0.053    2.62809 0.00744002  (K)
 <img src="GMXtut-0_Rg.png" alt="" />
 </figure>
 
-<h3 id="8.g_sas计算溶剂可及表面积">8. <code>g_sas</code>计算溶剂可及表面积</h3>
+<h3 id="8.g_sas计算溶剂可及表面积">8. g_sas计算溶剂可及表面积</h3>
 
 <p>氨基酸残基的疏水性是影响蛋白质折叠的重要因素, 溶剂可及表面积(SASA)是描述蛋白质疏水性的重要参数. 可利用<code>g_sas</code>计算蛋白质的溶剂可及表面积:</p>
 
 <p><code>g_sas -s npt-nopr.tpr -f npt-nopr.xtc -o area.xvg -or resarea.xvg -oa atomarea.xvg</code></p>
 
-<h3 id="9.do_dssp计算二级结构">9. <code>do_dssp</code>计算二级结构</h3>
+<h3 id="9.do_dssp计算二级结构">9. do_dssp计算二级结构</h3>
 
 <p><code>do_dssp</code>程序可计算模型的二级结构, 但前提是你的电脑中已经安装了<a href="http://swift.cmbi.ru.nl/gv/dssp/">dssp程序</a>.</p>
 
@@ -968,7 +968,7 @@ Temperature                 299.932      0.053    2.62809 0.00744002  (K)
 
 <p>上面的dssp图中, y轴为残基编号, x轴为模拟时间(ps). 我们从中可以看到3个红色区域, 代表3个beta片层. 中间的较短区是最不稳定的, 这和前面温度因子的计算结果相符.</p>
 
-<h3 id="10.g_hbond统计氢键">10. <code>g_hbond</code>统计氢键</h3>
+<h3 id="10.g_hbond统计氢键">10. g_hbond统计氢键</h3>
 
 <p><code>g_hbond</code>程序可用于计算模拟过程中分子间或组间的氢键数目以及氢键距离或角度的分布.</p>
 
@@ -990,13 +990,13 @@ r &\le 0.35 \text{nm} \\
 
 <p>你可以使用<code>-r</code>和<code>-a</code>选项设定其它阈值. 默认地, <code>g_hbond</code>计算施体受体距离 <span class="math">\(r_\text{DA}\)</span>, 可以用<code>-da no</code>选项设置为计算 <span class="math">\(r_\text{HA}\)</span> 距离.</p>
 
-<h3 id="11.g_saltbr分析盐桥">11. <code>g_saltbr</code>分析盐桥</h3>
+<h3 id="11.g_saltbr分析盐桥">11. g_saltbr分析盐桥</h3>
 
 <p><code>g_saltbr</code>程序可用于分析模拟中残基间的盐桥. 程序会输出一系列xvg文件. 给出-/-, +/-(最关注的)和+/+残基间的距离.</p>
 
 <p><code>g_saltbr -s npt-nopr.tpr -f npt-nopr.xtc</code></p>
 
-<h3 id="12.g_cluster分析团簇">12. <code>g_cluster</code>分析团簇</h3>
+<h3 id="12.g_cluster分析团簇">12. g_cluster分析团簇</h3>
 
 <p><code>g_cluster</code>可使用各种方法进行团簇分析. 示例如下:</p>
 
@@ -1011,7 +1011,7 @@ r &\le 0.35 \text{nm} \\
     show cartoon
 </code></pre>
 
-<h3 id="13.g_covar进行主成分分析">13. <code>g_covar</code>进行主成分分析</h3>
+<h3 id="13.g_covar进行主成分分析">13. g_covar进行主成分分析</h3>
 
 <p>主成分分析PCA(Principal Components Analysis)方法可以帮助我们确定哪些运动方式对蛋白质的整个动力学贡献最大. 在含有N个原子的体系中, 存在3N&#8211;6个可能的内部运动方式(需要6个自由度来描述体系的外部转动和平动). 对PCA分析, 我们主要关心蛋白质骨架上的原子.</p>
 
@@ -1037,7 +1037,7 @@ r &\le 0.35 \text{nm} \\
 
 <p><code>g_anaeig -s npt-nopr.tpr -f npt-nopr.xtc -first 1 -last 2 -2d proj-1-2.xvg</code></p>
 
-<h3 id="14.g_angle进行二面角主成分分析">14. <code>g_angle</code>进行二面角主成分分析</h3>
+<h3 id="14.g_angle进行二面角主成分分析">14. g_angle进行二面角主成分分析</h3>
 
 <p>我们将创建一个索引文件来研究涉及残基MET29, ILE30, GLY31的4个二面角(2个phi, 2个psi). 使用VMD打开<code>pr.gro</code>或<code>md.gro</code>挑选与每个二面角对应的4个原子的索引号. 将文件命名为<code>dangle.ndx</code>.</p>
 
