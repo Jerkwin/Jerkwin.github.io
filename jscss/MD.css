@@ -232,7 +232,7 @@ td, tr {
 figure,img {
 	font: bold 21px/1 Helvetica, arial, "Microsoft YaHei", \5b8b\4f53, sans-serif;
 	text-align: center;
-	max-width:800px;
+	max-width:100%;
 	width:expression(this.width>800 ? "800px" : this.width);
 }
 
