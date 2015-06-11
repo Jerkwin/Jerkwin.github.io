@@ -8,6 +8,8 @@
  - 汉化
 ---
 
+<script src="/jscss/ChemDoodleWeb.js"></script>
+
 ## 2015-02-02 08:51:05
 
 轨道查看器[Oribital Viewer](http://www.orbitals.com/orb/ov.htm)可用于查看类氢原子的各种轨道及其线性组合成的轨道.
