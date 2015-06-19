@@ -537,7 +537,59 @@ xvg绘图格式: xmgrace, xmgr, none</li>
 
 <h2 id="gmxmk_angndx-generateindexfilesforgmxangle">gmx mk_angndx - Generate index files for &#8216;gmx angle&#8217;</h2>
 
-<h2 id="gmxmorph-interpolatelinearlybetweenconformations">gmx morph - Interpolate linearly between conformations</h2>
+<h2 id="gmxmorph:构象间的线性内插翻译:杨宇">gmx morph: 构象间的线性内插(翻译: 杨宇)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx morph [-f1 [&lt;.gro/.g96/...&gt;]] [-f2 [&lt;.gro/.g96/...&gt;]]
+          [-o [&lt;.xtc/.trr/...&gt;]] [-or [&lt;.xvg&gt;]] [-n [&lt;.ndx&gt;]] [-nice ]
+          [-[no]w] [-xvg ] [-ninterm ] [-first ]
+          [-last ] [-[no]fit]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx morph</code>对构象进行线性内插以产生中间体构象. 当然这些构象完全是不现实的, 但你可以试着进行证明. 程序的输出形式是通用的轨迹. 中间体的数目由<code>-ninterm</code>选项进行控制. <code>-first</code>和<code>-last</code>选项用于控制插值方式: 0对应于输入结构1, 1对应于输入结构2. 如果指定的<code>-first</code> &lt; 0或<code>-last</code> &gt; 1, 会根据输入结构x_1到x_2的途径进行外推. 一般来说, 对总共N个中间体, 中间体i的坐标x(i)为:</p>
+
+<p><code>x(i) = x_1 + (first+(i/(N-1))*(last-first))*(x_2-x_1)</code></p>
+
+<p>最后, 如果指定了<code>-or</code>选项, 可以计算相对于两个输入结构的RMSD. 在这种情况下, 可能需要读取索引文件, 用于选择计算RMS的组.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f1 [&lt;.gro/.g96/...&gt;]</code> (conf1.gro) (输入)<br/>
+结构文件: gro g96 pdb brk ent esp tpr tpb tpa</li>
+<li><code>-f2 [&lt;.gro/.g96/...&gt;]</code> (conf2.gro) (输入)<br/>
+晶诶够文件:: gro g96 pdb brk ent esp tpr tpb tpa</li>
+<li><code>-o [&lt;.xtc/.trr/...&gt;]</code> (interm.xtc) (输出)<br/>
+轨迹: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-or [&lt;.xvg&gt;]</code> (rms-interm.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入, 可选)<br/>
+索引文件</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (0)<br/>
+设置优先级</li>
+<li><code>-[no]w</code> (no)<br/>
+查看输出的.xvg, .xpm, .eps和.pdb文件</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-ninterm &lt;int&gt;</code> (11)<br/>
+中间体数目</li>
+<li><code>-first &lt;real&gt;</code> (0)<br/>
+对应于第一个产生的结构(0为输入x_1, 见上文)</li>
+<li><code>-last &lt;real&gt;</code> (1)<br/>
+对应于最后一个产生的结构(1为输入x_2, 见上文)</li>
+<li><code>-[no]fit</code> (yes)<br/>
+内插前将第二个结构与第一个结构进行最小二乘叠合</li>
+</ul>
 
 <h2 id="gmxmsd-calculatesmeansquaredisplacements">gmx msd - Calculates mean square displacements</h2>
 
@@ -731,7 +783,93 @@ xvg绘图格式: xmgrace, xmgr, none</li>
 
 <h2 id="gmxsans-computesmallangleneutronscatteringspectra">gmx sans - Compute small angle neutron scattering spectra</h2>
 
-<h2 id="gmxsasa-computesolventaccessiblesurfacearea">gmx sasa - Compute solvent accessible surface area</h2>
+<h2 id="gmxsasa:计算溶剂可及表面积翻译:白艳艳">gmx sasa: 计算溶剂可及表面积(翻译: 白艳艳)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx sasa [-f [&lt;.xtc/.trr/...&gt;]] [-s [&lt;.tpr/.tpb/...&gt;]] [-n [&lt;.ndx&gt;]]
+         [-o [&lt;.xvg&gt;]] [-odg [&lt;.xvg&gt;]] [-or [&lt;.xvg&gt;]] [-oa [&lt;.xvg&gt;]]
+         [-tv [&lt;.xvg&gt;]] [-q [&lt;.pdb&gt;]] [-b ] [-e ] [-dt ]
+         [-tu ] [-xvg ] [-[no]rmpbc] [-[no]pbc] [-sf ]
+         [-selrpos ] [-probe ] [-ndots ] [-[no]prot]
+         [-dgs ] [-surface ] [-output ]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx sasa</code>用于计算溶剂可及表面积, 所用的算法可参考Eisenhaber F, Lijnzaad P, Argos P, Sander C, Scharf M, <em>J. Comput. Chem.</em> 16, 273&#8211;284 (1995). 使用<code>-q</code>选项时, 还会将产生Connolly表面输出到.pdb文件中, 其中节点以原子表示, 连接最近节点的边作为CONECT记录. <code>-odg</code>选项用于估计溶剂化自由能, 估计时根据每单位暴露表面积每原子的溶剂化能进行计算.</p>
+
+<p>此程序需要使用<code>-surface</code>选项来指定进行表面积计算的组. 体系内所有的非溶剂原子都包括在内, 并始终计算该组的表面积. 作为可选, <code>-output</code>可用于指定额外的选择, 它应该是整个计算组的一部分. 这些组的溶剂可及表面积会从整个表面积中抽取出来.</p>
+
+<p>可使用<code>-or</code>和<code>-oa</code>选项来计算整个轨迹中每个残基和每个原子表面积的的平均值与标准偏差.</p>
+
+<p>使用<code>-tv</code>选项可以计算分子的总体积和密度. 请注意在这种情况下正常的探针半径是否适合, 或者你是否要使用其他值, 如0. 请记住体积和密度的计算结果是非常粗糙的. 例如, 在冰Ih中, 可以很容易地将水分子放于孔道中, 这样得到的体积或过小, 而表面积和密度都过大.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入与输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入, 可选)<br/>
+输入轨迹或单个构型: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入, 可选)<br/>
+输入结构: tpr tpb tpa gro g96 pdb brk ent</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入, 可选)<br/>
+额外的索引组</li>
+<li><code>-o [&lt;.xvg&gt;]</code> (area.xvg) (输出)<br/>
+总表面积随时间的变化</li>
+<li><code>-odg [&lt;.xvg&gt;]</code> (dgsolv.xvg) (输出, 可选)<br/>
+溶剂化自由能估计值随时间的变化</li>
+<li><code>-or [&lt;.xvg&gt;]</code> (resarea.xvg) (输出, 可选)<br/>
+每个残基的平均表面积</li>
+<li><code>-oa [&lt;.xvg&gt;]</code> (atomarea.xvg) (输出, 可选)<br/>
+每个原子的平均表面积</li>
+<li><code>-tv [&lt;.xvg&gt;]</code> (volume.xvg) (输出, 可选)<br/>
+总体积和密度随时间的变化</li>
+<li><code>-q [&lt;.pdb&gt;]</code> (connolly.pdb) (输出, 可选)<br/>
+Connolly表面的PDB文件</li>
+</ul>
+
+<p>其他的选项:</p>
+
+<ul class="incremental">
+<li><code>-b &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的第一帧(ps)</li>
+<li><code>-e &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的最后一帧(ps)</li>
+<li><code>-dt &lt;time&gt;</code> (0)<br/>
+只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
+<li><code>-tu &lt;enum&gt;</code> (ps)<br/>
+时间单位: fs, ps, ns, us, ms, s</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+绘图格式: none, xmgrace, xmgr</li>
+<li><code>-[no]rmpbc</code> (yes)<br/>
+保持每帧中的分子完整</li>
+<li><code>-[no]pbc</code> (yes)<br/>
+计算距离时使用周期性边界条件</li>
+<li><code>-sf &lt;file&gt;</code><br/>
+使用文件提供的选择</li>
+<li><code>-selrpos &lt;enum&gt;</code> (atom)<br/>
+选择参考位置: atom, res_com, res_cog, mol_com, mol_cog, whole_res_com, whole_res_cog, whole_mol_com, whole_mol_cog, part_res_com, part_res_cog, part_mol_com, part_mol_cog, dyn_res_com, dyn_res_cog, dyn_mol_com, dyn_mol_cog</li>
+<li><code>-probe &lt;real&gt;</code> (0.14)<br/>
+溶剂探针的半径(nm)</li>
+<li><code>-ndots &lt;int&gt;</code> (24)<br/>
+每个球面的点数, 点数越多越精确</li>
+<li><code>-[no]prot</code> (yes)<br/>
+同时将蛋白质也输出到Connolly.pdb文件</li>
+<li><code>-dgs &lt;real&gt;</code> (0)<br/>
+单位面积溶剂化自由能的默认值(kJ/mol/nm<sup>2</sup>)</li>
+<li><code>-surface &lt;selection&gt;</code><br/>
+表面计算选择</li>
+<li><code>-output &lt;selection&gt;</code><br/>
+输出选择</li>
+</ul>
+
+<h3 id="附加说明">附加说明</h3>
+
+<p>溶剂可及表面积是描述蛋白质疏水性的重要参数, 氨基酸残基的疏水性是影响蛋白质折叠的重要物理作用.</p>
+
+<p>输出文件<code>area.xvg</code>中有四列, 分别代表: 总表面积, 极性表面积, 非极性表面积, 溶剂化自由能. 最后一项是根据原子所属类型来定义的.</p>
 
 <h2 id="gmxsaxs-computesmallanglex-rayscatteringspectra">gmx saxs - Compute small angle X-ray scattering spectra</h2>
 
@@ -739,7 +877,60 @@ xvg绘图格式: xmgrace, xmgr, none</li>
 
 <h2 id="gmxsham-computefreeenergiesorotherhistogramsfromhistograms">gmx sham - Compute free energies or other histograms from histograms</h2>
 
-<h2 id="gmxsigeps-convertc612orc6cncombinationstoandfromsigmaepsilon">gmx sigeps - Convert c6/12 or c6/cn combinations to and from sigma/epsilon</h2>
+<h2 id="gmxsigeps:将c612或c6cn组合转换为sigmaepsilon组合或反过来翻译:韩广超">gmx sigeps: 将C6/12或C6/Cn组合转换为sigma/epsilon组合, 或反过来 (翻译: 韩广超)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx sigeps [-o [&lt;.xvg&gt;]] [-nice ] [-[no]w] [-xvg ] [-c6 ]
+           [-cn ] [-pow ] [-sig ] [-eps ] [-A ]
+           [-B ] [-C ] [-qi ] [-qj ] [-sigfac ]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx sigeps</code>是一个简单的工具, 可以将C6/C12或C6/Cn组合转换成σ和ε, 或者反过来. 它也可以在文件中绘制出势能. 此外, 它还能把一个Buckingham势近似地转成一个Lennard-Jones势.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-o [&lt;.xvg&gt;]</code> (potje.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+</ul>
+
+<p>其它选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (0)<br/>
+设置优先级</li>
+<li><code>-[no]w</code> (no)<br/>
+查看.xvg, .xpm, .eps和.pdb输出文件</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-c6 &lt;real&gt;</code> (0.001)<br/>
+C6</li>
+<li><code>-cn &lt;real&gt;</code> (1e&#8211;06)<br/>
+排斥常数</li>
+<li><code>-pow &lt;int&gt;</code> (12)<br/>
+排斥项的次数</li>
+<li><code>-sig &lt;real&gt;</code> (0.3)<br/>
+σ</li>
+<li><code>-eps &lt;real&gt;</code> (1)<br/>
+ε</li>
+<li><code>-A &lt;real&gt;</code> (100000)<br/>
+Buckingham势的A</li>
+<li><code>-B &lt;real&gt;</code> (32)<br/>
+Buckingham势的B</li>
+<li><code>-C &lt;real&gt;</code> (0.001)<br/>
+Buckingham势的C</li>
+<li><code>-qi &lt;real&gt;</code> (0)<br/>
+粒子i的电荷qi</li>
+<li><code>-qj &lt;real&gt;</code> (0)<br/>
+粒子j的电荷qj</li>
+<li><code>-sigfac &lt;real&gt;</code> (0.7)<br/>
+开始绘制时, σ前的因子</li>
+</ul>
 
 <h2 id="gmxsolvate:体系溶剂化翻译:刘恒江">gmx solvate: 体系溶剂化(翻译: 刘恒江)</h2>
 
@@ -821,7 +1012,7 @@ xvg绘图格式: xmgrace, xmgr, none</li>
 
 <p>添加水分子后需要用VMD等软件查看结果, 因为有时产生的构型不尽合理. 若发现某一水分子出现在蛋白结构中, 而此位置本来不希望有水分子存在, 那么可以找出这个水分子的残基标号, 进行删除, 同时减少拓扑文件中水分子的数目.</p>
 
-<h3 id="示例命令">示例命令</h3>
+<h3 id="使用范例">使用范例</h3>
 
 <ul class="incremental">
 <li><code>-box a b c</code> 空盒子</li>
@@ -916,7 +1107,7 @@ xvg绘图格式: xmgrace, xmgr, none</li>
 计算质心时检查PBC. 只有当你的参考组包含多个分子时, 才需要使用此选项.</li>
 </ul>
 
-<p><strong>补充说明</strong></p>
+<h3 id="附加说明">附加说明</h3>
 
 <p>此程序特别适用于计算溶质分子周围水分子的角度分布.</p>
 
@@ -1002,7 +1193,54 @@ xvg绘图格式: xmgrace, xmgr, none</li>
 
 <h2 id="gmxvelacc-calculatevelocityautocorrelationfunctions">gmx velacc - Calculate velocity autocorrelation functions</h2>
 
-<h2 id="gmxview-viewatrajectoryonanx-windowsterminal">gmx view - View a trajectory on an X-Windows terminal</h2>
+<h2 id="gmxview:在x-windows终端显示轨迹翻译:杨旭云">gmx view: 在X-Windows终端显示轨迹(翻译: 杨旭云)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx view [-f [&lt;.xtc/.trr/...&gt;]] [-s [&lt;.tpr/.tpb/...&gt;]] [-n [&lt;.ndx&gt;]]
+         [-nice ] [-b ] [-e ] [-dt ]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx view</code>是GROMACS的轨迹查看器. 该程序可以读取一个轨迹文件, 运行输入文件和索引文件, 并在标准的X Windows屏幕上绘制分子的三维结构图. 此程序不需要高级的图形工作站, 它甚至可以在单色屏幕下工作.</p>
+
+<p>此程序已经实现了以下功能: 3D视图, 旋转, 平移和缩放分子, 标记原子, 轨迹动画, 以PostScript格式复制, 在MIT-X(real X)下用户可自定义原子过滤器, 打开窗口和主题, 用户友好的菜单, 去除周期性的选项, 显示计算盒子的选项.</p>
+
+<p>可以使用一些更常见的X命令行选项: <code>-bg</code>, <code>-fg</code>更改颜色; <code>-font fontname</code>更改字体.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;. xtc/. trr/...&gt;]</code> (traj. xtc) (输入)<br/>
+轨迹: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-s [&lt;. tpr/. tpb/...&gt;]</code> (topol. tpr) {输入)<br/>
+运行输入文件: tpr tpb tpa</li>
+<li><code>-n [&lt;. ndx&gt;]</code> (index. ndx) (输入, 可选)<br/>
+索引文件</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (0)<br/>
+设置优先级</li>
+<li><code>-b</code> <time> (0)<br/>
+从轨迹文件中读取的第一帧(ps)</li>
+<li><code>-e</code> <time> (0)<br/>
+从轨迹文件中读取的最后一帧(ps)</li>
+<li><code>-dt</code> <time> (0)<br/>
+只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
+</ul>
+
+<h3 id="已知问题">已知问题</h3>
+
+<ul class="incremental">
+<li>Balls选项暂时不可用</li>
+<li>有时候会吐核, 原因不明</li>
+</ul>
 
 <h2 id="gmxwham-performweightedhistogramanalysisafterumbrellasampling">gmx wham - Perform weighted histogram analysis after umbrella sampling</h2>
 
