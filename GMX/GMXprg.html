@@ -7,7 +7,50 @@
  - GMX
 ---
 
-<h2 id="gmxanadock-clusterstructuresfromautodockruns">gmx anadock - Cluster structures from Autodock runs</h2>
+<h2 id="gmxanadock:根据autodock运行计算团簇结构翻译:白艳艳">gmx anadock: 根据Autodock运行计算团簇结构(翻译: 白艳艳)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx anadock [-f [&lt;.pdb&gt;]] [-od [&lt;.xvg&gt;]] [-of [&lt;.xvg&gt;]] [-g [&lt;.log&gt;]]
+            [-nice ] [-xvg ] [-[no]free] [-[no]rms]
+            [-cutoff ]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx anadock</code>基于距离或RMSD对分子对接(docking)软件Autodock的计算结果进行分析, 并将结构划分成团簇. 程序会分析对接能和自由能, 并打印每个团簇的能量统计情况.</p>
+
+<p>另一个可采用的方法是先使用<code>gmx cluster</code>将结构划分为团簇, 然后按照最低能量或最低平均能量对这些团簇进行排序.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入与输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.pdb&gt;]</code> (eiwit.pdb) (输入)<br/>
+蛋白质数据库文件</li>
+<li><code>-od [&lt;.xvg&gt;]</code> (edocked.xvg) (输出)<br/>
+xvgr/xmgr文件, 能量</li>
+<li><code>-of [&lt;.xvg&gt;]</code> (efree.xvg) (输出)<br/>
+xvgr/xmgr文件, 自由能</li>
+<li><code>-g [&lt;.log&gt;]</code> (anadock.log) (输出)<br/>
+日志文件</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (0)<br/>
+设置优先级</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-[no]free</code> (no)<br/>
+使用autodock估算的自由能对结构进行分类</li>
+<li><code>-[no]rms</code> (yes)<br/>
+根据RMS或距离进行团簇化</li>
+<li><code>-cutoff &lt;real&gt;</code> (0.2)<br/>
+属于相同团簇的最大RMSD或距离值. 偏离大于此值时认为属于不同团簇.</li>
+</ul>
 
 <h2 id="gmxanaeig-analyzeeigenvectorsnormalmodes">gmx anaeig - Analyze eigenvectors/normal modes</h2>
 
