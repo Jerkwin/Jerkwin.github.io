@@ -266,7 +266,70 @@ xvg绘图格式: xmgrace, xmgr, none</li>
 
 <h2 id="gmxgangle-calculateangles">gmx gangle - Calculate angles</h2>
 
-<h2 id="gmxgenconf-multiplyaconformationinrandomorientations">gmx genconf - Multiply a conformation in &#8216;random&#8217; orientations</h2>
+<h2 id="gmxgenconf:增加随机取向的构象翻译:李卫星">gmx genconf: 增加&#8220;随机&#8221;取向的构象(翻译: 李卫星)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx genconf [-f [&lt;.gro/.g96/...&gt;]] [-o [&lt;.gro/.g96/...&gt;]]
+            [-trj [&lt;.xtc/.trr/...&gt;]] [-nice ] [-nbox ]
+            [-dist ] [-seed ] [-[no]rot] [-[no]shuffle]
+            [-[no]sort] [-block ] [-nmolat ] [-maxrot ]
+            [-[no]renumber]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx genconf</code>程序对给定的坐标文件进行简单的堆叠, 就像小孩子玩积木一样. 该程序会根据用户定义的比例(<code>-nbox</code>)创建一个网格, 格点间的额外空间由<code>-dist</code>指定.</p>
+
+<p>指定<code>-rot</code>选项时, 程序不会检查格点上分子之间的重叠. 建议输入文件中的盒子边长至少等于原子坐标与范德华半径之和.</p>
+
+<p>如果给出了可选的轨迹文件, 不会产生构象, 但会从文件中读取构象, 经过适当平移后创建格点.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.gro/.g96/...&gt;]</code> (conf.gro) (输入)<br/>
+结构文件: gro g96 pdb brk ent esp tpr tpb tpa</li>
+<li><code>-o [&lt;.gro/.g96/...&gt;]</code> (out.gro) (输出)<br/>
+结构文件: gro g96 pdb brk ent esp</li>
+<li><code>-trj [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入, 可选)<br/>
+轨迹: xtc trr cpt trj gro g96 pdb tng</li>
+</ul>
+
+<p>其它选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (0)<br/>
+设置优先级</li>
+<li><code>-nbox &lt;vector&gt;</code> (1 1 1)<br/>
+盒子数目</li>
+<li><code>-dist &lt;vector&gt;</code> (0 0 0)<br/>
+盒子间的距离</li>
+<li><code>-seed &lt;int&gt;</code> (0)<br/>
+随机数发生器的种子, 如果为0, 根据当前时间产生.</li>
+<li><code>-[no]rot</code> (no)<br/>
+随机旋转构象</li>
+<li><code>-[no]shuffle</code> (no)<br/>
+随机混洗分子</li>
+<li><code>-[no]sort</code> (no)<br/>
+根据X方向坐标对分子排序</li>
+<li><code>-block &lt;int&gt;</code> (1)<br/>
+根据此CPU数将盒子划分为块</li>
+<li><code>-nmolat &lt;int&gt;</code> (3)<br/>
+每个分子的原子数, 假定从0开始. 如果设置错误, 体系可能完全不对.</li>
+<li><code>-maxrot &lt;vector&gt;</code> (180 180 180)<br/>
+最大的随机转动</li>
+<li><code>-[no]renumber</code> (yes)<br/>
+重新编号残基</li>
+</ul>
+
+<h3 id="已知问题">已知问题</h3>
+
+<ul class="incremental">
+<li>程序应允许随机放置格点</li>
+</ul>
 
 <h2 id="gmxgenion-generatemonoatomicionsonenergeticallyfavorablepositions">gmx genion - Generate monoatomic ions on energetically favorable positions</h2>
 
@@ -640,7 +703,49 @@ xvg绘图格式: xmgrace, xmgr, none</li>
 
 <h2 id="gmxnmens-generateanensembleofstructuresfromthenormalmodes">gmx nmens - Generate an ensemble of structures from the normal modes</h2>
 
-<h2 id="gmxnmtraj-generateavirtualoscillatingtrajectoryfromaneigenvector">gmx nmtraj - Generate a virtual oscillating trajectory from an eigenvector</h2>
+<h2 id="gmxnmtraj:根据本征向量生成虚拟振荡轨迹翻译:王卓亚">gmx nmtraj: 根据本征向量生成虚拟振荡轨迹(翻译: 王卓亚)</h2>
+
+<h3 id="摘要">摘要</h3>
+
+<pre><code>gmx nmtraj [-s [&lt;.tpr/.tpb/...&gt;]] [-v [&lt;.trr/.cpt/...&gt;]]
+           [-o [&lt;.xtc/.trr/...&gt;]] [-nice ] [-eignr ]
+           [-phases ] [-temp ] [-amplitude ]
+           [-nframes ]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx nmtraj</code>根据特征向量产生虚拟的轨迹, 对应于围绕平均结构的简谐直角坐标振荡. 通常应使用质量加权的特征向量, 但你也可以使用非加权的特征向量来生成正交运动. 输出帧为一个覆盖整个周期的轨迹文件, 并且第一帧为平均结构. 如果你将轨迹输出(或转换)为PDB格式, 你可以直接在PyMol软件中观看, 还可以渲染生成逼真的动画. 假定能量均分到所有模式上, 运动振幅可以由特征值和预设温度计算. 为了在PyMol中清晰地显示运动, 你可以通过设定不现实的非常高的温度值来放大振幅. 然而, 要注意对大的振幅, 线性直角坐标位移与质量加权二者都可以导致严重的结构变形, 这只是直角简正模式模型的局限性. 默认选择的特征向量为7, 因为前六个简正模式对应于平动和转动自由度.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入)<br/>
+结构+质量: tpr tpb tpa gro g96 pdb brk ent</li>
+<li><code>-v [&lt;.trr/.cpt/...&gt;]</code> (eigenvec.trr) (输入)<br/>
+全精度轨迹: trr cpt trj tng</li>
+<li><code>-o [&lt;.xtc/.trr/...&gt;]</code> (nmtraj.xtc) (输出)<br/>
+轨迹: xtc trr trj gro g96 pdb tng</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (19)<br/>
+设置优先级</li>
+<li><code>-eignr &lt;string&gt;</code> (7)<br/>
+使用的特征向量对应的字符(第一个为1)</li>
+<li><code>-phases &lt;string&gt;</code> (0.0)<br/>
+相位对应的字符(默认为0.0)</li>
+<li><code>-temp &lt;real&gt;</code> (300)<br/>
+温度 (K)</li>
+<li><code>-amplitude &lt;real&gt;</code> (0.25)<br/>
+本征值&lt;=0的模式对应的幅度</li>
+<li><code>-nframes &lt;int&gt;</code> (30)<br/>
+生成帧的数目</li>
+</ul>
 
 <h2 id="gmxorder-computetheorderparameterperatomforcarbontails">gmx order - Compute the order parameter per atom for carbon tails</h2>
 
@@ -654,7 +759,56 @@ xvg绘图格式: xmgrace, xmgr, none</li>
 
 <h2 id="gmxprincipal-calculateprincipalaxesofinertiaforagroupofatoms">gmx principal - Calculate principal axes of inertia for a group of atoms</h2>
 
-<h2 id="gmxprotonate-protonatestructures">gmx protonate - Protonate structures</h2>
+<h2 id="gmxprotonate:结构质子化翻译:杜星">gmx protonate: 结构质子化(翻译: 杜星)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx protonate [-s [&lt;.tpr/.tpb/...&gt;]] [-f [&lt;.xtc/.trr/...&gt;]] [-n [&lt;.ndx&gt;]]
+              [-o [&lt;.xtc/.trr/...&gt;]] [-nice ] [-b ] [-e ]
+              [-dt ]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx protonate</code>读取构象并根据<code>oplsaa.ff/aminoacids.hdb</code>文件中的定义添加所有丢失氢原子. 如果仅仅指定<code>-s</code>选项, 那么构象将会被质子化, 如果也指定了<code>-f</code>选项, 那么程序会从文件中读取构象, 可以是单个构象或者轨迹.</p>
+
+<p>如果提供了一个<code>.pdb</code>文件, 那么残基名称可能与GROMACS的命名规则不一致. 在这种情况下, 这些残基很可能不会被正确地质子化.</p>
+
+<p>如果指定了索引文件, 请注意原子数目应当与 <strong>质子化</strong> 状态相对应.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入)<br/>
+结构文件: tpr tpb tpa gro g96 pdb brk ent</li>
+<li>`-f <a href="traj.xtc">&lt;.xtc/.trr/&#8230;&gt;</a> (输入, 可选)<br/>
+轨迹文件: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入, 可选)<br/>
+索引文件</li>
+<li><code>-o [&lt;.xtc/.trr/...&gt;]</code> (protonated.xtc) (输出)<br/>
+轨迹文件: xtc trr trj gro g96 pdb tng</li>
+</ul>
+
+<p>其它选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (0)<br/>
+设置优先级</li>
+<li><code>-b</code> <time> (0)<br/>
+从轨迹文件中读取的第一帧(ps)</li>
+<li><code>-e</code> <time> (0)<br/>
+从轨迹文件中读取的最后一帧(ps)</li>
+<li><code>-dt</code> <time> (0)<br/>
+只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
+</ul>
+
+<h3 id="已知问题">已知问题</h3>
+
+<ul class="incremental">
+<li>目前, <code>-s</code>选项仅接受<code>.pdb</code>文件.</li>
+</ul>
 
 <h2 id="gmxrama-computeramachandranplots">gmx rama - Compute Ramachandran plots</h2>
 
