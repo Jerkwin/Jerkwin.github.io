@@ -256,9 +256,273 @@ xvg绘图格式: xmgrace, xmgr, none</li>
 
 <h2 id="gmxeneconv-convertenergyfiles">gmx eneconv - Convert energy files</h2>
 
-<h2 id="gmxenemat-extractanenergymatrixfromanenergyfile">gmx enemat - Extract an energy matrix from an energy file</h2>
+<h2 id="gmxenemat:从能量文件中提取能量矩阵翻译:赵丙春">gmx enemat: 从能量文件中提取能量矩阵(翻译: 赵丙春)</h2>
 
-<h2 id="gmxenergy-writesenergiestoxvgfilesanddisplayaverages">gmx energy - Writes energies to xvg files and display averages</h2>
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx enemat [-f [&lt;.edr&gt;]] [-groups [&lt;.dat&gt;]] [-eref [&lt;.dat&gt;]]
+           [-emat [&lt;.xpm&gt;]] [-etot [&lt;.xvg&gt;]] [-nice ] [-b ]
+           [-e ] [-dt ] [-[no]w] [-xvg ] [-[no]sum]
+           [-skip ] [-[no]mean] [-nlevels ] [-max ]
+           [-min ] [-[no]coulsr] [-[no]coullr] [-[no]coul14]
+           [-[no]ljsr] [-[no]ljlr] [-[no]lj14] [-[no]bhamsr] [-[no]bhamlr]
+           [-[no]free] [-temp ]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx enemat</code>从能量文件(<code>-f</code>)中提取能量矩阵. 使用<code>-group</code>选项时必须提供一个文件名称, 文件中每行包含一组使用的原子. 通过寻找名称对应于原子组对名称的能量组, 会从能量文件中提取这些组的相互作用能的矩阵. 例如, 如果<code>-group</code>文件中包含:</p>
+
+<pre><code>2
+Protein
+SOL
+</code></pre>
+
+<p>程序会预期能量文件中包含具有<code>Coul-SR:Protein-SOL</code>和<code>LJ:Protein-SOL</code>名称的能量组(尽管同时分析很多组时, <code>gmx enemat</code>非常有用). 不同能量类型的矩阵会分开输出, 由<code>-[no]coul</code>, <code>-[no]coulr</code>, <code>-[no]coul14</code>, <code>-[no]lj</code>, <code>-[no]lj14</code>, <code>-[no]bham</code>和<code>-[no]free</code>选项控制. 最后, 可以计算每组的总相互作用能(<code>-etot</code>).</p>
+
+<p>近似的自由能可以如下计算: <span class="math">\(E_{free} = E_0 + kT \log(<\exp((E-E_0)/kT)>)\)</span>, 其中 <span class="math">\(<>\)</span> 代表时间平均. 可以提供包含参考自由能的文件, 用以计算相对于一些参考状态的自由能差值. 参考文件中的组名称(如残基名称)应当与<code>-group</code>文件中的组名称一致, 但在<code>-group</code>中追加的数字(如残基编号)在比较时将会被忽略.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.edr&gt;]</code> (ener.edr) (输入, 可选)<br/>
+能量文件</li>
+<li><code>-groups [&lt;.dat&gt;]</code> (groups.dat) (输入)<br/>
+通用数据文件</li>
+<li><code>-eref [&lt;.dat&gt;]</code> (eref.dat) (输入, 可选)<br/>
+通用数据文件</li>
+<li><code>-emat [&lt;.xpm&gt;]</code> (emat.xpm) (输出)<br/>
+X PixMap兼容矩阵文件</li>
+<li><code>-etot [&lt;.xvg&gt;]</code> (energy.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+</ul>
+
+<p>其它选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (19)<br/>
+设置优先级</li>
+<li><code>-b</code> <time> (0)<br/>
+从轨迹文件中读取的第一帧(ps)</li>
+<li><code>-e</code> <time> (0)<br/>
+从轨迹文件中读取的最后一帧(ps)</li>
+<li><code>-dt</code> <time> (0)<br/>
+只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
+<li><code>-[no]w</code> (no)<br/>
+查看输出.xvg, .xpm, .eps和.pdb文件</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-[no]sum</code> (no)<br/>
+累加所选的能量项而不是显示它们全部</li>
+<li><code>-skip &lt;int&gt;</code> (0)<br/>
+数据点之间跳过的帧数</li>
+<li><code>-[no]mean</code> (yes)<br/>
+与<code>-groups</code>一起使用时抽取平均能量矩阵而不是每一时间步的矩阵</li>
+<li><code>-nlevels &lt;int&gt;</code> (20)<br/>
+矩阵颜色的水平数</li>
+<li><code>-max &lt;real&gt; (1e+20)</code><br/>
+能量的最大值</li>
+<li><code>-min &lt;real&gt;</code> (&#8211;1e+20)<br/>
+能量的最小值</li>
+<li><code>-[no]coulsr</code> (yes)<br/>
+抽取短程Coulomb能量</li>
+<li><code>-[no]coullr</code> (no)<br/>
+抽取长程Coulomb能量</li>
+<li><code>-[no]coul14</code> (no)<br/>
+抽取Coulomb 1&#8211;4能量</li>
+<li>`-[no]ljsr (yes)<br/>
+抽取短程Lennard-Jones能量</li>
+<li><code>-[no]ljlr</code> (no)<br/>
+抽取长程Lennard-Jones能量</li>
+<li><code>-[no]lj14 (no)</code><br/>
+抽取Lennard-Jones 1&#8211;4能量</li>
+<li><code>-[no]bhamsr</code> (no)<br/>
+抽取短程Buckingham能量</li>
+<li><code>-[no]bhamlr</code> (no)<br/>
+抽取长程Buckingham能量</li>
+<li><code>-[no]free</code> (yes)<br/>
+计算自由能</li>
+<li><code>-temp &lt;real&gt;</code> (300)<br/>
+计算自由能的参考温度</li>
+</ul>
+
+<h2 id="gmxenergy:将能量写入xvg文件并显示平均值翻译:姚闯">gmx energy: 将能量写入xvg文件并显示平均值(翻译: 姚闯)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx energy [-f [&lt;.edr&gt;]] [-f2 [&lt;.edr&gt;]] [-s [&lt;.tpr/.tpb/...&gt;]] [-o [&lt;.xvg&gt;]]
+[-viol [&lt;.xvg&gt;]] [-pairs [&lt;.xvg&gt;]] [-ora [&lt;.xvg&gt;]] [-ort [&lt;.xvg&gt;]]
+[-oda [&lt;.xvg&gt;]] [-odr [&lt;.xvg&gt;]] [-odt [&lt;.xvg&gt;]] [-oten [&lt;.xvg&gt;]]
+[-corr [&lt;.xvg&gt;]] [-vis [&lt;.xvg&gt;]] [-ravg [&lt;.xvg&gt;]] [-odh [&lt;.xvg&gt;]]
+[-nice ] [-b ] [-e ] [-[no]w] [-xvg ]
+[-[no]fee] [-fetemp ] [-zero ] [-[no]sum] [-[no]dp]
+[-nbmin ] [-nbmax ] [-[no]mutot] [-skip ]
+[-[no]aver] [-nmol ] [-[no]fluct_props] [-[no]driftcorr]
+[-[no]fluc] [-[no]orinst] [-[no]ovec] [-acflen ]
+[-[no]normalize] [-P ] [-fitfn ] [-beginfit ]
+[-endfit ]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx energy</code>用于从能量文件中提取能量组分或距离限制数据. 程序会提示用户以交互方式选择所需的能量项.</p>
+
+<p>程序会使用全精度计算模拟中能量的平均值, RMSD和漂移(参见手册). 漂移是通过使用最小二乘法将数据拟合为直线得到的. 报告的总漂移是拟合直线第一个点和最后一个点的差值. 平均值的误差估计是基于5个块的块平均得到的, 计算时使用了全精度的平均值. 利用<code>-nbmin</code>和<code>-nbmax</code>选项, 可以使用多个块长度进行误差估计. <strong>注意</strong>, 在大多数情况下, 能量文件包含了对所有MD步骤的平均, 或进行平均的点比能量文件中的帧数多很多. 这使得<code>gmx energy</code>的统计输出比<code>.xvg</code>文件中的数据更准确. 当能量文件中不存在精确的平均值时, 上述统计数据只是简单地对每帧能量数据的平均.</p>
+
+<p>涨落项给出了围绕最小二乘拟合线的RMSD.</p>
+
+<p>如果选择了正确的能量项, 并且使用了该命令行选项<code>-fluct_props</code>, 程序可以计算一些涨落相关的性质. 会计算以下性质:</p>
+
+<table><caption></caption>
+<tr>
+<th style="text-align:center;">性质</th>
+<th style="text-align:center;">需要的能量项</th>
+</tr>
+<tr>
+<td style="text-align:center;">等压热容C_p(NPT模拟)</td>
+<td colspan="2" style="text-align:center;">Enthalpy, Temp</td>
+</tr>
+<tr>
+<td style="text-align:center;">等容热容C_v(NVT模拟)</td>
+<td colspan="2" style="text-align:center;">Etot, Temp</td>
+</tr>
+<tr>
+<td style="text-align:left;">热膨胀系数(NPT模拟)</td>
+<td colspan="2" style="text-align:center;">Enthalpy, Vol, Temp</td>
+</tr>
+<tr>
+<td style="text-align:left;">等温压缩率</td>
+<td colspan="2" style="text-align:center;">Vol, Temp</td>
+</tr>
+<tr>
+<td style="text-align:left;">绝热体弹性模量</td>
+<td colspan="2" style="text-align:center;">Vol, Temp</td>
+</tr>
+</table>
+
+<p>你也需要通过<code>-nmol</code>来设定分子的数目. C_p/C_v的计算 <strong>不</strong> 包含任何量子效应校正. 如果需要考虑量子效应可以使用<code>gmx dos</code>程序.</p>
+
+<p>当设置<code>-viol</code>选项时, 会绘制时间平均的背离数据, 并重新计算背离的实时时间平均值和瞬时累计值. 此外, 可以利用<code>-pairs</code>选项来绘制选定原子对之间的实时时间平均距离和瞬时距离.</p>
+
+<p>选项<code>-ora</code>, <code>-ort</code>, <code>-oda</code>, <code>-odr</code>和<code>-odt</code>用于分析取向限制数据. 前两个选项绘制取向, 后三个选项绘制来自实验值的取向偏差. 以上选项中以<code>a</code>结尾的选项绘制时间平均随限制的变化. 以<code>t</code>结尾选项会提示用户限制标签号并绘制数据随时间的变化. 选项<code>-odr</code>绘制RMS偏差随限制的变化. 当使用时间或系综平均的取向限制运行时, 选项<code>-orinst</code>可以用来分析瞬时, 非系综平均的取向和偏差, 而不是时间和系综平均的值.</p>
+
+<p>选项<code>-oten</code>用于绘制每个取向限制实验中分子序张量的特征值. 与选项<code>-ovec</code>同用时还可以绘制特征向量.</p>
+
+<p>选项<code>-odh</code>用于从<code>ener.edr</code>文件中提取并绘制自由能数据(哈密顿差值和/或哈密顿导数dhdl).</p>
+
+<p>使用<code>-fee</code>选项会计算体系与理想气体状态时的自由能差值:</p>
+
+<p><span class="math">\[\D A = A(N,V,T) - A_{idealgas}(N,V,T) = kT \ln(<\exp(U_{pot}/kT)>)\]</span></p>
+
+<p><span class="math">\[\D G = G(N,p,T) - G_{idealgas}(N,p,T) = kT \ln(<\exp(U_{pot}/kT)>)\]</span></p>
+
+<p>其中, <span class="math">\(k\)</span> 为玻尔兹曼常数, <span class="math">\(T\)</span> 由<code>-fetemp</code>设定, 平均对整个系综(或轨迹中的时间)进行. 请注意, 只有当平均是对整个(玻尔兹曼)系综进行并使用势能时, 这种作法在理论上才是正确的. 这允许对熵进行估计:</p>
+
+<p><span class="math">\[\D S(N,V,T) = S(N,V,T) - S_{idealgas}(N,V,T) = (< U_{pot} > - \D A)/T\]</span></p>
+
+<p><span class="math">\[\D S(N,p,T) = S(N,p,T) - S_{idealgas}(N,p,T) = (< U_{pot} > + pV - \D G)/T\]</span></p>
+
+<p>当指定了第二个能量文件(<code>-f2</code>)时, 将计算自由能量差值 <span class="math">\(dF = -kT \ln(<\exp(-(E_B-E_A)/kT)>_A)\)</span>, 其中 <span class="math">\(E_A\)</span> 和 <span class="math">\(E_B\)</span> 分布为第一个和第二个能量文件中的能量值, 平均对系综A进行. 自由能差的实时平均值会输出到由<code>-ravg</code>指定的文件中. <strong>注意</strong>, 能量必须由同一轨迹计算而来.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.edr&gt;]</code> (ener.edr) (输入)<br/>
+能量文件</li>
+<li><code>-f2 [&lt;.edr&gt;]</code> (ener.edr) (输入, 可选)<br/>
+能量文件</li>
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入, 可选)<br/>
+运行输入文件: tpr tpb tpa</li>
+<li><code>-o [&lt;.xvg&gt;]</code> (energy.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-viol [&lt;.xvg&gt;]</code> (violaver.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-pairs [&lt;.xvg&gt;]</code> (pairs.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-ora [&lt;.xvg&gt;]</code> (orienta.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-ort [&lt;.xvg&gt;]</code> (orientt.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-oda [&lt;.xvg&gt;]</code> (orideva.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-odr [&lt;.xvg&gt;]</code> (oridevr.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-odt [&lt;.xvg&gt;]</code> (oridevt.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-oten [&lt;.xvg&gt;]</code> (oriten.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-corr [&lt;.xvg&gt;]</code> (enecorr.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-vis [&lt;.xvg&gt;]</code> (visco.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-ravg [&lt;.xvg&gt;]</code> (runavgdf.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-odh [&lt;.xvg&gt;]</code> (dhdl.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (19)<br/>
+设置优先级</li>
+<li><code>-b</code> <time> (0)<br/>
+从轨迹文件中读取的第一帧(ps)</li>
+<li><code>-e</code> <time> (0)<br/>
+从轨迹文件中读取的最后一帧(ps)</li>
+<li><code>-[no]w</code>(no)<br/>
+查看输出 .xvg, .xpm, .eps和.pdb文件</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-[no]fee</code> (no)<br/>
+进行自由能估计</li>
+<li><code>-fetemp &lt;real&gt;</code> (300)<br/>
+自由能计算的参考温度</li>
+<li><code>-zero &lt;real&gt;</code> (0)<br/>
+减去零点能</li>
+<li><code>-[no]sum</code> (no)<br/>
+累加选中的能量项而不是全部展示出来</li>
+<li><code>-[no]dp</code> (no)<br/>
+以高精度格式输出能量</li>
+<li><code>-nbmin &lt;int&gt;</code> (5)<br/>
+误差估计的最小块数</li>
+<li><code>-nbmax &lt;int&gt;</code> (5)<br/>
+误差估计的最大块数</li>
+<li><code>-[no]mutot</code> (no)<br/>
+根据分量计算总的偶极矩</li>
+<li><code>-skip &lt;int&gt;</code> (0)<br/>
+数据点之间跳过的帧数</li>
+<li><code>-[no]aver</code> (no)<br/>
+同时打印能量帧中精确的平均值和RMSD(只计算一项时)</li>
+<li><code>-nmol &lt;int&gt;</code> (1)<br/>
+采样的分子数: 能量将除以此值</li>
+<li><code>-[no]fluct_props</code> (no)<br/>
+基于能量涨落计算性质, 如热容</li>
+<li><code>-[no]driftcorr</code> (no)<br/>
+只用于计算涨落性质. 计算涨落性质前减去观测量的漂移</li>
+<li><code>-[no]fluc</code> (no)<br/>
+计算能量涨落的自相关函数而不是能量自身</li>
+<li><code>-[no]orinst</code> (no)<br/>
+分析瞬时取向数据</li>
+<li><code>-[no]ovec</code> (no)<br/>
+与<code>-oten</code>同用时也给出特征向量</li>
+<li><code>-acflen &lt;int&gt;</code> (&#8211;1)<br/>
+ACF的长度, 默认为帧数的一半</li>
+<li><code>-[no]normalize</code> (yes)<br/>
+归一化ACF</li>
+<li><code>-P &lt;enum&gt; (0)</code><br/>
+ACF Legendre多项式的阶数(0意味着没有): 0, 1, 2, 3</li>
+<li><code>-fitfn &lt;enum&gt;</code> (none)<br/>
+拟合函数: none, exp, aexp, exp_exp, vac, exp5, exp7, exp9, erffit</li>
+<li><code>-beginfit &lt;real&gt;</code> (0)<br/>
+对相关函数进行指数拟合的开始时间</li>
+<li><code>-endfit &lt;real&gt;</code> (&#8211;1)<br/>
+对相关函数进行指数拟合的结束时间, &#8211;1表示最终</li>
+</ul>
 
 <h2 id="gmxfilter-frequencyfiltertrajectoriesusefulformakingsmoothmovies">gmx filter - Frequency filter trajectories, useful for making smooth movies</h2>
 
@@ -1443,6 +1707,90 @@ xvg绘图格式: xmgrace, xmgr, none</li>
 
 <h2 id="gmxwheel-plothelicalwheels">gmx wheel - Plot helical wheels</h2>
 
-<h2 id="gmxx2top-generateaprimitivetopologyfromcoordinates">gmx x2top - Generate a primitive topology from coordinates</h2>
+<h2 id="gmxx2top:根据坐标生成原始拓扑文件翻译:阮洋">gmx x2top: 根据坐标生成原始拓扑文件(翻译: 阮洋)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx x2top [-f [&lt;.gro/.g96/...&gt;]] [-o [&lt;.top&gt;]] [-r [&lt;.rtp&gt;]] [-nice ]
+          [-ff ] [-[no]v] [-nexcl ] [-[no]H14] [-[no]alldih]
+          [-[no]remdih] [-[no]pairs] [-name ] [-[no]pbc] [-[no]pdbq]
+          [-[no]param] [-[no]round] [-kb ] [-kt ] [-kp ]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx x2top</code>可以根据坐标文件生成原始的拓扑文件. 当根据原子名称和键的数目定义杂化状态时, 程序会假定所有的氢原子都出现在构型中. 这个程序也可以生成<code>.rtp</code>文件中的条目, 你可以将它们添加到力场目录下的<code>.rtp</code>数据库中.</p>
+
+<p>当设置了<code>-param</code>选项的时候, 所有相互作用的平衡距离, 键角和力常数都会写入拓扑中的相应位置. 平衡距离和键角由输入坐标得到, 力常数根据命令行选项设定. 目前支持的力场主要有以下几类:</p>
+
+<ul class="incremental">
+<li>G53a5: GROMOS96 53a5力场(官方发布)</li>
+<li>oplsaa: OPLS-AA/L 全原子力场(2001氨基酸二面角版本)</li>
+</ul>
+
+<p>使用<code>gmx x2top</code>时需要一个对应的<code>.n2t</code>文件, 它位于力场库目录下, 名称为<code>atomname2type.n2t</code>. 该文件的格式在手册的第五章有详细介绍. 默认情况下, 力场的选择是交互式的, 但可以使用<code>-ff</code>选项在命令行中指定上面力场的简短名称. 在这种情况下, <code>gmx x2top</code>会到指定的力场目录下查找对应的文件.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.gro/.g96/...&gt;]</code> (conf.gro) (输入)<br/>
+结构文件: gro g96 pdb brk ent esp tpr tpb tpa</li>
+<li><code>-o [&lt;.top&gt;]</code> (out.top) (输出, 可选)<br/>
+输出拓扑文件</li>
+<li><code>-r [&lt;.rtp&gt;]</code> (out.rtp) (输出, 可选)<br/>
+pdb2gmx使用的残基类型文件</li>
+</ul>
+
+<p>其它选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (0)<br/>
+设置优先级</li>
+<li><code>-ff  &lt;string&gt;</code> (oplsaa)<br/>
+模拟使用的力场, 默认OPLS-AA力场. 键入<code>select</code>以交互式的进行选择</li>
+<li><code>-[no]v</code> (no)<br/>
+在<code>top</code>文件中输出详细的生成信息</li>
+<li><code>-nexcl &lt;int&gt;</code> (3)<br/>
+相互作用排除数</li>
+<li><code>-[no]H14</code> (yes)<br/>
+对氢原子使用第3个近邻相互作用</li>
+<li><code>-[no]alldih</code> (no)<br/>
+生成所有恰当二面角</li>
+<li><code>-[no]remdih</code> (no)<br/>
+去除同一键上的不当二面角</li>
+<li><code>-[no]pairs</code> (yes)<br/>
+在拓扑文件中输出1&#8211;4相互作用(原子对)</li>
+<li><code>-name &lt;string&gt;</code> (ICE)<br/>
+指定分子名称, 默认使用ICE</li>
+<li><code>-[no]pbc</code> (yes)<br/>
+使用周期性边界条件</li>
+<li><code>-[no]pdbq</code> (no)<br/>
+使用<code>.pdb</code>文件提供的B因子作为原子电荷(前提是输入文件格式为<code>.pdb</code>)</li>
+<li><code>-[no]param</code> (yes)<br/>
+将参数输出到拓扑文件中</li>
+<li><code>-[no]round</code> (yes)<br/>
+将测量值进行四舍五入</li>
+<li><code>-kb &lt;real&gt;</code> (400000)<br/>
+键的力常数, 单位kJ/mol/nm<sup>2</sup></li>
+<li><code>-kt &lt;real&gt;</code> (400)<br/>
+键角的力常数, 单位kJ/mol/rad<sup>2</sup></li>
+<li><code>-kp &lt;real&gt;</code> (5)<br/>
+二面角的力常数, 单位kJ/mol/rad<sup>2</sup></li>
+</ul>
+
+<h3 id="已知问题">已知问题</h3>
+
+<ul class="incremental">
+<li>原子类型的选择方法很原始, 没有使用化学信息.</li>
+<li>周期性边界条件会卷曲键</li>
+<li>不会生成不当二面角</li>
+<li>原子到原子类型的转换表不完整(数据目录下的<code>atomname2type.n2t</code>文件). 请扩展此文件并将其提供给GROMACS团队.</li>
+</ul>
+
+<h3 id="附加说明">附加说明</h3>
+
+<p>理论上只要能在对应的力场中找到构型中的各个原子类型, 那么<code>gmx x2top</code>可以支持所有GROMACS的力场. 当然输出的原始拓扑文件需要进行很多修改, 因此在使用此工具需要对拓扑文件足够熟悉.</p>
 
 <h2 id="gmxxpm2ps-convertxpmxpixelmapmatricestopostscriptorxpm">gmx xpm2ps - Convert XPM (XPixelMap) matrices to postscript or XPM</h2>
