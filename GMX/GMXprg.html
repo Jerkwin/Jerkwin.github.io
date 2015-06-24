@@ -743,7 +743,63 @@ ACF Legendre多项式的阶数(0意味着没有): 0, 1, 2, 3</li>
 
 <h2 id="gmxgenion-generatemonoatomicionsonenergeticallyfavorablepositions">gmx genion - Generate monoatomic ions on energetically favorable positions</h2>
 
-<h2 id="gmxgenrestr-generatepositionrestraintsordistancerestraintsforindexgroups">gmx genrestr - Generate position restraints or distance restraints for index groups</h2>
+<h2 id="gmxgenrestr:生成索引组的位置限制或距离限制翻译:廖华东">gmx genrestr: 生成索引组的位置限制或距离限制(翻译: 廖华东)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx genrestr [-f [&lt;.gro/.g96/...&gt;]] [-n [&lt;.ndx&gt;]] [-o [&lt;.itp&gt;]]
+             [-of [&lt;.ndx&gt;]] [-nice ] [-fc ] [-freeze ]
+             [-[no]disre] [-disre_dist ] [-disre_frac ]
+             [-disre_up2 ] [-cutoff ] [-[no]constr]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p>基于<code>-f</code>指定的文件内容, <code>gmx genrestr</code>为拓扑生成一个<code>#include</code>头文件, 其中包含一个原子编号列表以及x, y和z三个方向的力常数. 也可以在命令行中指定单一的各向同性力常数, 而不是给出三个分量.</p>
+
+<p><strong>警告</strong>: 位置限制是分子内的相互作用, 因此在拓扑文件中它们必须被包含在正确的<code>[ moleculetype ]</code>段中. 而<code>[ position_restraints ]</code>段中的原子索引必须在相应分子类型的原子索引范围之内. 因为在每个分子类型中原子编号都是从1开始的, 而在<code>gmx genrestr</code>命令的输入文件中却是从1开始连续编号, 所以<code>gmx genrestr</code>命令只会对第一个分子生成有用的文件. 你可能需要编辑生成的索引文件以删除第一个分子后面的原子, 或构建一个合适的索引组作为<code>gmx genrestr</code>的输入.</p>
+
+<p><code>-of</code>选项可生成一个用于冻结原子的索引文件. 在这种情况下, 输入文件必须是<code>.pdb</code>文件.</p>
+
+<p>使用<code>-disre</code>选项会生成距离限制而非位置限制的半个矩阵. 该矩阵通常用于蛋白质中的C<sub>α</sub>原子, 这样可以维持一个蛋白质的总体构象而不必将其绑定到特定位置(使用位置限制时).</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.gro/.g96/...&gt;]</code> (conf.gro) (输入)<br/>
+结构文件: gro g96 pdb brk ent esp tpr tpb tpa</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入, 可选)
+索引文件</li>
+<li><code>-o [&lt;.itp&gt;]</code> (posre.itp) (输出)
+拓扑的包含文件</li>
+<li><code>-of [&lt;.ndx&gt;]</code> (freeze.ndx) (输出, 可选)
+索引文件</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (0)
+设置优先级</li>
+<li><code>-fc &lt;vector&gt;</code> (1000 1000 1000)
+力常数(kJ/mol nm<sup>2</sup>)</li>
+<li><code>-freeze &lt;real&gt;</code> (0)
+如果给出<code>-of</code>选项或此选项, 对所有B因子小于选项指定值的原子, 其编号都将被写入一个索引文件.</li>
+<li><code>-[no]disre</code> (no)
+生成所有索引中原子的距离限制矩阵.</li>
+<li><code>-disre_dist &lt;real&gt;</code> (0.1)
+生成距离限制时围绕真实距离的范围.</li>
+<li><code>-disre_frac &lt;real&gt;</code> (0)
+用作间隔而不是固定距离的距离分数. 如果在此指定的距离分数小于前一选项(<code>-disre_dist</code>)指定的距离, 将使用<code>-disre_dist</code>选项指定的值.</li>
+<li><code>-disre_up2 &lt;real&gt;</code> (1)
+距离限制的上限距离, 在此距离处力将变为常量(参见手册).</li>
+<li><code>-cutoff &lt;real&gt;</code> (&#8211;1)
+仅对处于截断半径(nm)内的原子生成距离限制.</li>
+<li><code>-[no]constr</code> (no)
+生成约束矩阵而非距离限制. 会生成类型2的约束, 并包含排除.</li>
+</ul>
 
 <h2 id="gmxgrompp-makearuninputfile">gmx grompp - Make a run input file</h2>
 
@@ -1210,7 +1266,125 @@ xvg绘图格式: xmgrace, xmgr, none</li>
 
 <h2 id="gmxorder-computetheorderparameterperatomforcarbontails">gmx order - Compute the order parameter per atom for carbon tails</h2>
 
-<h2 id="gmxpdb2gmx-convertcoordinatefilestotopologyandff-compliantcoordinatefiles">gmx pdb2gmx - Convert coordinate files to topology and FF-compliant coordinate files</h2>
+<h2 id="gmxpdb2gmx:将pdb坐标文件转换为拓扑文件和力场兼容的坐标文件翻译:冯佳伟">gmx pdb2gmx: 将PDB坐标文件转换为拓扑文件和力场兼容的坐标文件(翻译: 冯佳伟)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx pdb2gmx [-f [&lt;.gro/.g96/...&gt;]] [-o [&lt;.gro/.g96/...&gt;]] [-p [&lt;.top&gt;]]
+            [-i [&lt;.itp&gt;]] [-n [&lt;.ndx&gt;]] [-q [&lt;.gro/.g96/...&gt;]] [-nice ]
+            [-chainsep ] [-merge ] [-ff ] [-water ]
+            [-[no]inter] [-[no]ss] [-[no]ter] [-[no]lys] [-[no]arg]
+            [-[no]asp] [-[no]glu] [-[no]gln] [-[no]his] [-angle ]
+            [-dist ] [-[no]una] [-[no]ignh] [-[no]missing] [-[no]v]
+            [-posrefc ] [-vsite ] [-[no]heavyh] [-[no]deuterate]
+            [-[no]chargegrp] [-[no]cmap] [-[no]renum] [-[no]rtpres]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx pdb2gmx</code>读取一个<code>.pdb</code>(或<code>.gro</code>)文件和一些数据库文件, 为分子添加氢原子, 生成GROMACS(GROMOS)格式或可选的<code>.pdb</code>格式的坐标文件, 并生成一个GROMACS格式的拓扑文件. 对这些文件进行后续处理即可生成运行模拟需要的运行输入文件.</p>
+
+<p><code>gmx pdb2gmx</code>搜索力场时, 会在当前工作目录和GROMACS库目录下的<code>&lt;forcefield&gt;.ff</code>子目录中搜寻<code>forcefiled.itp</code>文件, 库目录根据可执行文件的路径确定或由环境变量<code>GMXLIB</code>指定. 默认情况下, 当程序找到所有可用的<code>forcefield.itp</code>文件后, 会提示你选择其中的一个力场. 但你也可以在命令行中使用<code>-ff</code>选项指定列表中某一力场的简短名称. 在这种情况下, <code>gmx pdb2gmx</code>程序只会搜寻对应的<code>&lt;forcefield&gt;.ff</code>目录.</p>
+
+<p>当选择了一种力场后, 程序仅会读取对应力场目录下的所有文件. 如果要修改或添加一个残基类型, 你可以把整个力场目录复制到你的当前工作目录. 如果想增加一个新的蛋白质残基类型, 你需要修改库目录下的<code>residuetype.dat</code>文件, 或将整个库目录复制到本地的一个目录中, 修改复制后的<code>residuetype.dat</code>文件, 并将环境变量<code>GMXLIB</code>设为新的目录. 想了解GROMASC文件类型的更多信息, 请参考手册的第五章.</p>
+
+<p>注意, <code>.pdb</code>文件只是一种文件类型, 不一定非得包含蛋白质结构. 只要GROMACS的数据库支持, 任何类型的分子都可以使用<code>gmx pdb2gmx</code>进行转换. 如果数据库不支持, 你可以自己添加.</p>
+
+<p>这个程序本身也不是万能的, 它需要读取一系列的数据库文件, 这样才能在残基之间加上特殊的化学键(如Cys-Cys, Heme-His等等). 如果你觉得有必要, 这些都可以手动完成. 当指定了一些选项后, 程序可以提示用户选择蛋白质中的LYS, ASP, GLU, CYS或HIS残基的质子化状态. 对于Lys来说, 可以选择中性(即NZ上有两个质子), 也可以选择质子化的(3个质子, 默认). 对于Asp和Glu可以选择非质子化的(默认)或质子化的. 对于His, 质子可以位于ND1或NE2或前两者之上. 默认情况下, 这些选择会自动完成. 对于His, 是根据最优的氢键构象来进行选择的. 氢键是根据简单的几何准则来定义的, 由分子构型确定. 对要判断的三个原子, 即氢供体, 氢原子, 氢受体, 若氢-供体-受体三者之间的角度小于最大角度值, 并且供体-受体原子之间的距离小于最大距离值, 则认为三个原子之间存在氢键. 最大氢键角度和最大氢键距离分别由<code>-angle</code>和<code>-dist</code>选项指定.</p>
+
+<p>如果使用了<code>-ter</code>选项, 蛋白质N端和C端的质子化状态可以交互式地选择. 默认情况下蛋白质的两端是离子化的(即NH3+和COO-). 对于只有一种残基的蛋白质链, 有些力场可以把它设定为两性分子形式, 但对于多肽链, <strong>不</strong> 应该使用这些选项. AMBER力场对于蛋白质两端的残基有着自己的独特形式, 与<code>-ter</code>选项不兼容. 如果要使用AMBER力场, 你需要在N或C端残基对应的名称前分别加上<code>N</code>或<code>C</code>, 并保证坐标文件的格式相同. 作为替代方法, 你也可以使用专门的末端残基的名称(如ACE, NME).</p>
+
+<p>处理PDB文件时, 把不同的链分开并不是一件简单的事, 因为用户自己生成的PDB文件中链的组织方式不同, 使用的标记也不同, 有时你确实需要在PDB里面合并由TER标记隔开的两个部分, 比如你需要使用二硫键或距离限制将两条蛋白链连接起来, 或者你的蛋白质上吸附有HEMD基团. 在这种情况下, 多条链需要包含在同一个<code>[ moleculetype ]</code>定义中. 为了处理这个问题, <code>gmx pdb2gmx</code>可以使用两个独立的选项. 首先, <code>-chainsep</code>选项允许你选择何时开始一个新的化学链, 何时为链添加末端. 这可以根据PDB文件中存在的TER记录, 或链序号的改变, 或前两个条件中的一个或两个进行. 你也可以完全交互式地进行选择. 另外一个选项是<code>-merge</code>, 它控制添加(或不添加)所有化学末端后, 如何将多条链合并成一条链. 也可以关闭这个选项(不合并), 也可以让所有不含水分子的链都合并到一个分子中, 或交互式的选择.</p>
+
+<p><code>gmx pdb2gmx</code>还会检查<code>.pdb</code>文件中的原子占有率, 如果一个原子的占有率不是1, 说明它在结构中的位置还没有很好的确定, 这时<code>pdb2gmx</code>会给出警告信息. 若一个<code>.pdb</code>文件不是来自X射线晶体衍射确定的结构, 可能所有的占有率都是0. 不管如何, 当使用<code>pdb2gmx</code>时, 你必须先验证输入PDB文件的正确性(读PDB文件作者的原始文章!).</p>
+
+<p>处理时, 文件中的原子会使用GROMACS约定进行记录. 如果指定了<code>-n</code>选项, 程序会生成一个索引文件, 里面包含了以相同方式记录的一个原子组. 这样你就可以用将GROMOS轨迹和坐标文件转换为GROMOS. 需要注意的是, 有一个限制, 因为记录是在去除输入文件中的氢原子之后, 添加新的氢原子之前生成的, 所以你不应该再使用<code>-ignh</code>选项.</p>
+
+<p><code>.gro</code>和<code>.g96</code>文件类型不支持识别链的序号, 所以如果你要转换一个含有多条链的<code>.pdb</code>文件, 最好使用<code>-o</code>选项将结果输出为<code>.pdb</code>格式的文件.</p>
+
+<p><code>-vsite</code>选项可以去除氢原子运动和快速的不当二面角运动. 通过将氢原子转换为虚拟位点并固定键角, 即固定它们相对于临近原子的位置, 可以去除键角运动以及面外运动. 此外, 标准氨基酸中芳香环上的所有原子(即PHE, TRP, TYR和HIS)都可以转换为虚拟位点, 从而去除这些环中的快速不当二面角运动. <strong>注意</strong>, 在这种情况下, 所有其他氢原子也会被转换为虚拟位点. 所有被转换为虚拟位点的原子的质量会增加到重原子上.</p>
+
+<p>另外, 你也可以指定<code>-heavyh</code>选项, 这样氢原子的质量会增加为原来的4倍, 从而可以减慢二面角的运动. 这种方法也可以用于水分子的氢原子, 以减慢水分子的转动. 应当从键合(重)原子的质量中减去氢原子增加的质量, 以维持体系的总质量不变.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.gro/.g96/...&gt;]</code> (eiwit.pdb) (输入)<br/>
+结构文件: gro g96 pdb brk ent esp tpr tpb tpa</li>
+<li><code>-o [&lt;.gro/.g96/...&gt;]</code> (conf.gro) (输出)<br/>
+结构文件: gro g96 pdb brk ent esp</li>
+<li><code>-p [&lt;.top&gt;]</code> (topol.top) (输出)<br/>
+拓扑文件</li>
+<li><code>-i [&lt;.itp&gt;]</code> (posre.itp) (输出)<br/>
+拓扑的包含的文件</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (clean.ndx) (输出, 可选)<br/>
+索引文件</li>
+<li><code>-q [&lt;.gro/.g96/...&gt;]</code> (clean.pdb) (输出, 可选)<br/>
+结构文件: gro g96 pdb brk ent esp</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (0)<br/>
+设置优先级</li>
+<li><code>-chainsep &lt;enum&gt;</code> (id_or_ter)<br/>
+设置通过何种方式判断一个新链开始, 可用选项: id_or_ter, id_and_ter, ter, id, interactive</li>
+<li><code>-merge &lt;enum&gt;</code> (no)<br/>
+设置是否将多条链合并为单个<code>[ moleculetype ]</code>, 可用选项: no, all, interactive</li>
+<li><code>-ff &lt;string&gt;</code> (select)<br/>
+设置使用何种力场, 默认交互式地选择. 使用<code>-h</code>查看更多信息.</li>
+<li><code>-water &lt;enum&gt;</code> (select)<br/>
+设置使用的水分子模型, 可用选项: select, none, spc, spce, tip3p, tip4p, tip5p</li>
+<li><code>-[no]inter</code> (no)<br/>
+如果开启了这个选项, 接下来的八个选项就会交互式地让用户选择</li>
+<li><code>-[no]ss</code> (no)<br/>
+交互式地选择二硫键</li>
+<li><code>-[no]ter</code> (no)<br/>
+交互式地选择蛋白末端, 默认带电</li>
+<li><code>-[no]lys</code> (no)<br/>
+交互式地选择lys赖氨酸类型, 默认带电</li>
+<li><code>-[no]arg</code> (no)<br/>
+交互式地选择arg精氨酸类型, 默认带电</li>
+<li><code>-[no]asp</code> (no)<br/>
+交互式地选择asp天冬氨酸类型, 默认带电</li>
+<li><code>-[no]glu</code> (no)<br/>
+交互式地选择glu谷氨酸类型, 默认带电</li>
+<li><code>-[no]gln</code> (no)<br/>
+交互式地选择gln谷氨酰胺类型, 默认中性</li>
+<li><code>-[no]his</code> (no)<br/>
+交互式地选择his组胺酸类型, 默认通过检查氢键判断</li>
+<li><code>-angle &lt;real&gt;</code> (135)<br/>
+设置氢键中氢-氢供体-氢受体之间的最小角度, 单位度</li>
+<li><code>-dist &lt;real&gt;</code> (0.3)<br/>
+设置氢键中氢供体-氢受体之间的最大距离, 单位nm</li>
+<li><code>-[no]una</code> (no)<br/>
+将苯丙氨酸, 色氨酸, 酪氨酸中的芳香环设为联合CH原子.</li>
+<li><code>-[no]ignh</code> (no)<br/>
+忽略坐标文件中的氢原子</li>
+<li><code>-[no]missing</code> (no)<br/>
+当发现坐标文件中的原子有缺失时继续运行, 设置这个选项很危险.</li>
+<li><code>-[no]v</code> (no)<br/>
+在屏幕上输出更多的信息</li>
+<li><code>-posrefc &lt;real&gt;</code> (1000)<br/>
+位置限制的力常数</li>
+<li><code>-vsite &lt;enum&gt;</code> (none)<br/>
+设置将哪些原子转变为虚拟位点, 可用选项: none, hydrogens, aromatics</li>
+<li><code>-[no]heavyh</code> (no)<br/>
+将氢原子质量增大一些</li>
+<li><code>-[no]deuterate</code> (no)<br/>
+将氢原子质量更改为2 amu</li>
+<li><code>-[no]chargegrp</code> (yes)<br/>
+使用<code>.rtp</code>文件中的电荷组</li>
+<li><code>-[no]cmap</code> (yes)<br/>
+使用cmap中的扭转(如果在<code>.rtp</code>文件开启)</li>
+<li><code>-[no]renum</code> (no)<br/>
+对输出中的残基重新编号以保证编号连续</li>
+<li><code>-[no]rtpres</code> (no)<br/>
+使用<code>.rtp</code>中的条目名称作为残基名称</li>
+</ul>
 
 <h2 id="gmxpme_error-estimatetheerrorofusingpmewithagiveninputfile">gmx pme_error - Estimate the error of using PME with a given input file</h2>
 
@@ -1681,7 +1855,7 @@ Buckingham势的C</li>
 <li><code>-cp slu.gro -cs slv.gro -maxsol N -box a b c</code></li>
 </ul>
 
-<h2 id="gmxsorient:分析溶质周围的溶剂取向">gmx sorient: 分析溶质周围的溶剂取向</h2>
+<h2 id="gmxsorient:分析溶质周围的溶剂取向翻译:李继存">gmx sorient: 分析溶质周围的溶剂取向(翻译: 李继存)</h2>
 
 <h3 id="概要">概要</h3>
 
@@ -1777,7 +1951,7 @@ xvg绘图格式: xmgrace, xmgr, none</li>
 
 <h2 id="gmxspatial-calculatethespatialdistributionfunction">gmx spatial - Calculate the spatial distribution function</h2>
 
-<h2 id="gmxspol:分析溶质周围溶剂的偶极取向及极化">gmx spol: 分析溶质周围溶剂的偶极取向及极化</h2>
+<h2 id="gmxspol:分析溶质周围溶剂的偶极取向及极化翻译:李继存">gmx spol: 分析溶质周围溶剂的偶极取向及极化(翻译: 李继存)</h2>
 
 <h3 id="概要">概要</h3>
 
