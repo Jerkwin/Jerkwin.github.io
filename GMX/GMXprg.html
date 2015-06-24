@@ -146,7 +146,153 @@ xvg绘图格式: xmgrace, xmgr, none</li>
 
 <h2 id="gmxchi-calculateeverythingyouwanttoknowaboutchiandotherdihedrals">gmx chi - Calculate everything you want to know about chi and other dihedrals</h2>
 
-<h2 id="gmxcluster-clusterstructures">gmx cluster - Cluster structures</h2>
+<h2 id="gmxcluster:对结构进行团簇分析翻译:姚闯">gmx cluster: 对结构进行团簇分析(翻译: 姚闯)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx cluster [-f [&lt;.xtc/.trr/...&gt;]] [-s [&lt;.tpr/.tpb/...&gt;]] [-n [&lt;.ndx&gt;]]
+            [-dm [&lt;.xpm&gt;]] [-om [&lt;.xpm&gt;]] [-o [&lt;.xpm&gt;]] [-g [&lt;.log&gt;]]
+            [-dist [&lt;.xvg&gt;]] [-ev [&lt;.xvg&gt;]] [-conv [&lt;.xvg&gt;]] [-sz [&lt;.xvg&gt;]]
+            [-tr [&lt;.xpm&gt;]] [-ntr [&lt;.xvg&gt;]] [-clid [&lt;.xvg&gt;]]
+            [-cl [&lt;.xtc/.trr/...&gt;]] [-nice ] [-b ] [-e ]
+            [-dt ] [-tu ] [-[no]w] [-xvg ] [-[no]dista]
+            [-nlevels ] [-cutoff ] [-[no]fit] [-max ]
+            [-skip ] [-[no]av] [-wcl ] [-nst ]
+            [-rmsmin ] [-method ] [-minstruct ]
+            [-[no]binary] [-M ] [-P ] [-seed ] [-niter ]
+            [-nrandom ] [-kT ] [-[no]pbc]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx cluster</code>可以使用几种不同的方法团簇化结构. 结构之间的距离可由轨迹来确定, 或使用<code>-dm</code>选项从<code>.xpm</code>矩阵文件读取. 结构间的距离可以由叠合后的RMS偏差或原子对距离的RMS偏差来定义.</p>
+
+<p>确定团簇的方法有以下几种:</p>
+
+<ul class="incremental">
+<li>single linkage(单连接): 当一个结构到团簇中任何一个原子的距离小于<code>cutoff</code>时, 就将此结构加入到团簇中.</li>
+<li>Jarvis Patrick: 当一个结构和团簇中的一个结构互为近邻结构, 并且至少有<code>P</code>个相同的邻近结构时, 将这个结构加入到团簇中. 一个结构的近邻结构是指距离它最近的<code>M</code>个结构或在<code>cutoff</code>以内的全部结构.</li>
+<li>Monte Carlo(蒙特卡洛): 利用蒙特卡洛方法重新排列RMSD矩阵, 以使帧的排列具有尽可能小的递增顺序. 这样做可以使从一个结构到另一个结构的动画尽量平滑, 并且结构之间的具有最大的可能(例如)RMSD, 但中间步骤应尽可能小. 这种方法可用于显示模拟的平均力势能系综或牵引模拟. 显然, 用户要仔细地准备轨迹文件(例如不能存在叠加的帧). 最终的结果可以通过<code>.xpm</code>矩阵文件进行直观的检查, 此文件从下到上都应该平滑地变化.</li>
+<li>diagonalization(对角化): 对角化RMSD矩阵.</li>
+<li>gromos: 利用Daura等介绍的算法(Angew. Chem. Int. Ed. <strong>1999</strong>, 38, pp 236&#8211;240). 使用截断来数算近邻结构的个数, 把具有最多近邻的结构及其所有近邻作为一个团簇, 并从团簇池中将这个团簇移除. 然后对团簇池中剩下的结构重复以上算法.</li>
+</ul>
+
+<p>当团簇化算法(single linkage, Jarvis Patrick and gromos) 将每个结构都精确地分配到了一个团簇, 并且提供了轨迹文件时, 在每一个团簇中, 相对于其他结构或平均结构或所有结构拥有最小平均距离的结构将被写入到轨迹文件中. 当输出所有结构时, 对每个团簇会使用单独编号的文件.</p>
+
+<p>程序总会给出两个输出文件:</p>
+
+<ul class="incremental">
+<li><code>-o</code>: 输出矩阵左上半区域的RMSD值, 团簇图像的右下半区域. 当<code>-minstruct = 1</code>时, 若两个结构属于同一团簇, 相应的图像点为黑色; 当<code>-minstruct &gt; 1</code>时, 对每一个团簇使用不同的颜色.</li>
+<li><code>-g</code>: 输出所用选项的信息和所有团簇及其成员的详细列表.</li>
+</ul>
+
+<p>此外, 程序也可以给出多个可选的输出文件:</p>
+
+<ul class="incremental">
+<li><code>-dist</code>: 输出RMSD的分布</li>
+<li><code>-ev</code>: 输出RMSD矩阵对角化的特征向量</li>
+<li><code>-sz</code>: 输出团簇的大小</li>
+<li><code>-tr</code>: 输出两个团簇之间的转变次数矩阵</li>
+<li><code>-ntr</code>: 输出从/到每个团簇的总转变次数</li>
+<li><code>-clid</code>: 输出团簇数随时间变化的函数</li>
+<li><code>-cl</code>: 输出每个团簇的平均(利用<code>-av</code>选项)或中心结构, 或对所选的一组团簇, 将团簇成员输出到带编号的文件(利用<code>-wcl</code>选项, 取决于<code>-nst</code>和<code>-rmsmin</code>选项). 一个团簇的中心是指团簇中与所有其他结构具有最小平均RMSD的结构.</li>
+</ul>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入, 可选)<br/>
+轨迹: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入, 可选)<br/>
+结构+质量（db）: tpr tpb tpa gro g96 pdb brk ent</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入, 可选)<br/>
+索引文件</li>
+<li><code>-dm [&lt;.xpm&gt;]</code> (rmsd.xpm) (输入, 可选)<br/>
+X PixMap兼容的矩阵文件</li>
+<li><code>-om [&lt;.xpm&gt;]</code> (rmsd-raw.xpm) (输出)<br/>
+X PixMap兼容的矩阵文件</li>
+<li><code>-o [&lt;.xpm&gt;]</code> (rmsd-clust.xpm) (输出)<br/>
+X PixMap兼容的矩阵文件</li>
+<li><code>-g [&lt;.log&gt;]</code> (cluster.log) (输出)<br/>
+日志文件</li>
+<li><code>-dist [&lt;.xvg&gt;]</code> (rmsd-dist.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-ev [&lt;.xvg&gt;]</code> (rmsd-eig.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-conv [&lt;.xvg&gt;]</code> (mc-conv.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-sz [&lt;.xvg&gt;]</code> (clust-size.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-tr [&lt;.xpm&gt;]</code> (clust-trans.xpm) (输出, 可选)<br/>
+X PixMap兼容的矩阵文件</li>
+<li><code>-ntr [&lt;.xvg&gt;]</code> (clust-trans.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-clid [&lt;.xvg&gt;]</code> (clust-id.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-cl [&lt;.xtc/.trr/...&gt;]</code> (clusters.pdb) (输出, 可选)<br/>
+轨迹: xtc trr cpt trj gro g96 pdb tng</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (19)<br/>
+设置优先级</li>
+<li><code>-b</code> <time> (0)<br/>
+从轨迹文件中读取的第一帧(ps)</li>
+<li><code>-e</code> <time> (0)<br/>
+从轨迹文件中读取的最后一帧(ps)</li>
+<li><code>-dt</code> <time> (0)<br/>
+只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
+<li><code>-tu</code> <enum> (ps)<br/>
+时间值的单位: fs, ps, ns, us, ms, s</li>
+<li><code>-[no]w</code> (no)<br/>
+查看输出的 <code>.xvg</code>, <code>.xpm</code>, <code>.eps</code>和<code>.pdb</code>文件</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg图形格式: xmgrace, xmgr, none</li>
+<li><code>-[no]dista</code> (no)<br/>
+利用RMSD距离而不是RMS偏差</li>
+<li><code>-nlevels &lt;int&gt;</code> (40)<br/>
+离散化RMSD矩阵时使用的水平数</li>
+<li><code>-cutoff &lt;real&gt;</code> (0.1)<br/>
+定义两个近邻结构所用的RMSD截断距离(nm)</li>
+<li><code>-[no]fit</code> (yes)<br/>
+计算RMSD之前使用最小二乘叠合结构</li>
+<li><code>-max &lt;real&gt;</code> (&#8211;1)<br/>
+RMSD矩阵的最高水平</li>
+<li><code>-skip &lt;int&gt;</code> (1)<br/>
+每nr帧分析一次</li>
+<li><code>-[no]av</code> (no)<br/>
+输出每一团簇的平均等中间结构</li>
+<li><code>-wcl &lt;int&gt;</code> (0)<br/>
+将此数目团簇的结构输出到编号文件中</li>
+<li><code>-nst &lt;int&gt;</code> (1)<br/>
+每个团簇中的结构数超过此数时才会输出团簇中的所有结构</li>
+<li><code>-rmsmin &lt;real&gt;</code> (0)<br/>
+输出结构与其余团簇的最小rms差异</li>
+<li><code>-method &lt;enum&gt;</code> (linkage)<br/>
+团簇的确定方法: linkage, jarvis-patrick, monte-carlo, diagonalization, gromos</li>
+<li><code>-minstruct &lt;int&gt;</code> (1)<br/>
+<code>.xpm</code>文件中着色团簇具有的最小结构数</li>
+<li><code>-[no]binary</code> (no)<br/>
+将RMSD矩阵视为由0和1组成的矩阵, 截断由<code>-cutoff</code>给出</li>
+<li><code>-M &lt;int&gt;</code> (10)<br/>
+Jarvis-Patrick算法中使用的最近近邻数, 取0时使用截断</li>
+<li><code>-P &lt;int&gt;</code> (3)<br/>
+形成团簇需要的全同最近近邻数</li>
+<li><code>-seed &lt;int&gt;</code> (1993)<br/>
+蒙特卡洛团簇化算法的随机数种子: &lt;= 0 代表生成</li>
+<li><code>-niter &lt;int&gt;</code> (10000)<br/>
+蒙特卡洛的迭代次数</li>
+<li><code>-nrandom &lt;int&gt;</code> (0)<br/>
+蒙特卡洛的第一次迭代可以完全随机, 以对帧进行混洗</li>
+<li><code>-kT &lt;real&gt;</code> (0.001)<br/>
+蒙特卡洛优化中使用的Boltzmann权重因子(取0时会关闭上升步骤)</li>
+<li><code>-[no]pbc</code> (yes)<br/>
+PBC检查</li>
+</ul>
 
 <h2 id="gmxclustsize-calculatesizedistributionsofatomicclusters">gmx clustsize - Calculate size distributions of atomic clusters</h2>
 
@@ -843,7 +989,58 @@ ACF的长度, 默认为帧数的一半.</li>
 <li><code>-seed</code>: 随机数种子, 添加水分子时, 各个水分子的位置是随机的, 可以改变这个随机数种子使水分子重新分布</li>
 </ul>
 
-<h2 id="gmxlie-estimatefreeenergyfromlinearcombinations">gmx lie - Estimate free energy from linear combinations</h2>
+<h2 id="gmxlie:根据线性组合估计自由能翻译:王燕">gmx lie: 根据线性组合估计自由能(翻译: 王燕)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx lie [-f [&lt;.edr&gt;]] [-o [&lt;.xvg&gt;]] [-nice ] [-b ] [-e ]
+        [-dt ] [-[no]w] [-xvg ] [-Elj ] [-Eqq ]
+        [-Clj ] [-Cqq ] [-ligand ]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx lie</code>基于对非键能的能量分析估算自由能. 程序需要包含Coul-(A-B), LJ-SR(A-B)等能量项的能量文件.</p>
+
+<p>为正确使用<code>g_lie</code>, 需要进行两次模拟: 一次是目标分子与受体结合的模拟, 一次是目标分子在水中的模拟. 两者都需要利用<code>energygrps</code>以使Coul-SR(A-B), LJ-SR(A-B)等能量项写入<code>.edr</code>文件. 水中分子的模拟数据可提供-Elj和-Eqq的合适值.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.edr&gt;]</code> (ener.edr) (输入)<br/>
+能量文件</li>
+<li><code>-o [&lt;.xvg&gt;]</code> (lie.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+</ul>
+
+<p>其它选项:</p>
+
+<ul class="incremental">
+<li><code>-nice</code> <int> (19)<br/>
+设置优先级</li>
+<li><code>-b</code> <time> (0)<br/>
+从轨迹文件中读取的第一帧(ps)</li>
+<li><code>-e</code> <time> (0)<br/>
+从轨迹文件中读取的最后一帧(ps)</li>
+<li><code>-dt</code> <time> (0)<br/>
+只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
+<li><code>-[no]w</code> (no)<br/>
+查看输出的<code>.xvg</code>, <code>.xpm</code>, <code>.eps</code>和<code>.pdb</code>文件</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-Elj &lt;real&gt;</code> (0)<br/>
+配体和溶剂之间的Lennard-Jones相互作用</li>
+<li><code>-Eqq &lt;real&gt;</code> (0)<br/>
+配体和溶剂之间的库伦相互作用</li>
+<li><code>-Clj &lt;real&gt;</code> (0.181)<br/>
+LIE方程中能量Lennard-Jones分量的系数</li>
+<li><code>-Cqq &lt;real&gt;</code> (0.5)<br/>
+LIE方程中能量库伦分量的系数</li>
+<li><code>-ligand &lt;string&gt;</code> (none)<br/>
+能量文件中配体的名称</li>
+</ul>
 
 <h2 id="gmxmake_edi-generateinputfilesforessentialdynamicssampling">gmx make_edi - Generate input files for essential dynamics sampling</h2>
 
