@@ -8,6 +8,9 @@
  - js
 ---
 
+<script src="/jscss/raphael-min.js"></script>
+<script src="/jscss/flowchart-min.js"></script>
+
 ## 2014-12-25 12:08:34
 
 计算机领域中一直存在两种不同的理念并彼此竞争, 可视化与可控化, 或称为所见即所得与所愿即所得.
