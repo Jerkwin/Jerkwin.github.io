@@ -398,7 +398,144 @@ PBC检查</li>
 
 <h2 id="gmxdyndom-interpolateandextrapolatestructurerotations">gmx dyndom - Interpolate and extrapolate structure rotations</h2>
 
-<h2 id="gmxeditconf-convertandmanipulatesstructurefiles">gmx editconf - Convert and manipulates structure files</h2>
+<h2 id="gmxeditconf:编辑模拟盒子以及转换和操控结构文件翻译:严立京">gmx editconf: 编辑模拟盒子以及转换和操控结构文件(翻译: 严立京)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx editconf [-f [&lt;.gro/.g96/...&gt;]] [-n [&lt;.ndx&gt;]] [-o [&lt;.gro/.g96/...&gt;]]
+             [-mead [&lt;.pqr&gt;]] [-bf [&lt;.dat&gt;]] [-nice ] [-[no]w]
+             [-[no]ndef] [-bt ] [-box ] [-angles ]
+             [-d ] [-[no]c] [-center ] [-aligncenter ]
+             [-align ] [-translate ] [-rotate ]
+             [-[no]princ] [-scale ] [-density ] [-[no]pbc]
+             [-resnr ] [-[no]grasp] [-rvdw ] [-[no]sig56]
+             [-[no]vdwread] [-[no]atom] [-[no]legend] [-label ]
+             [-[no]conect]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx editconf</code>的主要功能是对体系结构进行编辑, 也可以将通用结构格式保存或转换为<code>.gro</code>, <code>.g96</code>或<code>.pdb</code>等其他格式.</p>
+
+<p>在分子动力学模拟中, 通常会给体系添加一个周期性的模拟盒子. <code>gmx editconf</code>有许多控制盒子的选项.</p>
+
+<p>利用选项<code>-box</code>, <code>-d</code>和<code>-angles</code>可以对盒子进行修改. 除非明确使用了<code>-noc</code>选项, <code>-box</code>和<code>-d</code>都可以使体系在盒子内居中.</p>
+
+<p>选项<code>-bt</code>设定盒子类型: <code>triclinic</code>为三斜盒子, <code>cubic</code>为所有边长都相等的长方体盒子(即立方体盒子), <code>dodecahedron</code>代表菱形十二面体盒子(等边十二面体), <code>octahedron</code>为截角八面体盒子(即将两个底面重合的四面体切去方向相反的两头, 同时保证所有的边长相等). 后面两种盒子是三斜盒子的特殊情况. 截角八面体三个盒向量的长度是两个相对六边形之间的最短距离. 相对于具有周期性映象距离的立方盒子, 具有相同周期距离的菱形十二面体盒子的体积是立方盒子的71%, 而截角八面体盒子的体积是立方盒子的77%.</p>
+
+<p>对一般的三斜盒子, <code>-box</code>的参数是三个实数, 为长方体的边长. 对于立方盒子, 菱形十二面体盒子或者截面八面体盒子, 选项<code>-box</code>只需要提供一个数值, 即盒子边长.</p>
+
+<p><code>-d</code>选项指定体系中的原子到盒子编边界的最小距离. 使用<code>-d</code>选项时, 对三斜盒子会使用体系在x, y和z方向的大小, 对立方盒子, 菱形十二面体盒子或截角八面体盒子, 盒子的大小被设定为体系直径(原子间的最大距离)加上两倍的指定距离.</p>
+
+<p>选项<code>-angles</code>只能与选项<code>-box</code>和三斜盒子一起使用才有意义, 而且不能和选项<code>-d</code>一起使用.</p>
+
+<p>当使用<code>-n</code>或<code>-ndef</code>时, 可以指定一个索引文件, 并选择其中的一个组来计算大小和几何中心, 否则会使用整个体系的大小和几何中心.</p>
+
+<p><code>-rotate</code>选项可以对坐标和速度进行旋转. 如<code>-rotate 0 30 0</code>表示将体系绕Y轴沿顺时针方向旋转30度.</p>
+
+<p><code>-princ</code>选项将体系(或体系某一部分)的主轴与坐标轴平齐, 并且最长的轴沿x轴方向. 这可以减小盒子的体积, 特别当分子为长条形时. 但是注意分子在纳秒的时间尺度内可能发生明显的旋转, 所以使用时要小心.</p>
+
+<p>缩放会在任何其他操作之前进行. 可以对盒子和坐标进行缩放以得到一定的密度(选项<code>-density</code>). 注意如果输入是<code>.gro</code>文件的话, 密度可能不够精确. <code>-scale</code>选项的一个特性是, 当某一维度的缩放因子为&#8211;1时, 可以得到体系相对于一个平面的镜面映象. 当三个维度的缩放因子都是&#8211;1时, 可以获得体系相对于坐标原点的对称映象.</p>
+
+<p>组的选择是在其他所有操作都完成之后进行的. 在程序输出时, 可以只输出体系中的某一个组, 或者某一个部分, 还可以建立划分更细致的索引文件, 以便进行更加细致的选择.</p>
+
+<p>可以粗略地去除体系的周期性. 当去除周期性时, 输入文件最底部的盒向量必须保证正确, 这非常重要, 因为<code>gmx editconf</code>去除周期性的算法十分简单, 只是将原子坐标直接减去盒子边长.</p>
+
+<p>当输出<code>.pdb</code>文件时, 可以使用<code>-bf</code>选项添加B因子. B因子可以从文件中读取, 格式如下: 第一行声明文件中所含B因子数值的个数, 从第二行开始, 每行声明一个索引号, 后面跟着B因子. 默认情况下, B因子将附加到每个残基上, 每个残基一个数值, 除非索引大于残基数目或者设定了<code>-atom</code>选项. 显然, 可以添加任何类型的数值数据而不仅仅是B因子. <code>-legend</code>选项将生成一列CA原子, 其B因子的范围为所用数据的最小值到最大值, 可以有效地作为查看的图例, 便于可视化软件显示.</p>
+
+<p>使用<code>-mead</code>选项时可以生成一个特殊的<code>.pdb</code>文件(<code>.pqr</code>), 它可用于MEAD静电程序(泊松玻尔兹曼方程求解器). 使用这个选项的前提条件是输入文件必须为运行输入文件(如tpr), 因为这样的文件中才包含了力场参数. 输出文件中的B因子段为原子的范德华半径而占有率段为原子的电荷.</p>
+
+<p><code>-grasp</code>选项的作用与上一选项类似, 只不过互换了电荷与半径的位置, 电荷位于B因子段, 而半径位于占有率段.</p>
+
+<p>选项<code>-align</code>可以将特定组的主轴与给定的向量平齐, <code>-aligncenter</code>选项指定可选的旋转中心.</p>
+
+<p>最后, 使用选项<code>-label</code>, <code>gmx editconf</code>可以为<code>.pdb</code>文件添加一个链标识符. 如果一个文件中不同残基属于不同肽链, 那么这个选项可以为残基指定肽链归属, 这样不但有利于可视化, 在使用一些程序如Rasmol进行分析时也很有帮助, 在建立模拟体系时也十分方便.</p>
+
+<p>对一些软件包(如GROMOS), 会使用对立方盒子进行角截断的方法生成截角八面体, 为转换这种截角八面体文件, 可使用以下命令:</p>
+
+<p><code>gmx editconf -f in -rotate 0 45 35.264 -bt o -box veclen -o out</code></p>
+
+<p>其中<code>veclen</code>是立方盒子大小乘以sqrt(3)/2.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.gro/.g96/...&gt;]</code> (conf.gro) (输入)<br/>
+结构文件: gro g96 pdb brk ent esp tpr tpb tpa</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入, 可选)<br/>
+索引文件</li>
+<li><code>-o [&lt;.gro/.g96/...&gt;]</code> (out.gro) (Output, 可选)<br/>
+结构文件: gro g96 pdb brk ent esp</li>
+<li><code>-mead [&lt;.pqr&gt;]</code> (mead.pqr) (Output, 可选)<br/>
+用于MEAD的坐标文件</li>
+<li><code>-bf [&lt;.dat&gt;]</code> (bfact.dat) (输入, 可选)<br/>
+通用数据文件</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (0)<br/>
+设置优先级</li>
+<li><code>-[no]w</code> (no)<br/>
+程序结束自动打开输出的<code>.xvg</code>, <code>.xpm</code>, <code>.eps</code>和<code>.pdb</code>文件</li>
+<li><code>-[no]ndef</code> (no)<br/>
+从默认索引组选择输出</li>
+<li><code>-bt &lt;enum&gt;</code> (triclinic)<br/>
+用于<code>-box</code>和<code>-d</code>的盒子类型: triclinic, cubic, dodecahedron, octahedron</li>
+<li><code>-box &lt;vector&gt;</code> (0 0 0)<br/>
+盒向量长度 (a,b,c)</li>
+<li><code>-angles &lt;vector&gt;</code> (90 90 90)<br/>
+盒向量之间的角度 (bc,ac,ab)</li>
+<li><code>-d &lt;real&gt;</code> (0)<br/>
+溶质分子与盒子之间的距离</li>
+<li><code>-[no]c</code> (no)<br/>
+使分子在盒子内居中(<code>-box</code>和<code>-d</code>选项暗含此选项)</li>
+<li><code>-center &lt;vector&gt;</code> (0 0 0)<br/>
+几何中心的坐标</li>
+<li><code>-aligncenter &lt;vector&gt;</code> (0 0 0)<br/>
+平齐的旋转中心</li>
+<li><code>-align &lt;vector&gt;</code> (0 0 0)<br/>
+与目标向量平齐</li>
+<li><code>-translate &lt;vector&gt;</code> (0 0 0)<br/>
+平移</li>
+<li><code>-rotate &lt;vector&gt;</code> (0 0 0)<br/>
+绕X, Y和Z轴的旋转角度, 单位为度</li>
+<li><code>-[no]princ</code> (no)<br/>
+使分子取向沿其主轴</li>
+<li><code>-scale &lt;vector&gt;</code> (1 1 1)<br/>
+缩放因子</li>
+<li><code>-density &lt;real&gt;</code> (1000)<br/>
+通过缩放使输出盒子的密度(g/L)为指定值</li>
+<li><code>-[no]pbc</code> (no)<br/>
+移除周期性(使分子保持完整)</li>
+<li><code>-resnr &lt;int&gt;</code> (&#8211;1)<br/>
+从resnr开始重新对残基进行编号</li>
+<li><code>-[no]grasp</code> (no)<br/>
+在B因子段存储原子电荷, 在占有率段存储原子半径.</li>
+<li><code>-rvdw &lt;real&gt;</code> (0.12)<br/>
+如果在数据库中找不到范德华半径或者拓扑文件中不存在参数, 将使用默认的范德华半径(单位nm). 可用于处理缺少力场参数的原子.</li>
+<li><code>-[no]sig56</code> (no)<br/>
+使用rmin/2(范德华势能的最小点对应距离的一半)而不是σ/2(范德华半径的一半)</li>
+<li><code>-[no]vdwread</code> (no)<br/>
+从<code>vdwradii.dat</code>文件中读取范德华半径, 而不是根据力场计算半径.</li>
+<li><code>-[no]atom</code> (no)<br/>
+强制为每个原子附加B因子</li>
+<li><code>-[no]legend</code> (no)<br/>
+创建B因子图例</li>
+<li><code>-label &lt;string&gt;</code> (A)<br/>
+为所有残基添加链标识符, 以便指定其肽链归属</li>
+<li><code>-[no]conect (no)</code><br/>
+当写入的时候将CONECT记录添加到<code>.pdb</code>文件中. 只有当拓扑文件存在时才可以.</li>
+</ul>
+
+<h3 id="已知问题">已知问题</h3>
+
+<ul class="incremental">
+<li>对复杂的分子, 去除周期性的子程序可能会崩溃, 在这种情况下你可以使用<code>gmx trjconv</code>.</li>
+</ul>
 
 <h2 id="gmxeneconv-convertenergyfiles">gmx eneconv - Convert energy files</h2>
 
@@ -1705,7 +1842,106 @@ Connolly表面的PDB文件</li>
 
 <h2 id="gmxsaxs-computesmallanglex-rayscatteringspectra">gmx saxs - Compute small angle X-ray scattering spectra</h2>
 
-<h2 id="gmxselect-printgeneralinformationaboutselections">gmx select - Print general information about selections</h2>
+<h1 id="gmxselect:打印选区的通用信息翻译:陈珂">gmx select: 打印选区的通用信息(翻译: 陈珂)</h1>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx select [-f [&lt;.xtc/.trr/...&gt;]] [-s [&lt;.tpr/.tpb/...&gt;]] [-n [&lt;.ndx&gt;]]
+           [-os [&lt;.xvg&gt;]] [-oc [&lt;.xvg&gt;]] [-oi [&lt;.dat&gt;]] [-on [&lt;.ndx&gt;]]
+           [-om [&lt;.xvg&gt;]] [-of [&lt;.xvg&gt;]] [-ofpdb [&lt;.pdb&gt;]] [-olt [&lt;.xvg&gt;]]
+           [-b ] [-e ] [-dt ] [-tu ] [-xvg ]
+           [-[no]rmpbc] [-[no]pbc] [-sf ] [-selrpos ]
+           [-select ] [-[no]norm] [-[no]cfnorm] [-resnr ]
+           [-pdbatoms ] [-[no]cumlt]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx select</code>输出与动态选区相关的基本数据. 它可以用于一些简单分析, 它的输出也可以与其他程序和/或外部分析程序的输出组合起来, 用以计算更复杂的数据. 输出选项可以任意组合, 但需要注意<code>-om</code>仅对第一个选区进行操作. 还需要注意, 如果没有提供输出选项, 则不会有任何输出.</p>
+
+<p>使用<code>-os</code>时, 会逐帧计算每个选区中的位置(position)数目. 使用<code>-norm</code>时, 输出值会介于0和1之间, 代表相对于最大位置数的比例(例如, 对于选区<code>resname RA and x &lt; 5</code>, 最大位置数就是RA残基内的原子数). 使用<code>-cfnorm</code>时, (<code>-os</code>的)输出值则会除以选区覆盖(全局位置数的)比例. <code>-norm</code>和<code>-cfnorm</code>可以互相独立地指定.</p>
+
+<p>使用<code>-oc</code>时, 以时间函数的形式输出每个选区的覆盖比例.</p>
+
+<p>使用<code>-oi</code>时, 以时间函数的形式输出选中的原子/残基/分子. 输出中, 第一列是帧时间, 第二列是位置数, 后续列是原子/残基/分子编号. 如果指定的选区数大于1, 则第二组的位置数紧邻第一组的最后一个数字输出, 并以此类推.</p>
+
+<p>使用<code>-on</code>时, 会将选中的原子输出为索引文件, 此文件与<code>make_ndx</code>和分析工具兼容. 每个选区会输出为一个选区组, 对于动态选区, 每帧都会输出一个组.</p>
+
+<p>要得到残基编号, 可以使用<code>-resnr</code>控制<code>-oi</code>的输出: <code>number</code>(默认)会按照残基在输入文件中的编号输出, 而<code>index</code>则会按残基在输入文件中出现的顺序, 从1开始, 赋予残基唯一的编号并输出. 前者更加直观, 但如果输入中含有多个同一编号的残基, 得到的输出就没那么有用了.</p>
+
+<p>使用<code>-om</code>时, 以时间函数的形式, 针对第一选区输出一套掩码(mask). 输出中的每一行对应一帧, 为每一个可能被选中的原子/残基/分子赋予0或1的值. 1表示该原子/残基/分子在当前帧中被选中, 0表示未选中.</p>
+
+<p>使用<code>-of</code>时, 输出每个位置的占据比例(即该位置被选中的帧所占的比例).</p>
+
+<p>使用<code>-ofpdb</code>时, 输出一个PDB文件, 其中占有率列的值是选区中每个原子的占据分数. PDB文件中的坐标则是输入拓扑中的值. <code>-pdbatoms</code>可以用来控制哪些原子会出现在输出的PDB文件中: 使用<code>all</code>时, 所有原子都会出现; 使用<code>maxsel</code>时, 所有可能被选区选中的原子都会出现; 使用<code>selected</code>时, 只有在至少一帧中被选中的原子才会出现.</p>
+
+<p>使用<code>-olt</code>时, 生成一个直方图, 显示了被选中位置数与某位置持续被选中时间的函数关系. <code>-cumlt</code>可以用来控制是否在直方图中包含较长间隔的子间隔.</p>
+
+<p><code>-om</code>, <code>-of</code>和<code>-olt</code>只有在处理动态选区时才有意义.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入, 可选)<br/>
+输入轨迹或单个构型: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入, 可选)<br/>
+输入结构拓扑: tpr tpb tpa gro g96 pdb brk ent</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入, 可选)<br/>
+额外的索引组</li>
+<li><code>-os [&lt;.xvg&gt;]</code> (size.xvg) (输出, 可选)<br/>
+每个选区中的位置数</li>
+<li><code>-oc [&lt;.xvg&gt;]</code> (cfrac.xvg) (输出, 可选)<br/>
+每个选区的覆盖比例</li>
+<li><code>-oi [&lt;.dat&gt;]</code> (index.dat) (输出, 可选)<br/>
+每个选区所选中的索引</li>
+<li><code>-on [&lt;.ndx&gt;]</code> (index.ndx) (输出, 可选)<br/>
+由选区生成的索引文件</li>
+<li><code>-om [&lt;.xvg&gt;]</code> (mask.xvg) (输出, 可选)<br/>
+被选中位置的掩码</li>
+<li><code>-of [&lt;.xvg&gt;]</code> (occupancy.xvg) (输出, 可选)<br/>
+被选中位置的占据比例</li>
+<li><code>-ofpdb [&lt;.pdb&gt;]</code> (occupancy.pdb) (输出, 可选)<br/>
+含有被选中位置占据比例的PDB文件</li>
+<li><code>-olt [&lt;.xvg&gt;]</code> (lifetime.xvg) (输出, 可选)<br/>
+生命周期的直方图</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-b &lt;time&gt;</code> (0)<br/>
+从轨迹中读取的第一帧(ps)</li>
+<li><code>-e &lt;time&gt;</code> (0)<br/>
+从轨迹中读取的最后一帧(ps)</li>
+<li><code>-dt &lt;time&gt;</code> (0)<br/>
+只使用 t MOD dt == 第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
+<li><code>-tu &lt;enum&gt;</code> (ps)<br/>
+时间值的单位: fs, ps, ns, us, ms, s</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: none, xmgrace, xmgr</li>
+<li><code>-[no]rmpbc</code> (yes)<br/>
+保持每帧中的分子完整</li>
+<li><code>-[no]pbc</code> (yes)<br/>
+在距离计算中使用周期性边界条件</li>
+<li><code>-sf &lt;file&gt;</code>
+由文件提供选区</li>
+<li><code>-selrpos &lt;enum&gt;</code> (atom)<br/>
+选区的参考位置: atom, res_com, res_cog, mol_com, mol_cog, whole_res_com, whole_res_cog, whole_mol_com, whole_mol_cog, part_res_com, part_res_cog, part_mol_com, part_mol_cog, dyn_res_com, dyn_res_cog, dyn_mol_com, dyn_mol_cog</li>
+<li><code>-select &lt;selection&gt;</code>
+要分析的选区</li>
+<li><code>-[no]norm</code> (no)<br/>
+启用<code>-os</code>选项时, 用总位置数进行归一化</li>
+<li><code>-[no]cfnorm</code> (no)<br/>
+启用<code>-os</code>选项时, 用覆盖比例进行归一化</li>
+<li><code>-resnr &lt;enum&gt;</code> (number)<br/>
+启用<code>-oi</code>或<code>-on</code>时, 残基编号的输出类型: number, index</li>
+<li><code>-pdbatoms &lt;enum&gt;</code> (all)<br/>
+启用<code>-ofpdb</code>选项时, 要输出的原子: all, maxsel, selected</li>
+<li><code>-[no]cumlt</code> (yes)<br/>
+启用<code>-olt</code>选项时, 累积计入较长间隔的子间隔</li>
+</ul>
 
 <h2 id="gmxsham-computefreeenergiesorotherhistogramsfromhistograms">gmx sham - Compute free energies or other histograms from histograms</h2>
 
