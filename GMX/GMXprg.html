@@ -396,7 +396,55 @@ PBC检查</li>
 
 <h2 id="gmxdyecoupl-extractdyedynamicsfromtrajectories">gmx dyecoupl - Extract dye dynamics from trajectories</h2>
 
-<h2 id="gmxdyndom-interpolateandextrapolatestructurerotations">gmx dyndom - Interpolate and extrapolate structure rotations</h2>
+<h2 id="gmxdyndom:结构旋转的内插和外推翻译:李耀">gmx dyndom: 结构旋转的内插和外推(翻译: 李耀)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx dyndom [-f [&lt;.pdb&gt;]] [-o [&lt;.xtc/.trr/...&gt;]] [-n [&lt;.ndx&gt;]] [-nice ]
+           [-firstangle ] [-lastangle ] [-nframe ]
+           [-maxangle ] [-trans ] [-head ]
+           [-tail ]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx dyndom</code>读取DynDom程序(<a href="http://www.cmp.uea.ac.uk/dyndom/">http://www.cmp.uea.ac.uk/dyndom/</a>)输出的<code>.pdb</code>文件. 它会读取坐标, 旋转轴的坐标以及包含分区的索引文件. 而且, 它把矢量文件的第一个和最后一个原子当作命令行参数(头和尾), 最终得到平移矢量(DynDom的info文件给出)和旋转角度(也当作命令行参数). 如果给出了DynDom确定的角度, 你应该能够恢复用于生成DynDom输出文件的二级结构. 由于数值精度的限制, 需要通过计算所有原子的RMSD(<code>gmx confrms</code>)而不是文件对比(使用<code>diff</code>)来进行确认.</p>
+
+<p>此程序的目的是对DynDom揭示的旋转进行内插和外推. 所以, 可能会产生含有过长或过短键的不现实结构, 或者原子会重叠在一起. 因此, 可能需要查看结构和并进行能量优化以验证结构.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>用来指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.pdb&gt;]</code> (dyndom.pdb) (输入)<br/>
+蛋白质数据库文件</li>
+<li><code>-o [&lt;.xtc/.trr/...&gt;]</code> (rotated.xtc) (输出)<br/>
+轨迹文件: xtc trr trj gro g96 pdb tng</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (domains.ndx) (输入)<br/>
+索引文件</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (0)<br/>
+设置优先级</li>
+<li><code>-firstangle &lt;real&gt;</code> (0)<br/>
+绕旋转矢量的旋转角度</li>
+<li><code>-lastangle &lt;real&gt;</code> (0)<br/>
+绕旋转矢量的旋转角度</li>
+<li><code>-nframe &lt;int&gt;</code> (11)<br/>
+途径上的步数</li>
+<li><code>-maxangle &lt;real&gt;</code> (0)<br/>
+DymDom确定的绕旋转矢量的旋转角度</li>
+<li><code>-trans &lt;real&gt;</code> (0)<br/>
+沿旋转矢量的平移量(单位: 埃) (参看DynDom info)</li>
+<li><code>-head &lt;vector&gt;</code> (0 0 0)<br/>
+矢量的第一个原子</li>
+<li><code>-tail &lt;vector&gt;</code> (0 0 0)<br/>
+矢量的最后一个原子</li>
+</ul>
 
 <h2 id="gmxeditconf:编辑模拟盒子以及转换和操控结构文件翻译:严立京">gmx editconf: 编辑模拟盒子以及转换和操控结构文件(翻译: 严立京)</h2>
 
@@ -2400,4 +2448,92 @@ pdb2gmx使用的残基类型文件</li>
 
 <p>理论上只要能在对应的力场中找到构型中的各个原子类型, 那么<code>gmx x2top</code>可以支持所有GROMACS的力场. 当然输出的原始拓扑文件需要进行很多修改, 因此在使用此工具需要对拓扑文件足够熟悉.</p>
 
-<h2 id="gmxxpm2ps-convertxpmxpixelmapmatricestopostscriptorxpm">gmx xpm2ps - Convert XPM (XPixelMap) matrices to postscript or XPM</h2>
+<h2 id="gmxxpm2ps:将xpmxpixelmap矩阵转换为postscript或xpm翻译:黄丽红">gmx xpm2ps: 将XPM(XPixelMap)矩阵转换为postscript或XPM(翻译: 黄丽红)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx xpm2ps [-f [&lt;.xpm&gt;]] [-f2 [&lt;.xpm&gt;]] [-di [&lt;.m2p&gt;]] [-do [&lt;.m2p&gt;]]
+           [-o [&lt;.eps&gt;]] [-xpm [&lt;.xpm&gt;]] [-nice ] [-[no]w] [-[no]frame]
+           [-title ] [-[no]yonce] [-legend ] [-diag ]
+           [-size ] [-bx ] [-by ] [-rainbow ]
+           [-gradient ] [-skip ] [-[no]zeroline]
+           [-legoffset ] [-combine ] [-cmin ] [-cmax ]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx xpm2ps</code>能够将XPM(XPixelMap)矩阵文件转换为漂亮的颜色映射图. 只要提供了正确的矩阵格式, 还可以显示标签和坐标轴. 矩阵数据可以通过一些程序得到, 如<code>gmx do_dssp</code>, <code>gmx rms</code>或<code>gmx mdmat</code>.</p>
+
+<p>可以选择性的使用<code>-di</code>选项提供<code>.m2p</code>文件, 里面包含了设定的参数, 并提供了合理的默认值. Y轴的默认设置与X轴相同. 字体名称的默认等级为: 标题字体 -&gt; 图例字体; 标题字体 -&gt; (x字体 -&gt; y字体 -&gt; y刻度字体) -&gt; x刻度字体, 例如, 设置标题字体相当于设置了所有字体, 设置x轴字体相对于设置了y轴字体, y刻度字体和x刻度字体.</p>
+
+<p>未提供<code>.m2p</code>文件时, 可以通过命令行选项设定多数设置. 其中最重要的选项是<code>-size</code>, 它以postscript的单位设定了整个矩阵的大小. 此选项也可以使用<code>-bx</code>和<code>-by</code>选项(以及<code>.m2p</code>文件中的相应参数)覆盖, 它们设定了单个矩阵元素的大小.</p>
+
+<p>使用<code>-f2</code>选项可以提供第二个矩阵文件. 程序会同时读取两个矩阵文件, 并绘制出第一个矩阵(<code>-f</code>)的左上半部分与第二个矩阵(<code>-f2</code>)的右下半部分. 对角部分的值来自由<code>-diag</code>选项选择的矩阵文件. 将选项<code>-diag</code>设置为<code>none</code>可以不显示对角线上的值. 在这种情况下, 会生成一个新的颜色映射图, 其中红和蓝的渐变色分别代表负值和正值. 如果两个矩阵的颜色代码和图例标签完全相同, 那么只会显示一个图例说明, 否则会显示两个分开的图例说明. 使用<code>-combine</code>选项可以选择另外的操作, 以将矩阵进行组合. 输出值的范围会自动设置为组合矩阵的实际范围, 但可以使用<code>-cmin</code>和<code>-cmax</code>选项来覆盖所用的范围.</p>
+
+<p><code>-title</code>可设置为<code>none</code>以忽略标题, 或设置为<code>ylabel</code>以便在Y轴标签位置显示标题(平行于Y轴).</p>
+
+<p>使用<code>-rainbow</code>选项可以将暗色的灰度矩阵变成更吸引人的彩色图片.</p>
+
+<p>使用<code>-xpm</code>选项可以将溶合或彩虹映射的矩阵输出到XPixelMap文件.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.xpm&gt;]</code> (root.xpm) (输入)<br/>
+XPixMap兼容的矩阵文件</li>
+<li><code>-f2 [&lt;.xpm&gt;]</code> (root2.xpm) (输入, 可选)<br/>
+X PixMap兼容的矩阵文件</li>
+<li><code>-di [&lt;.m2p&gt;]</code> (ps.m2p) (输入, 可选, 库)<br/>
+<code>mat2ps</code>的输入文件</li>
+<li><code>-do [&lt;.m2p&gt;]</code> (out.m2p) (输出, 可选)<br/>
+<code>mat2ps</code>的输入文件</li>
+<li><code>-o [&lt;.eps&gt;]</code> (plot.eps) (输出, 可选)<br/>
+封装的PostScript(tm)文件</li>
+<li><code>-xpm [&lt;.xpm&gt;]</code> (root.xpm) (输出, 可选)<br/>
+XPixMap兼容的矩阵文件</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (0)<br/>
+设置优先级</li>
+<li><code>-[no]w</code> (no)<br/>
+程序结束自动打开输出的<code>.xvg</code>, <code>.xpm</code>, <code>.eps</code>和<code>.pdb</code>文件</li>
+<li><code>-[no]frame</code> (yes)<br/>
+显示帧, 刻度, 标签, 标题, 图例</li>
+<li><code>-title &lt;enum&gt;</code> (top)<br/>
+显示标题的位置: top, once, ylabel, none</li>
+<li><code>-[no]yonce</code> (no)<br/>
+y轴标签只显示一次</li>
+<li><code>-legend &lt;enum&gt;</code> (both)<br/>
+显示图例说明: both, first, second, none</li>
+<li><code>-diag &lt;enum&gt;</code> (first)<br/>
+对角元素: first, second, none</li>
+<li><code>-size &lt;real&gt;</code> (400)<br/>
+矩阵的水平尺寸, ps单位</li>
+<li><code>-bx &lt;real&gt;</code> (0)<br/>
+元素的x大小, 覆盖<code>-size</code>选项(当未设置<code>-by</code>时还会覆盖y大小)</li>
+<li><code>-by &lt;real&gt;</code> (0)<br/>
+元素的y大小</li>
+<li><code>-rainbow &lt;enum&gt;</code> (no)<br/>
+彩虹颜色, 将白色转成为: no, blue, red</li>
+<li><code>-gradient &lt;vector&gt;</code> (0 0 0)<br/>
+将颜色映射重新标度为平滑的渐变, 从白色{1,1,1}到{r,g,b}</li>
+<li><code>-skip &lt;int&gt;</code> (1)<br/>
+每nr行和nr列输出一次</li>
+<li><code>-[no]zeroline</code> (no)<br/>
+在<code>.xpm</code>矩阵中坐标轴标签为零的位置插入一条线</li>
+<li><code>-legoffset &lt;int&gt;</code> (0)<br/>
+对图例, 忽略<code>.xpm</code>文件中的前N个颜色</li>
+<li><code>-combine &lt;enum&gt;</code> (halves)<br/>
+组合两个矩阵: halves, add, sub, mult, div</li>
+<li><code>-cmin &lt;real&gt;</code> (0)<br/>
+组合输出的最小值</li>
+<li><code>-cmax &lt;real&gt;</code> (0)<br/>
+组合输出的最大值</li>
+</ul>
+
+<p>&#8211;&gt;</p>
