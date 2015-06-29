@@ -2565,7 +2565,222 @@ PBC处理方式(完整说明见帮助文件): none, mol, res, atom, nojump, clus
 
 <h2 id="gmxtrjorder-ordermoleculesaccordingtotheirdistancetoagroup">gmx trjorder - Order molecules according to their distance to a group</h2>
 
-<h2 id="gmxtune_pme-timemdrunasafunctionofpmerankstooptimizesettings">gmx tune_pme - Time mdrun as a function of PME ranks to optimize settings</h2>
+<h2 id="gmxtune_pme:计算mdrun的运行时间与pme进程数的关系以优化设置翻译:嘉晔">gmx tune_pme: 计算<code>mdrun</code>的运行时间与PME进程数的关系以优化设置(翻译: 嘉晔)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx tune_pme [-p [&lt;.out&gt;]] [-err [&lt;.log&gt;]] [-so [&lt;.tpr/.tpb/...&gt;]]
+             [-s [&lt;.tpr/.tpb/...&gt;]] [-o [&lt;.trr/.cpt/...&gt;]] [-x [&lt;.xtc/.tng&gt;]]
+             [-cpi [&lt;.cpt&gt;]] [-cpo [&lt;.cpt&gt;]] [-c [&lt;.gro/.g96/...&gt;]]
+             [-e [&lt;.edr&gt;]] [-g [&lt;.log&gt;]] [-dhdl [&lt;.xvg&gt;]] [-field [&lt;.xvg&gt;]]
+             [-table [&lt;.xvg&gt;]] [-tabletf [&lt;.xvg&gt;]] [-tablep [&lt;.xvg&gt;]]
+             [-tableb [&lt;.xvg&gt;]] [-rerun [&lt;.xtc/.trr/...&gt;]] [-tpi [&lt;.xvg&gt;]]
+             [-tpid [&lt;.xvg&gt;]] [-ei [&lt;.edi&gt;]] [-eo [&lt;.xvg&gt;]]
+             [-devout [&lt;.xvg&gt;]] [-runav [&lt;.xvg&gt;]] [-px [&lt;.xvg&gt;]]
+             [-pf [&lt;.xvg&gt;]] [-ro [&lt;.xvg&gt;]] [-ra [&lt;.log&gt;]] [-rs [&lt;.log&gt;]]
+             [-rt [&lt;.log&gt;]] [-mtx [&lt;.mtx&gt;]] [-dn [&lt;.ndx&gt;]] [-swap [&lt;.xvg&gt;]]
+             [-bo [&lt;.trr/.cpt/...&gt;]] [-bx [&lt;.xtc&gt;]] [-bcpo [&lt;.cpt&gt;]]
+             [-bc [&lt;.gro/.g96/...&gt;]] [-be [&lt;.edr&gt;]] [-bg [&lt;.log&gt;]]
+             [-beo [&lt;.xvg&gt;]] [-bdhdl [&lt;.xvg&gt;]] [-bfield [&lt;.xvg&gt;]]
+             [-btpi [&lt;.xvg&gt;]] [-btpid [&lt;.xvg&gt;]] [-bdevout [&lt;.xvg&gt;]]
+             [-brunav [&lt;.xvg&gt;]] [-bpx [&lt;.xvg&gt;]] [-bpf [&lt;.xvg&gt;]]
+             [-bro [&lt;.xvg&gt;]] [-bra [&lt;.log&gt;]] [-brs [&lt;.log&gt;]] [-brt [&lt;.log&gt;]]
+             [-bmtx [&lt;.mtx&gt;]] [-bdn [&lt;.ndx&gt;]] [-bswap [&lt;.xvg&gt;]] [-nice ]
+             [-xvg ] [-np ] [-npstring ] [-ntmpi ]
+             [-r ] [-max ] [-min ] [-npme ]
+             [-fix ] [-rmax ] [-rmin ] [-[no]scalevdw]
+             [-ntpr ] [-steps ] [-resetstep ] [-nsteps ]
+             [-[no]launch] [-[no]bench] [-[no]check] [-[no]append]
+             [-[no]cpnum]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p>对于给定数目<code>-np</code>或<code>-ntmpi</code>的总进程数, <code>gmx tune_pme</code>可以系统地测试不同PME进程数对<code>gmx mdrun</code>运行时间的影响, 并确定哪种设置最快. 通过将负载从Ewald加和的倒易空间部分转移到实空间部分, 它也可以测试是否能提升性能. 测试时, 你只需要将<code>.tpr</code>文件和<code>gmx mdrun</code>的运行选项一起传给<code>gmx tune_pme</code>即可.</p>
+
+<p>测试使用的可执行文件可以通过环境变量<code>MPIRUN</code>和<code>MDRUN</code>进行设置. 如果这些设置不存在, 默认将使用<code>mpirun</code>和<code>mdrun</code>. 注意, 对某些MPI框架, 你需要提供机器号或者主机名. 也可以通过<code>MPIRUN</code>变量传递这些设置, 例如,</p>
+
+<pre><code>export MPIRUN=&quot;/usr/local/mpirun -machinefile hosts&quot;
+</code></pre>
+
+<p>在实际的基准测试运行之前, 如果激活了<code>-check</code>选项(默认激活), <code>gmx tune_pme</code>会进行一个快速的检测, 以确定对提供的并行设置<code>mdrun</code>是否如预期的那样运行. 请使用你要传递给<code>gmx mdrun</code>的正常选项去调用<code>gmx tune_pme</code>, 并且增加执行测试的进程数选项<code>-np</code>, 或线程数选项<code>-ntmpi</code>. 你也可以增加<code>-r</code>选项对每个测试重复多次以便得到更好的统计结果.</p>
+
+<p><code>gmx tune_pme</code>能够测试各种实空间/倒空间的工作负载. 使用<code>-ntpr</code>选项, 你可以控制额外输出的<code>.tpr</code>文件的数目, 每个文件分别对应了增大的截断距离和更小的傅里叶格点. 通常, 首次测试(0号)的设置来自输入的<code>.tpr</code>文件; 最后一次测试(<code>ntpr</code>号)使用了由<code>-rmax</code>指定的库伦截断, 同时使用了略小的PME格点. 在最后的测试中, 傅里叶间距会变为原来的<code>rmax</code>/<code>rcoulomb</code>倍. 其余<code>.tpr</code>文件使用了处于这两个极值之间的等间距的库伦布半径(以及傅里叶间距). <strong>注意</strong>, 如果你只想搜寻最佳的PME进程数, 可以将<code>-ntpr</code>设为1. 在这种情况下, 输入文件<code>.tpr</code>将保持不变.</p>
+
+<p>对于基准测试, 默认的1000个时间步对大多数MD体系应该足够了. 动态负载平衡大约需要100个时间步长来适应本地的负载失衡, 因此默认情况下, 100步之后时间步计数器会被重置. 对于大的体系(&gt;1M个原子)以及高精度测量, 你应该将<code>-resetstep</code>设置为更大的值. 由<code>md.log</code>输出文件中的<code>DD</code>负载失衡项, 你可以知道多少步之后负载已经充分均衡了. 例如, 你可以调用</p>
+
+<pre><code>gmx tune_pme -np 64 -s protein.tpr -launch
+</code></pre>
+
+<p>调用<code>gmx mdrun</code>命令若干次之后, 详细的性能信息会保存在输出文件<code>perf.out</code>中. <strong>注意</strong>, 在基准测试运行期间, 会产生一些临时文件(选项<code>-b*</code>), 每个测试完成之后它们会被自动删除.</p>
+
+<p>如果你想使用最佳参数自动启动模拟, 可以使用命令行选项<code>-launch</code>.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-p [&lt;.out&gt;]</code> (perf.out) (输出)<br/>
+通用输出文件</li>
+<li><code>-err [&lt;.log&gt;]</code> (bencherr.log) (输出)<br/>
+日志文件</li>
+<li><code>-so [&lt;.tpr/.tpb/...&gt;]</code> (tuned.tpr) (输出)<br/>
+运行输入文件: tpr tpb tpa</li>
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入)<br/>
+运行输入文件: tpr tpb tpa</li>
+<li><code>-o [&lt;.trr/.cpt/...&gt;]</code> (traj.trr) (输出)<br/>
+全精度轨迹: trr cpt trj tng</li>
+<li><code>-x [&lt;.xtc/.tng&gt;]</code> (traj_comp.xtc) (输出, 可选)<br/>
+压缩轨迹(tng格式或可移植的xdr格式)</li>
+<li><code>-cpi [&lt;.cpt&gt;]</code> (state.cpt) (输入, 可选)<br/>
+检查点文件</li>
+<li><code>-cpo [&lt;.cpt&gt;]</code> (state.cpt) (输出, 可选)<br/>
+检查点文件</li>
+<li><code>-c [&lt;.gro/.g96/...&gt;]</code> (confout.gro) (输出)<br/>
+结构文件: gro g96 pdb brk ent esp</li>
+<li><code>-e [&lt;.edr&gt;]</code> (ener.edr) (输出)<br/>
+能量文件</li>
+<li><code>-g [&lt;.log&gt;]</code> (md.log) (输出)<br/>
+日志文件</li>
+<li><code>-dhdl [&lt;.xvg&gt;]</code> (dhdl.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-field [&lt;.xvg&gt;]</code> (field.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-table [&lt;.xvg&gt;]</code> (table.xvg) (输入, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-tabletf [&lt;.xvg&gt;]</code> (tabletf.xvg) (输入, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-tablep [&lt;.xvg&gt;]</code> (tablep.xvg) (输入, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-tableb [&lt;.xvg&gt;]</code> (table.xvg) (输入, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-rerun [&lt;.xtc/.trr/...&gt;]</code> (rerun.xtc) (输入, 可选)<br/>
+轨迹: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-tpi [&lt;.xvg&gt;]</code> (tpi.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-tpid [&lt;.xvg&gt;]</code> (tpidist.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-ei [&lt;.edi&gt;]</code> (sam.edi) (输入, 可选)<br/>
+ED采样输入</li>
+<li><code>-eo [&lt;.xvg&gt;]</code> (edsam.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-devout [&lt;.xvg&gt;]</code> (deviatie.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-runav [&lt;.xvg&gt;]</code> (runaver.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-px [&lt;.xvg&gt;]</code> (pullx.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-pf [&lt;.xvg&gt;]</code> (pullf.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-ro [&lt;.xvg&gt;]</code> (rotation.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-ra [&lt;.log&gt;]</code> (rotangles.log) (输出, 可选)<br/>
+日志文件</li>
+<li><code>-rs [&lt;.log&gt;]</code> (rotslabs.log) (输出, 可选)<br/>
+日志文件</li>
+<li><code>-rt [&lt;.log&gt;]</code> (rottorque.log) (输出, 可选)<br/>
+日志文件</li>
+<li><code>-mtx [&lt;.mtx&gt;]</code> (nm.mtx) (输出, 可选)<br/>
+Hessian矩阵</li>
+<li><code>-dn [&lt;.ndx&gt;]</code> (dipole.ndx) (输出, 可选)<br/>
+索引文件</li>
+<li><code>-swap [&lt;.xvg&gt;]</code> (swapions.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-bo [&lt;.trr/.cpt/...&gt;]</code> (bench.trr) (输出)<br/>
+全精度轨迹: trr cpt trj tng</li>
+<li><code>-bx [&lt;.xtc&gt;]</code> (bench.xtc) (输出)<br/>
+压缩轨迹(可移植xdr格式): xtc</li>
+<li><code>-bcpo [&lt;.cpt&gt;]</code> (bench.cpt) (输出)<br/>
+检查点文件</li>
+<li><code>-bc [&lt;.gro/.g96/...&gt;]</code> (bench.gro) (输出)<br/>
+结构文件: gro g96 pdb brk ent esp</li>
+<li><code>-be [&lt;.edr&gt;]</code> (bench.edr) (输出)<br/>
+能量文件</li>
+<li><code>-bg [&lt;.log&gt;]</code> (bench.log) (输出)<br/>
+日志文件</li>
+<li><code>-beo [&lt;.xvg&gt;]</code> (benchedo.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-bdhdl [&lt;.xvg&gt;]</code> (benchdhdl.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-bfield [&lt;.xvg&gt;]</code> (benchfld.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-btpi [&lt;.xvg&gt;]</code> (benchtpi.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-btpid [&lt;.xvg&gt;]</code> (benchtpid.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-bdevout [&lt;.xvg&gt;]</code> (benchdev.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-brunav [&lt;.xvg&gt;]</code> (benchrnav.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-bpx [&lt;.xvg&gt;]</code> (benchpx.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-bpf [&lt;.xvg&gt;]</code> (benchpf.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-bro [&lt;.xvg&gt;]</code> (benchrot.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-bra [&lt;.log&gt;]</code> (benchrota.log) (输出, 可选)<br/>
+日志文件</li>
+<li><code>-brs [&lt;.log&gt;]</code> (benchrots.log) (输出, 可选)<br/>
+日志文件</li>
+<li><code>-brt [&lt;.log&gt;]</code> (benchrott.log) (输出, 可选)<br/>
+日志文件</li>
+<li><code>-bmtx [&lt;.mtx&gt;]</code> (benchn.mtx) (输出, 可选)<br/>
+Hessian矩阵</li>
+<li><code>-bdn [&lt;.ndx&gt;]</code> (bench.ndx) (输出, 可选)<br/>
+索引文件</li>
+<li><code>-bswap [&lt;.xvg&gt;]</code> (benchswp.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (0)<br/>
+设置优先级</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-np &lt;int&gt;</code> (1)<br/>
+运行测试的进程数(对单独的PME进行, 必须大于2)</li>
+<li><code>-npstring &lt;enum&gt;</code> (-np)<br/>
+使用此字符串指定<code>$MPIRUN</code>的进程数: -np, -n, none</li>
+<li><code>-ntmpi &lt;int&gt;</code> (1)<br/>
+运行测试的MPI线程数(关闭MPI和mpirun)</li>
+<li><code>-r &lt;int&gt;</code> (2)<br/>
+每次测试的重复次数</li>
+<li><code>-max &lt;real&gt;</code> (0.5)<br/>
+要测试的PME进程数的最大比例</li>
+<li><code>-min &lt;real&gt;</code> (0.25)<br/>
+要测试的PME进程数的最小比例</li>
+<li><code>-npme &lt;enum&gt;</code> (auto)<br/>
+在<code>-min</code>和<code>-max</code>之间, 对<code>-npme</code>的所有可能值或其合理子集执行基准测试. <code>auto</code>会忽略<code>-min</code>和<code>-max</code>, 根据<code>.tpr</code>文件中<code>npme</code>推测一个值, 并由此选择一个合理的值. 可用选项: auto, all, subset</li>
+<li><code>-fix &lt;int&gt;</code> (&#8211;2)<br/>
+若此参数的值大于等于&#8211;1, 不改变PME进程的数目, 而是使用此固定值, 并只改变<code>rcoulomb</code>和PME格点间距.</li>
+<li><code>-rmax &lt;real&gt;</code> (0)<br/>
+若此参数的值大于0, 对<code>-ntpr</code>&gt;1使用的最大<code>rcoulomb</code>(增大<code>rcoulomb</code>会导致傅立叶格点减小)</li>
+<li><code>-rmin &lt;real&gt;</code> (0)<br/>
+若此参数的值大于0, 对<code>-ntpr</code>&gt;1使用的最小<code>rcoulomb</code></li>
+<li><code>-[no]scalevdw</code> (yes)<br/>
+与<code>rcoulomb</code>一起, 缩放<code>rvdw</code></li>
+<li><code>-ntpr &lt;int&gt;</code> (0)<br/>
+基准测试的<code>.tpr</code>文件的数目. 创建这么多文件, 每个文件使用的库仑缩放因子不同, 并取决于<code>-rmin</code>和<code>-rmax</code>参数. 若此值&lt;1, 会自动选择<code>.tpr</code>文件的数目进行测试.</li>
+<li><code>-steps &lt;int&gt;</code> (1000)<br/>
+在基准测试运行中, 对这么多步进行计时.</li>
+<li><code>-resetstep &lt;int&gt;</code> (100)<br/>
+开始计时前, 让dlb平衡这么多步(在这么多步之后重置循环计数器)</li>
+<li><code>-nsteps &lt;int&gt;</code> (&#8211;1)<br/>
+如果该参数值非负, 在实际模拟中执行这么多步(覆盖<code>.tpr</code>文件中的<code>nsteps</code>, 添加<code>.cpt</code>中的步数)</li>
+<li><code>-[no]launch</code> (no)<br/>
+优化后启动实际模拟</li>
+<li><code>-[no]bench</code> (yes)<br/>
+运行基准测试还是仅仅创建输入的<code>.tpr</code>文件?</li>
+<li><code>-[no]check</code> (yes)<br/>
+基准测试运行前, 检查<code>mdrun</code>是否可以并行</li>
+<li><code>-[no]append</code> (yes)<br/>
+当从检查点继续运行时, 输出将追加到之前的输出文件中, 而不是将模拟的部分编号添加到所有文件名称中(仅与<code>-launch</code>同用)</li>
+<li><code>-[no]cpnum</code> (no)<br/>
+保留检查点文件并对其进行编号(仅与<code>-launch</code>同用)</li>
+</ul>
 
 <h2 id="gmxvanhove-computevanhovedisplacementandcorrelationfunctions">gmx vanhove - Compute Van Hove displacement and correlation functions</h2>
 
