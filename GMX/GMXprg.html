@@ -514,9 +514,9 @@ DymDom确定的绕旋转矢量的旋转角度</li>
 结构文件: gro g96 pdb brk ent esp tpr tpb tpa</li>
 <li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入, 可选)<br/>
 索引文件</li>
-<li><code>-o [&lt;.gro/.g96/...&gt;]</code> (out.gro) (Output, 可选)<br/>
-结构文件: gro g96 pdb brk ent esp</li>
-<li><code>-mead [&lt;.pqr&gt;]</code> (mead.pqr) (Output, 可选)<br/>
+<li><code>-o [&lt;.gro/.g96/...&gt;]</code> (out.gro) (输出, 可选)<br/>
+结构文件: gro g96 pdb brk ent esp. 放进盒子里面的分子坐标文件.</li>
+<li><code>-mead [&lt;.pqr&gt;]</code> (mead.pqr) (输出, 可选)<br/>
 用于MEAD的坐标文件</li>
 <li><code>-bf [&lt;.dat&gt;]</code> (bfact.dat) (输入, 可选)<br/>
 通用数据文件</li>
@@ -534,7 +534,7 @@ DymDom确定的绕旋转矢量的旋转角度</li>
 <li><code>-bt &lt;enum&gt;</code> (triclinic)<br/>
 用于<code>-box</code>和<code>-d</code>的盒子类型: triclinic, cubic, dodecahedron, octahedron</li>
 <li><code>-box &lt;vector&gt;</code> (0 0 0)<br/>
-盒向量长度 (a,b,c)</li>
+盒向量长度 (a,b,c). 即自定义的盒子大小</li>
 <li><code>-angles &lt;vector&gt;</code> (90 90 90)<br/>
 盒向量之间的角度 (bc,ac,ab)</li>
 <li><code>-d &lt;real&gt;</code> (0)<br/>
@@ -584,6 +584,12 @@ DymDom确定的绕旋转矢量的旋转角度</li>
 <ul class="incremental">
 <li>对复杂的分子, 去除周期性的子程序可能会崩溃, 在这种情况下你可以使用<code>gmx trjconv</code>.</li>
 </ul>
+
+<h3 id="补充说明">补充说明</h3>
+
+<p>在使用<code>pdb2gmx</code>创建了模拟分子体系之后, 可以使用<code>editconf</code>为你的分子创建一个模拟盒子, 也可以认为是使用<code>editconf</code>将分子放进一个盒子中. 这样, 你就可以往盒子里面添加水分子, 离子或者其他溶剂等等了.</p>
+
+<p><code>-princ</code>这个选项可以用来对齐分子, 比如使分子沿X轴对齐. 例如, 你想将分子中的两个残基沿Y轴对齐, 那么就在索引文件中将这俩个残基标记一下, 然后使用<code>-princ</code>, 根据提示就能对齐分子了.</p>
 
 <h2 id="gmxeneconv-convertenergyfiles">gmx eneconv - Convert energy files</h2>
 
@@ -986,7 +992,107 @@ ACF Legendre多项式的阶数(0意味着没有): 0, 1, 2, 3</li>
 生成约束矩阵而非距离限制. 会生成类型2的约束, 并包含排除.</li>
 </ul>
 
-<h2 id="gmxgrompp-makearuninputfile">gmx grompp - Make a run input file</h2>
+<h2 id="gmxgrompp:生成运行输入文件翻译:杨旭云">gmx grompp: 生成运行输入文件(翻译: 杨旭云)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx grompp [-f [&lt;.mdp&gt;]] [-po [&lt;.mdp&gt;]] [-c [&lt;.gro/.g96/...&gt;]]
+           [-r [&lt;.gro/.g96/...&gt;]] [-rb [&lt;.gro/.g96/...&gt;]] [-n [&lt;.ndx&gt;]]
+           [-p [&lt;.top&gt;]] [-pp [&lt;.top&gt;]] [-o [&lt;.tpr/.tpb/...&gt;]]
+           [-t [&lt;.trr/.cpt/...&gt;]] [-e [&lt;.edr&gt;]] [-imd [&lt;.gro&gt;]]
+           [-ref [&lt;.trr/.cpt/...&gt;]] [-nice ] [-[no]v] [-time ]
+           [-[no]rmvsbds] [-maxwarn ] [-[no]zero] [-[no]renum]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx grompp</code>(gromacs预处理器)读取分子的拓扑文件, 检查其合理性, 并将拓扑从分子描述拓展到原子描述. 拓扑文件包含了分子类型和分子数目的信息, 预处理器会复制每个需要的分子. 对分子类型的数目没有限制. 键和键角可以转换为约束, 对氢原子和重原子独立进行. 然后读入坐标文件, 如果需要可以由Maxwell分布生成速度. <code>gmx grompp</code>还会读取用于<code>gmx mdrun</code>的参数(例如, MD的步数, 时间步长和截断)以及其他一些参数, 如NEMD参数. 程序会对这些参数进行校正以使得净加速度为零. 程序最终会生成一个二进制文件, 它可以单独地作为MD程序的输入文件.</p>
+
+<p><code>gmx grompp</code>使用来自拓扑文件的原子名称. 当坐标文件中(选项<code>-c</code>)的原子名称与拓扑文件中的不一致时, 会产生警告. 注意, 原子名称与模拟无关, 因为生成相互作用参数只使用了原子类型.</p>
+
+<p><code>gmx grompp</code>使用内置的预处理器来解决包含, 宏等问题. 预处理器支持下面的关键词:</p>
+
+<pre><code>#ifdef VARIABLE
+#ifndef VARIABLE
+#else
+#endif
+#define VARIABLE
+#undef VARIABLE
+#include &quot;filename&quot;
+#include &lt;filename&gt;
+</code></pre>
+
+<p>在<code>.mdp</code>文件中, 拓扑文件中的这些语句的功能可以通过以下两个选项来模块化：</p>
+
+<pre><code>define = -DVARIABLE1 -DVARIABLE2
+include = -I/home/john/doe
+</code></pre>
+
+<p>要了解更多的信息, 可以学习C语言程序的教材. 指定<code>-pp</code>选项可以输出预处理的拓扑文件, 这样你就可以验证其内容了.</p>
+
+<p>当使用位置限制时, 可以使用<code>-r</code>选项提供一个包含限制坐标的文件, 否则将会使用相对于来自<code>-c</code>选项的构象进行限制. 对自由能计算, B拓扑的坐标可使用<code>-rb</code>提供, 否则它们将等同于A拓扑的坐标.</p>
+
+<p>起始坐标可以由<code>-t</code>提供的轨迹文件中读取. 程序会读取最后一帧的坐标和速度, 除非使用了<code>-time</code>选项. 只有当这些信息缺失时才会使用由<code>-c</code>提供的文件中的坐标. 注意, 当<code>.mdp</code>文件中设置了<code>gen_vel = yes</code>时, 不会使用文件中的速度信息. 可以使用选项<code>-e</code>提供能量文件, 以读取Nose-Hoover和/或Parrinello-Rahman耦合变量.</p>
+
+<p><code>gmx grompp</code>可用于重启模拟(保持连续), 只需要使用<code>-t</code>选项提供一个检查点文件即可. 然而, 如果只是简单地改变运行步数以延长模拟, 使用<code>gmx convert-tpr</code>比使用<code>gmx grompp</code>更方便. 你只需要使用<code>-cpi</code>选项将旧的检查点文件直接提供给<code>gmx mdrun</code>即可. 如果想要改变系综或是输出频率等, 建议使用<code>-t</code>为<code>gmx grompp</code>提供检查点文件, 并使用<code>-f</code>提供新的<code>.mdp</code>文件.</p>
+
+<p>默认情况下, 所有由构建虚拟位点引入的具有恒定能量的键合相互作用都会被移除. 如果此恒定能量不为零, 将会导致总能量移动. 所有键合相互作用都可以通过关闭<code>-rmvsbds</code>来维持. 另外, 所有因虚拟位点构建引入的距离约束都具有恒定能量, 它们都会被移除. 如果仍然存在涉及虚拟位点的任何约束, 将导致致命错误.</p>
+
+<p>为验证运行输入文件, 请注意屏幕上显示的所有警告, 并对必要的警告加以纠正. 此外也需要查看<code>mdout.mdp</code>文件的内容, 其中包括注释行以及<code>gmx grompp</code>读入的输入信息. 如果有疑问, 你可以使用<code>-debug</code>选项启动<code>gmx grompp</code>, 这将会生成一个<code>grompp.log</code>文件(以及真正的调试信息), 里面包含了更多的信息. 你可以使用<code>gmx dump</code>程序查看运行输入文件的内容. <code>gmx check</code>可用于比较两个运行输入文件的内容.</p>
+
+<p><code>-maxwarn</code>选项可用于覆盖<code>gmx grompp</code>给出的警告, 否则会停止输出. 在某些情况下, 警告无关紧要, 但大多数情况下并非如此. 建议用户在使用这个选项绕过这些警告之前认真阅读并理解输出信息.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入与输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.mdp&gt;]</code> (grompp.mdp) (输入)<br/>
+包含MD参数的grompp输入文件</li>
+<li><code>-po [&lt;.mdp&gt;]</code> (mdout.mdp) (输出)<br/>
+包含MD参数的grompp输入文件</li>
+<li><code>-c [&lt;.gro/.g96/...&gt;]</code> (conf.gro) (输入)<br/>
+结构文件: gro g96 pdb brk ent esp tpr tpb tpa</li>
+<li><code>-r [&lt;.gro/.g96/...&gt;]</code> (conf.gro) (输入, 可选)<br/>
+结构文件: gro g96 pdb brk ent esp tpr tpb tpa</li>
+<li><code>-rb [&lt;.gro/.g96/...&gt;]</code> (conf.gro) (输入, 可选)<br/>
+结构文件: gro g96 pdb brk ent esp tpr tpb tpa</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入, 可选)<br/>
+索引文件</li>
+<li><code>-p [&lt;.top&gt;]</code> (topol.top) (输入)<br/>
+拓扑文件</li>
+<li><code>-pp [&lt;.top&gt;]</code> (processed.top) (输出, 可选)<br/>
+拓扑文件</li>
+<li><code>-o [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输出)<br/>
+运行输入文件: tpr tpb tpa</li>
+<li><code>-t [&lt;.trr/.cpt/...&gt;]</code> (traj.trr) (输入, 可选)<br/>
+全精度轨迹: trr cpt trj tng</li>
+<li><code>-e [&lt;.edr&gt;]</code> (ener.edr) (输入, 可选)<br/>
+能量文件</li>
+<li><code>-imd [&lt;.gro&gt;]</code> (imdgroup.gro) (输出, 可选)<br/>
+Gromos&#8211;87格式的坐标文件</li>
+<li><code>-ref [&lt;.trr/.cpt/...&gt;]</code> (rotref.trr) (输入/输出, 可选)<br/>
+全精度轨迹: trr cpt trj tng</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (0)<br/>
+设置优先级</li>
+<li><code>-[no]v</code> (no)<br/>
+输出更多信息</li>
+<li><code>-time &lt;real&gt;</code> (&#8211;1)<br/>
+采用此刻的帧或此刻之后的第一帧</li>
+<li><code>-[no]rmvsbds</code> (yes)<br/>
+移除涉及虚拟位点的具有恒定能量的键合相互作用</li>
+<li><code>-maxwarn &lt;int&gt;</code> (0)<br/>
+处理输入过程中所允许的最大警告数目. 如果非正常使用可能导致体系不稳定.</li>
+<li><code>-[no]zero</code> (no)<br/>
+对没有默认值的键合相互作用, 将其参数设置为零, 而不是产生错误.</li>
+<li><code>-[no]renum</code> (yes)<br/>
+重新对原子类型进行编号以使原子类型的数目最小</li>
+</ul>
 
 <h2 id="gmxgyrate-calculatetheradiusofgyration">gmx gyrate - Calculate the radius of gyration</h2>
 
@@ -1522,7 +1628,7 @@ xvg绘图格式: xmgrace, xmgr, none</li>
 <li><code>-ff &lt;string&gt;</code> (select)<br/>
 设置使用何种力场, 默认交互式地选择. 使用<code>-h</code>查看更多信息.</li>
 <li><code>-water &lt;enum&gt;</code> (select)<br/>
-设置使用的水分子模型, 可用选项: select, none, spc, spce, tip3p, tip4p, tip5p</li>
+设置使用的水分子模型, 可用选项: select, none, spc, spce, tip3p, tip4p, tip5p. 使用这个参数会提前在拓扑文件中添加水分子信息.</li>
 <li><code>-[no]inter</code> (no)<br/>
 如果开启了这个选项, 接下来的八个选项就会交互式地让用户选择</li>
 <li><code>-[no]ss</code> (no)<br/>
@@ -1548,7 +1654,7 @@ xvg绘图格式: xmgrace, xmgr, none</li>
 <li><code>-[no]una</code> (no)<br/>
 将苯丙氨酸, 色氨酸, 酪氨酸中的芳香环设为联合CH原子.</li>
 <li><code>-[no]ignh</code> (no)<br/>
-忽略坐标文件中的氢原子</li>
+忽略坐标文件中的氢原子. 因为氢原子的命名规则不统一, 有些力场无法识别.</li>
 <li><code>-[no]missing</code> (no)<br/>
 当发现坐标文件中的原子有缺失时继续运行, 设置这个选项很危险.</li>
 <li><code>-[no]v</code> (no)<br/>
@@ -2299,7 +2405,163 @@ xvg绘图格式: xmgrace, xmgr, none</li>
 
 <h2 id="gmxtrjcat-concatenatetrajectoryfiles">gmx trjcat - Concatenate trajectory files</h2>
 
-<h2 id="gmxtrjconv-convertandmanipulatestrajectoryfiles">gmx trjconv - Convert and manipulates trajectory files</h2>
+<h2 id="gmxtrjconv:转换和操控轨迹文件翻译:黄灏">gmx trjconv: 转换和操控轨迹文件(翻译: 黄灏)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx trjconv [-f [&lt;.xtc/.trr/...&gt;]] [-o [&lt;.xtc/.trr/...&gt;]]
+            [-s [&lt;.tpr/.tpb/...&gt;]] [-n [&lt;.ndx&gt;]] [-fr [&lt;.ndx&gt;]]
+            [-sub [&lt;.ndx&gt;]] [-drop [&lt;.xvg&gt;]] [-nice ] [-b ]
+            [-e ] [-tu ] [-[no]w] [-xvg ] [-skip ]
+            [-dt ] [-[no]round] [-dump ] [-t0 ]
+            [-timestep ] [-pbc ] [-ur ] [-[no]center]
+            [-boxcenter ] [-box ] [-trans ]
+            [-shift ] [-fit ] [-ndec ] [-[no]vel]
+            [-[no]force] [-trunc ] [-exec ] [-split ]
+            [-[no]sep] [-nzero ] [-dropunder ] [-dropover ]
+            [-[no]conect]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx trjconv</code>可以以多种方式来转换轨迹文件:</p>
+
+<ul class="incremental">
+<li>从一种格式转换为另一种格式</li>
+<li>选择一组原子集合</li>
+<li>改变周期性的表示方式</li>
+<li>将多聚体分子保持一起</li>
+<li>将原子在盒子内居中</li>
+<li>将原子叠合到参考结构</li>
+<li>减少帧数</li>
+<li>改变每帧的时间戳(<code>-t0</code>和<code>-timestep</code>)</li>
+<li>根据索引文件中的信息把轨迹分割为小的子轨迹, 这样对子轨迹的后续分析就变为对团簇的分析. 需要使用选项<code>-sub</code>. 处理时假定索引文件中的条目为帧数, 并将把索引文件中的每个组输出为单独的轨迹.</li>
+<li>选取某个量处于一定范围内的帧, 这个量由<code>.xvg</code>文件给出</li>
+</ul>
+
+<p><code>gmx trjconv</code>更适用于将多个轨迹文件拼合起来.</p>
+
+<p><code>gmx trjconv</code>支持以下格式的输入和输出文件: <code>.xtc</code>, <code>.trr</code>, <code>.trj</code>, <code>.gro</code>, <code>.g96</code>和<code>.pdb</code>. 文件格式由文件的扩展名决定. 对<code>.xtc</code>, <code>.trj</code>, <code>.gro</code>和<code>.pdb</code>, <code>.xtc</code>和<code>.gro</code>输出文件的精度取决于输入文件; 对其他输入格式, 输出文件的精度由<code>-ndec</code>选项决定. 当设定了<code>-ndec</code>选项时, 输出格式的精度总是取决于<code>-ndec</code>. 所有其他格式的精度都是固定的. <code>.trr</code>和<code>.trj</code>输出格式的精度可以是单精度或双精度, 取决于<code>gmx trjconv</code>程序的精度. 注意, 只有<code>.trr</code>, <code>.trj</code>, <code>.gro</code>和<code>.g96</code>格式的文件支持速度.</p>
+
+<p><code>-sep</code>选项可将每一帧写入到单独的<code>.gro</code>, <code>.g96</code>或<code>.pdb</code>文件. 默认情况下, 所有帧都被写入到一个文件中. 拼合了所有帧的<code>.pdb</code>文件可以使用<code>rasmol –nmrpdb</code>来查看.</p>
+
+<p>为了节省磁盘空间, 可以选择部分轨迹并将其写入到一个新的轨迹文件中. 例如, 去除蛋白质水溶液轨迹中的水分子. <strong>始终</strong> 要保存原始的轨迹文件! 我们推荐使用可移植的<code>.xtc</code>格式进行分析以节省磁盘空间并得到可移植的文件.</p>
+
+<p>有两个选项可用于将轨迹叠合到参考结构或进行主成分动力学分析. 第一个选项仅仅将结构简单地叠合到结构文件中的参考结构. 第二个选项是逐步叠合: 第一时间步的结构叠合到结构文件中的参考结构, 后续时间步的结构则叠合到前一步的叠合结构. 与常规的叠合方法不同, 利用这种方式可以产生连续的轨迹, 例如当蛋白质的构象转变很大时.</p>
+
+<p>选项<code>-pbc</code>用于设置周期性边界条件的处理方式:</p>
+
+<ul class="incremental">
+<li><code>mol</code>: 将分子的质心置于盒子中, 需要使用<code>-s</code>提供一个运行输入文件</li>
+<li><code>res</code>: 将残基的质心置于盒子中</li>
+<li><code>atom</code>: 将所有原子置于盒子中</li>
+<li><code>nojump</code>: 检查原子是否跳过了盒子边缘, 如果是则将它们放回来. 这样所有分子都可以保持完整(如果在初始构型中它们是完整的). <strong>注意</strong>, 这样可以确保轨迹连续, 但分子可能扩散出盒子. 如果提供了结构文件, 此过程的起始构型将来自结构文件, 否则将使用第一帧的构型.</li>
+<li><code>cluster</code>: 将选定索引中的所有原子团簇化, 这样它们到团簇质心的距离最近, 团簇质心会迭代更新. <strong>注意</strong>, 只有确实存在一个团簇时, 这种方法才能给出有意义的结果. 幸运的是你以后可以使用轨迹查看器来检查是否存在一个团簇. 同时也要注意, 如果分子破碎了, 这个选项也不会起作用.<br/>
+单独的选项<code>-clustrcenter</code>可用于指定团簇的近似质心. 这适用于一些情况, 例如存在两个大囊泡, 你需要保持他们的相对位置.</li>
+<li><code>whole</code>: 将破碎的分子恢复完整</li>
+</ul>
+
+<p>对<code>-pbc</code>的<code>mol</code>, <code>res</code>和<code>atom</code>选项, <code>-ur</code>选项设置单元晶胞的表示方式. 对于三斜盒子这三个选项会给出不同的结果, 而对于长方盒子, 给出的结构相同. <code>rect</code>是普通的长方体形状, <code>tric</code>是三斜晶胞, <code>compact</code>将所有原子置于离盒子中心距离最近的位置. 这有利于, 例如对截断八面体和菱形十二面体的可视化. 对<code>tric</code>和<code>compact</code>选项的中心是<code>tric</code>(见下文), 除非选项<code>-boxcenter</code>设置了不同的值.</p>
+
+<p>选项<code>-center</code>将体系在盒子内居中. 用户可以选择用于确定几何中心的组. 对<code>-pbc</code>和<code>-center</code>选项, <code>-boxcenter</code>设置盒子的中心位置. 中心的选项为: <code>tric</code>: 盒向量总和的一半, <code>rect</code>: 盒子对角线的一半, <code>zero</code>: 0. 如果居中后你想使所有分子都处于盒子中, 可以使用<code>-center</code>和<code>-pbc mol</code>选项.</p>
+
+<p>选项<code>-box</code>设置新盒子的大小. 此选项只用于主维度, 因此通常只用于长方盒子. 如果你只想修改某些维度, 例如读取轨迹时, 你可以使用&#8211;1使某一维度保持不变. 当仅调用一次<code>gmx trjconv</code>时, 使用<code>-pbc</code>, <code>-fit</code>, <code>-ur</code>和<code>-center</code>选项的组合并不总能精确地达到你的目的. 这种情况下可考虑使用多次调用, 可参考GROMACS网站的一些建议.</p>
+
+<p>使用<code>-dt</code>选项可以减少输出中的帧数. 此选项依赖于输入轨迹中时间的精确度, 因此, 如果它们不够精确, 可以使用<code>-timestep</code>选项来修改时间(可以同时进行). 为了制作平滑的电影, <code>gmx filter</code>程序可以使用低通频率滤波器来减少帧的数目, 从而减少了高频运动的走样.</p>
+
+<p>使用<code>-trunc</code>选项, <code>gmx trjconv</code>可以就地截断<code>.trj</code>文件, 即不需要复制文件. 当在磁盘I/O过程中运行崩溃时(即磁盘已满), 或者当拼合两个邻近的轨迹但不能重帧时, 此选项很有用.</p>
+
+<p>选项<code>-dump</code>用于从你的轨迹文件中处于或邻近指定时间的帧.</p>
+
+<p>选项<code>-drop</code>读取<code>.xvg</code>文件中的时间和数值. 当设置了选项<code>-dropunder</code>和/或<code>-dropover</code>, 不会输出低于或高于相应选项设定值的帧.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入)<br/>
+轨迹: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-o [&lt;.xtc/.trr/...&gt;]</code> (trajout.xtc) (Output)<br/>
+轨迹: xtc trr trj gro g96 pdb tng</li>
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入, 可选)<br/>
+结构+质量(db): tpr tpb tpa gro g96 pdb brk ent</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入, 可选)<br/>
+索引文件</li>
+<li><code>-fr [&lt;.ndx&gt;]</code> (frames.ndx) (输入, 可选)<br/>
+索引文件</li>
+<li><code>-sub [&lt;.ndx&gt;]</code> (cluster.ndx) (输入, 可选)<br/>
+索引文件</li>
+<li><code>-drop [&lt;.xvg&gt;]</code> (drop.xvg) (输入, 可选)<br/>
+xvgr/xmgr文件</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (19)<br/>
+设置优先级</li>
+<li><code>-b</code> <time> (0)<br/>
+从轨迹文件中读取的第一帧(ps)</li>
+<li><code>-e</code> <time> (0)<br/>
+从轨迹文件中读取的最后一帧(ps)</li>
+<li><code>-tu</code> <enum> (ps)<br/>
+时间值的单位: fs, ps, ns, us, ms, s</li>
+<li><code>-[no]w</code> (no)<br/>
+程序结束后查看输出的<code>.xvg</code>, <code>.xpm</code>, <code>.eps</code>和<code>.pdb</code>文件</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-skip &lt;int&gt;</code> (1)<br/>
+每nr帧输出一次</li>
+<li><code>-dt</code> <time> (0)<br/>
+只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
+<li><code>-[no]round</code> (no)<br/>
+将测量四舍五入至最接近的皮秒</li>
+<li><code>-dump &lt;time&gt;</code> (&#8211;1)<br/>
+重复最接近指定时间(ps)的帧</li>
+<li><code>-t0 &lt;time&gt;</code> (0)<br/>
+起始时间(ps) (默认: 不改变)</li>
+<li><code>-timestep &lt;time&gt;</code> (0)<br/>
+更改输入帧之间的时间步长(ps)</li>
+<li><code>-pbc &lt;enum&gt;</code> (none)<br/>
+PBC处理方式(完整说明见帮助文件): none, mol, res, atom, nojump, cluster, whole</li>
+<li><code>-ur &lt;enum&gt;</code> (rect)<br/>
+单元晶胞的表示方式: rect, tric, compact</li>
+<li><code>-[no]center</code> (no)<br/>
+将盒子内的原子居中</li>
+<li><code>-boxcenter &lt;enum&gt;</code> (tric)<br/>
+<code>-pbc</code>和<code>-center</code>的中心: tric, rect, zero</li>
+<li><code>-box &lt;vector&gt;</code> (0 0 0)<br/>
+新立方盒子的尺寸(默认读取自输入文件)</li>
+<li><code>-trans &lt;vector&gt;</code> (0 0 0)<br/>
+所有坐标将被平移 trans. 适用于与<code>-pbc mol -ur compact</code>组合使用.</li>
+<li><code>-shift &lt;vector&gt;</code> (0 0 0)<br/>
+所有坐标将被偏移 framenr*shift</li>
+<li><code>-fit &lt;enum&gt;</code> (none)<br/>
+将分子叠合到结构文件中的参考结构: none, rot+trans, rotxy+transxy, translation, transxy, progressive</li>
+<li><code>-ndec &lt;int&gt;</code> (3)<br/>
+输出<code>.xtc</code>和<code>.gro</code>时, 小数位的精度</li>
+<li><code>-[no]vel</code> (yes)<br/>
+如果可能, 读取并输出速度</li>
+<li><code>-[no]force</code> (no)<br/>
+如果可能, 读取并输出力</li>
+<li><code>-trunc &lt;time&gt;</code> (&#8211;1)<br/>
+在此时间(ps)后截断输入轨迹文件</li>
+<li><code>-exec &lt;string&gt;</code>
+对每个输出帧执行命令, 帧号作为命令的参数</li>
+<li><code>-split &lt;time&gt;</code> (0)<br/>
+当t MOD split = 第一帧时间(ps)时开始输出新文件</li>
+<li><code>-[no]sep</code> (no)<br/>
+将每一帧输出为独立的<code>.gro</code>, <code>.g96</code>或<code>.pdb</code>文件</li>
+<li><code>-nzero &lt;int&gt;</code> (0)<br/>
+如果设置<code>-sep</code>, 文件编号的数字位数, 如果需要, 数字签名会添加0</li>
+<li><code>-dropunder &lt;real&gt;</code> (0)<br/>
+舍弃低于此值的所有帧</li>
+<li><code>-dropover &lt;real&gt;</code> (0)<br/>
+舍弃高于此值的所有帧</li>
+<li><code>-[no]conect</code> (no)<br/>
+当输出<code>.pdb</code>文件时增加连接记录. 对于非标准分子, 例如粗粒化分子的可视化会有用.</li>
+</ul>
 
 <h2 id="gmxtrjorder-ordermoleculesaccordingtotheirdistancetoagroup">gmx trjorder - Order molecules according to their distance to a group</h2>
 
