@@ -1445,7 +1445,270 @@ xvg绘图格式: xmgrace, xmgr, none</li>
 距离的离散水平数</li>
 </ul>
 
-<h2 id="gmxmdrun-performasimulationdoanormalmodeanalysisoranenergyminimization">gmx mdrun - Perform a simulation, do a normal mode analysis or an energy minimization</h2>
+<h2 id="gmxmdrun:执行模拟简正分析或能量最小化翻译:王浩博">gmx mdrun: 执行模拟, 简正分析或能量最小化(翻译: 王浩博)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx mdrun [-s [&lt;.tpr/.tpb/...&gt;]] [-o [&lt;.trr/.cpt/...&gt;]] [-x [&lt;.xtc/.tng&gt;]]
+          [-cpi [&lt;.cpt&gt;]] [-cpo [&lt;.cpt&gt;]] [-c [&lt;.gro/.g96/...&gt;]]
+          [-e [&lt;.edr&gt;]] [-g [&lt;.log&gt;]] [-dhdl [&lt;.xvg&gt;]] [-field [&lt;.xvg&gt;]]
+          [-table [&lt;.xvg&gt;]] [-tabletf [&lt;.xvg&gt;]] [-tablep [&lt;.xvg&gt;]]
+          [-tableb [&lt;.xvg&gt;]] [-rerun [&lt;.xtc/.trr/...&gt;]] [-tpi [&lt;.xvg&gt;]]
+          [-tpid [&lt;.xvg&gt;]] [-ei [&lt;.edi&gt;]] [-eo [&lt;.xvg&gt;]] [-devout [&lt;.xvg&gt;]]
+          [-runav [&lt;.xvg&gt;]] [-px [&lt;.xvg&gt;]] [-pf [&lt;.xvg&gt;]] [-ro [&lt;.xvg&gt;]]
+          [-ra [&lt;.log&gt;]] [-rs [&lt;.log&gt;]] [-rt [&lt;.log&gt;]] [-mtx [&lt;.mtx&gt;]]
+          [-dn [&lt;.ndx&gt;]] [-multidir [
+       [...]]] [-membed [&lt;.dat&gt;]]
+                [-mp [&lt;.top&gt;]] [-mn [&lt;.ndx&gt;]] [-if [&lt;.xvg&gt;]] [-swap [&lt;.xvg&gt;]]
+                [-nice ] [-deffnm ] [-xvg ] [-dd ]
+                [-ddorder ] [-npme ] [-nt ] [-ntmpi ]
+                [-ntomp ] [-ntomp_pme ] [-pin ] [-pinoffset ]
+                [-pinstride ] [-gpu_id ] [-[no]ddcheck] [-rdd ]
+                [-rcon ] [-dlb ] [-dds ] [-gcom ]
+                [-nb ] [-nstlist ] [-[no]tunepme] [-[no]testverlet]
+                [-[no]v] [-[no]compact] [-[no]seppot] [-pforce ]
+                [-[no]reprod] [-cpt ] [-[no]cpnum] [-[no]append]
+                [-nsteps ] [-maxh ] [-multi ] [-replex ]
+                [-nex ] [-reseed ]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx mdrun</code>是GROMACS的主要计算化学引擎. 很显然, 它执行分子动力学模拟, 但它也可以执行随机动力学, 能量最小化, 测试粒子插入或(重新)计算能量. 它还可以进行简正模式分析. 在这种情况下<code>mdrun</code>可以根据单一的构象计算Hessian矩阵. 对于通常的简正模式类计算, 请确保所提供的结构已经正确地进行过能量最小化. 可以使用<code>gmx nmeig</code>对得到的矩阵进行对角化.</p>
+
+<p><code>mdrun</code>程序读取运行输入文件(<code>-s</code>), 如果需要, 它会将拓扑分发给不同的进程号. <code>mdrun</code>至少会产生四个输出文件. 单个日志文件(<code>-g</code>), 除非使用了<code>-seppot</code>选项, 在这种情况下, 每个进程号都会输出一个日志文件. 轨迹文件(<code>-o</code>), 包含了坐标, 速度和可选的力. 结构文件(<code>-c</code>)包含了最后一步的坐标和速度. 能量文件(<code>-e</code>)含有能量, 温度, 压力等, 这些量大都也会在日志文件中输出. 作为可选项, 坐标也可以被写入到压缩轨迹文件中(<code>-x</code>).</p>
+
+<p>只有当进行自由能计算时, 才可以使用选项<code>-dhdl</code>.</p>
+
+<p>并行运行模拟时, 可以使用两种不同的并行方案: MPI并行和/或OpenMP线程并行. 对使用常规MPI库编译的<code>mdrun</code>, MPI并行使用多个处理器; 对使用GROMACS内置的线程MPI库编译的<code>mdrun</code>, MPI并行则使用多个线程. 使用OpenMP编译的<code>mdrun</code>支持OpenMP线程. 只有Verlet截断方案全面支持OpenMP, 对于(旧的)组方案, 只有PME进程可以使用OpenMP并行. 对上述所有情况, <code>mdrun</code>默认会尝试使用所有可用的硬件资源. 使用常规MPI库时, 只有<code>-ntomp</code>(与Verlet截断方案一起使用)和<code>-ntomp_pme</code>选项可用于控制PME进程中的线程数目. 使用线程MPI时, 还可使用选项<code>-nt</code>设置总线程数, 使用<code>-ntmpi</code>设置线程MPI的线程数. 也可以使用标准环境变量<code>OMP_NUM_THREADS</code>设置<code>mdrun</code>使用的OpenMP线程数. 环境变量<code>GMX_PME_NUM_THREADS</code>可用于指定PME进程使用的线程数.</p>
+
+<p>需要注意的是, 在许多情况下MPI+OpenMP混合并行要比单独使用其中的一种慢. 然而, 对高并行化使用这种混合并行通常是有益的, 因为它减少了区域的数目和/或MPI进程的数目. (更少或更多的区域可以改进标度行为, 对独立的PME进程, 使用更少的MPI进程可以降低通信成本.) 在单CPU(<code>-die</code>)上, 单纯的OpenMP并行通常比单纯的MPI并行更快. 由于目前我们还没有检测硬件拓扑的合适方法, 使用线程MPI编译的<code>mdrun</code>只能自动使用单纯的OpenMP并行, 如果你使用的线程数达到4个, 使用英特尔的Nehalem/Westmere处理器时最多可使用12个线程, 使用英特尔的Sandy Bridge或更新的CPU最多可使用16个线程. 否则, 会使用单纯的MPI并行(除非使用GPU, 见下文).</p>
+
+<p>要使用旧的<code>.tpr</code>文件快速地测试新的Verlet截断方案, 无论使用CPU还是CPU+GPU, 你都可以使用<code>-testverlet</code>选项. 此选项不能用于成品模拟, 因为它会稍微修改势能, 并且还会移除电荷组导致分析困难, 但<code>.tpr</code>文件中仍包含电荷组. 对成品模拟, 强烈建议在<code>.mdp</code>文件中指定<code>cutoff-scheme = verlet</code>.</p>
+
+<p>使用GPU(仅支持Verlet截断方案)时, GPU数应与粒子-粒子进程数匹配, 即不包括单纯的PME进程. 使用线程MPI时, 除非在命令行中设定, MPI线程数将被自动设置为检测到的GPU数. 要使用可用GPU中的一部分, 或手动提供PP进程的GPU映射, 你可以使用<code>-gpu_id</code>选项. <code>-gpu_id</code>的参数为一串数字(无分隔符), 代表要使用的GPU的设备号. 例如, <code>02</code>指定对每个计算节点上的第一和第二个PP进程分别使用GPU 0和2. 要选择计算集群不同节点上的GPU, 可使用环境变量<code>GMX_GPU_ID</code>. <code>GMX_GPU_ID</code>的格式和<code>-gpu_id</code>相同, 区别在于环境变量在不同的计算节点上可以有不同的值. 每个节点上的多个MPI进程可以共享GPU, 这可以通过多次指定GPU的id来实现, 例如, <code>0011</code>表示在这个节点上四个进程共享两个GPU. 这种方法对单个或多个模拟都起作用, 并适用于任何形式的MPI.</p>
+
+<p>使用Verlet截断方案和Verlet缓冲容差设置时, 可以使用<code>-nstlist</code>选项自由地选择配对列表的更新间隔<code>nstlist</code>. <code>mdrun</code>随后会调整配对列表的截断以保持精度, 而不是调整<code>nstlist</code>. 否则, 默认情况下<code>mdrun</code>会尝试增加<code>.mdp</code>文件中<code>nstlist</code>的设定值以提高性能. 对只使用CPU的模拟, <code>nstlist</code>可能增加至20, 对使用GPU的模拟, 可能增加至40. 对中度到高度的并行或快速的GPU, 使用(用户提供)更大的<code>nstlist</code>可以得到更好的性能.</p>
+
+<p>当PME计算使用单独的PME进程或GPU时, 两类主要的计算任务, 非键力计算和PME计算, 在不同的计算资源上进行. 如果负载不均衡, 某些资源会有一部分空闲时间. 使用Verlet截断方案时, 负载会自动均衡, 如果PME负载过高的话(但过低时则不会). 这是通过对库仑截断和PME格点间距进行相同的缩放完成的. 在前几百步中程序会尝试各种不同的设置, 然后选择最快的设置用于模拟的其余部分. 这并不影响结果的精确度, 但确实会影响将库仑能分解为粒子和网格的贡献. 可以使用<code>-notunepme</code>选项关闭自动调整.</p>
+
+<p><code>mdrun</code>将线程关联(设定附着)到特定的核, 当<code>mdrun</code>使用了计算节点上的所有(逻辑)核时, 即便没有使用多线程, 通常也会显著地提高性能. 如果排队系统或OpenMP库已经关联了线程, 我们将不再关联, 即使布局可能是次优的. 如果你想使<code>mdrun</code>覆盖一个已经设定的线程关联, 或使用更少的核关联线程, 可以使用<code>-pin on</code>. 随着SMT(同步多线程), 如英特尔超线程的出现, 每个物理核心上可以有多个逻辑核心. 选项<code>-pinstride</code>可以在逻辑核心上设置步幅以关联连续的线程. 如果没有SMT, 1通常是最好的选择. 使用英特尔超线程, 并使用一半或更少的逻辑核心时, 2是最好的选择, 否则就使用1. 默认值0恰恰如此: 它最大限度地减少每个逻辑核心的线程以优化性能. 如果你想在同一物理节点上运行多个<code>mdrun</code>工作, 当使用所有逻辑核心时你应该将<code>-pinstride</code>设置为1. 当在相同的物理节点上运行多个<code>mdrun</code>(或其它)模拟时, 一些模拟需要从非零核心开始关联, 以避免核心过载; 使用<code>-pinoffset</code>你可以设置逻辑核心关联的偏移值.</p>
+
+<p>当使用超过1个进程启动<code>mdrun</code>时, 会使用区域分解的并行.</p>
+
+<p>使用区域分解时, 空间分解可以通过<code>-dd</code>选项设置. 默认情况下<code>mdrun</code>会选择一个好的分解. 只有当体系非常不均匀时, 用户才需要更改此设置. 动态负载平衡由<code>-dlb</code>选项设置, 它可以显著地提升性能, 特别是对于非均相体系. 动态负载均衡的唯一缺点是运行不再具有二进制级别的可重现性, 但在大多数情况下, 这并不重要. 由负载失衡导致的性能损失达到5%或以上时, 默认会自动开启动态负载均衡. 对低并行度计算, 这些是区域分解仅有的重要选项. 对高并行度计算, 下面两节中的选项可能是提升性能的重要选项.</p>
+
+<p>当PME与区域分解一起使用时, 可以分配独立的进程只进行PME网格计算; 大约从12个进程开始, 这样计算效率更高, 当使用OpenMP并行时, 需要的线程数可能更少. PME线程数可由选项<code>-npme</code>设定, 但不能超过总线程数的一半. 默认情况下, 当总线程数超过16时, <code>mdrun</code>会猜测一个PME线程数. 使用GPU时, 不会自动选择使用单独的PME线程, 因为最佳设置在很大程度上取决于硬件的详细信息. 在任何情况下, 你都可能通过优化<code>-npme</code>提高性能. 关于此选项的性能统计数据会写到日志文件的结束处. 为了在高并行度下获得良好的负载均衡, PME格点的X和Y尺寸应该能被PME线程数整除(即便不是这样, 模拟也可以正常运行).</p>
+
+<p>本节列出了能够影响区域分解的所有选项.</p>
+
+<p>选项<code>-rdd</code>可用于设置计算电荷组之间的键合相互作用时所需要的最大距离. 对于非键截断距离以下的二体键合相互作用, 其通讯总是与非键通讯一起进行. 只有当含有丢失的键合相互作用时, 超过非键截断的原子才进行通讯; 这意味着额外的花销是很小的, 而且几乎与<code>-rdd</code>的值无关. 使用动态负载均衡时, <code>-rdd</code>选项同时也是区域分解单元晶胞尺寸的下限. 默认情况下, <code>mdrun</code>会根据初始的坐标确定<code>-rdd</code>, 所选值基于相互作用范围和通讯成本之间的平衡.</p>
+
+<p>当电荷组间的键合相互作用超过了键合截断距离时, <code>mdrun</code>会终止运行, 并给出一个错误信息. 对不使用排除的配对相互作用和表格键, 可以使用<code>-noddcheck</code>选项关闭此检查.</p>
+
+<p>当存在约束时, 选项<code>-rcon</code>也会影响晶胞的大小限制. 由NC约束连接的原子, 其中NC为LINCS的阶数加1, 不应超出最小的晶胞尺寸. 如果发生了这种情况, 程序会给出错误信息, 用户应更改分解或减小LINCS阶数并增加LINCS的迭代次数. 默认情况下<code>mdrun</code>会以保守的方式估计P-LINCS所需要的最小晶胞尺寸. 对高并行度的计算, 使用选项<code>-rcon</code>来设置P-LINCS所需要的距离, 可能会有帮助.</p>
+
+<p>使用动态负载均衡时, <code>-dds</code>选项设置晶胞x, y和/或z方向缩放的最小允许比例. <code>mdrun</code>会确保晶胞至少缩放此比例. 这个选项用于自动空间分解(当不使用<code>-dd</code>时)以及确定网格脉冲的数量, 进而设置晶胞的最小允许尺寸. 在某些情况下, 可能需要调整<code>-dds</code>的值以考虑体系高或低的空间不均匀性.</p>
+
+<p>选项<code>-gcom</code>可用于决定每n步只进行一次全局通讯. 当全局通讯步成为瓶颈的时候, 对高并行度的模拟此选项可以提高性能. 对全局控温器和/或控压器, 其温度和/或压力也会每<code>-gcom</code>步数更新一次. 默认情况下此选项的值被设为<code>nstcalcenergy</code>和<code>nstlist</code>中的较小值.</p>
+
+<p>使用<code>-rerun</code>选项, 可以(重新)计算一个输入轨迹的的力和能量. 会针对每一帧进行近邻搜索, 除非<code>nstlist</code>被设置为零(见<code>.mdp</code>文件).</p>
+
+<p>ED(主成分动力学)采样和/或额外的洪泛势可使用<code>-ei</code>选项启用, 后面指定一个<code>.edi</code>文件. <code>.edi</code>文件可以使用<code>make_edi</code>工具创建, 或通过WHAT IF程序essdyn菜单中的选项来创建. <code>mdrun</code>会产生一个<code>.xvg</code>输出文件, 里面包含了位置, 速度, 力在选定的特征向量上的投影.</p>
+
+<p>当在<code>.mdp</code>文件中指定了用户自定义的势函数时, 可使用<code>-table</code>选项将式化的势函数表格传递给<code>mdrun</code>. 该表格文件从当前目录或<code>GMXLIB</code>目录中读取. <code>GMXLIB</code>目录中有许多预格式化的表格, 如使用普通库仑势的6&#8211;8, 6&#8211;9, 6&#8211;10, 6&#8211;11, 6&#8211;12 Lennard-Jones势. 当存在对相互作用时, 可使用<code>-tablep</code>选项读入对相互作用函数的单独表格.</p>
+
+<p>当拓扑中存在表格键函数时, 可使用<code>-tableb</code>选项读入相互作用函数. 对每个不同的表格相互作用类型, 表格文件的名称以不同方式修饰: 文件扩展名之前会追加下划线, 后面跟着一个代表键的<code>b</code>, 代表键角的<code>a</code>或代表二面角的<code>d</code>, 最后是相互作用类型的表格编号.</p>
+
+<p>当<code>.mdp</code>文件中指定了牵引时, 选项<code>-px</code>和<code>-pf</code>可用于输出牵引COM的坐标和力.</p>
+
+<p>使用<code>-multi</code>或<code>-multidir</code>选项, 可以并行方式模拟多个体系, 输入文件/目录的数目等于体系的数目. <code>-multidir</code>选项获取一个目录列表(每个体系一个), 并在其中的每一个目录中运行, 运行时使用的输入/输出文件名, 如由<code>-s</code>选项指定的, 是相对于这些目录的. 使用<code>-multi</code>选项, 体系编号会追加到运行输入文件与每个输出文件的名称中, 例如<code>topol.tpr</code>会变为<code>topol0.tpr</code>, <code>topol1.tpr</code>等. 每个体系的进程数为总进程数除以体系的数目. 这个选项的一个应用是NMR精修: 当存在距离或取向限制时, 可以对所有体系进行系统平均.</p>
+
+<p>使用<code>-replex</code>选项, 每经过给定的步数, 会尝试进行一次副本交换. 副本的数目由<code>-multi</code>或<code>-multidir</code>选项设置, 如上所述. 所有运行输入文件都应使用不同的耦合温度, 文件的顺序并不重要. 随机数种子由<code>-reseed</code>设置. 每次交换后会进行速度缩放和近邻搜索.</p>
+
+<p>最后, 当给出合适的选项时, 可以测试一些试验性的算法. 目前正在考察的是: 极化.</p>
+
+<p>选项<code>-membed</code>的功能与原先的<code>g_membed</code>相同, 即将蛋白质嵌入到膜中. 数据文件应包含传递给<code>g_membed</code>的选项. <code>-mn</code>和<code>-mp</code>也会应用到.</p>
+
+<p>如果你怀疑模拟是由于原子受力过大而崩溃的, 选项<code>-pforce</code>可能对你有用. 使用此选项, 当原子的受力超过一定值时, 其坐标和力会被打印到<code>stderr</code>.</p>
+
+<p>包含体系完整状态的检查点会被定期(选项<code>-cpt</code>)地写入文件<code>-cpo</code>, 除非选项<code>-cpt</code>设置为&#8211;1. 先前的检查点会备份到<code>state_prev.cpt</code>以确保最近的体系状态始终可用, 即使在写入检查点时模拟被终止. 使用<code>-cpnum</code>选项会保存所有的检查点文件并追加步数. 通过从由选项<code>-cpi</code>指定的文件中读入全部状态, 模拟可以继续进行. 该选项的智能之处在于, 如果没有找到检查点文件, GROMACS就假定这是一个常规运行, 并从<code>.tpr</code>文件的第一步开始. 默认情况下, 输出将被追加到现有的输出文件中. 检查点文件中包含了所有输出文件的校验码, 这样你永远不会丢失数据, 即使一些输出文件被修改, 破坏或删除. <code>-cpi</code>有三种情景:</p>
+
+<ul class="incremental">
+<li>不存在名称匹配的文件: 写入新的输出文件</li>
+<li>所有文件都存在, 且名称和校验码与存储在检查点文件中的匹配: 追加文件</li>
+<li>其他情况下, 不会修改任何文件, 并产生一个致命错误</li>
+</ul>
+
+<p>使用<code>-noappend</code>选项, 会打开新的输出文件, 并将模拟部分编号添加到所有输出文件的名称中. 需要注意的是, 在所有情况下检查点文件本身都不会被重命名, 并会被覆盖, 除非它的名称与<code>-cpo</code>选项不匹配.</p>
+
+<p>使用检查点时, 输出会追加到先前的输出文件中, 除非使用了<code>-noappend</code>选项或不存在任何先前的输出文件(除检查点文件外). 要追加的文件的完整性是通过验证检查点文件中存储的校验码实现的. 这保证了追加文件时不会造成混淆或损坏. 当只有部分先前的输出文件存在时, 会导致致命错误, 并且不会修改旧的输出文件, 也不会打开新的输出文件. 追加得到的结果与单独运行得到的结果相同, 文件内容是二进制相同的, 除非你使用了不同的进程数或动态负载均衡或FFT库使用了计时优化.</p>
+
+<p>使用选项<code>-maxh</code>时, 当运行时间超过<code>-maxh</code>*0.99小时后, 模拟会终止, 并在第一个近邻搜索步输出检查点文件.</p>
+
+<p>当<code>mdrun</code>接收到TERM信号后, 它会将<code>nsteps</code>设置为比当前步数多一的值. 当<code>mdrun</code>接收到INT信号后(例如, 按下CTRL+C), 会在下一近邻搜索步后停止(下一步的<code>nstlist = 0</code>). 在这两种情况下, 所有的常规输出都将被写入到文件中. 当使用MPI运行<code>mdrun</code>时, 只要将信号发送到<code>mdrun</code>的一个进程就足够了, 此信号不应该被发送到<code>mpirun</code>或<code>mdrun</code>进程, 因为它们是其他进程的父进程.</p>
+
+<p>交互式分子动力学(IMD)可以通过至少使用三个IMD开关中的一个来激活: <code>-imdterm</code>开关允许从分子查看器(如VMD)终止模拟; 使用<code>-imdwait</code>, 当没有IMD客户端连接时, <code>mdrun</code>会暂停; 可以使用<code>-imdpull</code>打开IMD的远程操控. <code>mdrun</code>监听的端口可以使用<code>-imdport</code>来更改. 如果使用IMD操控, 由<code>-if</code>指向的文件中包含了原子索引和力.</p>
+
+<p>当使用MPI启动<code>mdrun</code>时, 默认情况下, 不可改变它的优先级.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-s [&lt;.tpr/.tpb/...&gt;</code>]` (topol.tpr) (输入)<br/>
+运行输入文件: tpr tpb tpa</li>
+<li><code>-o [&lt;.trr/.cpt/...&gt;</code>]` (traj.trr) (输出)<br/>
+全精度轨迹: trr cpt trj tng</li>
+<li><code>-x [&lt;.xtc/.tng&gt;</code>]` (traj_comp.xtc) (输出, 可选)<br/>
+压缩轨迹(tng格式或可移植xdr格式)</li>
+<li><code>-cpi [&lt;.cpt&gt;</code>]` (state.cpt) (输入, 可选)<br/>
+检查点文件</li>
+<li><code>-cpo [&lt;.cpt&gt;</code>]` (state.cpt) (输出, 可选)<br/>
+检查点文件</li>
+<li><code>-c [&lt;.gro/.g96/...&gt;</code>]` (confout.gro) (输出)<br/>
+结构文件: gro g96 pdb brk ent esp</li>
+<li><code>-e [&lt;.edr&gt;</code>]` (ener.edr) (输出)<br/>
+能量文件</li>
+<li><code>-g [&lt;.log&gt;</code>]` (md.log) (输出)<br/>
+日志文件</li>
+<li><code>-dhdl [&lt;.xvg&gt;</code>]` (dhdl.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-field [&lt;.xvg&gt;</code>]` (field.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-table [&lt;.xvg&gt;</code>]` (table.xvg) (输入, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-tabletf [&lt;.xvg&gt;</code>]` (tabletf.xvg) (输入, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-tablep [&lt;.xvg&gt;</code>]` (tablep.xvg) (输入, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-tableb [&lt;.xvg&gt;</code>]` (table.xvg) (输入, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-rerun [&lt;.xtc/.trr/...&gt;</code>]` (rerun.xtc) (输入, 可选)<br/>
+轨迹: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-tpi [&lt;.xvg&gt;</code>]` (tpi.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-tpid [&lt;.xvg&gt;</code>]` (tpidist.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-ei [&lt;.edi&gt;</code>]` (sam.edi) (输入, 可选)<br/>
+ED采用输入</li>
+<li><code>-eo [&lt;.xvg&gt;</code>]` (edsam.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-devout [&lt;.xvg&gt;</code>]` (deviatie.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-runav [&lt;.xvg&gt;</code>]` (runaver.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-px [&lt;.xvg&gt;</code>]` (pullx.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-pf [&lt;.xvg&gt;</code>]` (pullf.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-ro [&lt;.xvg&gt;</code>]` (rotation.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-ra [&lt;.log&gt;</code>]` (rotangles.log) (输出, 可选)<br/>
+日志文件</li>
+<li><code>-rs [&lt;.log&gt;</code>]` (rotslabs.log) (输出, 可选)<br/>
+日志文件</li>
+<li><code>-rt [&lt;.log&gt;</code>]` (rottorque.log) (输出, 可选)<br/>
+日志文件</li>
+<li><code>-mtx [&lt;.mtx&gt;</code>]` (nm.mtx) (输出, 可选)<br/>
+Hessian矩阵</li>
+<li><code>-dn [&lt;.ndx&gt;</code>]` (dipole.ndx) (输出, 可选)<br/>
+索引文件</li>
+<li><code>-multidir [&lt;dir&gt;</code> [&#8230;]<code>]</code> (rundir) (输入, 可选)<br/>
+运行路径</li>
+<li><code>-membed [&lt;.dat&gt;</code>]` (membed.dat) (输入, 可选)<br/>
+通用数据文件</li>
+<li><code>-mp [&lt;.top&gt;</code>]` (membed.top) (输入, 可选)<br/>
+拓扑文件</li>
+<li><code>-mn [&lt;.ndx&gt;</code>]` (membed.ndx) (输入, 可选)<br/>
+索引文件</li>
+<li><code>-if [&lt;.xvg&gt;</code>]` (imdforces.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-swap [&lt;.xvg&gt;</code>]` (swapions.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (0)<br/>
+设置优先级</li>
+<li><code>-deffnm &lt;string&gt;</code>
+对所有文件选项设置默认的文件名</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-dd &lt;vector&gt;</code> (0 0 0)<br/>
+区域分解格点, 0为优化设置</li>
+<li><code>-ddorder &lt;enum&gt;</code> (interleave)<br/>
+DD进行顺序: interleave, pp_pme, cartesian</li>
+<li><code>-npme &lt;int&gt;</code> (&#8211;1)<br/>
+用于PME的独立进程数, &#8211;1表示使用猜测值</li>
+<li><code>-nt &lt;int&gt;</code> (0)<br/>
+启动的总线程数(0表示使用猜测值)</li>
+<li><code>-ntmpi &lt;int&gt;</code> (0)<br/>
+启动的线程MPI的线程数(0表示使用猜测值)</li>
+<li><code>-ntomp &lt;int&gt;</code> (0)<br/>
+每个MPI进程启动的OpenMP线程数(0表示使用猜测值)</li>
+<li><code>-ntomp_pme &lt;int&gt;</code> (0)<br/>
+每个MPI进程启动的OpenMP线程数(0表示使用猜测值)</li>
+<li><code>-pin &lt;enum&gt;</code> (auto)<br/>
+设置线程关联: auto, on, off</li>
+<li><code>-pinoffset &lt;int&gt;</code> (0)<br/>
+关联到核心的逻辑核心的起始编号, 用于避免将不同<code>mdrun</code>实例的线程关联到相同的核心</li>
+<li><code>-pinstride &lt;int&gt;</code> (0)<br/>
+逻辑核心上线程之间的关联距离, 使用0可以最大限度地减少每个物理核心上的线程数</li>
+<li><code>-gpu_id &lt;string&gt;</code>
+使用的GPU设备的ID列表, 指定每个节点上PP进程到GPU的映射</li>
+<li><code>-[no]</code>ddcheck (yes)<br/>
+使用DD时, 检查所有的键合相互作用</li>
+<li><code>-rdd &lt;real&gt;</code> (0)<br/>
+使用DD时键合相互作用的最大距离(单位: nm), 0表示由初始坐标决定</li>
+<li><code>-rcon &lt;real&gt;</code> (0)<br/>
+P-LINCS的最大距离(单位: nm), 0为估计值</li>
+<li><code>-dlb &lt;enum&gt;</code> (auto)<br/>
+动态负载均衡(使用DD): auto, no, yes</li>
+<li><code>-dds &lt;real&gt;</code> (0.8)<br/>
+一个处于(0,1)之间的比例, 初始DD晶胞的尺寸会根据此数值的倒数进行放大, 以便能进行动态负载均衡, 且同时保持最小的晶胞尺寸</li>
+<li><code>-gcom &lt;int&gt;</code> (&#8211;1)<br/>
+全局通讯频率</li>
+<li><code>-nb &lt;enum&gt;</code> (auto)<br/>
+计算非键相互作用的设备: auto, cpu, gpu, gpu_cpu</li>
+<li><code>-nstlist &lt;int&gt;</code> (0)<br/>
+当使用Verlet缓冲容差时, 设置<code>nstlist</code>(0为猜测值)</li>
+<li><code>-[no]tunepme</code> (yes)<br/>
+优化PP/PME进程间或GPU/CPU间的PME负载</li>
+<li><code>-[no]testverlet</code> (no)<br/>
+测试Verlet非键方案</li>
+<li><code>-[no]v</code> (no)<br/>
+在屏幕上输出更多信息</li>
+<li><code>-[no]compact</code> (yes)<br/>
+输出紧凑的日志文件</li>
+<li><code>-[no]seppot</code> (no)<br/>
+将每一相互作用类型及进程的V和dVdl项独立地输出到日志文件中</li>
+<li><code>-pforce &lt;real&gt;</code> (&#8211;1)<br/>
+输出所有超过此值的力(单位: kJ/mol nm)</li>
+<li><code>-[no]reprod</code> (no)<br/>
+尝试避免那些会影响二进制可重复性的优化</li>
+<li><code>-cpt &lt;real&gt;</code> (15)<br/>
+保存检查点文件的间隔(单位: 分钟)</li>
+<li><code>-[no]cpnum</code> (no)<br/>
+编号并保留检查点文件</li>
+<li><code>-[no]append</code> (yes)<br/>
+当从检查点文件开始继续运行时, 将输出追加到先前的文件中, 而不是将模拟部分编号添加到所有文件名中</li>
+<li><code>-nsteps &lt;int&gt;</code> (&#8211;2)<br/>
+设置运行步数, 覆盖<code>.mdp</code>文件中的设置</li>
+<li><code>-maxh &lt;real&gt;</code> (&#8211;1)<br/>
+时间达到设定值的99%后结束运行(单位: 小时)</li>
+<li><code>-multi &lt;int&gt;</code> (0)<br/>
+以并行方式执行多个模拟</li>
+<li><code>-replex &lt;int&gt;</code> (0)<br/>
+使用此周期(步数)尝试进行周期性的副本交换</li>
+<li><code>-nex &lt;int&gt;</code> (0)<br/>
+每个交换间隔执行的随机交换数(一个建议是N<sup>3</sup>). 设置为零或不设置则使用相邻副本交换.</li>
+<li><code>-reseed &lt;int&gt;</code> (&#8211;1)<br/>
+副本交换的种子, &#8211;1表示产生种子</li>
+</ul>
 
 <h2 id="gmxmindist-calculatetheminimumdistancebetweentwogroups">gmx mindist - Calculate the minimum distance between two groups</h2>
 
