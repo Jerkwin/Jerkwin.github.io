@@ -932,7 +932,97 @@ ACF Legendre多项式的阶数(0意味着没有): 0, 1, 2, 3</li>
 <li>程序应允许随机放置格点</li>
 </ul>
 
-<h2 id="gmxgenion-generatemonoatomicionsonenergeticallyfavorablepositions">gmx genion - Generate monoatomic ions on energetically favorable positions</h2>
+<h2 id="genion:在能量有利位置加入单原子离子翻译:李继存">genion: 在能量有利位置加入单原子离子(翻译: 李继存)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx genion [-s [&lt;.tpr/.tpb/...&gt;]] [-n [&lt;.ndx&gt;]] [-o [&lt;.gro/.g96/...&gt;]]
+           [-p [&lt;.top&gt;]] [-nice ] [-np ] [-pname ]
+           [-pq ] [-nn ] [-nname ] [-nq ]
+           [-rmin ] [-seed ] [-conc ] [-[no]neutral]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx genion</code>用单原子离子随机地取代溶剂分子. 溶剂分子组应该连续, 且所有分子的原子数应该相同. 用户应该将离子添加到拓扑文件中, 或使用<code>-p</code>选项自动修改拓扑文件.</p>
+
+<p>在所有力场中, 离子的分子类型, 残基名称和原子名称都是大写的元素名称且不含符号. 分子名称应使用<code>-pname</code>或<code>-nname</code>给出, 并且拓扑文件的<code>[ molecules ]</code>段也要相应地更新, 可以手动更新或使用<code>-p</code>选项. 不要使用原子名称!</p>
+
+<p>具有多个电荷态的离子会添加多重度, 不含符号, 只用于非常见态.</p>
+
+<p>对更大的离子, 例如硫酸根, 我们建议使用<code>gmx insert-molecules</code></p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入)<br/>
+运行输入文件: tpr tpb tpa</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入, 可选)<br/>
+索引文件</li>
+<li><code>-o [&lt;.gro/.g96/...&gt;]</code> (out.gro) (输出)<br/>
+结构文件: gro g96 pdb brk ent esp<br/>
+得到这个文件之后, 可以再用它产生tpr文件.</li>
+<li><code>-p [&lt;.top&gt;]</code> (topol.top) (输入/输出, 可选)<br/>
+拓扑文件<br/>
+在往体系中添加金属离子时, <code>genion</code>会往拓扑文件最后的分子类型中写入添加的离子数, 并修改拓扑文件中体系的原子数.</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (19)<br/>
+设置优先级</li>
+<li><code>-np &lt;int&gt;</code> (0)<br/>
+阳离子的数目</li>
+<li><code>-pname &lt;string&gt;</code> (NA)<br/>
+阳离子的名称</li>
+<li><code>-pq &lt;int&gt;</code> (1)<br/>
+阳离子的电荷</li>
+<li><code>-nn &lt;int&gt;</code> (0)<br/>
+阴离子的数目</li>
+<li><code>-nname &lt;string&gt;</code> (CL)<br/>
+阴离子的名称</li>
+<li><code>-nq &lt;int&gt;</code> (&#8211;1)<br/>
+阴离子的电荷</li>
+<li><code>-rmin &lt;real&gt;</code> (0.6)<br/>
+离子间的最小距离</li>
+<li><code>-seed &lt;int&gt;</code> (1993)<br/>
+随机数发生器的种子</li>
+<li><code>-conc &lt;real&gt;</code> (0)<br/>
+指定盐的浓度(mol/L). 程序会添加足够多的离子以达到指定的浓度, 浓度根据输入<code>.tpr</code>文件中的盒子体积计算. 覆盖<code>-np</code>和<code>-nn</code>选项.</li>
+<li><code>-[no]neutral</code> (no)<br/>
+此选项会添加足够多的离子以使体系的净电荷为零. 会优先添加这些离子, 然后在添加那些由<code>-np</code>/<code>-nn</code>或<code>-conc</code>指定的离子.</li>
+</ul>
+
+<h3 id="已知问题">已知问题</h3>
+
+<ul class="incremental">
+<li>如果你指定了盐的浓度, 不会考虑已有的离子. 为此, 你需要指定要添加的盐的量.</li>
+</ul>
+
+<h3 id="附加说明">附加说明</h3>
+
+<p>在给蛋白质添加了水环境之后, 一般要在水环境中添加离子, 使模拟体系更接近真实体系. 如果体系中的蛋白质本身已经带了静电荷, 那么就更要给体系加几个带相反电荷的离子, 使体系处于电中性.</p>
+
+<p>几个常用选项的说明:</p>
+
+<ul class="incremental">
+<li><code>-np/-nn/-conc</code>: 带正/负电离子的数目.<br/>
+假如想要得到0.1 mol/L的离子浓度到底要加多少离子, 可以自己算一下, 也可以直接使用<code>-conc</code>指定离子浓度. 在使用<code>-conc</code>时, 建议配合使用<code>-neutral</code>, 以便使体系最后处于电中性.</li>
+<li><code>-pn/-nn</code>: 指定正负离子的名称, 比如<code>NA+</code>或者<code>CL-</code>.<br/>
+可以参看GROMACS安装路径<code>share/gromacs/top/</code>下面的力场文件中离子使用的名称, 也可以使用新的离子, 但要在力场中定义, 或者把新离子的itp文件使用<code>include</code>添加到体系拓扑文件中.</li>
+<li><code>-seed</code>: 随机数种子.<br/>
+如果发现添加的离子离蛋白太近(比如说小于0.1 nm), 那么可以指定新的种子.</li>
+</ul>
+
+<h3 id="使用范例">使用范例</h3>
+
+<pre><code>gmx genion -s topol.tpr -o system_ion.pdb -p system.top -np 100 -pname Na -nn 100 -nname Cl
+</code></pre>
+
+<p>添加100个Na+离子和100个Cl离子, 输出文件为<code>system_ion.pdb</code>文件.</p>
 
 <h2 id="gmxgenrestr:生成索引组的位置限制或距离限制翻译:廖华东">gmx genrestr: 生成索引组的位置限制或距离限制(翻译: 廖华东)</h2>
 
@@ -1940,7 +2030,48 @@ xvg绘图格式: xmgrace, xmgr, none</li>
 使用<code>.rtp</code>中的条目名称作为残基名称</li>
 </ul>
 
-<h2 id="gmxpme_error-estimatetheerrorofusingpmewithagiveninputfile">gmx pme_error - Estimate the error of using PME with a given input file</h2>
+<h2 id="gmxpme_error:根据给定的输入文件估计使用pme的误差翻译:张爱">gmx pme_error: 根据给定的输入文件估计使用PME的误差(翻译: 张爱)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx pme_error [-s [&lt;.tpr/.tpb/...&gt;`]] [-o [&lt;.out&gt;`]] [-so [&lt;.tpr/.tpb/...&gt;`]]
+             [-nice ] [-beta ] [-[no]tune] [-self ]
+             [-seed ] [-[no]v]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p>如果使用sPME算法, <code>gmx pme_error</code>可用于估计静电力的误差. <code>-tune</code>选项可确定划分参数, 以使得误差在实空间和倒易空间两部分之间均匀分布. 源于粒子自相互作用的那部分误差不易计算. 但是一个较好的近似方法是仅仅使用一部分粒子来计算此项, 这可使用<code>-self</code>选项完成.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入)<br/>
+运行输入文件: tpr tpb tpa</li>
+<li><code>-o [&lt;.out&gt;]</code> (error.out) (输出)<br/>
+通用输出文件类型</li>
+<li><code>-so [&lt;.tpr/.tpb/...&gt;</code>]` (tuned.tpr) (输出, 可选)<br/>
+运行输入文件: tpr tpb tpa</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (0)<br/>
+设置优先级</li>
+<li><code>-beta &lt;real&gt;</code> (&#8211;1)<br/>
+如果是正值, 用此值覆盖<code>.tpr</code>文件中的<code>ewald_beta</code>值</li>
+<li><code>-[no]tune</code> (no)<br/>
+调整划分参数, 以使得误差在实空间和倒易空间之间均匀分布</li>
+<li><code>-self &lt;real&gt;</code> (1)<br/>
+如果处于0到1之间, 只根据这部分带电粒子来确定粒子间的自相互作用误差</li>
+<li><code>-seed &lt;int&gt;</code> (0)<br/>
+当<code>-self</code>的值处于0.0到1.0之间时, 用于蒙特卡洛算法的随机数种子</li>
+<li><code>-[no]v</code> (no)<br/>
+屏幕上输出更多信息</li>
+</ul>
 
 <h2 id="gmxpolystat-calculatestaticpropertiesofpolymers">gmx polystat - Calculate static properties of polymers</h2>
 
