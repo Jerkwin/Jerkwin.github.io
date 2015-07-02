@@ -1,0 +1,39 @@
+integrator          =  md			; MD
+tinit               =  0			; initial time
+dt                  =  0.5E-3		; time step(ps)
+nsteps              =     400000	;number of steps
+nstcomm             =  1			; reset c.o.m. motion
+
+nstxout             =  1000
+nstvout             =  1000
+nstfout             =  0
+nstlog              =  1000
+nstenergy           =  1000
+nstcalcenergy       =  100
+nstxtcout           =  100
+xtc_precision       =  1000
+
+ns_type             =  grid			; pairlist method
+nstlist             =  1			; update pairlist
+rlist               =  0.8			; cut-off for ns
+
+PBC                 =  xyz
+periodic_molecules  =  yes
+constraints         =  none
+
+vdwtype             =  cut-off
+rvdw                =  0.8		; cut-off for vdw
+coulombtype         =  PME
+rcoulomb            =  0.8		; cut-off for coulomb
+pme_order           =  6
+ewald_rtol          =  1E-6
+
+Tcoupl              =  Nose-Hoover		; temperature coupling
+tc-grps             =  System
+ref_t               =  300
+tau_t               =  1
+
+Pcoupl              =  no	; pressure bath
+gen_vel             =  yes			; generate initial velocities
+gen_temp            =  300			; initial temperature
+gen_seed            =  1993			; random seed
