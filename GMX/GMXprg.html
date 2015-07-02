@@ -206,7 +206,7 @@ xvg绘图格式: xmgrace, xmgr, none</li>
 <li><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入, 可选)<br/>
 轨迹: xtc trr cpt trj gro g96 pdb tng</li>
 <li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入, 可选)<br/>
-结构+质量（db）: tpr tpb tpa gro g96 pdb brk ent</li>
+结构+质量(db): tpr tpb tpa gro g96 pdb brk ent</li>
 <li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入, 可选)<br/>
 索引文件</li>
 <li><code>-dm [&lt;.xpm&gt;]</code> (rmsd.xpm) (输入, 可选)<br/>
@@ -388,7 +388,86 @@ PBC检查</li>
 直方图单元格的宽度</li>
 </ul>
 
-<h2 id="gmxdo_dssp-assignsecondarystructureandcalculatesolventaccessiblesurfacearea">gmx do_dssp - Assign secondary structure and calculate solvent accessible surface area</h2>
+<h2 id="gmxdo_dssp:指定二级结构并计算溶剂可及表面积翻译:杨旭云">gmx do_dssp: 指定二级结构并计算溶剂可及表面积(翻译: 杨旭云)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx do_dssp [-f [&lt;.xtc/.trr/...&gt;]] [-s [&lt;.tpr/.tpb/...&gt;]] [-n [&lt;.ndx&gt;]]
+            [-ssdump [&lt;.dat&gt;]] [-map [&lt;.map&gt;]] [-o [&lt;.xpm&gt;]] [-sc [&lt;.xvg&gt;]]
+            [-a [&lt;.xpm&gt;]] [-ta [&lt;.xvg&gt;]] [-aa [&lt;.xvg&gt;]] [-nice ]
+            [-b ] [-e ] [-dt ] [-tu ] [-[no]w]
+            [-xvg ] [-sss ] [-ver ]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx do_dssp</code>读取轨迹文件, 并调用第三方程序dssp计算每一时间帧蛋白质的二级结构信息. 如果你还没有安装dssp程序, 可以在这里获得: <a href="http://swift.cmbi.ru.nl/gv/dssp">http://swift.cmbi.ru.nl/gv/dssp</a>. <code>gmx do_dssp</code>假定dssp可执行程序的路径为<code>/usr/local/bin/dssp</code>. 如果不是, 那么需要设置环境变量<code>DSSP</code>, 并将其指向dssp可执行程序的路径, 例如<code>setenv DSSP /opt/dssp/bin/dssp</code>. 如果使用bash, 可使用<code>export DSSP='/opt/dssp/bin/dssp'</code>, 也可以直接将该变量加到bash的配置文件中.</p>
+
+<p>自2.0.0版本起, dssp的语法不同于之前的版本. 如果你正在使用旧版本的dssp程序, 可用选项<code>-ver</code>指示<code>do_dssp</code>使用旧的语法. 默认情况下, <code>do_dssp</code>使用2.0.0版本引入的语法. 即使更新的版本(编写此文档时尚未发布)也被假定与2.0.0版本使用同样的语法.</p>
+
+<p>程序会将每一残基每一时间帧的二级结构写入一个<code>.xpm</code>矩阵文件. 该文件实际上是一个文本文件, 可以用文本编辑器打开. 文件中用不同字符表示蛋白质每一残基属于何种二级结构, 并随时间变化, 同时定义了每个字符的颜色. 这一文件可使用<code>xv</code>之类的程序可视化, 也可使用<code>xpm2ps</code>转换为PostScript格式, 扩展名为<code>.eps</code>, 这样就可以直接打开或用到Latex文件中. 在<code>.xpm</code>和PostScript文件中, 每个链以浅灰线分割开.</p>
+
+<p>程序可以统计每个二级结构类型的残基数目和总的二级结构类型数(<code>-sss</code>), 并将统计结果随时间的变化写入文件中(<code>-sc</code>). 输出文件中包含了所有不同二级结构的氨基酸残基数目, 可以用xmgrace的<code>-nxy</code>选项打开.</p>
+
+<p>程序可以计算每个残基的溶剂可及表面积(SAS, Solvent Accesible Surface), 包括绝对值(&#197;^2^)和相对于残基最大可及表面积的比例. 残基的最大可及表面积定义为该残基在甘氨酸链中的可及表面积. <strong>注意</strong>, <code>gmx sas</code>程序也可用于计算SAS且更简单高效.</p>
+
+<p>最后, 这个程序可以将二级结构信息转存在一个特殊的文件<code>ssdump.dat</code>中(此文件为文本文件, 里面用字符代表残基的二级结构类型, 如H表示螺旋, B表示折叠等), 以供<code>gmx chi</code>程序使用. 将这两个程序结合起来, 就可以分析残基二面角性质与二级结构类型的关系.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入)<br/>
+轨迹: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入)<br/>
+结构+质量(db): tpr tpb tpa gro g96 pdb brk ent</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入, 可选)<br/>
+索引文件</li>
+<li><code>-ssdump [&lt;.dat&gt;]</code> (ssdump.dat) (输出, 可选)<br/>
+通用数据文件</li>
+<li><code>- map [&lt;.map&gt;]</code> (ss.map) (输入, 库)<br/>
+矩阵数据到颜色的映射文件.<br/>
+程序输出<code>.xpm</code>文件的原色库文件, 如无则默认输出.</li>
+<li><code>-o [&lt;.xpm&gt;]</code> (ss.xpm) (输出)<br/>
+X PixMap兼容的矩阵文件.<br/>
+各个残基属于某二级结构的信息并随时间变化</li>
+<li><code>-sc [&lt;.xvg&gt;]</code> (scount.xvg) (输出)<br/>
+xvgr/xmgr文件<br/>
+统计某二级结构的残基数目</li>
+<li><code>-a [&lt;.xpm&gt;]</code> (area.xpm) (输出, 可选)<br/>
+X PixMap兼容的矩阵文件<br/>
+各残基的溶剂可及表面积</li>
+<li><code>-ta [&lt;.xvg&gt;]</code> (totarea.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件<br/>
+总溶剂可及表面积, 包括疏水和亲水表面积</li>
+<li><code>-aa [&lt;.xvg&gt;]</code> (averarea.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件<br/>
+平均溶剂可及表面积</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (19)<br/>
+设置优先级</li>
+<li><code>-b &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的第一帧(ps)</li>
+<li><code>-e &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的最后一帧(ps)</li>
+<li><code>-dt &lt;time&gt;</code> (0)<br/>
+只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
+<li><code>-tu &lt;enum&gt;</code> (ps)<br/>
+时间单位: fs, ps, ns, us, ms, s</li>
+<li><code>-[no]</code>w (no)<br/>
+程序运行结束查看输出文件: <code>.xvg</code>, <code>.xpm</code>, <code>.eps</code>和<code>.pdb</code></li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-sss &lt;string&gt;</code> (HEBT)<br/>
+用于数算结构的二级结构</li>
+<li><code>-sss ver &lt;int&gt;</code> (2)<br/>
+DSSP主版本号. 自2.0版本开始语法发生变化.</li>
+</ul>
 
 <h2 id="gmxdos-analyzedensityofstatesandpropertiesbasedonthat">gmx dos - Analyze density of states and properties based on that</h2>
 
@@ -1481,7 +1560,64 @@ LIE方程中能量库伦分量的系数</li>
 
 <h2 id="gmxmake_edi-generateinputfilesforessentialdynamicssampling">gmx make_edi - Generate input files for essential dynamics sampling</h2>
 
-<h2 id="gmxmake_ndx-makeindexfiles">gmx make_ndx - Make index files</h2>
+<h2 id="gmxmake_ndx:制作索引文件翻译:刘恒江">gmx make_ndx: 制作索引文件(翻译: 刘恒江)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx make_ndx [-f [&lt;.gro/.g96/...&gt;]] [-n [&lt;.ndx&gt; [...]]] [-o [&lt;.ndx&gt;]]
+             [-nice ] [-natoms ] [-[no]twin]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p>几乎每个GROMACS程序都需要使用索引组. 所有程序都可以生成默认的索引组. <strong>只有</strong> 需要 <strong>特殊</strong> 索引组的时候, 你才不得不使用<code>gmx make_ndx</code>. 一般情况下, 整个体系会有一个默认组, 蛋白质会有九个默认组, 每个其他的残基会有一个默认组.</p>
+
+<p>当没有提供索引文件时, <code>gmx make_ndx</code>也会生成这些默认组. 借助命令中的索引编辑器, 你可以选择原子, 残基或链的名称和数目. 如果提供了运行输入文件, 你也可以选择原子类型. 可以使用NOT, AND或OR等逻辑判断词, 你可以将索引组分成链, 残基会原子. 你也可以随意删除或重命名索引组.</p>
+
+<p>在索引编辑器和索引文件中, 原子编号都是从1开始的.</p>
+
+<p>选项<code>-twin</code>可以复写所有索引组, 并对其施加<code>-natoms</code>的偏移. 在设置计算电生理双层膜时, 这个选项很有用.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.gro/.g96/...&gt;]</code> (conf.gro) (输入, 可选)<br/>
+结构文件: gro g96 pdb brk ent esp tpr tpb tpa</li>
+<li><code>-n [&lt;.ndx&gt; [...]]</code> (index.ndx) (输入, 可选)<br/>
+索引文件</li>
+<li><code>-o [&lt;.ndx&gt;]</code> (index.ndx) (输出)<br/>
+索引文件</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (0)<br/>
+设置优先级</li>
+<li><code>-natoms &lt;int&gt;</code> (0)<br/>
+设置原子数(默认从坐标或索引文件中读取)</li>
+<li><code>-[no]twin</code> (no)<br/>
+复写所有索引组并进行<code>-natoms</code>的偏移</li>
+</ul>
+
+<h3 id="附加说明">附加说明</h3>
+
+<p>GROMACS的索引文件, 即index文件, 扩展名为<code>.ndx</code>.</p>
+
+<p>索引文件是GROMACS的重要文件, 使用它可以在模拟过程中为所欲为. 举一个简单的例子, 如果想详细了解HIV整合酶切割DNA的反应机理, 使用量子力学方法模拟反应位点的反应过程, 而对其他部位使用一般的分子力学方法进行模拟. 于是我们就面临一个对模拟体系进行分开定义的问题. 在GROMACS中, 我们可以使用索引文件来达到目的. 基本思路是这样的, 在索引文件中, 定义一个独立的组, 这个组包括反应位点附近的所有原子. 在模拟的<code>.mdp</code>文件中, 对这个组定义使用量子力学模拟. 对蛋白进行量子力学模拟时, 一般使用洋葱模型. 所谓洋葱模型, 就是对反应位点使用高水平的方法, 对距离反应位点一定半径范围内的, 使用低水平的方法, 然后其他部分使用分子力学方法. 在这种情况下, 就可以在索引文件中定义高水平方法组, 把需要使用高水平方法的原子放到这个组中; 再定义低水平方法组, 指定使用低水平方法的原子.</p>
+
+<p>再举一个例子, 比如说在进行SMD(Steered Molecular Dynamics)时, 要对蛋白膜上的一个原子或者残基施加作用力, 那么可以建立一个索引文件, 在该文件中定义一个组, 把要施力的残基或者原子放到该组中. 然后在相应的文件中就可以使用该组了.</p>
+
+<p>索引文件使用<code>make_ndx</code>程序生成. 运行<code>make_ndx</code>后, 可使用<code>r</code>选择残基, <code>a</code>选择原子, <code>name</code>对多组进行改名, 还可以使用<code>|</code>表示或运算, <code>&amp;</code>表示与运算. 下面是几个简单的例子:</p>
+
+<ul class="incremental">
+<li><code>r 56</code>: 选择56号残基</li>
+<li><code>r 3-45</code>: 选择3至45号残基</li>
+<li><code>r 3-15 | r 23-67</code>: 选择3至15, 23至67号残基</li>
+<li><code>r 3-15 &amp; 4</code>: 选择3至15号残基的主干链原子, 在索引文件中, 4号组为默认的主干链.</li>
+</ul>
 
 <h2 id="gmxmdmat:计算残基接触映射图翻译:陈辰">gmx mdmat: 计算残基接触映射图(翻译: 陈辰)</h2>
 
@@ -3406,5 +3542,47 @@ y轴标签只显示一次</li>
 <li><code>-cmax &lt;real&gt;</code> (0)<br/>
 组合输出的最大值</li>
 </ul>
+
+<h3 id="附加说明">附加说明</h3>
+
+<p>The m2p file format contains input options for the xpm2ps program. All of these options are very easy to comprehend when you look at the PosScript(tm) output from xpm2ps.</p>
+
+<pre><code>; Command line options of xpm2ps override the parameters in this file
+black&amp;white              = no           ; Obsolete
+titlefont                = Times-Roman  ; A PostScript Font
+titlefontsize            = 20           ; Font size (pt)
+legend                   = yes          ; Show the legend
+legendfont               = Times-Roman  ; A PostScript Font
+legendlabel              =              ; Used when there is none in the .xpm
+legend2label             =              ; Used when merging two xpm's
+legendfontsize           = 14           ; Font size (pt)
+xbox                     = 2.0          ; x-size of a matrix element
+ybox                     = 2.0          ; y-size of a matrix element
+matrixspacing            = 20.0         ; Space between 2 matrices
+xoffset                  = 0.0          ; Between matrix and bounding box
+yoffset                  = 0.0          ; Between matrix and bounding box
+x-major                  = 20           ; Major ticks on x axis every .. frames
+x-minor                  = 5            ; Id. Minor ticks
+x-firstmajor             = 0            ; First frame for major tick
+x-majorat0               = no           ; Major tick at first frame
+x-majorticklen           = 8.0          ; x-majorticklength
+x-minorticklen           = 4.0          ; x-minorticklength
+x-label                  =              ; Used when there is none in the .xpm
+x-fontsize               = 16           ; Font size (pt)
+x-font                   = Times-Roman  ; A PostScript Font
+x-tickfontsize           = 10           ; Font size (pt)
+x-tickfont               = Helvetica    ; A PostScript Font
+y-major                  = 20
+y-minor                  = 5
+y-firstmajor             = 0
+y-majorat0               = no
+y-majorticklen           = 8.0
+y-minorticklen           = 4.0
+y-label                  =
+y-fontsize               = 16
+y-font                   = Times-Roman
+y-tickfontsize           = 10
+y-tickfont               = Helvetica
+</code></pre>
 
 <p>&#8211;&gt;</p>
