@@ -28,6 +28,7 @@ function initThree() {
 	renderer = new THREE.WebGLRenderer({antialias: true});
 	renderer.setSize(width-10, height-10);
 	renderer.setClearColorHex(0xFFFFFF, 1.0);
+	renderer.shadowMapEnabled = true;
 	$('canvas-frame').appendChild(renderer.domElement);
 }
 
@@ -51,11 +52,16 @@ function initCamera() {
 
 function initLight() {
 	light = new THREE.DirectionalLight(0xFFFFFF, 1.0, 0);
-	light.position.set(-0.4*100, -0.4*100, 1*100);
+	light.position.set(0, 0, 100);
+	light.shadowCameraRight = 5;
+	light.shadowCameraLeft = -5;
+	light.shadowCameraTop = 5;
+	light.shadowCameraBottom = -5;
+	light.shadowCameraNear = 2;
+	light.shadowCameraFar = 100;
 	scene.add(light);
 
-	//light2 = new THREE.AmbientLight(0x111111, 1.0, 0);
-	//light.position.set(0, 0, 100);
+	//light2 = new THREE.AmbientLight(0x101010, 1.0, 0);
 	//scene.add(light2);
 }
 
@@ -63,8 +69,15 @@ function initObject(){
 
 	var gridMaterial, wireMaterial, vertexColorMaterial;
 	var normMaterial = new THREE.MeshNormalMaterial;
-	var shadeMaterial = new THREE.MeshPhongMaterial( { color: 0x3099d3 , wireframe: false, side:THREE.DoubleSide} );
+	var shadeMaterial = new THREE.MeshPhongMaterial( { color: 0x3099d3 , wireframe: false, side:THREE.DoubleSide, shading:THREE.SmoothShading } );
 	var wireframeMaterial = new THREE.MeshBasicMaterial( { color: 0x000000, wireframe: true, side:THREE.DoubleSide } );
+	var vertexColorMaterial  = new THREE.MeshBasicMaterial( { vertexColors: THREE.VertexColors } );
+
+	THREE.ImageUtils.crossOrigin = ''
+	var wireTexture =  THREE.ImageUtils.loadTexture('square.png')
+	wireTexture.wrapS = wireTexture.wrapT = THREE.RepeatWrapping;
+	wireTexture.repeat.set( 40, 40 );
+	wireMaterial = new THREE.MeshBasicMaterial( { map: wireTexture, vertexColors: THREE.VertexColors, side:THREE.DoubleSide } );
 	var vertexColorMaterial  = new THREE.MeshBasicMaterial( { vertexColors: THREE.VertexColors } );
 
 	var meshFunction = function(x, y) {
@@ -80,14 +93,47 @@ function initObject(){
 	var segments = 25,
 	xMin = -7, xMax = 5.5, xRange = xMax - xMin,
 	yMin = -7, yMax = 7,   yRange = yMax - yMin;
-	var graphGeometry = new THREE.ParametricGeometry( meshFunction, segments, segments+3, false );
-	var graphMesh = new THREE.Mesh( graphGeometry, wireframeMaterial );
-	graphMesh.doubleSided = true;
 
-	scene.add(new THREE.Mesh( graphGeometry, shadeMaterial));
+	var graphGeometry = new THREE.ParametricGeometry( meshFunction, segments, segments+3, false );
+
+	graphGeometry.computeBoundingBox();
+	zMin = graphGeometry.boundingBox.min.z;
+	zMax = graphGeometry.boundingBox.max.z;
+	zRange = zMax - zMin;
+	var color, point, face, numberOfSides, vertexIndex;
+
+	var faceIndices = [ 'a', 'b', 'c', 'd' ];
+
+	for ( var i = 0; i < graphGeometry.vertices.length; i++ )
+	{
+		point = graphGeometry.vertices[ i ];
+		color = new THREE.Color( 0x0000ff );
+		color.setHSL( 0.7 * (zMax - point.z) / zRange, 1, 0.5 );
+		graphGeometry.colors[i] = color; // use this array for convenience
+	}
+
+	for ( var i = 0; i < graphGeometry.faces.length; i++ )
+	{
+		face = graphGeometry.faces[ i ];
+		numberOfSides = ( face instanceof THREE.Face3 ) ? 3 : 4;
+		for( var j = 0; j < numberOfSides; j++ )
+		{
+			vertexIndex = face[ faceIndices[ j ] ];
+			face.vertexColors[ j ] = graphGeometry.colors[ vertexIndex ];
+		}
+	}
+
+	wireMaterial.map.repeat.set( segments, segments );
+	var graphMesh = new THREE.Mesh( graphGeometry, wireMaterial );
+
+	//var graphMesh = new THREE.Mesh( graphGeometry, wireframeMaterial );
+	graphMesh.doubleSided = true;
+	graphMesh.receiveShadow = true;
+
 	scene.add(graphMesh);
-	
+
 	sphere = addSphere(.5, 0xffffff, 0,0,0)
+	sphere.castShadow = true;
 }
 
 var t=0, Xini=-4.5, x, y, z, cube, sphere;
@@ -108,9 +154,9 @@ function dPES(x,y) {
 }
 
 function Animate() {
-	t++; 
+	t++;
 	x = Xini+t/100; if(x>5.5) t=0;
-	y = Xini+t*0/100; 
+	y = Xini+t*0/100;
 	z=PES(x,y);
 	rad=0.5
 	norm=dPES(x,y)
