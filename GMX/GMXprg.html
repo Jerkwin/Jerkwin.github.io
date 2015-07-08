@@ -2349,7 +2349,117 @@ RDF类型: atom, mol_com, mol_cog, res_com, res_cog</li>
 从此距离开始, 将使用g&#8217;(r) = 1 + [g(r)&#8211;1] exp(-(r/fade&#8211;1)^2) 对RDF进行变换, 以使RDF曲线光滑地趋向于1, 如果fade设置为0.0, 将不做任何处理.</li>
 </ul>
 
-<h2 id="gmxrms-calculatermsdswithareferencestructureandrmsdmatrices">gmx rms - Calculate RMSDs with a reference structure and RMSD matrices</h2>
+<h2 id="gmxrms:计算与参考结构之间的rmsd及其矩阵翻译:王育伟">gmx rms: 计算与参考结构之间的RMSD及其矩阵(翻译: 王育伟)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx rms [-s [&lt;.tpr/.tpb/...&gt;]] [-f [&lt;.xtc/.trr/...&gt;]]
+        [-f2 [&lt;.xtc/.trr/...&gt;]] [-n [&lt;.ndx&gt;]] [-o [&lt;.xvg&gt;]] [-mir [&lt;.xvg&gt;]]
+        [-a [&lt;.xvg&gt;]] [-dist [&lt;.xvg&gt;]] [-m [&lt;.xpm&gt;]] [-bin [&lt;.dat&gt;]]
+        [-bm [&lt;.xpm&gt;]] [-nice ] [-b ] [-e ] [-dt ]
+        [-tu ] [-[no]w] [-xvg ] [-what ] [-[no]pbc]
+        [-fit ] [-prev ] [-[no]split] [-skip ] [-skip2 ]
+        [-max ] [-min ] [-bmax ] [-bmin ] [-[no]mw]
+        [-nlevels ] [-ng ]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx rms</code>通过计算均方根偏差(RMSD, root mean square deviation), 尺寸无关的ρ相似性参数(<code>rho</code>)或标度ρ参数(<code>rhosc</code>)来比较两个结构. 请参考Maiorov &amp; Crippen, <em>Proteins</em> <strong>22</strong>, 273 (1995). 可利用<code>-what</code>选项来选择计算那个参数.</p>
+
+<p>程序会将轨迹(<code>-f</code>)中的每个结构与参考结构进行比较. 参考结构取自结构文件(<code>-s</code>).</p>
+
+<p>使用<code>-mir</code>选项, 还会与参考结构的镜像进行比较. 这可以作为一个很有用的参考&#8217;显著&#8217;值. 详见Maiorov &amp; Crippen, <em>Proteins</em> <strong>22</strong>, 273 (1995).</p>
+
+<p>选项<code>-prev</code>会对当前帧的结构与前面指定帧中的结构进行比较.</p>
+
+<p>选项<code>-m</code>将生成一个<code>.xpm</code>格式的矩阵, 其值为轨迹中所有结构彼此之间的比较值. 这个矩阵文件可以使用如<code>xv</code>之类的程序进查看, 也可以使用<code>gmx xpm2ps</code>将其转换为postscript格式.</p>
+
+<p>选项<code>-fit</code>控制结构彼此之间的最小二乘叠合: 完全叠合(旋转和平移), 仅平移, 或不叠合.</p>
+
+<p>选项<code>-mw</code>控制是否使用质量加权. 如果你选择了这个选项(默认), 并提供一个有效的<code>.tpr</code>文件, 程序会读取<code>.tpr</code>文件中的质量, 否则将会从<code>GMXLIB</code>目录下的<code>atommass.dat</code>文件中获取质量. 对于蛋白质这还可以, 但对于别的分子来说就未必了. 对未知的原子, 会分配默认的质量12.011 amu(碳原子). 你可以通过打开<code>-debug</code>选项并检查<code>log</code>文件来判断是否这样.</p>
+
+<p>使用<code>-f2</code>选项, 程序会从第二个轨迹文件中读取&#8217;其他结构&#8217;, 并生成两个轨迹之间的比较矩阵.</p>
+
+<p>选项<code>-bin</code>会对比较矩阵进行二进制转储.</p>
+
+<p>选项<code>-bm</code>会产生平均键角偏差的矩阵, 类似<code>-m</code>选项. 比较时只会考虑比较组中原子之间的键.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入)<br/>
+结构+质量(db): tpr tpb tpa gro g96 pdb brk ent</li>
+<li><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入)<br/>
+轨迹: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-f2 [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入, 可选)<br/>
+轨迹: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入, 可选)<br/>
+索引文件</li>
+<li><code>-o [&lt;.xvg&gt;]</code> (rmsd.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-mir [&lt;.xvg&gt;]</code> (rmsdmir.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-a [&lt;.xvg&gt;]</code> (avgrp.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-dist [&lt;.xvg&gt;]</code> (rmsd-dist.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-m [&lt;.xpm&gt;]</code> (rmsd.xpm) (输出, 可选)<br/>
+X PixMap兼容矩阵文件</li>
+<li><code>-bin [&lt;.dat&gt;]</code> (rmsd.dat) (输出, 可选)<br/>
+通用数据文件</li>
+<li><code>-bm [&lt;.xpm&gt;]</code> (bond.xpm) (输出, 可选)<br/>
+X PixMap兼容矩阵文件</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (19)<br/>
+设置优先级</li>
+<li><code>-b &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的第一帧</li>
+<li><code>-e &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的最后一帧</li>
+<li><code>-dt &lt;time&gt;</code> (0)<br/>
+当 t MOD dt = first time (ps)时, 使用帧</li>
+<li><code>-tu &lt;enum&gt;</code> (ps)<br/>
+时间单位: fs, ps, ns, us, ms, s</li>
+<li><code>-[no]w</code> (no)<br/>
+程序结束后查看输出的.xvg, .xpm, .eps和.pdb文件</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-what &lt;enum&gt;</code> (rmsd)<br/>
+结构差异类型: rmsd, rho, rhosc</li>
+<li><code>-[no]pbc</code> (yes)<br/>
+PBC检查</li>
+<li><code>-fit &lt;enum&gt;</code> (rot+trans)<br/>
+叠合到参考结构: rot+trans, translation, none</li>
+<li><code>-prev &lt;int&gt;</code> (0)<br/>
+和前面的帧进行比较</li>
+<li><code>-[no]split</code> (no)<br/>
+在时间为0的地方分割图</li>
+<li><code>-skip &lt;int&gt;</code> (1)<br/>
+每nr帧写入矩阵一次</li>
+<li><code>-skip2 &lt;int&gt;</code> (1)<br/>
+每nr帧写入矩阵一次</li>
+<li><code>-max &lt;real&gt;</code> (&#8211;1)<br/>
+比较矩阵的最大水平</li>
+<li><code>-min &lt;real&gt;</code> (&#8211;1)<br/>
+比较矩阵的最小水平</li>
+<li><code>-bmax &lt;real&gt;</code> (&#8211;1)<br/>
+键角矩阵的最大水平</li>
+<li><code>-bmin &lt;real&gt;</code> (&#8211;1)<br/>
+键角矩阵的最小水平</li>
+<li><code>-[no]mw</code> (yes)<br/>
+重叠部分使用质量权重</li>
+<li><code>-nlevels &lt;int&gt;</code> (80)<br/>
+矩阵的水平数</li>
+<li><code>-ng &lt;int&gt;</code> (1)<br/>
+计算RMS的组数</li>
+</ul>
 
 <h2 id="gmxrmsdist-calculateatompairdistancesaveragedwithpower-2-3or-6">gmx rmsdist - Calculate atom pair distances averaged with power &#8211;2, &#8211;3 or &#8211;6</h2>
 
