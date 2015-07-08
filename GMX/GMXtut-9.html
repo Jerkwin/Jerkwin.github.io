@@ -174,45 +174,49 @@ Segmentation fault</code>或<code>Illegal instruction (core dumped)</code>之类
 
 <p><code>g_mmpbsa</code>支持GROMACS&#8211;4.6.x, 尚未支持5.x. 编译时, GROMACS需要生成静态库, 因为<code>g_mmpbsa</code>不支持MPI, 不能并行, 因此编译GROMACS时, 必须明确地禁用MPI和GPU选项. 此外, 还需要注意<code>fftw</code>的单双精度问题, 需要安装双精度版本的<code>fftw</code>.</p>
 
-<p>tar -zxvf gromacs&#8211;4.6.5.tar.gz
-cd gromacs&#8211;4.6.5
+<pre><code>tar -zxvf gromacs-4.6.5.tar.gz
+cd gromacs-4.6.5
 mkdir build
 cd build
 cmake ../ -DCMAKE_INSTALL_PREFIX=/opt/gromacs -DGMX_PREFER_STATIC_LIBS=ON -DGMX_GPU=off
 make
-make install</p></li>
+make install
+</code></pre></li>
 <li><p>编译APBS 1.3</p>
 
 <p><code>g_mmpbsa</code>目前也支持APBS&#8211;1.4, 编译方法请参考程序网站上的说明.</p>
 
 <p>编译时, 如果环境变量含有<code>ifort</code>, 会自动选择intel的<code>ifort</code>进行编译, 这样<code>g_mmpbsa</code>也应当使用<code>ifort</code>来编译.</p>
 
-<p>tar zxvf apbs&#8211;1.3-source.tar.gz
-cd apbs&#8211;1.3-source/
-./configure &#8211;prefix=/path/to/apbs&#8211;1.3
+<pre><code>tar zxvf apbs-1.3-source.tar.gz
+cd apbs-1.3-source/
+./configure --prefix=/path/to/apbs-1.3
 make
-make install</p></li>
+make install
+</code></pre></li>
 <li><p>编译fftw单双精度版</p>
 
-<p>cd fftw&#8211;3.1.2
-./configure &#8211;enable-float &#8211;enable-mpi &#8211;prefix=/opt/fftw&#8211;3.1.2
+<pre><code>cd fftw-3.1.2
+./configure --enable-float --enable-mpi --prefix=/opt/fftw-3.1.2
 make
 make install
 make distclean
-./configure &#8211;disable-float &#8211;enable-mpi &#8211;prefix=/opt/fftw&#8211;3.1.2</p></li>
+./configure --disable-float --enable-mpi --prefix=/opt/fftw-3.1.2
+</code></pre></li>
 <li><p>编译g_mmpbsa</p>
 
-<p>tar zxvf RashmiKumari-g_mmpbsa-v1.1.0&#8211;7-gcf6c583.tar.gz
+<pre><code>tar zxvf RashmiKumari-g_mmpbsa-v1.1.0-7-gcf6c583.tar.gz
 cd RashmiKumari-g_mmpbsa-cf6c583/
 mkdir build
 cd build
-cmake -DGMX_PATH=/opt/gromacs 
--DAPBS_INSTALL=/opt/apbs 
--DAPBS_SRC=/path/to/apbs&#8211;1.3-source 
--DCMAKE_INSTALL_PREFIX=/opt/g_mmpbsa 
--DFFTW_LIB=/opt/fftw&#8211;3.3.4/lib ..
+cmake -DGMX_PATH=/opt/gromacs \
+-DAPBS_INSTALL=/opt/apbs \
+-DAPBS_SRC=/path/to/apbs-1.3-source \
+-DCMAKE_INSTALL_PREFIX=/opt/g_mmpbsa \
+-DFFTW_LIB=/opt/fftw-3.3.4/lib ..
 make
-make install</p></li>
+make install
+</code></pre></li>
 <li><p>完善Python环境</p>
 
 <p><code>g_mmpbsa</code>附带的<code>tools</code>文件夹中包含了几个用于后处理的Python脚本. 如果直接执行脚本时出错, 那你需要对Python环境进行完善, 安装缺少的模块. 由于Pyhton版本众多, 注意要下载与已安装的Python版本匹配的模块. 网站<a href="http://www.lfd.uci.edu/~gohlke/pythonlibs/">Unofficial Windows Binaries for Python Extension Packages</a>上提高各种版本的模块供下载, 需要的话可以下载.</p></li>
