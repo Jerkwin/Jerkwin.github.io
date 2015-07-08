@@ -225,7 +225,7 @@ make install
 <h2 id="几点说明">几点说明</h2>
 
 <ol class="incremental">
-<li><p>这两个工具都可以用于计算MMPBSA的结合能, 根据袁晓辉的个人经验, 使用默认参数时, 在精度上<code>GMXPBSA</code>似乎优于<code>g_mmpbsa</code>而且使用也更方便.</p></li>
+<li><p>这两个工具都可以用于计算MMPBSA的结合能, 根据袁曙光的个人经验, 使用默认参数时, 在精度上<code>GMXPBSA</code>似乎优于<code>g_mmpbsa</code>而且使用也更方便.</p></li>
 <li><p>APBS程序可使用OpenMP进行并行, 通过环境变量控制使用的核/处理器数目, <code>export OMP_NUM_THREADS=X</code></p></li>
 <li><p>APBS程序求解PB方程的速度有限, 因此体系大时, 计算很耗时. 卢本卓提出了一种求解PB方程的改进方法, 且发布了求解程序<a href="http://www.sciencedirect.com/science/article/pii/S0010465515000089">AFMPB</a>. 如果使用AFMPB替代APBS, 应该可以提高计算速度.</p></li>
 <li><p>在轨迹不平衡的情况下, 计算PB部分时可能会变得非常慢, 所以需要挑选足够平衡的轨迹进行计算</p></li>
@@ -239,7 +239,7 @@ make install
 <h2 id="参考资料">参考资料</h2>
 
 <ul class="incremental">
-<li>袁晓辉: <a href="http://blog.sciencenet.cn/blog-355217-808289.html">Two MMPBSA calculation tools in Gromacs</a></li>
+<li>袁曙光: <a href="http://blog.sciencenet.cn/blog-355217-808289.html">Two MMPBSA calculation tools in Gromacs</a></li>
 <li>N. Zhou: <a href="http://bioms.org/thread-1240-1-1.html">GROMACS中g_mmpbsa工具使用详解</a></li>
 <li>eming: <a href="http://www.bioms.org/forum.php?mod=viewthread&amp;tid=1046">GROMACS计算MMPBSA</a></li>
 <li>夕览: <a href="http://blog.sina.com.cn/s/blog_60f9c0050100x39b.html">NAMD &amp; MM-PBSA</a></li>
