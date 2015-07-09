@@ -13,10 +13,11 @@ var _hmt = _hmt || [];
 (function() {
   var hm = document.createElement("script");
   hm.src = "//hm.baidu.com/hm.js?69c44f4557bc1fb1b1c6d9b6174a0e9a";
-  var s = document.getElementsByTagName("script")[0]; 
+  var s = document.getElementsByTagName("script")[0];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 </head>
 
 <body>
@@ -30,6 +31,16 @@ var _hmt = _hmt || [];
 <a href="/about" title="About" >关于</a>
 <a href="/feed" title="Subscribe by RSS" >订阅</a>
 </div><h1>{{ page.title }}</h1></header>
-<hr><article class="content">{{ content }}</article></div>
+<hr>
+{% if page.categories %}<span class="categories">类别:
+{% for cat in page.categories %} <a href="/categories/#{{ cat }}" title="{{ cat }}">{{ cat }}</a>&nbsp;{% endfor %}</span>
+{% endif %}
+{% if page.tags %}<span class="tags">&nbsp;&nbsp;&nbsp;&nbsp;标签:
+{% for tag in page.tags %} <a href="/tags/#{{ tag }}" title="{{ tag }}">{{ tag }}</a>&nbsp;{% endfor %}</span>
+{% endif %}
+<span class="license">&nbsp;&nbsp;&nbsp;&nbsp;版权: <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">(CC) BY-NC-SA</a>&nbsp;</span>
+<span id="busuanzi_container_page_pv">&nbsp;&nbsp;&nbsp;&nbsp;本文总阅读次数: <span id="busuanzi_value_page_pv"></span></span>
+
+<article class="content">{{ content }}</article></div>
 <footer><p><small>Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a> | Copyright 2008 - {{site.time | date:"%Y"}} by <a href="http://jerkwin.github.io/about/">Jerkwin</a> | <span class="label label-info">{{site.time | date:"%Y-%m-%d %H:%M:%S %Z"}}</span></small></p></footer>
 </div></body></html>
