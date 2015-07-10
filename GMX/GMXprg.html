@@ -296,7 +296,63 @@ PBC检查</li>
 
 <h2 id="gmxclustsize-calculatesizedistributionsofatomicclusters">gmx clustsize - Calculate size distributions of atomic clusters</h2>
 
-<h2 id="gmxconfrms-fittwostructuresandcalculatesthermsd">gmx confrms - Fit two structures and calculates the RMSD</h2>
+<h2 id="gmxconfrms:叠合两个结构并计算rmsd翻译:李耀">gmx confrms: 叠合两个结构并计算RMSD(翻译: 李耀)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx confrms [-f1 [&lt;.tpr/.tpb/...&gt;]] [-f2 [&lt;.gro/.g96/...&gt;]]
+            [-o [&lt;.gro/.g96/...&gt;]] [-n1 [&lt;.ndx&gt;]] [-n2 [&lt;.ndx&gt;]]
+            [-no [&lt;.ndx&gt;]] [-nice ] [-[no]w] [-[no]one] [-[no]mw]
+            [-[no]pbc] [-[no]fit] [-[no]name] [-[no]label] [-[no]bfac]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx confrms</code>首先将第二个结构最小二乘叠合到第一个结构, 然后再计算两个结构的均方根偏差(RMSD, root mean square deviation). 两个结构的原子数 <strong>不必</strong> 相同, 只要用于叠合的两个索引组一样即可. 使用<code>-name</code>选项时, 只对所选组中名称匹配的原子进行叠合和RMSD计算. 当比较蛋白质的突变体时这个功能很有用.</p>
+
+<p>叠合的结构会写入一个文件中. 在这个<code>.pdb</code>文件中, 两个结构会当作独立的模型(使用<code>rasmol –nmrpdb</code>). 使用<code>-bfac</code>选项时, 根据原子的MSD值计算的B因子也会写入这个<code>.pdb</code>文件中.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f1 [&lt;.tpr/.tpb/...&gt;]</code> (conf1.gro) (输入)<br/>
+ 结构+质量(db): tpr tpb tpa gro g96 pdb brk ent</li>
+<li><code>-f2 [&lt;.gro/.g96/...&gt;]</code> (conf2.gro) (输入)<br/>
+结构文件: gro g96 pdb brk ent esp tpr tpb tpa</li>
+<li><code>-o [&lt;.gro/.g96/...&gt;]</code> (fit.pdb) (输出)<br/>
+结构文件: gro g96 pdb brk ent esp</li>
+<li><code>-n1 [&lt;.ndx&gt;]</code> (fit1.ndx) (输入, 可选)<br/>
+索引文件</li>
+<li><code>-n2 [&lt;.ndx&gt;]</code> (fit2.ndx) (输入, 可选)<br/>
+索引文件</li>
+<li><code>-no [&lt;.ndx&gt;]</code> (match.ndx) (输出, 可选)<br/>
+索引文件</li>
+</ul>
+
+<h3 id="其他选项">其他选项</h3>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (19)<br/>
+设置优先级</li>
+<li><code>-[no]w</code> (no)<br/>
+查看输出的<code>.xvg</code>, <code>.xpm</code>, <code>.eps</code>和<code>.pdb</code>文件</li>
+<li><code>-[no]one</code> (no)<br/>
+只输出叠合后的结构</li>
+<li><code>-[no]mw</code> (yes)<br/>
+叠合与计算RMSD时使用质量加权</li>
+<li><code>-[no]pbc</code> (no)<br/>
+尝试将分子恢复完整</li>
+<li><code>-[no]fit</code> (yes)<br/>
+将目标结构与参考结构进行最小二乘叠合</li>
+<li><code>-[no]name</code> (no)<br/>
+只考虑名称匹配的原子</li>
+<li><code>-[no]label</code> (no)<br/>
+增加链标识, 第一个结构为A, 第二个结构为B</li>
+<li><code>-[no]bfac</code> (no)<br/>
+根据原子的MSD值输出B因子</li>
+</ul>
 
 <h2 id="gmxconvert-tpr-makeamodifedrun-inputfile">gmx convert-tpr - Make a modifed run-input file</h2>
 
@@ -310,11 +366,173 @@ PBC检查</li>
 
 <h2 id="gmxdensorder-calculatesurfacefluctuations">gmx densorder - Calculate surface fluctuations</h2>
 
-<h2 id="gmxdielectric-calculatefrequencydependentdielectricconstants">gmx dielectric - Calculate frequency dependent dielectric constants</h2>
+<h2 id="gmxdielectric:计算频率相关的介电常数翻译:白艳艳">gmx dielectric: 计算频率相关的介电常数(翻译: 白艳艳)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx dielectric [-f [&lt;.xvg&gt;]] [-d [&lt;.xvg&gt;]] [-o [&lt;.xvg&gt;]] [-c [&lt;.xvg&gt;]]
+             [-nice ] [-b ] [-e ] [-dt ] [-[no]w]
+             [-xvg ] [-[no]fft] [-[no]x1] [-eint ] [-bfit ]
+             [-efit ] [-tail ] [-A ] [-tau1 ]
+             [-tau2 ] [-eps0 ] [-epsRF ] [-fix ]
+             [-ffn ] [-nsmooth ]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx dielectric</code>可以利用模拟得到的总偶极矩的自相关函数(ACF)计算频率依赖的介电常数. ACF可由<code>gmx dipoles</code>计算得到. 可使用的函数形式如下:</p>
+
+<ul class="incremental">
+<li>单参数: y = exp(-a_1 x)</li>
+<li>双参数: y = a_2 exp(-a_1 x)</li>
+<li>三参数: y = a_2 exp(-a_1 x) + (1 - a_2) exp(-a_3 x)</li>
+</ul>
+
+<p>拟合的初始值可以在命令行中指定, 也可以使用<code>-fix</code>和参数编号将需要固定的参数的值固定为初始值.</p>
+
+<p>程序会生成三个输出文件. 第一个文件中包含了ACF, 对ACF使用1, 2, 3个参数的指数拟合, 以及组合的数据/拟合的数值导数. 第二个文件中包含了频率依赖介电常数的实部和虚部. 最后一个文件给出了所谓的Cole-Cole图, 图中虚部是实部的函数. 对于一个纯指数弛豫(也称德拜弛豫), Cole-Cole图应该是个半圆.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入与输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.xvg&gt;]</code> (dipcorr.xvg) (输入)<br/>
+xvgr/xmgr文件</li>
+<li><code>-d [&lt;.xvg&gt;]</code> (deriv.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-o [&lt;.xvg&gt;]</code> (epsw.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-c [&lt;.xvg&gt;]</code> (cole.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (19)<br/>
+设置优先级</li>
+<li><code>-b &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的第一帧(ps)</li>
+<li><code>-e &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的最后一帧(ps)</li>
+<li><code>-dt &lt;time&gt;</code> (0)<br/>
+只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
+<li><code>-[no]w</code> (no)<br/>
+查看输出的<code>.xvg</code>, <code>.xpm</code>, <code>.eps</code>和<code>.pdb</code>文件</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-[no]fft</code> (no)<br/>
+使用快速傅里叶变换计算相关函数</li>
+<li><code>-[no]x1</code> (yes)<br/>
+使用第一列作为X轴数据, 而不是使用第一个数据集</li>
+<li><code>-eint &lt;real&gt;</code> (5)<br/>
+终止数据积分并开始使用拟合的时间</li>
+<li><code>-bfit &lt;real&gt;</code> (5)<br/>
+拟合的起始时间</li>
+<li><code>-efit &lt;real&gt;</code> (500)<br/>
+拟合的终止时间</li>
+<li><code>-tail &lt;real&gt;</code> (500)<br/>
+函数的长度, 包括数据与拟合的尾部</li>
+<li><code>-A &lt;real&gt;</code> (0.5)<br/>
+拟合参数A的初始值</li>
+<li><code>-tau1 &lt;real&gt;</code> (10)<br/>
+拟合参数τ1的初始值</li>
+<li><code>-tau2 &lt;real&gt;</code> (1)<br/>
+拟合参数τ2的初始值</li>
+<li><code>-eps0 &lt;real&gt;</code> (80)<br/>
+液体的ε0</li>
+<li><code>-epsRF &lt;real&gt;</code> (78.5)<br/>
+模拟中使用的反应场的ε. 值为0表示无穷大.</li>
+<li><code>-fix &lt;int&gt;</code> (0)<br/>
+将参数固定为初始值, A (2), tau1 (1)或tau2 (4)</li>
+<li><code>-ffn &lt;enum&gt;</code> (none)<br/>
+拟合函数: none, exp, aexp, exp_exp, vac, exp5, exp7, exp9, erffit</li>
+<li><code>-nsmooth &lt;int&gt;</code> (3)<br/>
+用于平滑的点的个数</li>
+</ul>
 
 <h2 id="gmxdipoles-computethetotaldipoleplusfluctuations">gmx dipoles - Compute the total dipole plus fluctuations</h2>
 
-<h2 id="gmxdisre-analyzedistancerestraints">gmx disre - Analyze distance restraints</h2>
+<h2 id="gmxdisre:分析距离限制翻译:严立京">gmx disre: 分析距离限制(翻译: 严立京)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx disre [-s [&lt;.tpr/.tpb/...&gt;]] [-f [&lt;.xtc/.trr/...&gt;]] [-ds [&lt;.xvg&gt;]]
+          [-da [&lt;.xvg&gt;]] [-dn [&lt;.xvg&gt;]] [-dm [&lt;.xvg&gt;]] [-dr [&lt;.xvg&gt;]]
+          [-l [&lt;.log&gt;]] [-n [&lt;.ndx&gt;]] [-q [&lt;.pdb&gt;]] [-c [&lt;.ndx&gt;]]
+          [-x [&lt;.xpm&gt;]] [-nice ] [-b ] [-e ] [-dt ]
+          [-[no]w] [-xvg ] [-ntop ] [-maxdr ]
+          [-nlevels ] [-[no]third]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx disre</code>计算距离限制的方差. 如果需要, 可以使用<code>gmx protonate</code>程序将所有的质子添加到蛋白质分子中.</p>
+
+<p><code>gmx disre</code>总是计算瞬时方差而不是时间平均的方差, 因为分析是根据轨迹文件进行的, 使用时间平均没有意义. 尽管如此, 每个限制的时间平均值还是都会输出在日志文件中.</p>
+
+<p>为输出所选的特定限制, 可以使用索引文件.</p>
+
+<p>当给定<code>-q</code>选项时, 会输出<code>.pdb</code>文件, 并使用平均方差对其着色.</p>
+
+<p>当给定<code>-c</code>选项时, 程序将读取一个索引文件, 其中包含了轨迹中与你要分析的团簇(以另一种方式定义)相应的帧. 对这些团簇, 程序将使用三次平均算法来计算平均方差, 并将其输出在日志文件中.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入)<br/>
+运行输入文件: tpr tpb tpa</li>
+<li><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入)<br/>
+轨迹: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-ds [&lt;.xvg&gt;]</code> (drsum.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-da [&lt;.xvg&gt;]</code> (draver.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-dn [&lt;.xvg&gt;]</code> (drnum.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-dm [&lt;.xvg&gt;]</code> (drmax.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-dr [&lt;.xvg&gt;]</code> (restr.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-l [&lt;.log&gt;]</code> (disres.log) (输出)<br/>
+日志文件</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (viol.ndx) (输入, 可选)<br/>
+索引文件</li>
+<li><code>-q [&lt;.pdb&gt;]</code> (viol.pdb) (输出, 可选)<br/>
+蛋白质数据库文件</li>
+<li><code>-c [&lt;.ndx&gt;]</code> (clust.ndx) (输入, 可选)<br/>
+索引文件</li>
+<li><code>-x [&lt;.xpm&gt;]</code> (matrix.xpm) (输出, 可选)<br/>
+X PixMap兼容的矩阵文件</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (19)<br/>
+设置优先级</li>
+<li><code>-b &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的第一帧(ps)</li>
+<li><code>-e &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的最后一帧(ps)</li>
+<li><code>-dt &lt;time&gt;</code> (0)<br/>
+只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
+<li><code>-[no]w</code> (no)<br/>
+查看输出<code>.xvg</code>, <code>.xpm</code>, <code>.eps</code>和<code>.pdb</code>文件</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-ntop &lt;int&gt;</code> (0)<br/>
+每步存储在日志文件中的较大方差的数目</li>
+<li><code>-maxdr &lt;real&gt;</code> (0)<br/>
+输出矩阵中最大的距离方差. 如果此值小于等于0, 将根据数据确定最大值.</li>
+<li><code>-nlevels &lt;int&gt;</code> (20)<br/>
+输出矩阵的水平数</li>
+<li><code>-[no]third</code> (yes)<br/>
+对输出矩阵使用立方反比平均或线性平均</li>
+</ul>
 
 <h2 id="gmxdistance:计算两个位置之间的距离翻译:姚闯">gmx distance: 计算两个位置之间的距离(翻译: 姚闯)</h2>
 
@@ -469,7 +687,87 @@ xvg绘图格式: xmgrace, xmgr, none</li>
 DSSP主版本号. 自2.0版本开始语法发生变化.</li>
 </ul>
 
-<h2 id="gmxdos-analyzedensityofstatesandpropertiesbasedonthat">gmx dos - Analyze density of states and properties based on that</h2>
+<h2 id="gmxdos:分析态密度及相关性质翻译:韩广超">gmx dos: 分析态密度及相关性质(翻译: 韩广超)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx dos [-f [&lt;.trr/.cpt/...&gt;]] [-s [&lt;.tpr/.tpb/...&gt;]] [-n [&lt;.ndx&gt;]]
+        [-vacf [&lt;.xvg&gt;]] [-mvacf [&lt;.xvg&gt;]] [-dos [&lt;.xvg&gt;]] [-g [&lt;.log&gt;]]
+        [-nice ] [-b ] [-e ] [-dt ] [-[no]w]
+        [-xvg ] [-[no]v] [-[no]recip] [-[no]abs] [-[no]normdos]
+        [-T ] [-acflen ] [-[no]normalize] [-P ]
+        [-fitfn ] [-beginfit ] [-endfit ]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx dos</code>根据模拟计算态密度. 为使计算结果有意义, 必须使用足够高的频率来保存轨迹中的速度, 这样才能包含所有的振动. 对于柔性体系, 保存轨迹的时间间隔大约是几飞秒. 程序会将基于DoS的性质在打印在标准输出.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.trr/.cpt/...&gt;]</code> (traj.trr) (输入)<br/>
+全精度轨迹: trr cpt trj tng</li>
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入)<br/>
+运行输入文件: tpr tpb tpa</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入, 可选)<br/>
+索引文件</li>
+<li><code>-vacf [&lt;.xvg&gt;]</code> (vacf.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-mvacf [&lt;.xvg&gt;]</code> (mvacf.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-dos [&lt;.xvg&gt;]</code> (dos.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-g [&lt;.log&gt;]</code> (dos.log) (输出)<br/>
+日志文件</li>
+</ul>
+
+<p>其它选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (19)<br/>
+设置优先级</li>
+<li><code>-b &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的第一帧(ps)</li>
+<li><code>-e &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的最后一帧(ps)</li>
+<li><code>-dt &lt;time&gt;</code> (0)<br/>
+只使用t MOD dt=第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
+<li><code>-[no]w</code> (no)<br/>
+查看输出的<code>.xvg</code>, <code>.xpm</code>, <code>.eps</code>和<code>.pdb</code>文件</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-[no]v</code> (yes)<br/>
+显示更多信息</li>
+<li><code>-[no]recip</code> (no)<br/>
+绘制DoS图时, X轴使用cm^&#8211;1而不是1/ps</li>
+<li><code>-[no]abs</code> (no)<br/>
+使用VACF傅里叶变换的绝对值作为态密度. 默认仅仅使用实部.</li>
+<li><code>-[no]normdos</code> (no)<br/>
+对DoS进行归一化以便其累加和等于3N. 这并不时一个必要的选项.</li>
+<li><code>-T &lt;real&gt;</code> (298.15)<br/>
+模拟温度</li>
+<li><code>-acflen &lt;int&gt;</code> (&#8211;1)<br/>
+ACF的长度, 默认为帧数的一半</li>
+<li><code>-[no]normalize</code> (yes)<br/>
+归一化ACF</li>
+<li><code>-P &lt;enum&gt;</code> (0)<br/>
+ACF勒让德多项式的级数(0表示无): 0, 1, 2, 3</li>
+<li><code>-fitfn &lt;enum&gt;</code> (none)<br/>
+拟合函数: none, exp, aexp, exp_exp, vac, exp5, exp7, exp9, erffit</li>
+<li><code>-beginfit &lt;real&gt;</code> (0)<br/>
+对相关函数进行指数拟合的起始时间</li>
+<li><code>-endfit &lt;real&gt;</code> (&#8211;1)<br/>
+对相关函数进行指数拟合的终止时间, &#8211;1表示直至最后</li>
+</ul>
+
+<h3 id="已知问题">已知问题</h3>
+
+<ul class="incremental">
+<li>此程序运行时需要大量内存: 总使用量等于原子数乘以3乘以帧数再乘以4(或8, 当使用双精度时)</li>
+</ul>
 
 <h2 id="gmxdump-makebinaryfileshumanreadable">gmx dump - Make binary files human readable</h2>
 
@@ -2419,12 +2717,12 @@ X PixMap兼容矩阵文件</li>
 <ul class="incremental">
 <li><code>-nice &lt;int&gt;</code> (19)<br/>
 设置优先级</li>
-<li><code>-b &lt;time&gt;</code> (0)<br/>
-从轨迹文件中读取的第一帧</li>
-<li><code>-e &lt;time&gt;</code> (0)<br/>
-从轨迹文件中读取的最后一帧</li>
-<li><code>-dt &lt;time&gt;</code> (0)<br/>
-当 t MOD dt = first time (ps)时, 使用帧</li>
+<li><code>-b</code> <time> (0)<br/>
+从轨迹文件中读取的第一帧(ps)</li>
+<li><code>-e</code> <time> (0)<br/>
+从轨迹文件中读取的最后一帧(ps)</li>
+<li><code>-dt</code> <time> (0)<br/>
+只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
 <li><code>-tu &lt;enum&gt;</code> (ps)<br/>
 时间单位: fs, ps, ns, us, ms, s</li>
 <li><code>-[no]w</code> (no)<br/>

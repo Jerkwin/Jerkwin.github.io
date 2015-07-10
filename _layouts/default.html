@@ -35,13 +35,13 @@ var _hmt = _hmt || [];
 {% if page.categories %}<span class="categories">类别:
 {% for cat in page.categories %} <a href="/categories/#{{ cat }}" title="{{ cat }}">{{ cat }}</a>&nbsp;{% endfor %}</span>
 {% endif %}
-{% if page.tags %}<span class="tags">&nbsp;&nbsp;&nbsp;&nbsp;标签:
+{% if page.tags %}<span class="tags">&nbsp;&nbsp;标签:
 {% for tag in page.tags %} <a href="/tags/#{{ tag }}" title="{{ tag }}">{{ tag }}</a>&nbsp;{% endfor %}</span>
+<span id="busuanzi_container_page_pv">&nbsp;&nbsp;阅读次数: <span id="busuanzi_value_page_pv"></span></span>
+<span class="license">&nbsp;&nbsp;版权: <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">(CC) BY-NC-SA</a></span>
 {% endif %}
-<span class="license">&nbsp;&nbsp;&nbsp;&nbsp;版权: <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">(CC) BY-NC-SA</a>&nbsp;</span>
-<span id="busuanzi_container_page_pv">&nbsp;&nbsp;&nbsp;&nbsp;阅读次数: <span id="busuanzi_value_page_pv"></span></span>
-<span id="busuanzi_container_site_uv">&nbsp;&nbsp;&nbsp;&nbsp;访客人数: <span id="busuanzi_value_site_uv"></span></span>
 
 <article class="content">{{ content }}</article></div>
-<footer><p><small>Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a> | Copyright 2008 - {{site.time | date:"%Y"}} by <a href="http://jerkwin.github.io/about/">Jerkwin</a> | <span class="label label-info">{{site.time | date:"%Y-%m-%d %H:%M:%S %Z"}}</span></small></p></footer>
+<footer><p><small><span id="busuanzi_container_site_uv">访问人次(2015年7月9日起): <span id="busuanzi_value_site_uv"></span></span><br>
+Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a> | Copyright 2008 - {{site.time | date:"%Y"}} by <a href="http://jerkwin.github.io/about/">Jerkwin</a> | <span class="label label-info">{{site.time | date:"%Y-%m-%d %H:%M:%S %Z"}}</span></small></p></footer>
 </div></body></html>
