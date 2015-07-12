@@ -142,7 +142,81 @@ xvg绘图格式: xmgrace, xmgr, none</li>
 
 <h2 id="gmxbundle-analyzebundlesofaxese.g.helices">gmx bundle - Analyze bundles of axes, e.g., helices</h2>
 
-<h2 id="gmxcheck-checkandcomparefiles">gmx check - Check and compare files</h2>
+<h2 id="gmxcheck:检查并比较文件翻译:杜星">gmx check: 检查并比较文件(翻译: 杜星)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx check [-f [&lt;.xtc/.trr/...&gt;]] [-f2 [&lt;.xtc/.trr/...&gt;]]
+          [-s1 [&lt;.tpr/.tpb/...&gt;]] [-s2 [&lt;.tpr/.tpb/...&gt;]]
+          [-c [&lt;.tpr/.tpb/...&gt;]] [-e [&lt;.edr&gt;]] [-e2 [&lt;.edr&gt;]] [-n [&lt;.ndx&gt;]]
+          [-m [&lt;.tex&gt;]] [-nice ] [-vdwfac ] [-bonlo ]
+          [-bonhi ] [-[no]rmsd] [-tol ] [-abstol ]
+          [-[no]ab] [-lastener ]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx check</code>读取一个轨迹文件(<code>.trj</code>, <code>.trr</code>或<code>.xtc</code>), 一个能量文件(<code>.ene</code>或<code>.edr</code>), 或一个索引文件(<code>.ndx</code>), 并输出与其相关的有用信息.</p>
+
+<p>如果指定了<code>-c</code>选项, 程序就会检查文件中是否包含了坐标, 速度和盒子大小. 如果存在坐标, 程序进而会检查原子是不是有近距离的接触(距离小于<code>-vdwfac</code>, 而且没有键相连, 即距离不在<code>-bonlo</code>和<code>-bonhi</code>之间. 注意这几个选项指定的都是与两个原子范德华半径之和的比例). 程序还会检查处于盒子外面的原子(这是经常发生的事情, 并不是什么问题). 如果文件中含有速度, 程序就会根据温度估算出温度.</p>
+
+<p>如果指定了一个索引文件, 程序会对索引文件中的所有索引进行处理, 并给出一个总结.</p>
+
+<p>如果同时给定了轨迹文件和<code>.tpr</code>文件(使用<code>-s1</code>选项), 程序就会检查<code>.tpr</code>文件中定义的键长在轨迹中是否正确. 如果不正确, 那么轨迹文件和<code>.tpr</code>文件可能不匹配, 原因可能出于原子重组或虚拟位点的问题. 所以, 通过这些选项, 你可以快速检查这些问题.</p>
+
+<p>当同时指定<code>-s1</code>和<code>-s2</code>时, 程序还可以对比两个输入文件(<code>.tpr</code>, <code>.tpb</code>或<code>.tpa</code>). 类似的, 程序也可以对比两个轨迹文件(使用<code>-f2</code>选项), 或对比两个能量文件(使用<code>-e2</code>选项).</p>
+
+<p>对于自由能计算, 来自同一运行输入文件A和B两种状态的拓扑, 可以通过<code>-s1</code>和<code>-ab</code>选项进行比较.</p>
+
+<p>指定了<code>-m</code>选项后, 程序会输出一个LaTeX文件, 其中包含了可用于论文方法部分的粗略提纲.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入, 可选)<br/>
+轨迹: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-f2 [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入, 可选)<br/>
+轨迹: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-s1 [&lt;.tpr/.tpb/...&gt;]</code> (top1.tpr) (输入, 可选)<br/>
+运行输入文件: tpr tpb tpa</li>
+<li><code>-s2 [&lt;.tpr/.tpb/...&gt;]</code> (top2.tpr) (输入, 可选)<br/>
+运行输入文件: tpr tpb tpa</li>
+<li><code>-c [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入, 可选)<br/>
+结构+质量文件(db): tpr tpb tpa gro g96 pdb brk ent</li>
+<li><code>-e [&lt;.edr&gt;]</code> (ener.edr) (输入, 可选)<br/>
+能量文件</li>
+<li><code>-e2 [&lt;.edr&gt;]</code> (ener2.edr) (输入, 可选)<br/>
+能量文件</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入, 可选)<br/>
+索引文件</li>
+<li><code>-m [&lt;.tex&gt;]</code> (doc.tex) (输出, 可选)<br/>
+LaTeX文件</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (0)<br/>
+设置优先级</li>
+<li><code>-vdwfac &lt;real&gt;</code> (0.8)<br/>
+原子之间的最小距离, 使用与两个原子范德华半径之和的比例来指定. 超过此值时会给出警告.</li>
+<li><code>-bonlo &lt;real&gt;</code> (0.4)<br/>
+成键原子之间的最小距离, 使用与两个原子范德华半径之和的比例来指定</li>
+<li><code>-bonhi &lt;real&gt;</code> (0.7)<br/>
+成键原子之间的最大距离, 使用与两个原子范德华半径之和的比例来指定</li>
+<li><code>-[no]rmsd</code> (no)<br/>
+输出坐标, 速度和力的均方根偏差</li>
+<li><code>-tol &lt;real&gt;</code> (0.001)<br/>
+相对容许误差2*(a-b)/(|a|+|b|). 用于判断两个实数是否一致</li>
+<li><code>-abstol &lt;real&gt;</code> (0.001)<br/>
+绝对容许误差. 当两个数绝对值之和接近为0时有用</li>
+<li><code>-[no]ab</code> (no)<br/>
+比较同一个文件中的A和B状态的拓扑</li>
+<li><code>-lastener &lt;string&gt;</code>
+指定检查的最后一个能量项(若未给出则测试所有项), 不检查在此之后的所有能量项. 比如可以只检查Pressure以及之前的能量项.</li>
+</ul>
 
 <h2 id="gmxchi-calculateeverythingyouwanttoknowaboutchiandotherdihedrals">gmx chi - Calculate everything you want to know about chi and other dihedrals</h2>
 
@@ -1720,13 +1794,142 @@ ACF的长度, 默认为帧数的一半.</li>
 <li>用于所选氢键的选项<code>-sel</code>有问题, 因此暂时无法使用.</li>
 </ul>
 
-<h2 id="gmxhelix-calculatebasicpropertiesofalphahelices">gmx helix - Calculate basic properties of alpha helices</h2>
+<h2 id="gmxhelix:计算α螺旋结构的基本性质翻译:李卫星">gmx helix: 计算α螺旋结构的基本性质(翻译: 李卫星)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx helix [-s [&lt;.tpr/.tpb/...&gt;]] [-n [&lt;.ndx&gt;]] [-f [&lt;.xtc/.trr/...&gt;]]
+          [-cz [&lt;.gro/.g96/...&gt;]] [-nice ] [-b ] [-e ]
+          [-dt ] [-[no]w] [-r0 ] [-[no]q] [-[no]F] [-[no]db]
+          [-[no]ev] [-ahxstart ] [-ahxend ]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx helix</code>计算各种类型螺旋的性质. 程序首先会检查多肽段, 找到最长的螺旋部分, 这由氢键和φ/ψ角度确定的. 再将其拟合成一个绕z轴的理想螺旋, 以原点居中. 然后计算以下性质:</p>
+
+<ol class="incremental">
+<li>螺旋半径(<code>radius.xvg</code>输出文件). 这仅仅是二维平面内所有C<sub>α</sub>原子的RMS偏差, 计算方法为sqrt((sum_i (x^2(i)+y^2(i)))/N), 其中N为骨干原子数. 理想螺旋的半径为0.23 nm.</li>
+<li>扭转(<code>twist.xvg</code>输出文件). 计算每个残基的平均螺旋角. 对α螺旋此值为100度, 对3&#8211;10螺旋值会更小, 5-螺旋的值更大.</li>
+<li>每个残基的上升量(<code>rise.xvg</code>输出文件). 每个残基的螺旋上升量以C<sub>α</sub>原子z坐标的差值表示. 对于理想螺旋此值为0.15 nm</li>
+<li>总螺旋长度(<code>len-ahx.xvg</code>输出文件). 以nm为单位的总螺旋长度. 其值简单由平均上升量(见上文)乘上螺旋残基数(见下文)计算.</li>
+<li>螺旋偶极. 只计算骨干原子的(<code>dip-ahx.xvg</code>输出文件).</li>
+<li>与理想螺旋的RMS偏差, 仅根据C<sub>α</sub>原子计算(<code>rms-ahx.xvg</code>输出文件).</li>
+<li>平均C<sub>α</sub>-C<sub>α</sub>二面角(<code>phi-ahx.xvg</code>输出文件)</li>
+<li>平均φ和ψ角度(<code>phipsi.xvg</code>输出文件).</li>
+<li>根据Hirst和Brooks方法计算的222nm处的椭圆度</li>
+</ol>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入与输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入)<br/>
+运行输入文件: tpr tpb tpa</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入)<br/>
+索引文件</li>
+<li><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入)<br/>
+轨迹: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-cz [&lt;.gro/.g96/...&gt;]</code> (zconf.gro) (输出)<br/>
+结构文件: gro g96 pdb brk ent esp</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (19)<br/>
+设置优先级</li>
+<li><code>-b &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的第一帧(ps)</li>
+<li><code>-e &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的最后一帧(ps)</li>
+<li><code>-dt &lt;time&gt;</code> (0)<br/>
+只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
+<li><code>-[no]w</code> (no)<br/>
+查看输出的<code>.xvg</code>, <code>.xpm</code>, <code>.eps</code>和<code>.pdb</code>文件</li>
+<li><code>-r0 &lt;int&gt;</code> (1)<br/>
+序列中的第一个残基编号</li>
+<li><code>-[no]q</code> (no)<br/>
+每一步都检查哪一部分序列是螺旋</li>
+<li><code>-[no]F</code> (yes)<br/>
+是否拟合到理想螺旋</li>
+<li><code>-[no]db</code> (no)<br/>
+输出调试信息</li>
+<li><code>-[no]ev</code> (no)<br/>
+输出新的<code>轨迹</code>文件用于ED</li>
+<li><code>-ahxstart &lt;int&gt;</code> (0)<br/>
+螺旋的第一个残基</li>
+<li><code>-ahxend &lt;int&gt;</code> (0)<br/>
+螺旋的最后一个残基</li>
+</ul>
 
 <h2 id="gmxhelixorient-calculatelocalpitchbendingrotationorientationinsidehelices">gmx helixorient - Calculate local pitch/bending/rotation/orientation inside helices</h2>
 
 <h2 id="gmxhelp-printhelpinformation">gmx help - Print help information</h2>
 
-<h2 id="gmxhydorder-computetetrahedralityparametersaroundagivenatom">gmx hydorder - Compute tetrahedrality parameters around a given atom</h2>
+<h2 id="gmxhydorder:计算给定原子周围的四面体参数翻译:王浩博">gmx hydorder: 计算给定原子周围的四面体参数(翻译: 王浩博)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx hydorder [-f [&lt;.xtc/.trr/...&gt;]] [-n [&lt;.ndx&gt;]] [-s [&lt;.tpr/.tpb/...&gt;]]
+             [-o [&lt;.xpm&gt; [...]]] [-or [&lt;.out&gt; [...]]] [-Spect [&lt;.out&gt; [...]]]
+             [-nice ] [-b ] [-e ] [-dt ] [-[no]w]
+             [-d ] [-bw ] [-sgang1 ] [-sgang2 ]
+             [-tblock ] [-nlevel ]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx hydorder</code>计算一个给定原子周围的四面体序参数, 可同时计算角和距离的序参数. 更多细节请参考 P.-L. Chau and A.J. Hardwick, <em>Mol. Phys.</em>, 93, (1998), 511&#8211;518.</p>
+
+<p><code>gmx hydorder</code>计算盒子内3维网格中的序参数. 当盒子中存在两相时, 用户可以通过指定参数<code>-sgang1</code>和<code>-sgang2</code>来定义不同时刻分开两相的二维界面(明智地选择这些参数很重要).</p>
+
+<h3 id="选项">选项</h3>
+
+<p>知指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入)<br/>
+轨迹: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入)<br/>
+索引文件</li>
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入)<br/>
+运行输入文件: tpr tpb tpa</li>
+<li><code>-o [&lt;.xpm&gt; [...]]</code> (intf.xpm) (输出)<br/>
+X PixMap兼容的矩阵文件</li>
+<li><code>-or [&lt;.out&gt; [...]]</code> (raw.out) (输出, 可选)<br/>
+通用输出文件</li>
+<li><code>-Spect [&lt;.out&gt; [...]]</code> (intfspect.out) (输出, 可选)<br/>
+通用输出文件</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (19)<br/>
+设置优先级</li>
+<li><code>-b &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的第一帧(ps)</li>
+<li><code>-e &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的最后一帧(ps)</li>
+<li><code>-dt &lt;time&gt;</code> (0)<br/>
+只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
+<li><code>-[no]w</code> (no)<br/>
+查看输出<code>.xvg</code>, <code>.xpm</code>, <code>.eps</code>和<code>.pdb</code>文件</li>
+<li><code>-d &lt;enum&gt;</code> (z)<br/>
+膜的法线方向: z, x, y</li>
+<li><code>-bw &lt;real&gt;</code> (1)<br/>
+盒子网格的分格宽度</li>
+<li><code>-sgang1 &lt;real&gt;</code> (1)<br/>
+相1(体相)中的四面体角参数</li>
+<li><code>-sgang2 &lt;real&gt;</code> (1)<br/>
+相2(体相)中的四面体角参数</li>
+<li><code>-tblock &lt;int&gt;</code> (1)<br/>
+进行一次时间块平均所用的帧数</li>
+<li><code>-nlevel &lt;int&gt;</code> (100)<br/>
+2D-XPixMaps中高度的水平数</li>
+</ul>
 
 <h2 id="gmxinsert-molecules:将分子插入已有空位翻译:刘恒江">gmx insert-molecules: 将分子插入已有空位(翻译: 刘恒江)</h2>
 
@@ -2296,7 +2499,57 @@ xvg绘图格式: xmgrace, xmgr, none</li>
 
 <h2 id="gmxnmeig-diagonalizethehessianfornormalmodeanalysis">gmx nmeig - Diagonalize the Hessian for normal mode analysis</h2>
 
-<h2 id="gmxnmens-generateanensembleofstructuresfromthenormalmodes">gmx nmens - Generate an ensemble of structures from the normal modes</h2>
+<h2 id="gmxnmens:根据简正模式生成结构系综翻译:杨宇">gmx nmens: 根据简正模式生成结构系综(翻译: 杨宇)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx nmens [-v [&lt;.trr/.cpt/...&gt;]] [-e [&lt;.xvg&gt;]] [-s [&lt;.tpr/.tpb/...&gt;]]
+          [-n [&lt;.ndx&gt;]] [-o [&lt;.xtc/.trr/...&gt;]] [-nice ] [-xvg ]
+          [-temp ] [-seed ] [-num ] [-first ]
+          [-last ]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx nmens</code>用于生成一个平均结构周围的系综, 系综处于一组简正模式(特征向量)定义的子空间中. 特征向量被假定是质量加权的. 沿每个特征向量的位置随机地取自方差为kT/特征值的高斯分布.</p>
+
+<p>默认情况下, 特征向量将从7开始, 因为前六个简正模式对应于平动和转动自由度.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-v [&lt;.trr/.cpt/...&gt;]</code> (eigenvec.trr) (输入)<br/>
+全精度轨迹: trr cpt trj tng</li>
+<li><code>-e [&lt;.xvg&gt;]</code> (eigenval.xvg) (输入)<br/>
+xvgr/xmgr文件</li>
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入)<br/>
+结构+质量(db): tpr tpb tpa gro g96 pdb brk ent</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入, 可选)<br/>
+索引文件</li>
+<li><code>-o [&lt;.xtc/.trr/...&gt;]</code> (ensemble.xtc) (输出)<br/>
+轨迹: xtc trr trj gro g96 pdb tng</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (19)<br/>
+设置优先级</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-temp &lt;real&gt;</code> (300)<br/>
+温度, 单位K</li>
+<li><code>-seed &lt;int&gt;</code> (&#8211;1)<br/>
+随机数种子, &#8211;1表示根据时间和pid产生随机数</li>
+<li><code>-num &lt;int&gt;</code> (100)<br/>
+要产生的结构数</li>
+<li><code>-first &lt;int&gt;</code> (7)<br/>
+要使用的第一个特征向量(&#8211;1表示所选)</li>
+<li><code>-last &lt;int&gt;</code> (&#8211;1)<br/>
+要使用的最后一个特征向量(&#8211;1表示直到最后)</li>
+</ul>
 
 <h2 id="gmxnmtraj:根据本征向量生成虚拟振荡轨迹翻译:王卓亚">gmx nmtraj: 根据本征向量生成虚拟振荡轨迹(翻译: 王卓亚)</h2>
 
