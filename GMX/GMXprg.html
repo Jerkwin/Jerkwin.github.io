@@ -368,7 +368,92 @@ Jarvis-Patrick算法中使用的最近近邻数, 取0时使用截断</li>
 PBC检查</li>
 </ul>
 
-<h2 id="gmxclustsize-calculatesizedistributionsofatomicclusters">gmx clustsize - Calculate size distributions of atomic clusters</h2>
+<h2 id="gmxclustsize:计算原子团簇的尺寸分布翻译:康文斌">gmx clustsize: 计算原子团簇的尺寸分布(翻译: 康文斌)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx clustsize [-f [&lt;.xtc/.trr/...&gt;]] [-s [&lt;.tpr&gt;]] [-n [&lt;.ndx&gt;]]
+             [-o [&lt;.xpm&gt;]] [-ow [&lt;.xpm&gt;]] [-nc [&lt;.xvg&gt;]] [-mc [&lt;.xvg&gt;]]
+             [-ac [&lt;.xvg&gt;]] [-hc [&lt;.xvg&gt;]] [-temp [&lt;.xvg&gt;]] [-mcn [&lt;.ndx&gt;]]
+             [-nice ] [-b ] [-e ] [-dt ] [-tu ]
+             [-[no]w] [-xvg ] [-cut ] [-[no]mol] [-[no]pbc]
+             [-nskip ] [-nlevels ] [-ndf ] [-rgblo ]
+             [-rgbhi ]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx clustsize</code>用于计算气相中的分子/原子团簇的尺寸分布. 结果以<code>.xpm</code>格式的文件给出. 总的团簇数目会写入一个<code>.xvg</code>文件中.</p>
+
+<p>当指定<code>-mol</code>选项时, 计算团簇时将以分子为基本单元, 而不是以原子为基本单元, 这样允许对大分子进行团簇化. 在这种情况下, 索引文件中仍然应当包括原子编号, 否则计算会终止并给出SEGV信号.</p>
+
+<p>当轨迹中包含速度时, 程序假定所有粒子都可自由移动, 并将最大团簇的温度输出在一个独立的<code>.xvg</code>文件中. 如果使用了约束, 则需要校正温度. 例如, 使用SHAKE或SETTLE算法模拟水时, 得到的温度是正常温度的1/1.5. 你可以使用<code>-ndf</code>选项来补偿这一点. 请记得计算时去除质心的运动.</p>
+
+<p>使用<code>-mc</code>选项将输出一个索引文件, 其中包含最大团簇的原子编号.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入)<br/>
+轨迹: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-s [&lt;.tpr&gt;]</code> (topol.tpr) (输入, 可选)<br/>
+兼容的xdr运行输入文件</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入, 可选)<br/>
+索引文件</li>
+<li><code>-o [&lt;.xpm&gt;]</code> (csize.xpm) (输出)<br/>
+X PixMap兼容矩阵文件</li>
+<li><code>-ow [&lt;.xpm&gt;]</code> (csizew.xpm) (输出)<br/>
+X PixMap兼容矩阵文件</li>
+<li><code>-nc [&lt;.xvg&gt;]</code> (nclust.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-mc [&lt;.xvg&gt;]</code> (maxclust.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-ac [&lt;.xvg&gt;]</code> (avclust.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-hc [&lt;.xvg&gt;]</code> (histo-clust.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-temp [&lt;.xvg&gt;]</code> (temp.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-mcn [&lt;.ndx&gt;]</code> (maxclust.ndx) (输出, 可选)<br/>
+索引文件</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (19)<br/>
+设置优先级</li>
+<li><code>-b &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的第一帧(ps)</li>
+<li><code>-e &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的最后一帧(ps)</li>
+<li><code>-dt &lt;time&gt;</code> (0)<br/>
+只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
+<li><code>-tu &lt;enum&gt;</code> (ps)<br/>
+时间单位: fs, ps, ns, us, ms, s</li>
+<li><code>-[no]w</code> (no)<br/>
+查看输出的<code>.xvg</code>, <code>.xpm</code>, <code>.eps</code>和<code>.pdb</code>文件</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-cut &lt;real&gt;</code> (0.35)<br/>
+一个团簇中的最大距离(单位nm)</li>
+<li><code>-[no]mol</code> (no)<br/>
+对分子而不是原子进行团簇分析(需要<code>.tpr</code>文件)</li>
+<li><code>-[no]pbc</code> (yes)<br/>
+使用周期性边界条件</li>
+<li><code>-nskip &lt;int&gt;</code> (0)<br/>
+输出时跳过的帧数</li>
+<li><code>-nlevels &lt;int&gt;</code> (20)<br/>
+<code>.xpm</code>输出文件中灰度的数目</li>
+<li><code>-ndf &lt;int&gt;</code> (&#8211;1)<br/>
+计算温度时整个体系的自由度数. 如果未设置, 会使用3倍的原子数目</li>
+<li><code>-rgblo &lt;vector&gt;</code> (1 1 0)<br/>
+团簇大小最低值的GRB颜色值</li>
+<li><code>-rgbhi &lt;vector&gt;</code> (0 0 1)<br/>
+团簇大小最高值的GRB颜色值</li>
+</ul>
 
 <h2 id="gmxconfrms:叠合两个结构并计算rmsd翻译:李耀">gmx confrms: 叠合两个结构并计算RMSD(翻译: 李耀)</h2>
 
@@ -432,7 +517,89 @@ PBC检查</li>
 
 <h2 id="gmxcovar-calculateanddiagonalizethecovariancematrix">gmx covar - Calculate and diagonalize the covariance matrix</h2>
 
-<h2 id="gmxcurrent-calculatedielectricconstantsandcurrentautocorrelationfunction">gmx current - Calculate dielectric constants and current autocorrelation function</h2>
+<h2 id="gmxcurrent:计算介电常数和电流自相关函数翻译:刘恒江">gmx current: 计算介电常数和电流自相关函数(翻译: 刘恒江)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx current [-s [&lt;.tpr/.tpb/...&gt;]] [-n [&lt;.ndx&gt;]] [-f [&lt;.xtc/.trr/...&gt;]]
+            [-o [&lt;.xvg&gt;]] [-caf [&lt;.xvg&gt;]] [-dsp [&lt;.xvg&gt;]] [-md [&lt;.xvg&gt;]]
+            [-mj [&lt;.xvg&gt;]] [-mc [&lt;.xvg&gt;]] [-nice ] [-b ]
+            [-e ] [-dt ] [-[no]w] [-xvg ] [-sh ]
+            [-[no]nojump] [-eps ] [-bfit ] [-efit ]
+            [-bvit ] [-evit ] [-tr ] [-temp ]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx current</code>可用于计算电流自相关函数, 体系转动偶极矩和平动偶极矩的相关, 以及相关的静态介电常数. 为得到合理的结果, 索引组应当是中性的. 更进一步, 如果给出了速度, 程序也可以根据电流自相关函数计算静态电导率. 此外, 也可以利用Einstein-Helfand拟合得到静态电导率.</p>
+
+<p><code>-caf</code>选项用于指定电流自相关函数的输出文件, <code>-mc</code>选项用于指定偶极矩转动和平动部分相关的输出文件. 但这些选项只适用于包含速度的轨迹. 选项<code>-sh</code>和<code>-tr</code>对自相关函数进行平均和积分. 由于平均是通过移动轨迹的起始点进行的, 可以利用<code>-sh</code>选项修改移动以便选择不相关的起始点. 当接近终止点时, 统计的不精确度增加, 对自相关函数进行积分只有在某一点之前才能得到合理的值, 数据的可靠性取决于帧数. 选项<code>-tr</code>控制用于计算静态介电常数的积分区域的大小.</p>
+
+<p>选项<code>-temp</code>可以设置计算静态介电常数所需要的温度.</p>
+
+<p>当模拟中使用了反应场或偶极修正Ewald加和(<code>-eps=0</code>对应于圆罐边界条件)时, 选项<code>-eps</code>可以控制周围介质的介电常数.</p>
+
+<p><code>-[no]nojump</code>选项取消坐标折叠允许自由扩散. 这需要一个连续的平动偶极矩以便进行Einstein-Helfand拟合. 拟合结果可用于确定带电分子体系的介电常数. 然而, 也可以根据折叠坐标的总偶极矩涨落计算介电常数. 但使用此选项时需要小心, 因为只有在非常小的时间跨度内才能满足分子密度近似恒定且平均值收敛的条件. 为保险起见, 计算介电常数时, 应借助Einstein-Helfand方法计算介电常数的平动部分.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入)<br/>
+结构+质量(db): tpr tpb tpa gro g96 pdb brk ent</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入, 可选)<br/>
+索引文件</li>
+<li><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入)<br/>
+轨迹: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-o [&lt;.xvg&gt;]</code> (current.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-caf [&lt;.xvg&gt;]</code> (caf.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-dsp [&lt;.xvg&gt;]</code> (dsp.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-md [&lt;.xvg&gt;]</code> (md.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-mj [&lt;.xvg&gt;]</code> (mj.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-mc [&lt;.xvg&gt;]</code> (mc.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (0)<br/>
+设置优先级</li>
+<li><code>-b &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的第一帧(ps)</li>
+<li><code>-e &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的最后一帧(ps)</li>
+<li><code>-dt &lt;time&gt;</code> (0)<br/>
+只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
+<li><code>-[no]w</code> (no)<br/>
+查看输出的<code>.xvg</code>, <code>.xpm</code>, <code>.eps</code>以及<code>.pdb</code>文件</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-sh &lt;int&gt;</code> (1000)<br/>
+为计算相关函数平均值及均方差位移而移动的帧</li>
+<li><code>-[no]nojump</code> (yes)<br/>
+移除横跨盒子的原子跳跃</li>
+<li><code>-eps &lt;real&gt;</code> (0)<br/>
+周围介质的介电常数. 该值为0时相当于无穷大(圆罐边界条件).</li>
+<li><code>-bfit &lt;real&gt;</code> (100)<br/>
+平动偶极矩MSD拟合为直线的起始值</li>
+<li><code>-efit &lt;real&gt;</code> (400)<br/>
+平动偶极矩MSD拟合为直线的终止值</li>
+<li><code>-bvit &lt;real&gt;</code> (0.5)<br/>
+电流自相关函数拟合为a*t<sup>b的起始值</sup></li>
+<li><code>-evit &lt;real&gt;</code> (5)<br/>
+电流自相关函数拟合为a*t<sup>b的终止值</sup></li>
+<li><code>-tr &lt;real&gt;</code> (0.25)<br/>
+积分时所用轨迹所占的比例</li>
+<li><code>-temp &lt;real&gt;</code> (300)<br/>
+计算介电常数时所用的温度</li>
+</ul>
 
 <h2 id="gmxdensity-calculatethedensityofthesystem">gmx density - Calculate the density of the system</h2>
 
@@ -526,7 +693,137 @@ xvg绘图格式: xmgrace, xmgr, none</li>
 用于平滑的点的个数</li>
 </ul>
 
-<h2 id="gmxdipoles-computethetotaldipoleplusfluctuations">gmx dipoles - Compute the total dipole plus fluctuations</h2>
+<h2 id="gmxdipoles:计算总偶极及其涨落翻译:曹锟">gmx dipoles: 计算总偶极及其涨落(翻译: 曹锟)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx dipoles [-en [&lt;.edr&gt;]] [-f [&lt;.xtc/.trr/...&gt;]] [-s [&lt;.tpr/.tpb/...&gt;]]
+            [-n [&lt;.ndx&gt;]] [-o [&lt;.xvg&gt;]] [-eps [&lt;.xvg&gt;]] [-a [&lt;.xvg&gt;]]
+            [-d [&lt;.xvg&gt;]] [-c [&lt;.xvg&gt;]] [-g [&lt;.xvg&gt;]] [-adip [&lt;.xvg&gt;]]
+            [-dip3d [&lt;.xvg&gt;]] [-cos [&lt;.xvg&gt;]] [-cmap [&lt;.xpm&gt;]]
+            [-slab [&lt;.xvg&gt;]] [-nice ] [-b ] [-e ]
+            [-dt ] [-[no]w] [-xvg ] [-mu ] [-mumax ]
+            [-epsilonRF ] [-skip ] [-temp ] [-corr ]
+            [-[no]pairs] [-[no]quad] [-ncos ] [-axis ]
+            [-sl ] [-gkratom ] [-gkratom2 ] [-rcmax ]
+            [-[no]phi] [-nlevels ] [-ndegrees ] [-acflen ]
+            [-[no]normalize] [-P ] [-fitfn ] [-beginfit ]
+            [-endfit ]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx dipoles</code>用于计算模拟体系的总偶极及其涨落. 利用这些数据, 你可以计算其他一些性质, 如低介电介质的介电常数. 对于具有净电荷的分子, 会在分子质心处减去分子的净电荷.</p>
+
+<p><code>Mtot.xvg</code>文件中包含了每帧的总偶极矩, 总偶极矩的分量以及大小. <code>aver.xvg</code>文件中包含了模拟过程中的&lt;|μ|^2&gt;和|&lt;μ&gt;|^2. <code>dipdist.xvg</code>文件包含了模拟过程中偶极矩的分布. <code>-mumax</code>的值是来统计分布图的最高值.</p>
+
+<p>而且, 如果使用了<code>-corr</code>选项, 程序会计算偶极的自相关函数, 输出文件的名字可通过<code>-c</code>选项来指定. 相关函数可以对所有分子进行平均, 独立地绘制每个分子(<code>molsep</code>)的分布, 或计算模拟盒子的总偶极矩(<code>total</code>).</p>
+
+<p>选项<code>-g</code>可以给出依赖距离的Kirkwood G因子, 以及偶极夹角余弦平均值与距离的函数关系. 图中包括了gOO和hOO, 请参考Nymand &amp; Linse, <em>J. Chem. Phys.</em> 112 (2000) pp 6386&#8211;6395. 在同一图中, 还包括了每一尺度的能量, 它是偶极矩内积与距离三次方的商.</p>
+
+<p>示例: <code>gmx dipoles -corr mol -P 1 -o dip_sqr -mu 2.273 -mumax 5.0</code></p>
+
+<p>上面的命令将计算分子偶极矩的自相关函数, 计算时使用了偶极矩向量与其t时刻后的值之间的夹角的一阶Legendre多项式. 此计算将会使用1001帧. 更进一步, 可以计算<code>-epsilonRF</code>无穷大(默认), 温度300 K(默认), 分子平均偶极矩2.273(SPC)条件下的介电常数. 对分布函数, 其最大值被设定为5.0.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项</p>
+
+<ul class="incremental">
+<li><code>-en [&lt;.edr&gt;]</code> (ener.edr) (输入, 可选)<br/>
+能量文件</li>
+<li><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入)<br/>
+轨迹: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入)<br/>
+运行输入文件: tpr tpb tpa</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入, 可选)<br/>
+索引文件</li>
+<li><code>-o [&lt;.xvg&gt;]</code> (Mtot.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-eps [&lt;.xvg&gt;]</code> (epsilon.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-a [&lt;.xvg&gt;]</code> (aver.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-d [&lt;.xvg&gt;]</code> (dipdist.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-c [&lt;.xvg&gt;]</code> (dipcorr.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-g [&lt;.xvg&gt;]</code> (gkr.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-adip [&lt;.xvg&gt;]</code> (adip.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-dip3d [&lt;.xvg&gt;]</code> (dip3d.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-cos [&lt;.xvg&gt;]</code> (cosaver.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-cmap [&lt;.xpm&gt;]</code> (cmap.xpm) (输出, 可选)<br/>
+X PixMap兼容的矩阵文件</li>
+<li><code>-slab [&lt;.xvg&gt;]</code> (slab.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (19)<br/>
+设置优先级</li>
+<li><code>-b &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的第一帧(ps)</li>
+<li><code>-e &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的最后一帧(ps)</li>
+<li><code>-dt &lt;time&gt;</code> (0)<br/>
+只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
+<li><code>-[no]w</code> (no)<br/>
+查看输出的<code>.xvg</code>, <code>.xpm</code>, <code>.eps</code>和<code>.pdb</code>文件</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-mu &lt;real&gt;</code> (&#8211;1)<br/>
+单个分子的偶极矩(单位Debye)</li>
+<li><code>-mumax &lt;real&gt;</code> (5)<br/>
+以Debye为单位的最大偶极矩(用于直方图)</li>
+<li><code>-epsilonRF &lt;real&gt;</code> (0)<br/>
+模拟中使用的反应场的ε值, 用于计算介电常数. 注意: 0.0代表无穷大(默认)</li>
+<li><code>-skip &lt;int&gt;</code> (0)<br/>
+输出结果中跳过的步数(但计算中使用了所有步)</li>
+<li><code>-temp &lt;real&gt;</code> (300)<br/>
+模拟的平均温度(用于计算介电常数)</li>
+<li><code>-corr &lt;enum&gt;</code> (none)<br/>
+要计算的相关函数: none, mol, molsep, total</li>
+<li><code>-[no]pairs</code> (yes)<br/>
+计算所有分子对的|cos(θ)|. 计算可能比较耗时.</li>
+<li><code>-[no]quad</code> (no)<br/>
+考虑四极距</li>
+<li><code>-ncos &lt;int&gt;</code> (1)<br/>
+该值只能为1或2, 决定了是计算同一组分子之间的&lt;cos(θ)&gt;, 还是计算不同组之间的&lt;cos(θ)&gt;. 使用此选项会打开<code>-g</code>选项.</li>
+<li><code>-axis &lt;string&gt;</code> (Z)<br/>
+计算盒子的法线沿X, Y或Z方向</li>
+<li><code>-sl &lt;int&gt;</code> (10)<br/>
+将盒子划分成若干片.</li>
+<li><code>-gkratom &lt;int&gt;</code> (0)<br/>
+计算依赖距离的Kirkwood因子时, 使用分子的第n个原子(从1开始)来计算分子间的距离, 而不是使用电荷中心(此值取0时).</li>
+<li><code>-gkratom2 &lt;int&gt;</code> (0)<br/>
+与上一选项相同, 但用于<code>-ncos 2</code>, 即两组分子间的偶极相互作用</li>
+<li><code>-rcmax &lt;real&gt;</code> (0)<br/>
+偶极取向分布中使用的最大距离(用于<code>- ncos 2</code>). 如果为0, 将使用基于盒子长度的规则.</li>
+<li><code>-[no]phi</code> (no)<br/>
+将&#8217;扭转角度&#8217;输出至由<code>-cmap</code>选项指定的<code>.xpm</code>文件中, 扭转角度定义为两个分子的偶极向量绕分子间距离向量的旋转角度. 默认给出的是偶极矩夹角的余弦值.</li>
+<li><code>-nlevels &lt;int&gt;</code> (20)<br/>
+颜色映射图输出中颜色的数目</li>
+<li><code>-ndegrees &lt;int&gt;</code> (90)<br/>
+颜色映射图输出中Y轴的划分数(180度)</li>
+<li><code>-acflen &lt;int&gt;</code> (&#8211;1)<br/>
+ACF的长度, 默认值为帧数的一半</li>
+<li><code>-[no]normalize</code> (yes)<br/>
+归一化ACF</li>
+<li><code>-P &lt;enum&gt;</code> (0)<br/>
+ACF Legendre多项式的阶数(0表示不使用): 0, 1, 2, 3</li>
+<li><code>-fitfn &lt;enum&gt;</code> (none)<br/>
+拟合函数: none, exp, aexp, exp_exp, vac, exp5, exp7, exp9, erffit</li>
+<li><code>-beginfit &lt;real&gt;</code> (0)<br/>
+对相关函数进行指数拟合的开始时间</li>
+<li><code>-endfit &lt;real&gt;</code> (&#8211;1)<br/>
+对相关函数进行指数拟合的终止时间, &#8211;1代表直到结束</li>
+</ul>
 
 <h2 id="gmxdisre:分析距离限制翻译:严立京">gmx disre: 分析距离限制(翻译: 严立京)</h2>
 
