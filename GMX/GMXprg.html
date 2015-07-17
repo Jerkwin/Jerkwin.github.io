@@ -54,7 +54,153 @@ xvg绘图格式: xmgrace, xmgr, none</li>
 
 <h2 id="gmxanaeig-analyzeeigenvectorsnormalmodes">gmx anaeig - Analyze eigenvectors/normal modes</h2>
 
-<h2 id="gmxanalyze-analyzedatasets">gmx analyze - Analyze data sets</h2>
+<h2 id="gmxanalyze:分析数据集翻译:李昊">gmx analyze: 分析数据集(翻译: 李昊)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx analyze [-f [&lt;.xvg&gt;]] [-ac [&lt;.xvg&gt;]] [-msd [&lt;.xvg&gt;]] [-cc [&lt;.xvg&gt;]]
+            [-dist [&lt;.xvg&gt;]] [-av [&lt;.xvg&gt;]] [-ee [&lt;.xvg&gt;]] [-bal [&lt;.xvg&gt;]]
+            [-g [&lt;.log&gt;]] [-nice ] [-[no]w] [-xvg ] [-[no]time]
+            [-b ] [-e ] [-n ] [-[no]d] [-bw ]
+            [-errbar ] [-[no]integrate] [-aver_start ]
+            [-[no]xydy] [-[no]regression] [-[no]luzar] [-temp ]
+            [-fitstart ] [-fitend ] [-smooth ]
+            [-filter ] [-[no]power] [-[no]subav] [-[no]oneacf]
+            [-acflen ] [-[no]normalize] [-P ] [-fitfn ]
+            [-beginfit ] [-endfit ]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx analyze</code>可以读取一个ASCII文本文件并对其中的数据集进行分析. 输入文件中每行的第一个数据可以为时间(见<code>-time</code>选项), 后面跟着任意数目的y值. 程序也可以读入多个数据集, 各个数据集之间以<code>&amp;</code>分割(<code>-n</code>选项). 在这种情况下, 对每一行, 程序只会读入一个y值. 程序会忽略所有以<code>#</code>和<code>@</code>开始的行. 所有的分析方法都可用于数据集的导数(<code>-d</code>选项).</p>
+
+<p>除<code>-av</code>和<code>-power</code>外, 所有选项都假定数据点之间的时间间隔是相等的.</p>
+
+<p><code>gmx analyze</code>总会给出各数据集的平均值和标准偏差, 以及来自具有相同标准偏差的高斯分布的三阶和四阶累积量的相对偏差.</p>
+
+<p>选项<code>-ac</code>计算自相关函数. 请确保数据点之间的时间间隔远远小于自相关的时间尺度.</p>
+
+<p>选项<code>-cc</code>给出数据集 <span class="math">\(i\)</span> 与周期为 <span class="math">\(i/2\)</span> 的余弦函数的相似性, 公式为:</p>
+
+<p><span class="math">\[{2 \left(\int_0^T y(t) \cos(i\p t) dt \right)^2 / \int_0^T y^2(t) dt}\]</span></p>
+
+<p>这可用于由协方差分析得到的主成分, 因为随机扩散的主成分是单纯的余弦.</p>
+
+<p>选项<code>-msd</code>计算均方位移.</p>
+
+<p>选项<code>-dist</code>计算分布图.</p>
+
+<p>选项<code>-av</code>计算数据集的平均值. 可以使用<code>-errbar</code>选项得到平均值的误差. 误差可代表标准偏差, 误差(假定点是独立的), 或通过弃去顶部和底部5%的点而包含90%的点的区间.</p>
+
+<p>选项<code>-ee</code>使用块平均估计误差. 数据集被分成几块, 并计算每块的平均值. 总平均值的误差由 <span class="math">\(m\)</span> 个块平均值 <span class="math">\(B_i\)</span> 的方差进行计算:</p>
+
+<p><span class="math">\[error^2 = \Sum (B_i - \lt B \gt)^2 / (m(m-1))\]</span></p>
+
+<p>程序会给出误差随块数的变化关系. 假定自相关是两个指数函数的加和, 程序还会给出解析的块平均值曲线. 块平均值的解析曲线为:</p>
+
+<p><span class="math">\[f(t) = \s \sqrt{2/T ( \a (\t_1 ((\exp(-t/\t_1) - 1) \t_1/t + 1)) +(1-\a) (\t_2 ((\exp(-t/\t_2) - 1) \t_2/t + 1)))}\]</span></p>
+
+<p>其中 <span class="math">\(T\)</span> 为总时间, <span class="math">\(\a\)</span>, <span class="math">\(\t_1\)</span> 和 <span class="math">\(\t_2\)</span> 通过将 <span class="math">\(error^2\)</span> 拟合为 <span class="math">\(f^2(t)\)</span> 得到. 当实际的块平均值与解析曲线十分接近时, 误差为 <span class="math">\(\s \sqrt{2/T (a \t_1 + (1-a) \t_2)}\)</span>. 完整的推导见B. Hess, <em>J. Chem. Phys.</em> 116:209&#8211;217, 2002.</p>
+
+<p>选项<code>-bal</code>通过多指数拟合发现并减去来自于氢键自相关函数的超快&#8220;弹道&#8221;分量, 具体请参考O. Markovitch, <em>J. Chem. Phys.</em> 129:084505, 2008. 最快项对应于具有最大负系数的指数项. 或者使用<code>-d</code>选项时, 最快项对应于0时刻具有最负的时间导数的项. <code>-nbalexp</code>设定用于拟合的指数函数的数目.</p>
+
+<p>选项<code>-gem</code>根据可逆成对重组模型拟合氢键自相关函数的双分子速率常数ka和kb(以及可选的kD). 强烈建议先去除弹道分量. 模型的细节见O. Markovitch, <em>J. Chem. Phys.</em> 129:084505, 2008.</p>
+
+<p>选项<code>-filter</code>打印每个数据集和所有数据集相对于滤波器平均值的RMS高频涨落. 滤波器正比于 <span class="math">\(\cos(\p t/len)\)</span>, 其中 <span class="math">\(t\)</span> 从 <span class="math">\(-len/2\)</span> 到 <span class="math">\(len/2\)</span>. <span class="math">\(len\)</span> 由<code>-filter</code>选项提供. 此滤波器可以将周期为 <span class="math">\(len/2\)</span> 和 <span class="math">\(len\)</span> 的振动分别降低为原来的79%和33%.</p>
+
+<p>选项<code>-g</code>使用选项<code>-fitfn</code>给出的函数对数据进行拟合.</p>
+
+<p>选项<code>-power</code>使用 <span class="math">\(b t^a\)</span> 对数据进行拟合, 这是通过在双对数尺度下进行 <span class="math">\(at+b\)</span> 拟合来完成的. 拟合时, 第一个零之后或值为负的所有点都被忽略.</p>
+
+<p>选项<code>-luzar</code>对<code>gmx hbond</code>的输出进行Luzar-Chandler动力学分析. 输入文件可直接来自<code>gmx hbond -ac</code>, 并应得到相同的结果.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.xvg&gt;]</code> (graph.xvg) (输入)<br/>
+xvgr/xmgr文件</li>
+<li><code>-ac [&lt;.xvg&gt;]</code> (autocorr.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-msd [&lt;.xvg&gt;]</code> (msd.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-cc [&lt;.xvg&gt;]</code> (coscont.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-dist [&lt;.xvg&gt;]</code> (distr.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-av [&lt;.xvg&gt;]</code> (average.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-ee [&lt;.xvg&gt;]</code> (errest.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-bal [&lt;.xvg&gt;]</code> (ballisitc.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-g [&lt;.log&gt;]</code> (fitlog.log) (输出, 可选)<br/>
+日志文件</li>
+</ul>
+
+<p>其它选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (0)<br/>
+设置优先级</li>
+<li><code>-[no]w</code> (no)<br/>
+查看输出的<code>.xvg</code>, <code>.xpm</code>, <code>.eps</code>和<code>.pdb</code>文件</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-[no]time</code> (yes)<br/>
+预计输入含有时间</li>
+<li><code>-b &lt;real&gt;</code> (&#8211;1)<br/>
+读取数据集的起始时间</li>
+<li><code>-e &lt;real&gt;</code> (&#8211;1)<br/>
+读取数据集的终止时间</li>
+<li><code>-n &lt;int&gt;</code> (1)<br/>
+读取指定数目, 彼此间以<code>&amp;</code>分开的数据集</li>
+<li><code>-[no]d</code> (no)<br/>
+使用导数</li>
+<li><code>-bw &lt;real&gt;</code> (0.1)<br/>
+分布的分格宽度</li>
+<li><code>-errbar &lt;enum&gt;</code> (none)<br/>
+<code>-av</code>的误差: none, stddev, error, 90</li>
+<li><code>-[no]integrate</code> (no)<br/>
+使用梯形规则对数据函数进行数值积分</li>
+<li><code>-aver_start &lt;real&gt;</code> (0)<br/>
+由此开始对积分进行平均</li>
+<li><code>-[no]xydy</code> (no)<br/>
+积分时将第二个数据集作为y值的误差</li>
+<li><code>-[no]regression</code> (no)<br/>
+对数据进行线性回归分析. 如果设定了<code>-xydy</code>选项, 第二个数据集将被视为Y值的误差. 否则, 如果存在多个数据集, 将会进行多元线性回归, 计算能使χ<sup>2</sup> = (y - A_0 x_0 - A_1 x_1 - &#8230; - A_N x_N)^2取最小值的常数A, 其中Y为输入文件中的第一个数据集而x_i为其他数据集. 请阅读<code>-time</code>选项的信息.</li>
+<li><code>-[no]luzar</code> (no)<br/>
+对相关函数进行Luzar-Chandler分析, 并与<code>gmx hbond</code>的结果进行关联. 当同时也给出<code>-xydy</code>选项时, 第二列和第四列将被视为c(t)和n(t)的误差.</li>
+<li><code>-temp &lt;real&gt;</code> (298.15)<br/>
+进行Luzar氢键动力学分析时的温度(K)</li>
+<li><code>-fitstart &lt;real&gt;</code> (1)<br/>
+为获得HB断裂和形成的前向和后向速度常数, 对相关函数进行拟合的起始时间(ps)</li>
+<li><code>-fitend &lt;real&gt;</code> (60)<br/>
+为获得HB断裂和形成的前向和后向速度常数, 对相关函数进行拟合的终止时间(ps). 只能与<code>-gem</code>一起使用.</li>
+<li><code>-smooth &lt;real&gt;</code> (&#8211;1)<br/>
+如果此值&gt;=0, 通过拟合为指数函数 y=A exp(-x/τ) 对ACF的尾部进行平滑</li>
+<li><code>-filter &lt;real&gt;</code> (0)<br/>
+使用此长度的余弦滤波器滤波后打印高频涨落</li>
+<li><code>-[no]power</code> (no)<br/>
+将数据拟合为 <span class="math">\(b t^a\)</span></li>
+<li><code>-[no]subav</code> (yes)<br/>
+计算自相关前减去平均值</li>
+<li><code>-[no]oneacf</code> (no)<br/>
+对所有数据集计算一个ACF</li>
+<li><code>-acflen &lt;int&gt;</code> (&#8211;1)<br/>
+ACF的长度, 默认为帧数的一半</li>
+<li><code>-[no]normalize</code> (yes)<br/>
+归一化ACF</li>
+<li><code>-P &lt;enum&gt;</code> (0)<br/>
+ACF Legendre多项式的阶数(0表示不使用): 0, 1, 2, 3</li>
+<li><code>-fitfn &lt;enum&gt;</code> (none)<br/>
+拟合函数: none, exp, aexp, exp_exp, vac, exp5, exp7, exp9, erfit</li>
+<li><code>-beginfit &lt;real&gt;</code> (0)<br/>
+对相关函数进行指数拟合的起始时间</li>
+<li><code>-endfit &lt;real&gt;</code> (&#8211;1)<br/>
+对相关函数进行指数拟合的终止时间, &#8211;1表示直到最后</li>
+</ul>
 
 <h2 id="gmxgangle:计算键角和二面角的分布及相关翻译:杨宇">gmx gangle: 计算键角和二面角的分布及相关(翻译: 杨宇)</h2>
 
@@ -601,7 +747,102 @@ xvg绘图格式: xmgrace, xmgr, none</li>
 计算介电常数时所用的温度</li>
 </ul>
 
-<h2 id="gmxdensity-calculatethedensityofthesystem">gmx density - Calculate the density of the system</h2>
+<h2 id="gmxdensity:计算体系的密度翻译:阮洋">gmx density: 计算体系的密度(翻译: 阮洋)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx density [-f [&lt;.xtc/.trr/...&gt;]] [-n [&lt;.ndx&gt;]] [-s [&lt;.tpr/.tpb/...&gt;]]
+            [-ei [&lt;.dat&gt;]] [-o [&lt;.xvg&gt;]] [-nice ] [-b ]
+            [-e ] [-dt ] [-[no]w] [-xvg ] [-d ]
+            [-sl ] [-dens ] [-ng ] [-[no]center] [-[no]symm]
+            [-[no]relative]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx density</code>用于计算盒子中的局部密度, 需要使用索引文件.</p>
+
+<p>对于NPT模拟的总密度, 可以直接使用<code>gmx energy</code>来得到.</p>
+
+<p>选项<code>-center</code>相对任意组中心以绝对盒子坐标进行直方图分格. 如果你想计算沿盒子Z轴的密度剖面, 盒子Z方向的大小为bZ, 如果基于整个体系进行居中, 输出的坐标范围从-bZ/2到bZ/2. 注意, 在GROMACS 5.0中, 这种行为有所改变. 早期的版本中只是在(0, bZ)范围内进行简单的静态分格, 并将输出进行移动. 新版本会计算每一帧的中心并在(-bZ/2,bZ/2)范围内进行分格.</p>
+
+<p>选项<code>-symn</code>使输出结果关于中心对称. 这一选项也会自动打开<code>-center</code>选项. 选项<code>-relative</code>基于盒子的相对坐标而不是绝对坐标进行分格, 然后对输出结果按输出轴方向盒子的平均尺寸进行标定.
+这一选项可以与<code>-center</code>结合使用.</p>
+
+<p>密度的单位为kg/m<sup>3</sup>, 同时也可以计算数密度或电子密度. 计算电子密度时, 需要使用选项<code>-ei</code>提供一个文件, 其中包含了每一原子类型的电子数. 文件内容如下所示:</p>
+
+<pre><code>2
+atomname = nrelectrons
+atomname = nrelectrons
+</code></pre>
+
+<p>第一行指明了该文件的行数. 体系中每个唯一的原子名称对应于一行. 每个原子的电子数会根据其原子部分电荷进行修改.</p>
+
+<p><strong>对双层体系需要注意的几点</strong></p>
+
+<p>最常见的使用情境之一是计算跨脂质双层的各种原子组的密度, 通常是以Z轴作为法线方向. 对小体系的短时间模拟, 当固定盒子尺寸时, 比较好处理, 但对更一般的情况, 脂质双层可能比较复杂. 第一个问题就是蛋白质和脂质的体积压缩率都很小, 而脂质有非常高的面积压缩率.
+这意味即便对完全弛豫好的体系, 在模拟过程中盒子形状(厚度或是面积/脂质)的涨落仍然很大.</p>
+
+<p>因为GROMACS将盒子置于原点和正轴之上, 这也就意味着居于盒子中间的脂质双层由于涨落将会上下移动, 并进而模糊密度剖面. 解决这个问题的最简单方法(如果你要使用压力耦合)就是使用<code>-center</code>选项以计算相对于盒子中心的密度剖面. 注意, 你仍然可以用双层部分居中, 即使你有一个复杂的非对称的脂质双层和膜蛋白体系. 这样输出的数据点在(中心)原点参考位置的某一侧会较多.</p>
+
+<p>因为脂质本身会被压缩和膨胀, 居中计算会导致输出的密度剖面模糊. 即使如此, 在多数情况下你希望得到这样的结果(因为它对应于宏观实验). 但如果你要关注分子细节, 可以使用<code>-relative</code>选项来尝试消除体积涨落带来的影响.</p>
+
+<p>最后, 对不受表面张力影响的大的双层, 在体系中形成&#8220;波浪&#8221;的地方会表现出起伏涨落. 这是生物体系的基本性质, 如果要和实验做对比, 你可能要包括这种波动模糊效应.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入)<br/>
+轨迹: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入, 可选)<br/>
+索引文件</li>
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入)<br/>
+运行输入文件: tpr tpb tpa</li>
+<li><code>-ei [&lt;.dat&gt;]</code> (electrons.dat) (输入, 可选)<br/>
+通用数据文件</li>
+<li><code>-o [&lt;.xvg&gt;]</code> (density.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (19)<br/>
+设置优先级</li>
+<li><code>-b &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的第一帧(ps)</li>
+<li><code>-e &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的最后一帧(ps)</li>
+<li><code>-dt &lt;time&gt;</code> (0)<br/>
+只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
+<li><code>-[no]w</code> (no)<br/>
+查看输出的<code>.xvg</code>, <code>.xpm</code>, <code>.eps</code>以及<code>.pdb</code>文件</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-d &lt;string&gt;</code> (Z)<br/>
+指定膜的法线方向: X, Y或Z</li>
+<li><code>-sl &lt;int&gt;</code> (50)<br/>
+将盒子划分为指定数目的片</li>
+<li><code>-dens &lt;enum&gt;</code> (mass)<br/>
+密度类型: mass, number, charge, electron</li>
+<li><code>-ng &lt;int&gt;</code> (1)<br/>
+要计算密度的组的数目<br/>
+一次性可以计算多个组的密度, 可在输出文件中查看</li>
+<li><code>-[no]center</code> (no)<br/>
+相对于(变化的)盒子中心进行分格, 适用于双层体系.</li>
+<li><code>-[no]symm</code> (no)<br/>
+使密度分布沿轴向对称. 适用于双层体系</li>
+<li><code>-[no]relative</code> (no)<br/>
+对变化的盒子使用相对坐标, 并根据平均尺寸对使出进行标定</li>
+</ul>
+
+<h3 id="已知问题">已知问题</h3>
+
+<ul class="incremental">
+<li>当计算电子密度时, 使用了原子名称而不是原子类型. 这种做法很不好.</li>
+</ul>
 
 <h2 id="gmxdensmap-calculate2dplanaroraxial-radialdensitymaps">gmx densmap - Calculate 2D planar or axial-radial density maps</h2>
 
