@@ -202,86 +202,105 @@ ACF Legendre多项式的阶数(0表示不使用): 0, 1, 2, 3</li>
 对相关函数进行指数拟合的终止时间, &#8211;1表示直到最后</li>
 </ul>
 
-<h2 id="gmxgangle:计算键角和二面角的分布及相关翻译:杨宇">gmx gangle: 计算键角和二面角的分布及相关(翻译: 杨宇)</h2>
+<h2 id="gmxangle:计算键角和二面角的分布及相关翻译:陈辰">gmx angle: 计算键角和二面角的分布及相关(翻译: 陈辰)</h2>
 
 <h3 id="概要">概要</h3>
 
-<pre><code>gmx gangle [-f [&lt;.xtc/.trr/...&gt;]] [-s [&lt;.tpr/.tpb/...&gt;]] [-n [&lt;.ndx&gt;]]
-           [-oav [&lt;.xvg&gt;]] [-oall [&lt;.xvg&gt;]] [-oh [&lt;.xvg&gt;]] [-b ]
-           [-e ] [-dt ] [-tu ] [-xvg ] [-[no]rmpbc]
-           [-[no]pbc] [-sf ] [-selrpos ] [-g1 ]
-           [-g2 ] [-binw ] [-group1 ]
-           [-group2 ]
+<pre><code>gmx angle [-f [&lt;.xtc/.trr/...&gt;]] [-n [&lt;.ndx&gt;]] [-od [&lt;.xvg&gt;]] [-ov [&lt;.xvg&gt;]]
+          [-of [&lt;.xvg&gt;]] [-ot [&lt;.xvg&gt;]] [-oh [&lt;.xvg&gt;]] [-oc [&lt;.xvg&gt;]]
+          [-or [&lt;.trr&gt;]] [-nice ] [-b ] [-e ] [-dt ]
+          [-[no]w] [-xvg ] [-type ] [-[no]all] [-binwidth ]
+          [-[no]periodic] [-[no]chandler] [-[no]avercorr] [-acflen ]
+          [-[no]normalize] [-P ] [-fitfn ] [-beginfit ]
+          [-endfit ]
 </code></pre>
 
 <h3 id="说明">说明</h3>
 
-<p><code>gmx gangle</code>计算矢量之间不同类型的角度, 它支持由两个位置定义的矢量, 也支持由三个位置定义的平面的法线. 矢量还可以是z轴或球面的局部法线. 此外, 选项<code>angle</code>和<code>dihedral</code>可方便地用于计算由三/四个位置定义的键角和二面角.</p>
+<p><code>gmx angle</code>用于计算一些键角或二面角的角度分布.</p>
 
-<p>角度类型通过<code>-g1</code>和<code>-g2</code>指定. 如果<code>-g1</code>为<code>angle</code>或<code>dihedral</code>, 就不应再指定<code>-g2</code>. 在这种情况下, <code>-group1</code>应指定一个或多个选择, 并且每个选择应包括位置的三联对或四联对, 它们定义了要计算的角度.</p>
+<p>利用<code>-ov</code>选项, 可以得到一组键角的平均值随时间的变化关系图. 使用<code>-all</code>选项时, 第一幅图为平均键角, 其他的则是单个键角.</p>
 
-<p>如果<code>-g1</code>为<code>vector</code>或<code>plane</code>, <code>-group1</code>指定的选择应包含位置对(<code>vector</code>)或位置三元对(<code>plane</code>). 对矢量, 位置设置了矢量的端点, 对平面, 三个位置用于计算平面的法向. 在这两种情况下, <code>-g2</code>指定要使用的其它矢量(见下文).</p>
+<p>利用<code>-of</code>选项, <code>gmx angle</code>也会计算反式二面角的比例(仅适用于二面角)与时间的函数关系, 但这可能只适用于少量的二面角.</p>
 
-<p>使用<code>-g2 vector</code>或<code>-g2 plane</code>时, <code>-group2</code>应指定另一组矢量. <code>-group1</code>和<code>-group2</code>应指定相同的选择数目. 对其中的一个选项也可以只有一个选择, 在这种情况下, 对其他组中的每个选择会使用相同的选择. 同样, 对<code>-group1</code>中的每个选择, 相应的<code>-group2</code>中的选择应指定相同数目的矢量或单独一个矢量. 在后一种情况下, 会计算这个单一矢量与其它选择中的每个矢量之间的角度.</p>
+<p>利用<code>-oc</code>选项, 可计算二面角的相关函数.</p>
 
-<p>使用<code>-g2 sphnorm</code>时, <code>-group2</code>中的每个选择应指定单一的位置, 它是球的中心. 第二个矢量从中心到由<code>-group1</code>指定的位置的中点.</p>
+<p>需要注意, 对键角, 在索引文件中必须包含原子三元组, 对二面角则必须包含原子四元组. 否则, 程序会崩溃.</p>
 
-<p>使用<code>-g2 z</code>时, 不需要指定<code>-group2</code>, 会计算第一个矢量与Z轴正半轴之间的角度.</p>
+<p>利用<code>-or</code>选项, 可生成包含所选二面角sin和cos函数值的轨迹文件. 当利用<code>gmx covar</code>进行主成分分析时, 此轨迹文件可作为输入.</p>
 
-<p>使用<code>-g2 t0</code>时, 不需要指定<code>-group2</code>, 会利用第一帧的矢量计算角度.</p>
-
-<p>有三个输出选项: <code>-oav</code>会将每一帧的时间与平均角度写入一个xvg文件. <code>-oall</code>会输出单独的角度. <code>-oh</code>输出角度的直方图. 分格的宽度由<code>-binw</code>设置. 对<code>-oav</code>和<code>-oh</code>, 会计算<code>-group1</code>中每个选择的单独平均/直方图.</p>
+<p>利用<code>-ot</code>选项, 可以记录多重度为3的二面角旋转异构体之间的转变. 假定输入轨迹各帧之间的时间间隔相等, 可利用<code>-oh</code>选项得到转变间隔时间的直方图.</p>
 
 <h3 id="选项">选项</h3>
 
 <p>指定输入和输出文件的选项:</p>
 
 <ul class="incremental">
-<li><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入, 可选)<br/>
-输入轨迹或单一构型: xtc trr cpt trj gro g96 pdb tng</li>
-<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入, 可选)<br/>
-输入结构: tpr tpb tpa gro g96 pdb brk ent</li>
-<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入, 可选)<br/>
-额外的索引组</li>
-<li><code>-oav [&lt;.xvg&gt;]</code> (angaver.xvg) (输出, 可选)<br/>
-作为时间函数的平均角度</li>
-<li><code>-oall [&lt;.xvg&gt;]</code> (angles.xvg) (输出, 可选)<br/>
-作为时间函数的所有角度</li>
-<li><code>-oh [&lt;.xvg&gt;]</code> (anghist.xvg) (输出, 可选)<br/>
-角度的直方图</li>
+<li><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入)<br/>
+轨迹: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (angle.ndx) (输入)<br/>
+索引文件</li>
+<li><code>-od [&lt;.xvg&gt;]</code> (angdist.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-ov [&lt;.xvg&gt;]</code> (angaver.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-of [&lt;.xvg&gt;]</code> (dihfrac.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-ot [&lt;.xvg&gt;]</code> (dihtrans.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-oh [&lt;.xvg&gt;]</code> (trhisto.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-oc [&lt;.xvg&gt;]</code> (dihcorr.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-or [&lt;.trr&gt;]</code> (traj.trr) (输出, 可选)<br/>
+兼容xdr格式的轨迹</li>
 </ul>
 
 <p>其他选项:</p>
 
 <ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (19)<br/>
+设置优先级</li>
 <li><code>-b</code> <time> (0)<br/>
 从轨迹文件中读取的第一帧(ps)</li>
 <li><code>-e</code> <time> (0)<br/>
 从轨迹文件中读取的最后一帧(ps)</li>
 <li><code>-dt</code> <time> (0)<br/>
 只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
-<li><code>-tu</code> <enum> (ps)<br/>
-时间值的单位: fs, ps, ns, us, ms, s</li>
-<li><code>-xvg</code> <enum> (xmgrace)<br/>
-绘图格式: none, xmgrace, xmgr</li>
-<li><code>-[no]rmpbc</code> (yes)<br/>
-对每一帧, 使分子保持完整</li>
-<li><code>-[no]pbc</code> (yes)<br/>
-计算距离时使用周期性边界条件</li>
-<li><code>-sf</code> <file><br/>
-使用文件提供选择</li>
-<li><code>-selrpos</code> <enum> (atom)<br/>
-选择参考位置: atom, res_com, res_cog, mol_com, mol_cog, whole_res_com, whole_res_cog, whole_mol_com, whole_mol_cog, part_res_com, part_res_cog, part_mol_com, part_mol_cog, dyn_res_com, dyn_res_cog, dyn_mol_com, dyn_mol_cog</li>
-<li><code>-g1</code> <enum> (angle)<br/>
-分析类型/第一矢量组: angle, dihedral, vector, plane</li>
-<li><code>-g2</code> <enum> (none)<br/>
-第二向量组的类型: none, vector, plane, t0, z, sphnorm</li>
-<li><code>-binw</code> <real> (1)<br/>
-<code>-oh</code>的分格宽度, 以度为单位</li>
-<li><code>-group1</code> <selection><br/>
-第一个分析/矢量选择</li>
-<li><code>-group2</code> <selection><br/>
-第二个分析/矢量选择</li>
+<li><code>-[no]w</code> (no)<br/>
+查看输出的 <code>.xvg</code>, <code>.xpm</code>, <code>.eps</code>和<code>.pdb</code>文件</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-type &lt;enum&gt;</code> (angle)<br/>
+要分析的键角类型: angle, dihedral, improper, ryckaert-bellemans</li>
+<li><code>-[no]all</code> (no)<br/>
+按索引文件中的出现顺序, 在平均值文件中单独输出每个键角的平均值</li>
+<li><code>-binwidth &lt;real&gt;</code> (1)<br/>
+计算分布的分格值(单位: 度)</li>
+<li><code>-[no]periodic</code> (yes)<br/>
+输出二面角除以360度的余数</li>
+<li><code>-[no]chandler</code> (no)<br/>
+使用Chandler相关函数(N[trans] = 1, N[gauche] = 0)而不是余弦相关函数. 转变的定义为phi &lt; &#8211;60或phi &gt; 60.</li>
+<li><code>-[no]avercorr</code> (no)<br/>
+对单个键角或二面角的相关函数进行平均</li>
+<li><code>-acflen &lt;int&gt;</code> (&#8211;1)<br/>
+ACF的长度, 默认为帧数的一半.</li>
+<li><code>-[no]normalize</code> (yes)<br/>
+归一化ACF</li>
+<li><code>-P &lt;enum&gt;</code> (0)<br/>
+ACF Legendre多项式的阶数(0表示不使用): 0, 1, 2, 3</li>
+<li><code>-fitfn &lt;enum&gt;</code> (none)<br/>
+拟合函数: none, exp, aexp, exp_exp, vac, exp5, exp7, exp9, erffit</li>
+<li><code>-beginfit &lt;real&gt;</code> (0)<br/>
+对相关函数进行指数拟合的起始时间</li>
+<li><code>-endfit &lt;real&gt;</code> (&#8211;1)<br/>
+对相关函数进行指数拟合的终止时间, &#8211;1表示直到最终</li>
+</ul>
+
+<h3 id="已知问题">已知问题</h3>
+
+<ul class="incremental">
+<li>对转变进行计数只适用于多重度为3的二面角</li>
 </ul>
 
 <h2 id="gmxbar-calculatefreeenergydifferenceestimatesthroughbennettsacceptanceratio">gmx bar - Calculate free energy difference estimates through Bennett&#8217;s acceptance ratio</h2>
@@ -1854,7 +1873,87 @@ ACF Legendre多项式的阶数(0意味着没有): 0, 1, 2, 3</li>
 
 <h2 id="gmxfreevolume-calculatefreevolume">gmx freevolume - Calculate free volume</h2>
 
-<h2 id="gmxgangle-calculateangles">gmx gangle - Calculate angles</h2>
+<h2 id="gmxgangle:计算角度翻译:杨宇">gmx gangle: 计算角度(翻译: 杨宇)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx gangle [-f [&lt;.xtc/.trr/...&gt;]] [-s [&lt;.tpr/.tpb/...&gt;]] [-n [&lt;.ndx&gt;]]
+           [-oav [&lt;.xvg&gt;]] [-oall [&lt;.xvg&gt;]] [-oh [&lt;.xvg&gt;]] [-b ]
+           [-e ] [-dt ] [-tu ] [-xvg ] [-[no]rmpbc]
+           [-[no]pbc] [-sf ] [-selrpos ] [-g1 ]
+           [-g2 ] [-binw ] [-group1 ]
+           [-group2 ]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx gangle</code>计算矢量之间不同类型的角度, 它支持由两个位置定义的矢量, 也支持由三个位置定义的平面的法线. 矢量还可以是z轴或球面的局部法线. 此外, 选项<code>angle</code>和<code>dihedral</code>可方便地用于计算由三/四个位置定义的键角和二面角.</p>
+
+<p>角度类型通过<code>-g1</code>和<code>-g2</code>指定. 如果<code>-g1</code>为<code>angle</code>或<code>dihedral</code>, 就不应再指定<code>-g2</code>. 在这种情况下, <code>-group1</code>应指定一个或多个选择, 并且每个选择应包括位置的三联对或四联对, 它们定义了要计算的角度.</p>
+
+<p>如果<code>-g1</code>为<code>vector</code>或<code>plane</code>, <code>-group1</code>指定的选择应包含位置对(<code>vector</code>)或位置三元对(<code>plane</code>). 对矢量, 位置设置了矢量的端点, 对平面, 三个位置用于计算平面的法向. 在这两种情况下, <code>-g2</code>指定要使用的其它矢量(见下文).</p>
+
+<p>使用<code>-g2 vector</code>或<code>-g2 plane</code>时, <code>-group2</code>应指定另一组矢量. <code>-group1</code>和<code>-group2</code>应指定相同的选择数目. 对其中的一个选项也可以只有一个选择, 在这种情况下, 对其他组中的每个选择会使用相同的选择. 同样, 对<code>-group1</code>中的每个选择, 相应的<code>-group2</code>中的选择应指定相同数目的矢量或单独一个矢量. 在后一种情况下, 会计算这个单一矢量与其它选择中的每个矢量之间的角度.</p>
+
+<p>使用<code>-g2 sphnorm</code>时, <code>-group2</code>中的每个选择应指定单一的位置, 它是球的中心. 第二个矢量从中心到由<code>-group1</code>指定的位置的中点.</p>
+
+<p>使用<code>-g2 z</code>时, 不需要指定<code>-group2</code>, 会计算第一个矢量与Z轴正半轴之间的角度.</p>
+
+<p>使用<code>-g2 t0</code>时, 不需要指定<code>-group2</code>, 会利用第一帧的矢量计算角度.</p>
+
+<p>有三个输出选项: <code>-oav</code>会将每一帧的时间与平均角度写入一个xvg文件. <code>-oall</code>会输出单独的角度. <code>-oh</code>输出角度的直方图. 分格的宽度由<code>-binw</code>设置. 对<code>-oav</code>和<code>-oh</code>, 会计算<code>-group1</code>中每个选择的单独平均/直方图.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入, 可选)<br/>
+输入轨迹或单一构型: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入, 可选)<br/>
+输入结构: tpr tpb tpa gro g96 pdb brk ent</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入, 可选)<br/>
+额外的索引组</li>
+<li><code>-oav [&lt;.xvg&gt;]</code> (angaver.xvg) (输出, 可选)<br/>
+作为时间函数的平均角度</li>
+<li><code>-oall [&lt;.xvg&gt;]</code> (angles.xvg) (输出, 可选)<br/>
+作为时间函数的所有角度</li>
+<li><code>-oh [&lt;.xvg&gt;]</code> (anghist.xvg) (输出, 可选)<br/>
+角度的直方图</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-b</code> <time> (0)<br/>
+从轨迹文件中读取的第一帧(ps)</li>
+<li><code>-e</code> <time> (0)<br/>
+从轨迹文件中读取的最后一帧(ps)</li>
+<li><code>-dt</code> <time> (0)<br/>
+只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
+<li><code>-tu</code> <enum> (ps)<br/>
+时间值的单位: fs, ps, ns, us, ms, s</li>
+<li><code>-xvg</code> <enum> (xmgrace)<br/>
+绘图格式: none, xmgrace, xmgr</li>
+<li><code>-[no]rmpbc</code> (yes)<br/>
+对每一帧, 使分子保持完整</li>
+<li><code>-[no]pbc</code> (yes)<br/>
+计算距离时使用周期性边界条件</li>
+<li><code>-sf</code> <file><br/>
+使用文件提供选择</li>
+<li><code>-selrpos</code> <enum> (atom)<br/>
+选择参考位置: atom, res_com, res_cog, mol_com, mol_cog, whole_res_com, whole_res_cog, whole_mol_com, whole_mol_cog, part_res_com, part_res_cog, part_mol_com, part_mol_cog, dyn_res_com, dyn_res_cog, dyn_mol_com, dyn_mol_cog</li>
+<li><code>-g1</code> <enum> (angle)<br/>
+分析类型/第一矢量组: angle, dihedral, vector, plane</li>
+<li><code>-g2</code> <enum> (none)<br/>
+第二向量组的类型: none, vector, plane, t0, z, sphnorm</li>
+<li><code>-binw</code> <real> (1)<br/>
+<code>-oh</code>的分格宽度, 以度为单位</li>
+<li><code>-group1</code> <selection><br/>
+第一个分析/矢量选择</li>
+<li><code>-group2</code> <selection><br/>
+第二个分析/矢量选择</li>
+</ul>
 
 <h2 id="gmxgenconf:增加随机取向的构象翻译:李卫星">gmx genconf: 增加&#8220;随机&#8221;取向的构象(翻译: 李卫星)</h2>
 
@@ -2173,7 +2272,85 @@ Gromos&#8211;87格式的坐标文件</li>
 重新对原子类型进行编号以使原子类型的数目最小</li>
 </ul>
 
-<h2 id="gmxgyrate-calculatetheradiusofgyration">gmx gyrate - Calculate the radius of gyration</h2>
+<h2 id="gmxgyrate:计算蛋白质的回旋半径翻译:黄丽红">gmx gyrate: 计算蛋白质的回旋半径(翻译: 黄丽红)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx gyrate [-f [&lt;.xtc/.trr/...&gt;]] [-s [&lt;.tpr/.tpb/...&gt;]] [-n [&lt;.ndx&gt;]]
+           [-o [&lt;.xvg&gt;]] [-acf [&lt;.xvg&gt;]] [-nice ] [-b ]
+           [-e ] [-dt ] [-[no]w] [-xvg ] [-nmol ]
+           [-[no]q] [-[no]p] [-[no]moi] [-nz ] [-acflen ]
+           [-[no]normalize] [-P ] [-fitfn ] [-beginfit ]
+           [-endfit ]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx gyrate</code>用于计算分子的回旋半径, 分子关于X, Y和Z轴的回旋半径, 并给出它们随时间的变化关系. 计算时会明确地使用原子的质量权重.</p>
+
+<p>将分析组划分为大小相同的几部分后, 可使用<code>-nmol</code>选项可以计算多个分子的回旋半径.</p>
+
+<p>使用<code>-nz</code>选项可计算沿Z轴方向X-Y切面内的2D回旋半径.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入)<br/>
+轨迹: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入)<br/>
+结构+质量(db): tpr tpb tpa gro g96 pdb brk ent</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入, 可选)<br/>
+索引文件</li>
+<li><code>-o [&lt;.xvg&gt;]</code> (gyrate.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-acf [&lt;.xvg&gt;]</code> (moi-acf.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (19)<br/>
+设置优先级</li>
+<li><code>-b &lt;time&gt;</code> (0)<br/>
+从轨迹读取的第一帧(ps)</li>
+<li><code>-e &lt;time&gt;</code> (0)<br/>
+从轨迹读取最后一帧(ps)</li>
+<li><code>-dt &lt;time&gt;</code> (0)<br/>
+只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
+<li><code>-[no]w</code> (no)<br/>
+查看输出的<code>.xvg</code>, <code>.xpm</code>, <code>.eps</code>和<code>.pdb</code>文件</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-nmol &lt;int&gt;</code> (1)<br/>
+要分析的分子数目</li>
+<li><code>-[no]q</code> (no)<br/>
+使用原子电荷的绝对值而不是质量作为权重因子</li>
+<li><code>-[no]p</code> (no)<br/>
+计算关于主轴的回转半径</li>
+<li><code>-[no]moi</code> (no)<br/>
+计算转动惯量(由主轴定义).</li>
+<li><code>-nz &lt;int&gt;</code> (0)<br/>
+计算2D回转半径时沿Z轴的切片数</li>
+<li><code>-acflen &lt;int&gt;</code> (&#8211;1)<br/>
+ACF的长度, 默认为帧数的一半.</li>
+<li><code>-[no]normalize</code> (yes)<br/>
+归一化ACF</li>
+<li><code>-P &lt;enum&gt;</code> (0)<br/>
+ACF Legendre多项式的阶数(0表示不使用): 0, 1, 2, 3</li>
+<li><code>-fitfn &lt;enum&gt;</code> (none)<br/>
+拟合函数: none, exp, aexp, exp_exp, vac, exp5, exp7, exp9, erffit</li>
+<li><code>-beginfit &lt;real&gt;</code> (0)<br/>
+对相关函数进行指数拟合的起始时间</li>
+<li><code>-endfit &lt;real&gt;</code> (&#8211;1)<br/>
+对相关函数进行指数拟合的终止时间, &#8211;1表示直到最终</li>
+</ul>
+
+<h3 id="补充说明">补充说明</h3>
+
+<p>蛋白质的回旋半径反映了蛋白质分子的体积和形状. 同一体系的回旋半径越大, 说明体系越膨松.</p>
 
 <h2 id="gmxh2order-computetheorientationofwatermolecules">gmx h2order - Compute the orientation of water molecules</h2>
 
