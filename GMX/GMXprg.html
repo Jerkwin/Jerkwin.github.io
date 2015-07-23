@@ -863,7 +863,85 @@ xvg绘图格式: xmgrace, xmgr, none</li>
 <li>当计算电子密度时, 使用了原子名称而不是原子类型. 这种做法很不好.</li>
 </ul>
 
-<h2 id="gmxdensmap-calculate2dplanaroraxial-radialdensitymaps">gmx densmap - Calculate 2D planar or axial-radial density maps</h2>
+<h2 id="gmxdensmap:计算二维的平面或轴径向密度映射图翻译:姚闯">gmx densmap: 计算二维的平面或轴径向密度映射图(翻译: 姚闯)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx densmap [-f [&lt;.xtc/.trr/...&gt;]] [-s [&lt;.tpr/.tpb/...&gt;]] [-n [&lt;.ndx&gt;]]
+            [-od [&lt;.dat&gt;]] [-o [&lt;.xpm&gt;]] [-nice ] [-b ]
+            [-e ] [-dt ] [-[no]w] [-bin ] [-aver ]
+            [-xmin ] [-xmax ] [-n1 ] [-n2 ]
+            [-amax ] [-rmax ] [-[no]mirror] [-[no]sums]
+            [-unit ] [-dmin ] [-dmax ]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx densmap</code>用于计算2D数密度的映射图. 它可以计算平面和轴径向的密度映射图. 输出的<code>.xpm</code>文件可以利用XV等程序进行可视化, 也可以利用<code>xpm2ps</code>转换为psotscript. 利用<code>-od</code>选项可将数据输出为文本形式的<code>.dat</code>文件, 而不是<code>-o</code>输出的通常<code>.xpm</code>文件.</p>
+
+<p>程序默认计算选定的一组原子在xy平面内的2D数密度映射图. 可以使用<code>-aver</code>选项改变平均方向. 当设定了<code>-xmin</code>和/或<code>-xmax</code>时, 计算时只会考虑平均方向上处于限制范围之内的原子. 使用<code>-bin</code>设置格点间距. 当<code>-n1</code>或<code>-n2</code>取非零值时, 格点尺寸由该选项决定. 计算时考虑了盒子尺寸的涨落.</p>
+
+<p>当设定了<code>-amax</code>和<code>-rmax</code>选项时, 会计算轴径向数密度映射图. 应提供三个组, 前两个组的质心用与定义轴线, 第三个组为要分析组. 轴向范围从-amax至+amax, 中心为两质心的中点, 并且正方向为第一组的质心到第二组的质心. 径向范围从0到rmax. 当指定了<code>-mirror</code>选项时, 径向范围从-rmax至+rmax.</p>
+
+<p>可使用<code>-unit</code>选项对输出进行归一化. 默认给出实际的数密度. 使用<code>-unit nm-2</code>选项忽略对平均值或角方向的归一化处理. 使用<code>-unit count</code>选项可得到每个格点单元的计数值. 如果不想在输出中使用从零到最大密度的标尺, 你可以使用<code>-dmax</code>选项设定最大密度值.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入)<br/>
+轨迹: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入, 可选)<br/>
+结构+质量(db): tpr tpb tpa gro g96 pdb brk ent</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入, 可选)<br/>
+索引文件</li>
+<li><code>-od [&lt;.dat&gt;]</code> (densmap.dat) (输出, 可选)<br/>
+通用数据文件</li>
+<li><code>-o [&lt;.xpm&gt;]</code> (densmap.xpm) (输出)<br/>
+X PixMap兼容数据文件</li>
+</ul>
+
+<p>其它选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (19)<br/>
+设置优先级</li>
+<li><code>-b &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的第一帧(ps)</li>
+<li><code>-e &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的最后一帧(ps)</li>
+<li><code>-dt &lt;time&gt;</code> (0)<br/>
+只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
+<li><code>-[no]w</code> (no)<br/>
+查看输出的<code>.xvg</code>, <code>.xpm</code>, <code>.eps</code>以及<code>.pdb</code>文件</li>
+<li><code>-bin &lt;real&gt;</code> (0.02)<br/>
+格点尺寸 (nm)</li>
+<li><code>-aver &lt;enum&gt;</code> (z)<br/>
+平均的方向: z, y, x</li>
+<li><code>-xmin &lt;real&gt;</code> (&#8211;1)<br/>
+平均的最小坐标</li>
+<li><code>-xmax &lt;real&gt;</code> (&#8211;1)<br/>
+平均的最大坐标</li>
+<li><code>-n1 &lt;int&gt;</code> (0)<br/>
+第一方向的格点单元数</li>
+<li><code>-n2 &lt;int&gt;</code> (0)<br/>
+第二方向的格点单元数</li>
+<li><code>-amax &lt;real&gt;</code> (0)<br/>
+距离中心的最大轴向距离</li>
+<li><code>-rmax &lt;real&gt;</code> (0)<br/>
+最大径向距离</li>
+<li><code>-[no]mirror</code> (no)<br/>
+在轴下添加镜像</li>
+<li><code>-[no]sums</code> (no)<br/>
+将密度累加值(1D映射图)输出到屏幕</li>
+<li><code>-unit &lt;enum&gt;</code> (nm&#8211;3)<br/>
+输出单位: nm&#8211;3, nm&#8211;2, count</li>
+<li><code>-dmin &lt;real&gt;</code> (0)<br/>
+输出中的最小密度</li>
+<li><code>-dmax &lt;real&gt;</code> (0)<br/>
+输出中的最大密度(0表示由计算值确定)</li>
+</ul>
 
 <h2 id="gmxdensorder-calculatesurfacefluctuations">gmx densorder - Calculate surface fluctuations</h2>
 
@@ -3152,7 +3230,88 @@ P-LINCS的最大距离(单位: nm), 0为估计值</li>
 副本交换的种子, &#8211;1表示产生种子</li>
 </ul>
 
-<h2 id="gmxmindist-calculatetheminimumdistancebetweentwogroups">gmx mindist - Calculate the minimum distance between two groups</h2>
+<h2 id="gmxmindist:计算两组间的最小距离翻译:王燕">gmx mindist: 计算两组间的最小距离(翻译: 王燕)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx mindist [-f [&lt;.xtc/.trr/...&gt;]] [-s [&lt;.tpr/.tpb/...&gt;]] [-n [&lt;.ndx&gt;]]
+            [-od [&lt;.xvg&gt;]] [-on [&lt;.xvg&gt;]] [-o [&lt;.out&gt;]]
+            [-ox [&lt;.xtc/.trr/...&gt;]] [-or [&lt;.xvg&gt;]] [-nice ] [-b ]
+            [-e ] [-dt ] [-tu ] [-[no]w] [-xvg ]
+            [-[no]matrix] [-[no]max] [-d ] [-[no]group] [-[no]pi]
+            [-[no]split] [-ng ] [-[no]pbc] [-[no]respertime]
+            [-[no]printresname]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx mindist</code>用于计算一个组与其他组之间的距离. 程序会将(两组之间任意原子对的)最小距离和给定距离内的接触数输出到两个独立的文件. 使用<code>-group</code>选项时, 如果另一组中的一个原子与第一组的多个原子相接触, 接触数只计为1次而不是多次. 使用<code>-or</code>选项时, 程序会确定到第一组中每个残基的最小距离, 并给出它与残基编号的函数关系图.</p>
+
+<p>使用<code>-pi</code>选项时, 会给出一个组与其周期映象的最小距离. 这可以用于检验蛋白质在模拟中是否可以感受到它的周期映象. 每个方向只考虑一次平移, 共26次平移. 程序也会给出组间的最大距离以及三个盒矢量的长度.</p>
+
+<p><code>gmx distance</code>也可用于计算距离.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入)<br/>
+轨迹: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入, 可选)<br/>
+结构+质量(db): tpr tpb tpa gro g96 pdb brk ent</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入, 可选)<br/>
+索引文件</li>
+<li><code>-od [&lt;.xvg&gt;]</code> (mindist.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-on [&lt;.xvg&gt;]</code> (numcont.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-o [&lt;.out&gt;]</code> (atm-pair.out) (输出, 可选)<br/>
+通用输出文件</li>
+<li><code>-ox [&lt;.xtc/.trr/...&gt;]</code> (mindist.xtc) (输出, 可选)<br/>
+轨迹: xtc trr trj gro g96 pdb tng</li>
+<li><code>-or [&lt;.xvg&gt;]</code> (mindistres.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+</ul>
+
+<p>其它选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (19)<br/>
+设置优先级</li>
+<li><code>-b &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的第一帧(ps)</li>
+<li><code>-e &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的最后一帧(ps)</li>
+<li><code>-dt &lt;time&gt;</code> (0)<br/>
+只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
+<li><code>-tu &lt;enum&gt;</code> (ps)<br/>
+时间单位: fs, ps, ns, us, ms, s</li>
+<li><code>-[no]w</code> (no)<br/>
+查看输出的<code>.xvg</code>, <code>.xpm</code>, <code>.eps</code>和<code>.pdb</code>文件</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-[no]matrix</code> (no)<br/>
+计算组与组之间距离的半个矩阵</li>
+<li><code>-[no]max</code> (no)<br/>
+计算最大距离, 而不是最小距离.</li>
+<li><code>-d &lt;real&gt;</code> (0.6)<br/>
+接触距离</li>
+<li><code>-[no]group</code> (no)<br/>
+计算接触数时, 与第一组中多个原子的接触数计为1.</li>
+<li><code>-[no]pi</code> (no)<br/>
+计算与映象间的最小距离</li>
+<li><code>-[no]split</code> (no)<br/>
+时间为零时分割图形</li>
+<li><code>-ng &lt;int&gt;</code> (1)<br/>
+计算到中心组的距离时, 其他组的数目</li>
+<li><code>-[no]pbc</code> (yes)<br/>
+计算距离时考虑周期性边界条件</li>
+<li><code>-[no]respertime</code> (no)<br/>
+当输出与每个残基的距离时, 输出每个时间点的距离.</li>
+<li><code>-[no]printresname</code> (no)<br/>
+输出残基名称</li>
+</ul>
 
 <h2 id="gmxmk_angndx-generateindexfilesforgmxangle">gmx mk_angndx - Generate index files for &#8216;gmx angle&#8217;</h2>
 
@@ -3310,7 +3469,87 @@ xvg绘图格式: xmgrace, xmgr, none</li>
 生成帧的数目</li>
 </ul>
 
-<h2 id="gmxorder-computetheorderparameterperatomforcarbontails">gmx order - Compute the order parameter per atom for carbon tails</h2>
+<h2 id="gmxorder:计算碳末端每个原子的序参量翻译:张爱">gmx order: 计算碳末端每个原子的序参量(翻译: 张爱)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx order [-f [&lt;.xtc/.trr/...&gt;]] [-n [&lt;.ndx&gt;]] [-nr [&lt;.ndx&gt;]]
+          [-s [&lt;.tpr/.tpb/...&gt;]] [-o [&lt;.xvg&gt;]] [-od [&lt;.xvg&gt;]] [-ob [&lt;.pdb&gt;]]
+          [-os [&lt;.xvg&gt;]] [-Sg [&lt;.xvg&gt;]] [-Sk [&lt;.xvg&gt;]] [-Sgsl [&lt;.xvg&gt;]]
+          [-Sksl [&lt;.xvg&gt;]] [-nice ] [-b ] [-e ] [-dt ]
+          [-[no]w] [-xvg ] [-d ] [-sl ] [-[no]szonly]
+          [-[no]unsat] [-[no]permolecule] [-[no]radial] [-[no]calcdist]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx orde</code>用于计算C末端每个原子的序参量. 对原子i, 会使用连接i&#8211;1和i+1的向量与轴线. 索引文件中应只包含用于计算的组, 沿相应酰基链的等价碳原子应处于单独的组中. 索引文件不应包含通用组(如System, Protein), 以避免产生混乱(但这与四面体序参量无关, 它只适用于水).</p>
+
+<p><code>gmx orde</code>可以给出序张量的所有对角线元素, 还可以计算氘代的序参量Scd(默认). 如果使用了<code>-szonly</code>选项, 程序只会给出序张量的一个分量(由<code>-d</code>选项指定), 并计算每个切片的序参量. 如果不使用<code>-szonly</code>选项, 程序会给出序参量的所有对角线元素以及氘代的序参量.</p>
+
+<p>可以确定一个原子周围的四面体序参量, 并计算键角和距离的序参量. 更多细节请参见 P.-L. Chau and A.J. Hardwick, <em>Mol. Phys.</em>, 93, (1998), 511&#8211;518.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入)<br/>
+轨迹: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入)<br/>
+索引文件</li>
+<li><code>-nr [&lt;.ndx&gt;]</code> (index.ndx) (输入)<br/>
+索引文件</li>
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr)(输入)<br/>
+运行输入文件: tpr tpb tpa</li>
+<li><code>-o [&lt;.xvg&gt;]</code> (order.xvg) (输出)<br/>
+xvgr/xmgr 文件</li>
+<li><code>-od [&lt;.xvg&gt;]</code> (deuter.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-ob [&lt;.pdb&gt;]</code> (eiwit.pdb) (输出)<br/>
+蛋白质数据库文件</li>
+<li><code>-os [&lt;.xvg&gt;]</code> (sliced.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-Sg [&lt;.xvg&gt;]</code> (sg-ang.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-Sk [&lt;.xvg&gt;]</code> (sk-dist.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-Sgsl [&lt;.xvg&gt;]</code> (sg-ang-slice.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-Sksl [&lt;.xvg&gt;]</code> (sk-dist-slice.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (19)<br/>
+设置优先级</li>
+<li><code>-b</code> <time> (0)<br/>
+从轨迹文件中读取的第一帧(ps)</li>
+<li><code>-e</code> <time> (0)<br/>
+从轨迹文件中读取的最后一帧(ps)</li>
+<li><code>-dt</code> <time> (0)<br/>
+只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
+<li><code>-[no]w</code> (no)<br/>
+查看输出.xvg, .xpm, .eps and .pdb文件</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-d &lt;enum&gt;</code> (z)<br/>
+膜的法线方向: z, x, y</li>
+<li><code>-sl &lt;int&gt;</code> (1)<br/>
+计算序参量与盒子长度的函数关系, 将盒子划分为指定数目的切片</li>
+<li><code>-[no]szonly</code> (no)<br/>
+只给出序张量的Sz元素.(轴方向可用<code>-d</code>定义)</li>
+<li><code>-[no]unsat</code> (no)<br/>
+计算不饱和碳的序参量. 注意不能将它和常规序参量混合在一起.</li>
+<li><code>-[no]permolecule</code> (no)<br/>
+计算每个分子的Scd序参量</li>
+<li><code>-[no]radial</code> (no)<br/>
+计算径向膜法线</li>
+<li><code>-[no]calcdist</code> (no)<br/>
+计算到参考位置的距离</li>
+</ul>
 
 <h2 id="gmxpdb2gmx:将pdb坐标文件转换为拓扑文件和力场兼容的坐标文件翻译:冯佳伟">gmx pdb2gmx: 将PDB坐标文件转换为拓扑文件和力场兼容的坐标文件(翻译: 冯佳伟)</h2>
 
@@ -4245,7 +4484,80 @@ xvg绘图格式: xmgrace, xmgr, none</li>
 
 <p>设溶质为单原子离子或分子质心Ref, 溶剂为水分子原子1为O, 原子2和3为H, 则 <span class="math">\(\q_1\)</span> 对应Ref至O的向量 <span class="math">\(\vec A=\vec R_\text{Ref}-\vec R_\text{O}\)</span> 与O至两个H连线中点的向量 <span class="math">\({\vec R_\text{OH2}+\vec R_\text{OH3} \over 2}\)</span> 之间的夹角, 后一向量的方向与水分子偶极矩的方向相同. 因此, <span class="math">\(\q_1\)</span> 可视为溶质分子周围水分子偶极矩的取向. <span class="math">\(\q_2\)</span> 对应 <span class="math">\(\vec A\)</span> 与水分子平面法线的夹角. 当使用<code>-v23</code>选项时, 则为 <span class="math">\(\vec A\)</span> 与两个H连线 <span class="math">\(\vec R_\text{H3}-\vec R_\text{H2}\)</span> 之间的夹角.</p>
 
-<h2 id="gmxspatial-calculatethespatialdistributionfunction">gmx spatial - Calculate the spatial distribution function</h2>
+<h2 id="gmxspatial:计算空间分布函数翻译:刘建川">gmx spatial: 计算空间分布函数(翻译: 刘建川)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx spatial [-s [&lt;.tpr/.tpb/...&gt;]] [-f [&lt;.xtc/.trr/...&gt;]] [-n [&lt;.ndx&gt;]]
+            [-nice ] [-b ] [-e ] [-dt ] [-[no]w]
+            [-[no]pbc] [-[no]div] [-ign ] [-bin ] [-nab ]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx spatial</code>用于计算空间分布函数(SDF, spatial distribution function), 其输出文件为Gaussian98 cube格式, 可用VMD读取. 对含有32,000个原子, 运行了50 ns的轨迹, 计算SDF大约需要30分钟. 其中的大部分时间都消耗在了运行<code>trjconv</code>上, 它需要运行两次, 以便恰当地对体系进行居中, 同时也需要很多空间(会复制三份轨迹文件). 如果选择了正确的叠合, 得到的结果非常漂亮, 而且也包含了很多有用信息. 程序可处理运动范围很广的组中的3&#8211;4原子(如溶液中的自由氨基酸), 也可以选择稳定折叠结构的蛋白质骨架, 计算溶剂分子的的SDF, 得到时间平均的溶剂壳层. 这个程序还可用于计算任意直角坐标的SDF, 只需要忽略前面的<code>gmx trjconv</code>步骤即可.</p>
+
+<p>使用:</p>
+
+<ol class="incremental">
+<li>使用<code>gmx make_ndx</code>创建一个组, 其中包含要计算SDF的原子组</li>
+<li><code>gmx trjconv -s a.tpr -f a.tng -o b.tng -boxcenter tric -ur compact -pbc none</code></li>
+<li><code>gmx trjconv -s a.tpr -f b.tng -o c.tng -fit rot+trans</code></li>
+<li>使用第3步生成的输出文件<code>c.tng</code>运行<code>gmx spatial</code></li>
+<li>使用VMD或其他可视化软件载入得到的<code>grid.cube</code>文件, 以等值面模式查看结果</li>
+</ol>
+
+<p><strong>注意</strong>, 对一些体系, 如胶束体系, 在第1步和第2步之间可能还需要运行<code>gmx trjconv -pbc cluster</code>.</p>
+
+<p>警告:</p>
+
+<p>SDF生成的cube文件包含了具有非零占据的所有格点. 然而, <code>gmx trjconv</code>使用的<code>-fit rot+trans</code>选项意味着你的体系会在空间中旋转和平移(选中的组不会). 因此, 返回值只在所选中心组/坐标周围的一定区域内有意义, 在整个轨迹中, 这些区域与平移/旋转后的体系之间存在重叠. 请你确保能满足这一条件.</p>
+
+<p>漏洞:</p>
+
+<p>当分配的内存不够时, 可能会出现段错误. 通常会检测这一错误, 并在出错前终止程序, 同时给出一条警告消息, 建议使用<code>-nab</code>选项(指定附加分格数). 然而, 程序并不能检测到所有此类事件. 如果你遇到段错误, 请试着增加<code>-nab</code>的值, 并再次运行程序.</p>
+
+<p>激进选项:</p>
+
+<p>为减少计算所需的空间和时间, 你可以只输出运行<code>gmx trjconv</code>所需的坐标. 然而, 请确保<code>-nab</code>的设定值足够高, 因为程序会基于初始坐标和<code>-nab</code>选项的值分配cube分格所需要的内存.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入)<br/>
+结构+质量(db): tpr tpb tpa gro g96 pdb brk ent</li>
+<li><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入)<br/>
+轨迹: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入, 可选)<br/>
+索引文件</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (0)<br/>
+设置优先级</li>
+<li><code>-b</code> <time> (0)<br/>
+从轨迹文件中读取的第一帧(ps)</li>
+<li><code>-e</code> <time> (0)<br/>
+从轨迹文件中读取的最后一帧(ps)</li>
+<li><code>-dt</code> <time> (0)<br/>
+只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
+<li><code>-[no]w</code> (no)<br/>
+查看输出的 <code>.xvg</code>, <code>.xpm</code>, <code>.eps</code>和<code>.pdb</code>文件</li>
+<li><code>-[no]pbc</code> (no)<br/>
+计算距离时考虑周期性边界条件(PBC).</li>
+<li><code>-[no]div</code> (yes)<br/>
+基于原子/最小cube尺寸计算施加分格占据率因子. TRUE用于可视化, FALSE(<code>-nodiv</code>)可得到每帧的精确计数</li>
+<li><code>-ign &lt;int&gt;</code> (&#8211;1)<br/>
+不显示的外部cube的数目(正值可能降低边界斑点; &#8211;1保证外部表面可见)</li>
+<li><code>-bin &lt;real&gt;</code> (0.05)<br/>
+分格宽度(单位: nm)</li>
+<li><code>-nab &lt;int&gt;</code> (4)<br/>
+附加的分格数目, 用于保证分配的内存足够大</li>
+</ul>
 
 <h2 id="gmxspol:分析溶质周围溶剂的偶极取向及极化翻译:李继存">gmx spol: 分析溶质周围溶剂的偶极取向及极化(翻译: 李继存)</h2>
 
