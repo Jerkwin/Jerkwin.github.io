@@ -4499,12 +4499,26 @@ xvg绘图格式: xmgrace, xmgr, none</li>
 
 <p>使用:</p>
 
+<p>为得到有意义的SDF, 整个轨迹中溶质分子必须在盒子内居中, 并去除其平动和转动. 也就是说, 统计周围分子的SDF时必须基于相对固定的参考坐标系. 为此, 可能需要使用<code>gmx trjconv</code>对轨迹进行多次处理. 此外, 可能还需要定义特殊的分析组, 并使用<code>-n</code>选项传递给<code>gmx trjconv</code>.</p>
+
 <ol class="incremental">
-<li>使用<code>gmx make_ndx</code>创建一个组, 其中包含要计算SDF的原子组</li>
-<li><code>gmx trjconv -s a.tpr -f a.tng -o b.tng -boxcenter tric -ur compact -pbc none</code></li>
-<li><code>gmx trjconv -s a.tpr -f b.tng -o c.tng -fit rot+trans</code></li>
-<li>使用第3步生成的输出文件<code>c.tng</code>运行<code>gmx spatial</code></li>
-<li>使用VMD或其他可视化软件载入得到的<code>grid.cube</code>文件, 以等值面模式查看结果</li>
+<li><p>使用<code>gmx make_ndx</code>创建两个组, 一个包含中心分子, 一个包含要统计SDF的原子</p></li>
+<li><p>使中心分子在盒子内居中, 同时所有其他分子处于盒子内</p>
+
+<p><code>gmx trjconv -s topol.tpr -f traj -n index.ndx -o traj~cnt.xtc -pbc mol -ur compact -center</code></p>
+
+<p><code>Select group for centering</code>时选择中心分子组, <code>Select group for output</code>时选择System组</p></li>
+<li><p>按中心分子对轨迹进行叠合, 移除中心分子的转动和平动: </p>
+
+<p><code>gmx trjconv -s topol.tpr -f traj~cnt.xtc -n index.ndx -o traj~cnt~fit.xtc -fit rot+trans</code></p>
+
+<p><code>Select group for least squares fit</code>时选择中心分子组, <code>Select group for output</code>是选择System组</p></li>
+<li><p>统计分布: </p>
+
+<p><code>gmx spatial -f traj~cnt~fit.xtc -n index.ndx</code></p>
+
+<p><code>Select group to generate SDF:</code>时选择要统计SDF的组, <code>Select group to output coords (e.g. solute):</code>时选择中心分子组</p></li>
+<li><p>使用VMD或其他可视化软件载入得到的<code>grid.cube</code>文件, 以等值面模式查看结果</p></li>
 </ol>
 
 <p><strong>注意</strong>, 对一些体系, 如胶束体系, 在第1步和第2步之间可能还需要运行<code>gmx trjconv -pbc cluster</code>.</p>
@@ -4557,6 +4571,15 @@ xvg绘图格式: xmgrace, xmgr, none</li>
 分格宽度(单位: nm)</li>
 <li><code>-nab &lt;int&gt;</code> (4)<br/>
 附加的分格数目, 用于保证分配的内存足够大</li>
+</ul>
+
+<h3 id="补充说明">补充说明</h3>
+
+<ul class="incremental">
+<li>如果得到的SDF等值面不够光滑, 请增加轨迹的帧数, 并检查<code>-bin</code>的取值时并不是合适</li>
+<li>此程序计算SDF的方式不够高效. 如果体系含有多个中心分子类型, 则每帧可使用每个中心分子进行居中, 得到更多的统计结果.</li>
+<li>一些说明请参考 <a href="http://jerkwin.github.io/2014/05/13/空间分布函数SDF的计算及三维图示/">空间分布函数SDF的计算及三维图示</a>.</li>
+<li>一个处理工具请参考<a href="http://sobereva.com/38">Gromacs的g_spatial产生的格点文件分析工具gmxgrid v1.2</a>.</li>
 </ul>
 
 <h2 id="gmxspol:分析溶质周围溶剂的偶极取向及极化翻译:李继存">gmx spol: 分析溶质周围溶剂的偶极取向及极化(翻译: 李继存)</h2>
@@ -4659,7 +4682,7 @@ xvg绘图格式: xmgrace, xmgr, none</li>
 
 <p><code>gmx trjconv</code>更适用于将多个轨迹文件拼合起来.</p>
 
-<p><code>gmx trjconv</code>支持以下格式的输入和输出文件: <code>.xtc</code>, <code>.trr</code>, <code>.trj</code>, <code>.gro</code>, <code>.g96</code>和<code>.pdb</code>. 文件格式由文件的扩展名决定. 对<code>.xtc</code>, <code>.trj</code>, <code>.gro</code>和<code>.pdb</code>, <code>.xtc</code>和<code>.gro</code>输出文件的精度取决于输入文件; 对其他输入格式, 输出文件的精度由<code>-ndec</code>选项决定. 当设定了<code>-ndec</code>选项时, 输出格式的精度总是取决于<code>-ndec</code>. 所有其他格式的精度都是固定的. <code>.trr</code>和<code>.trj</code>输出格式的精度可以是单精度或双精度, 取决于<code>gmx trjconv</code>程序的精度. 注意, 只有<code>.trr</code>, <code>.trj</code>, <code>.gro</code>和<code>.g96</code>格式的文件支持速度.</p>
+<p><code>gmx trjconv</code>支持以下格式的输入和输出文件: <code>.xtc</code>, <code>.trr</code>, <code>.trj</code>, <code>.gro</code>, <code>.g96</code>和<code>.pdb</code>. 文件格式由文件的扩展名决定. 对<code>.xtc</code>, <code>.gro</code>和<code>.pdb</code>输入格式, <code>.xtc</code>和<code>.gro</code>输出文件的精度取决于输入文件; 对其他输入格式, 输出文件的精度由<code>-ndec</code>选项决定. 如果设定了<code>-ndec</code>选项, 输出格式的精度总是取决于<code>-ndec</code>. 所有其他格式的精度都是固定的. <code>.trr</code>和<code>.trj</code>输出格式的精度可以是单精度或双精度, 取决于<code>gmx trjconv</code>程序的精度. 注意, 只有<code>.trr</code>, <code>.trj</code>, <code>.gro</code>和<code>.g96</code>格式的文件支持速度.</p>
 
 <p><code>-sep</code>选项可将每一帧写入到单独的<code>.gro</code>, <code>.g96</code>或<code>.pdb</code>文件. 默认情况下, 所有帧都被写入到一个文件中. 拼合了所有帧的<code>.pdb</code>文件可以使用<code>rasmol –nmrpdb</code>来查看.</p>
 
@@ -4681,7 +4704,7 @@ xvg绘图格式: xmgrace, xmgr, none</li>
 
 <p>对<code>-pbc</code>的<code>mol</code>, <code>res</code>和<code>atom</code>选项, <code>-ur</code>选项设置单元晶胞的表示方式. 对于三斜盒子这三个选项会给出不同的结果, 而对于长方盒子, 给出的结构相同. <code>rect</code>是普通的长方体形状, <code>tric</code>是三斜晶胞, <code>compact</code>将所有原子置于离盒子中心距离最近的位置. 这有利于, 例如对截断八面体和菱形十二面体的可视化. 对<code>tric</code>和<code>compact</code>选项的中心是<code>tric</code>(见下文), 除非选项<code>-boxcenter</code>设置了不同的值.</p>
 
-<p>选项<code>-center</code>将体系在盒子内居中. 用户可以选择用于确定几何中心的组. 对<code>-pbc</code>和<code>-center</code>选项, <code>-boxcenter</code>设置盒子的中心位置. 中心的选项为: <code>tric</code>: 盒向量总和的一半, <code>rect</code>: 盒子对角线的一半, <code>zero</code>: 0. 如果居中后你想使所有分子都处于盒子中, 可以使用<code>-center</code>和<code>-pbc mol</code>选项.</p>
+<p>选项<code>-center</code>将体系在盒子内居中, 用户可以选择用于确定几何中心的组. 对<code>-pbc</code>和<code>-center</code>选项, <code>-boxcenter</code>设置盒子的中心位置. 中心的选项为: <code>tric</code>: 盒向量总和的一半, <code>rect</code>: 盒子对角线的一半, <code>zero</code>: 0. 如果居中后你想使所有分子都处于盒子中, 可以使用<code>-center</code>和<code>-pbc mol</code>选项.</p>
 
 <p>选项<code>-box</code>设置新盒子的大小. 此选项只用于主维度, 因此通常只用于长方盒子. 如果你只想修改某些维度, 例如读取轨迹时, 你可以使用&#8211;1使某一维度保持不变. 当仅调用一次<code>gmx trjconv</code>时, 使用<code>-pbc</code>, <code>-fit</code>, <code>-ur</code>和<code>-center</code>选项的组合并不总能精确地达到你的目的. 这种情况下可考虑使用多次调用, 可参考GROMACS网站的一些建议.</p>
 
@@ -4689,7 +4712,7 @@ xvg绘图格式: xmgrace, xmgr, none</li>
 
 <p>使用<code>-trunc</code>选项, <code>gmx trjconv</code>可以就地截断<code>.trj</code>文件, 即不需要复制文件. 当在磁盘I/O过程中运行崩溃时(即磁盘已满), 或者当拼合两个邻近的轨迹但不能重帧时, 此选项很有用.</p>
 
-<p>选项<code>-dump</code>用于从你的轨迹文件中处于或邻近指定时间的帧.</p>
+<p>选项<code>-dump</code>用于从你的轨迹文件中抽取处于或邻近指定时间的帧.</p>
 
 <p>选项<code>-drop</code>读取<code>.xvg</code>文件中的时间和数值. 当设置了选项<code>-dropunder</code>和/或<code>-dropover</code>, 不会输出低于或高于相应选项设定值的帧.</p>
 
@@ -4765,7 +4788,7 @@ PBC处理方式(完整说明见帮助文件): none, mol, res, atom, nojump, clus
 如果可能, 读取并输出力</li>
 <li><code>-trunc &lt;time&gt;</code> (&#8211;1)<br/>
 在此时间(ps)后截断输入轨迹文件</li>
-<li><code>-exec &lt;string&gt;</code>
+<li><code>-exec &lt;string&gt;</code><br/>
 对每个输出帧执行命令, 帧号作为命令的参数</li>
 <li><code>-split &lt;time&gt;</code> (0)<br/>
 当t MOD split = 第一帧时间(ps)时开始输出新文件</li>
@@ -4780,6 +4803,33 @@ PBC处理方式(完整说明见帮助文件): none, mol, res, atom, nojump, clus
 <li><code>-[no]conect</code> (no)<br/>
 当输出<code>.pdb</code>文件时增加连接记录. 对于非标准分子, 例如粗粒化分子的可视化会有用.</li>
 </ul>
+
+<h3 id="补充说明">补充说明</h3>
+
+<p><code>gmx trjconv</code>可能是最常用的后处理工具, 用来处理坐标, 处理周期性或者手动调整轨迹. 利用它抽取特定的轨迹比较简单, 但使用它处理轨迹的周期性时, 一些选项不容易理解. 下面对其中的一些进行说明.</p>
+
+<p><code>-pbc mol|res|atom</code>指定以何种方式考虑PBC, 是使分子的质心, 残基的质心, 还是每个原子处于盒子中. 如果使用<code>-pbc atom</code>所有原子都处于盒子之中, 这样边界上的分子看起来破碎了. 如果对破碎后的分子再使用一次<code>-pbc whole</code>, 将分子恢复完整, 其效果与<code>-pbc mol</code>类似.</p>
+
+<p><code>-pbc nojump</code>可以保证分子的运动是连续的, 就像体系处于真空中一样, 分子连续地向各个方向扩散. 在计算MSD这样的量的时候, 需要这样考虑. 但<code>gmx msd</code>在计算时已经考虑了这点, 所以我们就无须先利用此选项对轨迹进行处理了. 此选项对单个构型没有意义.</p>
+
+<p>使用<code>-pbc mol|res|atom</code>选项时, 会使相应的中心处于盒子中, 而盒子的显示方法则使用<code>-ur</code>来控制. 如果使用长方体盒子, <code>-ur</code>的三种选项给出的结果相同, 所以无需考虑此项. 如果使用了三斜盒子, <code>-ur</code>的三种选项给出的结果不同: <code>-ur tric</code>粒子处于三斜盒子中, <code>-ur rect</code>粒子处于长方盒子中, <code>-ur compact</code>粒子处于距盒子中心最近的位置, 近似球形.</p>
+
+<p>利用<code>-center</code>选项可使某组原子在盒子内居中, 运行时, 会提示你选择要居中的组. 此选项可以和<code>-pbc mol|res|atom</code>一起使用, 达到使某组原子居中, 同时其他原子都处于盒子内的目的.</p>
+
+<p>在使用<code>-ur tric|compact</code>, <code>-pbc mol|res|atom|</code>, <code>-center</code>选项时, 都需要定义盒子的中心. 默认使用的盒子中心处于盒向量的一半处. 但可以使用<code>-boxcenter</code>改变: <code>tric</code>盒向量总和的一半, <code>rect</code>盒子对角线的一半, <code>zero</code>0.</p>
+
+<p>上面的这几个选项可组合使用, 但不能保证一定能满足需要, 有时可能需要使用<code>gmx trjconv</code>多次.</p>
+
+<p>注意, <code>-pbc</code>和<code>-fit rot</code>两个选项不能一起使用. 否则程序运行错误, 给出如下信息:</p>
+
+<pre><code>PBC condition treatment does not work together with rotational fit.
+Please do the PBC condition treatment first and then run trjconv in a second step for the rotational fit.
+First doing the rotational fit and then doing the PBC treatment gives incorrect results!
+</code></pre>
+
+<p>这意味着凡同时涉及周期性和叠合的处理都需要分两次进行, 而且必须先进行周期性处理, 再进行叠合, 否则结果错误.</p>
+
+<p><code>-pbc</code>几种处理的效果可参看 <a href="/GMX/GMXpbc.html">gmx trjconv选项测试</a></p>
 
 <h2 id="gmxtrjorder-ordermoleculesaccordingtotheirdistancetoagroup">gmx trjorder - Order molecules according to their distance to a group</h2>
 
