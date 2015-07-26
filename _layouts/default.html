@@ -11,6 +11,7 @@
 </head>
 
 <body>
+<span id="tblcontents" class="menu-button" onClick="show(this.innerHTML)">☰</span>
 <div id="container"><div id="main" role="main">
 <header><div class="buttons">
 <a href="/" title="Go to homepage">主页</a>
@@ -46,8 +47,20 @@ var _hmt = _hmt || [];
   s.parentNode.insertBefore(hm, s);
 })();
 
-var $top=document.getElementById("scrollTop")
+var $=function(id){return document.getElementById(id)}
+var $top=$("scrollTop")
 window.onscroll = function() { (document.documentElement.scrollTop||document.body.scrollTop)>0 ? $top.style.display="block" : $top.style.display="none" }
+function show(str) {
+	if(str=='☰') {
+		$('tblcontents').innerHTML="✕";
+		$('TOC').style.display="block"
+		$('container').style.margin="0 0 0 25%"
+	} else {
+		$('tblcontents').innerHTML='☰';
+		$('TOC').style.display="none"
+		$('container').style.margin="0 0 0 15%"
+	}
+}
 </script>
 <script async src="/jscss/busuanzi.pure.mini.js"></script>
 
