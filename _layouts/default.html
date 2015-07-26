@@ -35,7 +35,9 @@
 <footer><p><small><span id="busuanzi_container_site_uv">访问人次(2015年7月9日起): <span id="busuanzi_value_site_uv"></span></span><br>
 Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a> | Copyright 2008 - {{site.time | date:"%Y"}} by <a href="http://jerkwin.github.io/about/">Jerkwin</a> | <span class="label label-info">{{site.time | date:"%Y-%m-%d %H:%M:%S %Z"}}</span></small></p></footer>
 </div>
-<a style="position:fixed; bottom:10px;right:10px;" href="javascript:scroll(0,0)">返回顶部</a>
+
+<a id="scrollTop" onclick="goTopEx();">&#8657;</a>
+
 </body>
 <script>
 var _hmt = _hmt || [];
@@ -45,6 +47,16 @@ var _hmt = _hmt || [];
   var s = document.getElementsByTagName("script")[0];
   s.parentNode.insertBefore(hm, s);
 })();
+
+var $sty=document.getElementById("scrollTop").style
+var $top=document.documentElement.scrollTop
+function getScrollTop() { return $top + document.body.scrollTop}
+function setScrollTop(value) { if($top) $top=value; else document.body.scrollTop=value }
+window.onscroll = function() { getScrollTop()>0 ? $sty.display="block" : $sty.display="none" }
+function goTopEx() {
+	var goTop = setInterval(scrollMove, 10);
+	function scrollMove() { setScrollTop(getScrollTop()/1.1); if(getScrollTop()<1) clearInterval(goTop) }
+}
 </script>
 <script async src="/jscss/busuanzi.pure.mini.js"></script>
 
