@@ -303,7 +303,99 @@ ACF Legendre多项式的阶数(0表示不使用): 0, 1, 2, 3</li>
 <li>对转变进行计数只适用于多重度为3的二面角</li>
 </ul>
 
-<h2 id="gmxbar-calculatefreeenergydifferenceestimatesthroughbennettsacceptanceratio">gmx bar - Calculate free energy difference estimates through Bennett&#8217;s acceptance ratio</h2>
+<h2 id="gmxbar:利用bennett接受比率方法计算自由能差的估计值翻译:陈珂">gmx bar: 利用Bennett接受比率方法计算自由能差的估计值(翻译: 陈珂)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx bar [-f [&lt;.xvg&gt; [...]]] [-g [&lt;.edr&gt; [...]]] [-o [&lt;.xvg&gt;]] [-oi [&lt;.xvg&gt;]]
+        [-oh [&lt;.xvg&gt;]] [-nice ] [-[no]w] [-xvg ] [-b ]
+        [-e ] [-temp ] [-prec ] [-nbmin ]
+        [-nbmax ] [-nbin ] [-[no]extp]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx bar</code>通过Bennett接受率方法(BAR, Bennett&#8217;s acceptance ratio)估计自由能差值, 也可以自动将由BAR得到的一系列分立自由能进行组合得到自由能估计值.</p>
+
+<p>每个分立的BAR自由能差值依赖于两个不同状态的模拟, 且称为态A和态B, 它们由参数λ控制(见<code>.mdp</code>参数<code>init_lambda</code>). 给定态A, BAR方法可以计算态B相对于态A的哈密顿差的加权平均的比率, 反之亦然. 相对于另一状态的能量差在模拟中必须显式地计算, 可以通过<code>.mdp</code>选项<code>foreign_lambda</code>实现.</p>
+
+<p>输入选项<code>-f</code>需要读入多个<code>dhdl.xvg</code>文件, 支持两种输入文件类型:</p>
+
+<ul class="incremental">
+<li>包含多于一个y值的文件, 其中应包含dH/dλ和Δλ的列. λ的值根据列标题推定: 模拟使用的λ根据dH/dλ列的标题推定, 外部λ值根据Delta H列的标题推定.</li>
+<li>仅有一个y值的文件. 对这些文件应使用<code>-extp</code>选项, 并假定y值为dH/dλ, 而哈密顿量与λ呈线性关系. 模拟的λ值根据子标题(如果存在)推定, 否则会根据子目录下文件名中的数字推定.</li>
+</ul>
+
+<p>模拟的λ值根据<code>dhdl.xvg</code>文件中包含字符串<code>dH</code>的列标题解析得出, 外部λ值根据包含大写字母<code>D</code>和<code>H</code>的列标题解析得出, 温度根据包含<code>T=</code>的标题解析得出.</p>
+
+<p>输入选项<code>-g</code>需要读入多个<code>.edr</code>文件, 它们可以包含能量差列表(见<code>.mdp</code>选项<code>separate_dhdl_file</code>), 或者一系列直方图(见<code>.mdp</code>选项<code>dh_hist_size</code>和<code>dh_hist_spacing</code>). 程序会自动从<code>ener.edr</code>文件中推断出温度和λ值.</p>
+
+<p>除了<code>.mdp</code>的<code>foreign_lambda</code>选项外, 也可以根据dH/dλ值外推得到能量差. 这可通过<code>-extp</code>选项实现, 它假定系统的哈密顿量与λ呈线性关系, 虽然通常并非如此.</p>
+
+<p>自由能估计由使用二分法的BAR方法确定, 输出精度由<code>-prec</code>设定. 误差估计考虑了时间相关, 这是通过将数据分块, 并假定这些分块之间互相独立, 计算它们之间的自由能差来实现的. 最终的误差估计由5个分块的平均方差决定. 用于误差估计的分块数可以通过选项<code>-nbmin</code>和<code>-nbmax</code>来指定.</p>
+
+<p><code>gmx bar</code>会尝试合计具有相同&#8217;本地&#8217;和&#8217;外部&#8217;λ值的样本, 但总会假定样本互相独立. <strong>注意</strong>, 当合计具有不同采样间隔的能量差或能量导数时, 这个假定几乎肯定是不正确的. 连续的能量通常是相关的, 不同的时间间隔意味着样本间的相关度不同.</p>
+
+<p>结果分为两部分: 后一部分包含了以kJ/mol为单位的最终结果, 以及每一部分和总体的误差估计. 前一部分包含了详细的自由能差估计和相空间重叠量度, 以kT为单位(以及它们的误差估计). 打印出的值为:</p>
+
+<ul class="incremental">
+<li>lam_A: A点的λ值.</li>
+<li>lam_B: B点的λ值.</li>
+<li>DG: 自由能估计.</li>
+<li>s_A: B在A中的相对熵估计.</li>
+<li>s_B: A在B中的相对熵估计.</li>
+<li>stdev: 每个样本标准偏差的估计期望</li>
+</ul>
+
+<p>两个状态在彼此系综内的相对熵可以理解为相空间重叠的量度: lambda_B的工作样本在lambda_A系综内的相对熵s_A(对s_B反之亦然), 是两个状态Boltzmann分布之间&#8217;距离&#8217;的量度, 当分布相同时, 其值为0. 详见Wu &amp; Kofke, <em>J. Chem. Phys.</em> 123 084109 (2005).</p>
+
+<p>每个样本标准偏差的估计期望, 见Bennett BAR方法的原始论文 Bennett, <em>J. Comp. Phys.</em> 22, p 245 (1976). 其中的Eq. 10给出了采样质量的估计(并非直接的实际统计误差, 因为它假定了样本相互独立).</p>
+
+<p>要得到相空间重叠估计的可视化结果, 可使用<code>-oh</code>选项及<code>-nbin</code>选项输出一系列直方图.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.xvg&gt;</code> [&#8230;]]` (dhdl.xvg) (输入, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-g [&lt;.edr&gt;</code> [&#8230;]]` (ener.edr) (输入, 可选)<br/>
+能量文件</li>
+<li><code>-o [&lt;.xvg&gt;]</code> (bar.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-oi [&lt;.xvg&gt;]</code> (barint.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-oh [&lt;.xvg&gt;]</code> (histogram.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (0)<br/>
+设定优先级</li>
+<li><code>-[no]w</code> (no)<br/>
+查看输出的<code>.xvg</code>, <code>.xpm</code>, <code>.eps</code>和<code>.pdb</code>文件</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-b &lt;real&gt;</code> (0)<br/>
+BAR的起始时间</li>
+<li><code>-e &lt;real&gt;</code> (&#8211;1)<br/>
+BAR的终止时间</li>
+<li><code>-temp &lt;real&gt;</code> (&#8211;1)<br/>
+温度(K)</li>
+<li><code>-prec &lt;int&gt;</code> (2)<br/>
+小数点后的小数位数</li>
+<li><code>-nbmin &lt;int&gt;</code> (5)<br/>
+用于误差估计的最小分块数</li>
+<li><code>-nbmax &lt;int&gt;</code> (5)<br/>
+用于误差估计的最大分块数</li>
+<li><code>-nbin &lt;int&gt;</code> (100)<br/>
+输出直方图的分格数</li>
+<li><code>-[no]extp</code> (no)<br/>
+是否对dH/dλ进行线性外推作为能量使用</li>
+</ul>
 
 <h2 id="gmxbundle-analyzebundlesofaxese.g.helices">gmx bundle - Analyze bundles of axes, e.g., helices</h2>
 

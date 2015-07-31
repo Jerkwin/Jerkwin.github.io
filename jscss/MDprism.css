@@ -9,9 +9,9 @@ html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abb
 }
 .TOCEntry { font-family: sans-serif; }
 .TOCEntry a { text-decoration: none; }
-.TOCLevel1 { font-size: .8em; font-weight: bold;margin-left: 0;}
-.TOCLevel2 { font-size: .8em; margin-left: 1em; }
-.TOCLevel3 { font-size: .6em; margin-left: 2em; }
+.TOCLevel1 { font-size: 1em; font-weight: bold;margin-left: 0;}
+.TOCLevel2 { font-size: 1em; margin-left: 1em; }
+.TOCLevel3 { font-size: .8em; margin-left: 2em; }
 .TOCLevel3 a { color: #000000; }
 .TOCSectNum:after { content: " "; }
 
