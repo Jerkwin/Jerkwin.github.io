@@ -383,7 +383,154 @@ LaTeX文件</li>
 指定检查的最后一个能量项(若未给出则测试所有项), 不检查在此之后的所有能量项. 比如可以只检查Pressure以及之前的能量项.</li>
 </ul>
 
-<h2 id="gmxchi-calculateeverythingyouwanttoknowaboutchiandotherdihedrals">gmx chi - Calculate everything you want to know about chi and other dihedrals</h2>
+<h2 id="gmxchi:计算chi和其他二面角的所有信息翻译:黄炎">gmx chi: 计算chi和其他二面角的所有信息(翻译: 黄炎)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx chi [-s [&lt;.gro/.g96/...&gt;]] [-f [&lt;.xtc/.trr/...&gt;]] [-o [&lt;.xvg&gt;]]
+        [-p [&lt;.pdb&gt;]] [-ss [&lt;.dat&gt;]] [-jc [&lt;.xvg&gt;]] [-corr [&lt;.xvg&gt;]]
+        [-g [&lt;.log&gt;]] [-ot [&lt;.xvg&gt;]] [-oh [&lt;.xvg&gt;]] [-rt [&lt;.xvg&gt;]]
+        [-cp [&lt;.xvg&gt;]] [-nice ] [-b ] [-e ] [-dt ]
+        [-[no]w] [-xvg ] [-r0 ] [-[no]phi] [-[no]psi] [-[no]omega]
+        [-[no]rama] [-[no]viol] [-[no]periodic] [-[no]all] [-[no]rad]
+        [-[no]shift] [-binwidth ] [-core_rotamer ]
+        [-maxchi ] [-[no]normhisto] [-[no]ramomega] [-bfact ]
+        [-[no]chi_prod] [-[no]HChi] [-bmax ] [-acflen ]
+        [-[no]normalize] [-P ] [-fitfn ] [-beginfit ]
+        [-endfit ]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx chi</code>用于计算所有氨基酸骨架和侧链的φ, ψ, ω以及χ二面角. 它也可以计算二面角与时间的函数关系, 以及二面角的直方图分布. 分布(<code>histo-(dihedral) (RESIDUE).xvg</code>)会对每一类型的所有残基进行累计.</p>
+
+<p>如果使用<code>-corr</code>选项, 程序会计算二面角的自相关函数 C(t) = &lt;cos(χ(τ)) cos(χ(τ+t))&gt;. 之所以使用余弦而不是角度自身, 是为了解决周期性的问题(Van der Spoel &amp; Berendsen (1997), <em>Biophys. J.</em> 72, 2032&#8211;2041). 程序会将每个残基的每个二面角输出到单独的文件(<code>corr(dihedral) (RESIDUE) (nresnr).xvg</code>)中, 同时还会输出一个包含所有残基信息的文件(<code>-corr</code>选项).</p>
+
+<p>使用<code>-all</code>选项, 程序会将每个残基的角度与时间的函数关系输出到独立的文件<code>(dihedral) (RESIDUE) (nresnr).xvg</code>中. 所用的单位可以是弧度或度.</p>
+
+<p>程序还会输出一个日志文件(<code>-g</code>选项), 其中包含:</p>
+
+<ul class="incremental">
+<li>(a) 每种类型残基的数目信息.</li>
+<li>(b) 由Karplus方程得到的NMR <sup>3</sup>J 偶合常数.</li>
+<li>(c) 一个表格, 其中包含每个残基的旋转异构体每纳秒内的转变次数, 以及每个二面角的序参数S<sup>2</sup>.</li>
+<li>(d) 一个表格, 其中包含每个残基旋转异构体的占据率.</li>
+</ul>
+
+<p>所有的旋转异构体的多重度都视为3, 除平面基团的ω和χ二面角(如芳香化合物, Asp和Asn的χ_2; Glu和Gln的χ_3; 以及Arg的χ_4)外, 它们的多重度为2. &#8220;rotamer 0&#8221;表示二面角不处于每个旋转异构体的核心区域. 核心区域的宽度可使用<code>-core_rotamer</code>设置.</p>
+
+<p>S<sup>2序参数也会输出到一个</sup><code>.xvg</code>文件(由<code>-o</code>选项指定), 作为可选项, 可将S<sup>2的值作为B因子输出到一个</sup><code>.pdb</code>文件中(由<code>-p</code>选项指定). 每个时间步旋转异构体转变的总数(<code>-ot</code>选项), 每个旋转异构体的转变数(<code>-rt</code>选项)和<sup>3</sup>J 偶合(<code>-jc</code>选项)也可以写入到<code>.xvg</code>文件中. 注意, 在分析旋转异构体转变时, 假定所提供的轨迹帧之间的时间间隔是相等的.</p>
+
+<p>如果设置了<code>-chi_prod</code>选项(并且<code>-maxchi &gt; 0</code>), 会计算累积旋转异构体, 如1+9(χ_1&#8211;1)3(χ_2&#8211;1)+(χ_3&#8211;1)(如果残基具有三个3重二面角, 并且<code>-maxchi &gt;= 3</code>). 如前所述, 任何二面角如果不处于核心区域内, 旋转异构体取为0. 这些累积旋转异构体的占据率(由旋转异构体0开始)会写入由<code>-cp</code>选项指定的文件中, 如果使用<code>-all</code>选项, 旋转异构体作为时间的函数会写入<code>chiproduct (RESIDUE) (nresnr).xvg</code>文件中, 其占据率会写入<code>histo-chiproduct (RESIDUE) (nresnr).xvg</code>文件.</p>
+
+<p>选项<code>-r</code>可生成作为φ和ψ角函数的平均ω角的等值线图, 也就是使用颜色编码的平均ω角的Ramachandran图.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-s [&lt;.gro/.g96/...&gt;]</code> (conf.gro) (输入)<br/>
+结构文件: gro g96 pdb brk ent esp tpr tpb tpa</li>
+<li><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入)<br/>
+轨迹: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-o [&lt;.xvg&gt;]</code> (order.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-p [&lt;.pdb&gt;]</code> (order.pdb) (输出, 可选)<br/>
+PDB文件</li>
+<li><code>-ss [&lt;.dat&gt;]</code> (ssdump.dat) (输入, 可选)<br/>
+通用数据文件</li>
+<li><code>-jc [&lt;.xvg&gt;]</code> (Jcoupling.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-corr [&lt;.xvg&gt;]</code> (dihcorr.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-g [&lt;.log&gt;]</code> (chi.log) (输出)<br/>
+日志文件</li>
+<li><code>-ot [&lt;.xvg&gt;]</code> (dihtrans.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-oh [&lt;.xvg&gt;]</code> (trhisto.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-rt [&lt;.xvg&gt;]</code> (restrans.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-cp [&lt;.xvg&gt;]</code> (chiprodhisto.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (19)<br/>
+设置优先级</li>
+<li><code>-b &lt;time&gt;</code> (0)<br/>
+从轨迹读取的第一帧(ps)</li>
+<li><code>-e &lt;time&gt;</code> (0)<br/>
+从轨迹读取最后一帧(ps)</li>
+<li><code>-dt &lt;time&gt;</code> (0)<br/>
+只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
+<li><code>-[no]w</code> (no)<br/>
+查看输出的<code>.xvg</code>, <code>.xpm</code>, <code>.eps</code>和<code>.pdb</code>文件</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-r0 &lt;int&gt;</code> (1)<br/>
+起始残基</li>
+<li><code>-[no]phi</code> (no)<br/>
+输出φ二面角</li>
+<li><code>-[no]psi</code> (no)<br/>
+输出ψ二面角</li>
+<li><code>-[no]omega</code> (no)<br/>
+输出ω二面角(肽键)</li>
+<li><code>-[no]rama</code> (no)<br/>
+生成φ/ψ和χ_1/χ_2的Ramachandran图</li>
+<li><code>-[no]viol</code> (no)<br/>
+输出一个文件, 对违背Ramachandran规则的角使用0或1</li>
+<li><code>-[no]periodic</code> (yes)<br/>
+输出二面角与360度的模</li>
+<li><code>-[no]all</code> (no)<br/>
+对每个二面角使用独立的输出文件</li>
+<li><code>-[no]rad</code> (no)<br/>
+在角度与时间关系的文件中, 使用弧度而不是角度</li>
+<li><code>-[no]shift</code> (no)<br/>
+根据φ/ψ角度计算化学位移</li>
+<li><code>-binwidth &lt;int&gt;</code> (1)<br/>
+直方图的分格宽度(单位: 度)</li>
+<li><code>-core_rotamer &lt;real&gt;</code> (0.5)<br/>
+只输出中心<code>-core_rotamer</code>*(360/multiplicity)属于每个旋转异构体的值(其余的赋给rotamer 0)</li>
+<li><code>-maxchi &lt;enum&gt;</code> (0)<br/>
+计算前几个χ二面角: 0, 1, 2, 3, 4, 5, 6</li>
+<li><code>-[no]normhisto</code> (yes)<br/>
+直方图归一化</li>
+<li><code>-[no]ramomega</code> (no)<br/>
+计算omega角度的平均值与φ/ψ的函数关系, 并输出到<code>.xpm</code>文件</li>
+<li><code>-bfact &lt;real&gt;</code> (&#8211;1)<br/>
+对没有计算二面角序参数的原子, <code>.pdb</code>文件中的B因子值</li>
+<li><code>-[no]chi_prod</code> (no)<br/>
+计算每个残基的单个累积旋转异构体</li>
+<li><code>-[no]HChi</code> (no)<br/>
+包含到支链氢原子的二面角</li>
+<li><code>-bmax &lt;real&gt;</code> (0)<br/>
+对统计时所考虑的二面角, 组成二面角的任何原子的最大B因子. 当进行射线结构分析X时作为基础数据. <code>-bmax &lt;= 0</code>意味着没有限制.</li>
+<li><code>-acflen &lt;int&gt;</code> (&#8211;1)<br/>
+ACF的长度, 默认为帧数的一半.</li>
+<li><code>-[no]normalize</code> (yes)<br/>
+归一化ACF</li>
+<li><code>-P &lt;enum&gt;</code> (0)<br/>
+ACF Legendre多项式的阶数(0表示不使用): 0, 1, 2, 3</li>
+<li><code>-fitfn &lt;enum&gt;</code> (none)<br/>
+拟合函数: none, exp, aexp, exp_exp, vac, exp5, exp7, exp9, erffit</li>
+<li><code>-beginfit &lt;real&gt;</code> (0)<br/>
+对相关函数进行指数拟合的起始时间</li>
+<li><code>-endfit &lt;real&gt;</code> (&#8211;1)<br/>
+对相关函数进行指数拟合的终止时间, &#8211;1表示直到最终</li>
+</ul>
+
+<h3 id="已知问题">已知问题</h3>
+
+<ul class="incremental">
+<li>产生 <strong>非常非常多</strong> 的输出文件(数目最多约为蛋白质残基数目的4倍, 如果计算自相关函数会再增加两倍). 通常会有几百个输出文件.</li>
+<li>使用非标准方式计算φ和ψ二面角, 使用H-N-CA-C计算φ, 而不是使用C(-)-N-CA-C, 使用N-CA-C-O计算ψ, 而不是使用N-CA-C-N(+). 这将导致计算结果与其他工具, 如<code>gmx rama</code>的计算结果不符(通常很小).</li>
+<li><code>-r0</code>选项不能正常工作.</li>
+<li>二重旋转异构体会写入<code>chi.log</code>, 如三重一样, 只不过第三个(g(+))的概率总为0.</li>
+</ul>
 
 <h2 id="gmxcluster:对结构进行团簇分析翻译:姚闯">gmx cluster: 对结构进行团簇分析(翻译: 姚闯)</h2>
 
@@ -3714,7 +3861,67 @@ xvg绘图格式: xmgrace, xmgr, none</li>
 屏幕上输出更多信息</li>
 </ul>
 
-<h2 id="gmxpolystat-calculatestaticpropertiesofpolymers">gmx polystat - Calculate static properties of polymers</h2>
+<h2 id="gmxpolystat:计算聚合物的静态性质翻译:杜星">gmx polystat: 计算聚合物的静态性质(翻译: 杜星)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx polystat [-s [&lt;.tpr/.tpb/...&gt;]] [-f [&lt;.xtc/.trr/...&gt;]] [-n [&lt;.ndx&gt;]]
+             [-o [&lt;.xvg&gt;]] [-v [&lt;.xvg&gt;]] [-p [&lt;.xvg&gt;]] [-i [&lt;.xvg&gt;]]
+             [-nice ] [-b ] [-e ] [-dt ] [-tu ]
+             [-[no]w] [-xvg ] [-[no]mw] [-[no]pc]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx polystat</code>用于计算聚合物的静态性质与时间的函数关系, 并输出其平均值.</p>
+
+<p>默认情况下, 它会计算聚合物端到端的平均距离与回旋半径. 运行时, 程序需要一个索引组并将其拆分为分子, 然后使用索引组中每个分子的第一个原子和最后一个原子来确定端到端的距离. 程序会输出总的回旋半径, 以及平均回旋张量的三个主分量. <code>-v</code>选项用于输出本征向量. <code>-pc</code>选项用于输出每个回旋张量的平均本征值. <code>-i</code>选项用于输出内部距离的均方值.</p>
+
+<p><code>-p</code>选项用于计算持续长度. 所选索引组中应包含在聚合物主链上连续键合的原子. 持续长度根据索引间距为偶数的键之间的角度的余弦值确定, 不使用奇数间距的键, 因为直聚合物的骨架通常全是反式, 因此只能每两个键对齐一次. 持续长度定义为平均余弦值达到1/e时键的数目, 根据log(<cos>)的线性内插确定.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入)<br/>
+运行输入文件: tpr tpb tpa</li>
+<li><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入)<br/>
+轨迹文件: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入, 可选)<br/>
+索引文件</li>
+<li><code>-o [&lt;.xvg&gt;]</code> (polystat.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-v [&lt;.xvg&gt;]</code> (polyvec.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-p [&lt;.xvg&gt;]</code> (persist.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-i [&lt;.xvg&gt;]</code> (intdist.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (19)<br/>
+设置优先级</li>
+<li><code>-b &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的第一帧(ps)</li>
+<li><code>-e &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的最后一帧(ps)</li>
+<li><code>-dt &lt;time&gt;</code> (0)<br/>
+只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
+<li><code>-tu &lt;enum&gt;</code> (ps)
+时间单位: fs, ps, ns, us, ms, s</li>
+<li><code>-[no]w</code> (no)<br/>
+查看输出的<code>.xvg</code>, <code>.xpm</code>, <code>.eps</code>以及<code>.pdb</code>文件</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-[no]mw</code> (yes)
+计算质量加权的回旋半径</li>
+<li><code>-[no]pc</code> (no)
+输出平均本征值</li>
+</ul>
 
 <h2 id="gmxpotential-calculatetheelectrostaticpotentialacrossthebox">gmx potential - Calculate the electrostatic potential across the box</h2>
 
