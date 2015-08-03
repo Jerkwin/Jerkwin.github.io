@@ -38,7 +38,22 @@ if(e.which==37||e.which==74){ {% if page.previous %} url='{{ site.url }}{{ page.
 else if(e.which==39||e.which==75){ {% if page.next %}  url='{{ site.url }}{{ page.next.url }}';{% endif %} }
 if(url){window.location=url;} });})
 pageURL.innerHTML=decodeURI('{{ site.url }}{{ page.url }}');
+
+var tocName=[], tocHref=[]
+var tocLink=document.getElementsByTagName('a')
+for(var i=0; i<tocLink.length; i++) {
+	if(tocLink[i].name.match("TOC"))  tocName.push(tocLink[i])
+	if(tocLink[i].href.match("#TOC")) tocHref.push(tocLink[i])
+}
+
+window.onscroll = function() {
+	var i, docTop=document.documentElement.scrollTop||document.body.scrollTop
+	docTop>0 ? $top.style.display="block" : $top.style.display="none"
+	for(i=0; i<tocHref.length; i++) tocHref[i].style.background=""
+	i=0; while(docTop>tocName[i].offsetTop) i++
+	tocHref[i-1].style.background="#aaaaaa"
+}
+
 </script>
 
 {% include comments.md %}
-
