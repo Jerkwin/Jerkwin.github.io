@@ -90,12 +90,11 @@ function toc() {
 	}
 }
 
+var tocName=[], tocHref=[]
+
 window.onload=function(){
 	toc()
-	var $=function(id){return document.getElementById(id)},
-		tocName=[], tocHref=[],
-		tocLink=document.getElementsByTagName('a')
-
+	var tocLink=document.getElementsByTagName('a')
 	for(var i=0; i<tocLink.length; i++) {
 		if(tocLink[i].name.match("TOC"))  tocName.push(tocLink[i])
 		if(tocLink[i].href.match("#TOC")) tocHref.push(tocLink[i])
