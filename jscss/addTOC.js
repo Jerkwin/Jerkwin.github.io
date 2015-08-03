@@ -90,4 +90,21 @@ function toc() {
 	}
 }
 
-window.onload=function(){ toc()}
+window.onload=function(){
+	toc()
+	var $=function(id){return document.getElementById(id)},
+		tocName=[], tocHref=[],
+		tocLink=document.getElementsByTagName('a')
+
+	for(var i=0; i<tocLink.length; i++) {
+		if(tocLink[i].name.match("TOC"))  tocName.push(tocLink[i])
+		if(tocLink[i].href.match("#TOC")) tocHref.push(tocLink[i])
+	}
+}
+
+window.onscroll = function() {
+	var i, docTop=document.documentElement.scrollTop||document.body.scrollTop
+	for(i=0; i<tocHref.length; i++) tocHref[i].style.background=""
+	i=0; while(docTop>tocName[i].offsetTop) i++
+	tocHref[i-1].style.background="#aaaaaa"
+}
