@@ -397,7 +397,79 @@ BAR的终止时间</li>
 是否对dH/dλ进行线性外推作为能量使用</li>
 </ul>
 
-<h2 id="gmxbundle-analyzebundlesofaxese.g.helices">gmx bundle - Analyze bundles of axes, e.g., helices</h2>
+<h2 id="gmxbundle:分析轴束例如螺旋翻译:王燕">gmx bundle: 分析轴束, 例如螺旋(翻译: 王燕)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx bundle [-f [&lt;.xtc/.trr/...&gt;]] [-s [&lt;.tpr/.tpb/...&gt;]] [-n [&lt;.ndx&gt;]]
+           [-ol [&lt;.xvg&gt;]] [-od [&lt;.xvg&gt;]] [-oz [&lt;.xvg&gt;]] [-ot [&lt;.xvg&gt;]]
+           [-otr [&lt;.xvg&gt;]] [-otl [&lt;.xvg&gt;]] [-ok [&lt;.xvg&gt;]] [-okr [&lt;.xvg&gt;]]
+           [-okl [&lt;.xvg&gt;]] [-oa [&lt;.pdb&gt;]] [-nice ] [-b ]
+           [-e ] [-dt ] [-tu ] [-xvg ] [-na ]
+           [-[no]z]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx bundle</code>用于分析轴束, 例如螺旋轴. 程序读入两个索引组, 把它们分成<code>-na</code>个部分. 不同部分的质心确定轴的顶部和底部. 以下几个量会写入输出文件中: 轴的长度, 轴中点相对于所有轴的平均中点的距离和Z方向的偏移量, 轴相对于平均轴的总倾斜, 径向倾斜, 侧向倾斜.</p>
+
+<p>使用选项<code>-ok</code>, <code>-okr</code>和<code>-okl</code>可输出轴的总扭结, 径向扭结和侧向扭结. 这种情况下还需要定义扭结原子的索引组, 它也会被分为<code>-na</code>个部分. 扭结角定义为扭结顶部和扭结底部矢量间的夹角.</p>
+
+<p>使用选项<code>-oa</code>时, 每帧中每个轴的顶点, 中点(或扭结, 若指定了<code>-ok</code>), 最低点会写入一个<code>.pdb</code>文件, 残基编号对应于轴的编号. 当使用Rasmol查看这个文件时, 指定命令行选项<code>-nmrpdb</code>, 并输入<code>set axis true</code>来显示参考轴.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入)<br/>
+轨迹: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入)<br/>
+结构+质量(db): tpr tpb tpa gro g96 pdb brk ent</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入, 可选)<br/>
+索引文件</li>
+<li><code>-ol [&lt;.xvg&gt;]</code> (bun_len.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-od [&lt;.xvg&gt;]</code> (bun_dist.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-oz [&lt;.xvg&gt;]</code> (bun_z.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-ot [&lt;.xvg&gt;]</code> (bun_tilt.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-otr [&lt;.xvg&gt;]</code> (bun_tiltr.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-otl [&lt;.xvg&gt;]</code> (bun_tiltl.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-ok [&lt;.xvg&gt;]</code> (bun_kink.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-okr [&lt;.xvg&gt;]</code> (bun_kinkr.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-okl [&lt;.xvg&gt;]</code> (bun_kinkl.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-oa [&lt;.pdb&gt;]</code> (axes.pdb) (输出, 可选)<br/>
+PDB文件</li>
+</ul>
+
+<p>其它选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (19)<br/>
+设置优先级</li>
+<li><code>-b &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的第一帧(ps)</li>
+<li><code>-e &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的最后一帧(ps)</li>
+<li><code>-dt &lt;time&gt;</code> (0)<br/>
+只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
+<li><code>-tu &lt;enum&gt;</code> (ps)<br/>
+时间单位: fs, ps, ns, us, ms, s</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-na &lt;int&gt;</code> (0)<br/>
+轴的数目</li>
+<li><code>-[no]z</code> (no)<br/>
+使用z坐标轴取代平均轴作为参考轴</li>
+</ul>
 
 <h2 id="gmxcheck:检查并比较文件翻译:冯佳伟">gmx check: 检查并比较文件(翻译: 冯佳伟)</h2>
 
@@ -919,7 +991,87 @@ xvg绘图格式: xmgrace, xmgr, none</li>
 
 <h2 id="gmxconvert-tpr-makeamodifedrun-inputfile">gmx convert-tpr - Make a modifed run-input file</h2>
 
-<h2 id="gmxcovar-calculateanddiagonalizethecovariancematrix">gmx covar - Calculate and diagonalize the covariance matrix</h2>
+<h2 id="gmxcovar:计算并对角化协方差矩阵翻译:王浩博">gmx covar: 计算并对角化协方差矩阵(翻译: 王浩博)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx covar [-f [&lt;.xtc/.trr/...&gt;]] [-s [&lt;.tpr/.tpb/...&gt;]] [-n [&lt;.ndx&gt;]]
+          [-o [&lt;.xvg&gt;]] [-v [&lt;.trr/.cpt/...&gt;]] [-av [&lt;.gro/.g96/...&gt;]]
+          [-l [&lt;.log&gt;]] [-ascii [&lt;.dat&gt;]] [-xpm [&lt;.xpm&gt;]] [-xpma [&lt;.xpm&gt;]]
+          [-nice ] [-b ] [-e ] [-dt ] [-tu ]
+          [-xvg ] [-[no]fit] [-[no]ref] [-[no]mwa] [-last ]
+          [-[no]pbc]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx covar</code>用于计算并对角化(质量加权的)协方差矩阵. 所有结构都叠合到结构文件中的结构. 当结构文件不是运行输入文件时, 将不考虑周期性. 如果叠合组与分析组相同, 分析时不使用质量加权, 叠合也不使用质量加权.</p>
+
+<p>本征向量会写入一个轨迹文件(<code>-v</code>). 如果叠合与协方差分析的原子相同, 会首先输出用于叠合的参考结构, 其t=&#8211;1. 平均(或参考, 若使用了<code>-ref</code>)结构的t=0, 本征向量会写入不同的帧, 以其本征向量序号为时间戳.</p>
+
+<p>本征向量可使用<code>gmx anaeig</code>分析.</p>
+
+<p>选项<code>-ascii</code>会将整个协方差矩阵写入一个ASCII文件. 元素的顺序为: x1x1, x1y1, x1z1, x1x2, &#8230;</p>
+
+<p>选项<code>-xpm</code>会将整个协方差矩阵写入一个<code>.xpm</code>文件.</p>
+
+<p>选项<code>-xpma</code>会将原子的协方差矩阵写入一个<code>. xpm</code>文件, 即, 写入每个原子对xx, yy和zz协方差的总和.</p>
+
+<p>注意, 对角化一个矩阵所需的内存和时间至少会以原子数平方的速度增加, 因此很容易耗尽内存. 在这种情况下, 程序很可能会出现段错误并推出. 你应该仔细考虑数目更少的一组原子是否能满足你的需求, 这样计算成本更低.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入)<br/>
+轨迹: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入)<br/>
+结构+质量(db): tpr tpb tpa gro g96 pdb brk ent</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入, 可选)<br/>
+索引文件</li>
+<li><code>-o [&lt;.xvg&gt;]</code> (eigenval.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-v [&lt;.trr/.cpt/...&gt;]</code> (eigenvec.trr) (输出)<br/>
+全精度轨迹: trr cpt trj tng</li>
+<li><code>-av [&lt;.gro/.g96/...&gt;]</code> (average.pdb) (输出)<br/>
+结构文件: gro g96 pdb brk ent esp</li>
+<li><code>-l [&lt;.log&gt;]</code> (covar.log) (输出)<br/>
+日志文件</li>
+<li><code>-ascii [&lt;.dat&gt;]</code> (covar.dat) (输出, 可选)<br/>
+通用数据文件</li>
+<li><code>-xpm [&lt;.xpm&gt;]</code> (covar.xpm) (输出, 可选)<br/>
+X PixMap兼容矩阵文件</li>
+<li><code>-xpma [&lt;.xpm&gt;]</code> (covara.xpm) (输出, 可选)<br/>
+X PixMap兼容矩阵文件</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (19)<br/>
+设置优先级</li>
+<li><code>-b &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的第一帧(ps)</li>
+<li><code>-e &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的最后一帧(ps)</li>
+<li><code>-dt &lt;time&gt;</code> (0)<br/>
+只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
+<li><code>-tu &lt;enum&gt;</code> (ps)<br/>
+时间单位: fs, ps, ns, us, ms, s</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-[no]fit</code> (yes)<br/>
+叠合到参考结构</li>
+<li><code>-[no]ref</code> (no)<br/>
+使用与结构文件中的构型的偏离, 而不是使用平均构型</li>
+<li><code>-[no]mwa</code> (no)<br/>
+质量加权的协方差分析</li>
+<li><code>-last &lt;int&gt;</code> (&#8211;1)<br/>
+输出的最后一个本征向量的编号(&#8211;1会输出所有本征向量)</li>
+<li><code>-[no]pbc</code> (yes)<br/>
+对周期性边界条件进行校正</li>
+</ul>
 
 <h2 id="gmxcurrent:计算介电常数和电流自相关函数翻译:刘恒江">gmx current: 计算介电常数和电流自相关函数(翻译: 刘恒江)</h2>
 
@@ -1182,7 +1334,77 @@ X PixMap兼容数据文件</li>
 输出中的最大密度(0表示由计算值确定)</li>
 </ul>
 
-<h2 id="gmxdensorder-calculatesurfacefluctuations">gmx densorder - Calculate surface fluctuations</h2>
+<h2 id="gmxdensorder:计算表面涨落翻译:李卫星">gmx densorder: 计算表面涨落(翻译: 李卫星)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx densorder [-s [&lt;.tpr/.tpb/...&gt;]] [-f [&lt;.xtc/.trr/...&gt;]] [-n [&lt;.ndx&gt;]]
+              [-o [&lt;.dat&gt;]] [-or [&lt;.out&gt; [...]]] [-og [&lt;.xpm&gt; [...]]]
+              [-Spect [&lt;.out&gt; [...]]] [-nice ] [-b ] [-e ]
+              [-dt ] [-[no]w] [-[no]1d] [-bw ] [-bwn ]
+              [-order ] [-axis ] [-method ] [-d1 ]
+              [-d2 ] [-tblock ] [-nlevel ]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx densorder</code>利用MD轨迹计算沿着某一方向的双相密度分布, 通过将界面密度拟合为函数的剖面, 可得到二维表面随时间的涨落. 利用<code>-tavg</code>选项可输出界面的时间平均的空间表示.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入)<br/>
+运行输入文件: tpr tpb tpa</li>
+<li><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入)<br/>
+轨迹文件: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入)<br/>
+索引文件</li>
+<li><code>-o [&lt;.dat&gt;]</code> (Density4D.dat) (输出, 可选)<br/>
+通用数据文件</li>
+<li><code>-or [&lt;.out&gt; [...]]</code> (hello.out) (输出, 可选)<br/>
+通用输出文件</li>
+<li><code>-og [&lt;.xpm&gt; [...]]</code> (interface.xpm) (输出, 可选)<br/>
+X PixMap兼容矩阵文件</li>
+<li><code>-Spect [&lt;.out&gt; [...]]</code> (intfspect.out) (输出, 可选)<br/>
+通用输出文件</li>
+</ul>
+
+<p>其它选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (19)<br/>
+设置优先级</li>
+<li><code>-b &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的第一帧(ps)</li>
+<li><code>-e &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的最后一帧(ps)</li>
+<li><code>-dt &lt;time&gt;</code> (0)<br/>
+只使用t MOD dt=第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
+<li><code>-[no]w</code> (no)<br/>
+查看输出的<code>.xvg</code>, <code>.xpm</code>, <code>.eps</code>和<code>.pdb</code>文件</li>
+<li><code>-[no]1d</code> (no)<br/>
+伪1D界面结构</li>
+<li><code>-bw &lt;real&gt;</code> (0.2)<br/>
+平行于界面的密度分布的分格宽度</li>
+<li><code>-bwn &lt;real&gt;</code> (0.05)<br/>
+垂直于界面的密度分布的分格宽度</li>
+<li><code>-order &lt;int&gt;</code> (0)<br/>
+高斯滤波器的阶数, 0意味着不使用滤波</li>
+<li><code>-axis &lt;string&gt;</code> (Z)<br/>
+轴的方向: X, Y或Z</li>
+<li><code>-method &lt;enum&gt;</code> (二等分)<br/>
+定位界面的方法: bisect, functional</li>
+<li><code>-d1 &lt;real&gt;</code> (0)<br/>
+相1的体相密度(z值小时)</li>
+<li><code>-d2 &lt;real&gt;</code> (1000)<br/>
+相2的体相密度 (z值大时)</li>
+<li><code>-tblock &lt;int&gt;</code> (100)<br/>
+一次时间块平均所用的帧数</li>
+<li><code>-nlevel &lt;int&gt;</code> (100)<br/>
+2D-XPixMaps中高度的水平数</li>
+</ul>
 
 <h2 id="gmxdielectric:计算频率相关的介电常数翻译:白艳艳">gmx dielectric: 计算频率相关的介电常数(翻译: 白艳艳)</h2>
 
@@ -1717,7 +1939,58 @@ ACF勒让德多项式的级数(0表示无): 0, 1, 2, 3</li>
 <li>此程序运行时需要大量内存: 总使用量等于原子数乘以3乘以帧数再乘以4(或8, 当使用双精度时)</li>
 </ul>
 
-<h2 id="gmxdump-makebinaryfileshumanreadable">gmx dump - Make binary files human readable</h2>
+<h2 id="gmxdump:生成人类可读的二进制文件翻译:黄丽红">gmx dump: 生成人类可读的二进制文件(翻译: 黄丽红)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx dump [-s [&lt;.tpr/.tpb/...&gt;]] [-f [&lt;.xtc/.trr/...&gt;]] [-e [&lt;.edr&gt;]]
+         [-cp [&lt;.cpt&gt;]] [-p [&lt;.top&gt;]] [-mtx [&lt;.mtx&gt;]] [-om [&lt;.mdp&gt;]]
+         [-nice ] [-[no]nr] [-[no]sys]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx dump</code>读取一个运行输入文件(<code>.tpa</code>/<code>.tpr</code>/<code>.tpb</code>), 轨迹文件(<code>.trj</code>/<code>.trr</code>/<code>.xtc</code>), 能量文件(<code>.ene</code>/<code>.edr</code>), 或检查点文件(<code>.cpt</code>), 而后将其以可读格式打印到标准输出. 在检查运行输入文件是否有误时, 此程序至关重要.</p>
+
+<p>此程序也能预处理拓扑文件以此帮助发现问题. 注意, 目前定制包含文件搜索目录的唯一方法是设置<code>GMXLIB</code>.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入与输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入, 可选)<br/>
+运行输入文件: tpr tpb tpa</li>
+<li><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入, 可选)<br/>
+轨迹文件: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-e [&lt;.edr&gt;]</code> (ener.edr) (输入, 可选)<br/>
+能量文件</li>
+<li><code>-cp [&lt;.cpt&gt;]</code> (state.cpt) (输入, 可选)<br/>
+检查点文件</li>
+<li><code>-p [&lt;.top&gt;]</code> (topol.top) (输入, 可选)<br/>
+拓扑文件</li>
+<li><code>-mtx [&lt;.mtx&gt;]</code> (hessian.mtx) (输入, 可选)<br/>
+海森矩阵</li>
+<li><code>-om [&lt;.mdp&gt;]</code> (grompp.mdp) (输出, 可选)<br/>
+含有MD参数的grompp输入文件</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (0)<br/>
+设置优先级</li>
+<li><code>-[no]nr</code> (yes)<br/>
+在输出中显示索引编号(忽略这些更容易比较, 但创建的拓扑无用)</li>
+<li><code>-[no]sys</code> (no)<br/>
+列出整个体系的原子与键合相互作用, 而不是列出每个分子类型的.</li>
+</ul>
+
+<h3 id="已知问题：">已知问题：</h3>
+
+<ul class="incremental">
+<li>来自<code>-sys -s</code>的位置限制输出会中断.</li>
+</ul>
 
 <h2 id="gmxdyecoupl-extractdyedynamicsfromtrajectories">gmx dyecoupl - Extract dye dynamics from trajectories</h2>
 
@@ -2669,7 +2942,63 @@ ACF Legendre多项式的阶数(0表示不使用): 0, 1, 2, 3</li>
 
 <p>蛋白质的回旋半径反映了蛋白质分子的体积和形状. 同一体系的回旋半径越大, 说明体系越膨松.</p>
 
-<h2 id="gmxh2order-computetheorientationofwatermolecules">gmx h2order - Compute the orientation of water molecules</h2>
+<h2 id="gmxh2order:计算水分子的取向翻译:嘉晔严立京">gmx h2order: 计算水分子的取向(翻译: 嘉晔, 严立京)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx h2order [-f [&lt;.xtc/.trr/...&gt;]] [-n [&lt;.ndx&gt;]] [-nm [&lt;.ndx&gt;]]
+            [-s [&lt;.tpr/.tpb/...&gt;]] [-o [&lt;.xvg&gt;]] [-nice ] [-b ]
+            [-e ] [-dt ] [-[no]w] [-xvg ] [-d ]
+            [-sl ]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx h2order</code>用于计算水分子相对于盒子法向的取向, 确定水分子偶极矩与盒子轴线间夹角的余弦平均值. 计算时盒子被划分为许多切片, 程序会输出每一切片的平均取向. 根据氧原子的位置, 每一时间帧中的每个水分子都被归属到某一切片中. 如果使用了<code>-nm</code>选项, 程序将计算水分子偶极与从质心到氧原子的轴线之间的夹角, 而不是偶极与盒子轴线间的夹角.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入)<br/>
+轨迹: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入)<br/>
+索引文件</li>
+<li><code>-nm [&lt;.ndx&gt;]</code> (index.ndx) (输入, 可选)<br/>
+索引文件</li>
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入)<br/>
+运行输出文件: tpr tpb tpa</li>
+<li><code>-o [&lt;.xvg&gt;]</code> (order.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (19)<br/>
+设置优先级</li>
+<li><code>-b &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的第一帧(ps)</li>
+<li><code>-e &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的最后一帧(ps)</li>
+<li><code>-dt &lt;time&gt;</code> (0)<br/>
+只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
+<li><code>-[no]w</code> (no)<br/>
+查看输出的<code>.xvg</code>, <code>.xpm</code>, <code>.eps</code>以及<code>.pdb</code>文件</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-d &lt;string&gt;</code> (Z)<br/>
+膜的法线方向: X, Y或Z</li>
+<li><code>-sl &lt;int&gt;</code> (0)<br/>
+计算序参数与盒子长度的函数关系, 将盒子划分为指定数目的切片</li>
+</ul>
+
+<h3 id="已知问题">已知问题</h3>
+
+<ul class="incremental">
+<li>程序将整个水分子归属到某一切片时, 是根据索引文件组中的三个原子中的第一个原子. 假定顺序为O, H, H. 名称并不重要, 但顺序很关键. 如果不满足这个要求, 将水分子归属到切片时差异很大.</li>
+</ul>
 
 <h2 id="gmxhbond:计算分析氢键翻译:杨旭云">gmx hbond: 计算分析氢键(翻译: 杨旭云)</h2>
 
@@ -3552,7 +3881,41 @@ xvg绘图格式: xmgrace, xmgr, none</li>
 输出残基名称</li>
 </ul>
 
-<h2 id="gmxmk_angndx-generateindexfilesforgmxangle">gmx mk_angndx - Generate index files for &#8216;gmx angle&#8217;</h2>
+<h2 id="gmxmk_angndx:生成用于gmxangle的索引文件翻译:白艳艳">gmx mk_angndx: 生成用于gmx angle的索引文件(翻译: 白艳艳)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx mk_angndx [-s [&lt;.tpr/.tpb/...&gt;]] [-n [&lt;.ndx&gt;]] [-nice ]
+              [-type ] [-[no]hyd] [-hq ]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx mk_angndx</code>命令用于创建索引文件, 以计算角度分布等. 它需要使用一个运行输入文件(<code>.tpx</code>)来获得键角, 二面角等的信息.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入)<br/>
+运行输入文件: tpr tpb tpa</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (angle.ndx) (输出)<br/>
+索引文件</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (0)<br/>
+设置优先级</li>
+<li><code>-type &lt;enum&gt;</code> (angle)<br/>
+角度类型: angle, dihedral, improper, ryckaert-bellemans</li>
+<li><code>-[no]hyd</code> (yes)<br/>
+包括质量 &lt; 1.5的原子</li>
+<li><code>-hq &lt;real&gt;</code> (&#8211;1)<br/>
+忽略质量 &lt; 1.5, 电荷大小小于此值的原子所涉及的角度</li>
+</ul>
 
 <h2 id="gmxmorph:构象间的线性内插翻译:杨宇">gmx morph: 构象间的线性内插(翻译: 杨宇)</h2>
 
@@ -4342,7 +4705,74 @@ xvg绘图格式: xmgrace, xmgr, none</li>
 计算RMSF之前进行最小二乘叠合. 如果不使用这个选项, 你必须确保参考结构与轨迹匹配.</li>
 </ul>
 
-<h2 id="gmxrotacf-calculatetherotationalcorrelationfunctionformolecules">gmx rotacf - Calculate the rotational correlation function for molecules</h2>
+<h2 id="gmxrotacf:计算分子的转动相关函数翻译:韩广超">gmx rotacf: 计算分子的转动相关函数(翻译: 韩广超)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx rotacf [-f [&lt;.xtc/.trr/...&gt;]] [-s [&lt;.tpr/.tpb/...&gt;]] [-n [&lt;.ndx&gt;]]
+           [-o [&lt;.xvg&gt;]] [-nice ] [-b ] [-e ] [-dt ]
+           [-[no]w] [-xvg ] [-[no]d] [-[no]aver] [-acflen ]
+           [-[no]normalize] [-P ] [-fitfn ] [-beginfit ]
+           [-endfit ]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx rotacf</code>用于计算分子的旋转相关函数. 必须在索引文件中给出原子三联对(i,j,k), 它们定义了ij和jk两个向量. 旋转ACF根据向量n = ij x jk, 即两个向量叉积的自相关函数计算得到. 由于三个原子可张成一个平面, 因此三个原子的顺序并不重要. 作为可选, 通过使用<code>-d</code>选项, 并在索引文件中指定原子对(i,j), 你可以计算线性分子的旋转相关函数.</p>
+
+<p>示例:</p>
+
+<p><code>gmx rotacf -P 1 -nparm 2 -fft -n index -o rotacf-x-P1 -fa expfit-x-P1 -beginfit 2.5 -endfit 20.0</code></p>
+
+<p>上面的命令将利用索引文件中定义的向量间的夹角的一阶勒让德多项式计算旋转相关函数, 并根据2.5 ps到20.0 ps的数据, 将相关函数拟合为双参数指数形式.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入)<br/>
+轨迹: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入)<br/>
+运行输入文件: tpr tpb tpa</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入)<br/>
+索引文件</li>
+<li><code>-o [&lt;.xvg&gt;]</code> (rotacf.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+</ul>
+
+<p>其它选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (0)<br/>
+设置优先级</li>
+<li><code>-b &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的第一帧(ps)</li>
+<li><code>-e &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的最后一帧(ps)</li>
+<li><code>-dt &lt;time&gt;</code> (0)<br/>
+只使用t MOD dt=第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
+<li><code>-[no]w</code> (no)<br/>
+查看输出的<code>.xvg</code>, <code>.xpm</code>, <code>.eps</code>和<code>.pdb</code>文件</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-[no]d</code> (no)<br/>
+计算相关函数时使用索引双联对(向量)而不是三联对(平面)</li>
+<li><code>-[no]aver</code> (yes)<br/>
+对所有分子进行平均</li>
+<li><code>-acflen &lt;int&gt;</code> (&#8211;1)<br/>
+ACF的长度, 默认为帧数的一半.</li>
+<li><code>-[no]normalize</code> (yes)<br/>
+对ACF进行归一化</li>
+<li><code>-P &lt;enum&gt;</code> (0)<br/>
+用于ACF的Legendre多项式的阶数(0代表不使用): 0, 1, 2, 3</li>
+<li><code>-fitfn &lt;enum&gt;</code> (none)<br/>
+拟合函数: none, exp, aexp, exp_exp, vac, exp5, exp7, exp9, erffit</li>
+<li><code>-beginfit &lt;real&gt;</code> (0)<br/>
+相关函数指数拟合的起始时间</li>
+<li><code>-endfit &lt;real&gt;</code> (&#8211;1)<br/>
+相关函数指数拟合的终止时间, &#8211;1代表直到最后</li>
+</ul>
 
 <h2 id="gmxrotmat-plottherotationmatrixforfittingtoareferencestructure">gmx rotmat - Plot the rotation matrix for fitting to a reference structure</h2>
 
