@@ -1,4 +1,4 @@
-<div class="ds-share" data-thread-key="{{page.id}}" data-title="{{page.title}}" data-images="此处请替换为分享时显示的图片的链接地址" data-content="此处请替换为分享时显示的内容" data-url="{{ site.url }}{{ page.url | remove:'index.html' }}">
+<div class="ds-share" data-thread-key="{{ page.id }}" data-title="{{ page.title }}" data-images="此处请替换为分享时显示的图片的链接地址" data-content="此处请替换为分享时显示的内容" data-url="{{ site.url }}{{ page.url | remove:'index.html' }}">
     <div class="ds-share-inline">
       <ul  class="ds-share-icons-16">
       	<li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
@@ -14,7 +14,7 @@
 
 <section class="comment">
 
-<div class="ds-thread" data-thread-key="{{page.id}}" data-title="{{page.title}}" data-url="{{ site.url }}{{ page.url | remove:'index.html' }}"></div>
+<div class="ds-thread" data-thread-key="{{ page.id }}" data-title="{{ page.title }}" data-url="{{ site.url }}{{ page.url | remove:'index.html' }}"></div>
 
 <script>
 var duoshuoQuery = {short_name:"jerkwin"};
