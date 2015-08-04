@@ -50,11 +50,12 @@ window.onscroll = function() {
 		if(tocLink[i].name.match("TOC"))  tocName.push(tocLink[i])
 		if(tocLink[i].href.match("#TOC")) tocHref.push(tocLink[i])
 	}
-	for(i=0; i<tocHref.length; i++) tocHref[i].style.background=""
-	i=0; while(docTop>tocName[i].offsetTop) i++
-	tocHref[i-1].style.background="#aaaaaa"
-	$('TOC').scrollTop=tocHref[i].offsetTop-$('TOC').clientHeight/3
-
+	if(tocHref.length) {
+		for(i=0; i<tocHref.length; i++) tocHref[i].style.background=""
+		i=0; while(docTop>tocName[i].offsetTop) i++
+		tocHref[i-1].style.background="#aaaaaa"
+		$('TOC').scrollTop=tocHref[i].offsetTop-$('TOC').clientHeight/3
+	}
 }
 function show(str) {
 	if(str=='☰') {
