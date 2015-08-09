@@ -989,7 +989,66 @@ xvg绘图格式: xmgrace, xmgr, none</li>
 根据原子的MSD值输出B因子</li>
 </ul>
 
-<h2 id="gmxconvert-tpr-makeamodifedrun-inputfile">gmx convert-tpr - Make a modifed run-input file</h2>
+<h2 id="gmxconvert-tpr:生成修改的运行输出文件翻译:王卓亚">gmx convert-tpr: 生成修改的运行输出文件(翻译: 王卓亚)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx convert-tpr [-s [&lt;.tpr/.tpb/...&gt;]] [-f [&lt;.trr/.cpt/...&gt;]] [-e [&lt;.edr&gt;]]
+                [-n [&lt;.ndx&gt;]] [-o [&lt;.tpr/.tpb/...&gt;]] [-nice ]
+                [-extend ] [-until ] [-nsteps ] [-time ]
+                [-[no]zeroq] [-[no]vel] [-[no]cont] [-init_fep_state ]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx convert-tpr</code>可以四种方式来编辑运行输入文件:</p>
+
+<ol class="incremental">
+<li>修改运行输入文件中的模拟步数, 可使用选项<code>-extend</code>, <code>-until</code>或<code>-nsteps</code>(<code>nsteps=-1</code>表示步数不受限制).</li>
+<li>(已废弃) 因磁盘已满等原因而导致模拟崩溃时, 产生一个运行输入文件以继续模拟, 或创建一个继续的运行输入文件. 此选项已废弃, 因为<code>mdrun</code>现在可以读写检查点文件. <strong>注意</strong>, 运行需要带有坐标和速率的帧. 当使用压力和/或Nose-Hoover温度耦合时, 还需要提供能量文件以得到原始运行的精确继续.</li>
+<li>对原始tpx文件一部分创建一个<code>.tpx</code>文件. 当你想从<code>.tpx</code>文件中移除溶剂, 或想产生一个例如只包含C<sub>α</sub>的<code>.tpx</code>文件时, 此功能很有用. 需要注意的是, 你可能需要使用<code>-nsteps -1</code>(或类似的选项). <strong>警告: 此<code>.tpx</code>文件功能不全.</strong></li>
+<li>将指定组的电荷设置为零. 当使用LIE(Linear Interaction Energy, 线性相互作用能)方法估算自由能时, 此功能很有用.</li>
+</ol>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入)<br/>
+运行输入文件: tpr tpb tpa</li>
+<li><code>-f [&lt;.trr/.cpt/...&gt;]</code> (traj.trr) (输入, 可选)<br/>
+全精度轨迹: trr cpt trj tng</li>
+<li><code>-e [&lt;.edr&gt;]</code> (ener.edr) (输入,可选)<br/>
+能量文件</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入,可选)<br/>
+索引文件</li>
+<li><code>-o [&lt;.tpr/.tpb/...&gt;]</code> (tpxout.tpr) (输出)<br/>
+运行输入文件: tpr tpb tpa</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (0)<br/>
+设置优先级</li>
+<li><code>-extend &lt;real&gt;</code> (0)<br/>
+通过此值来延长运行时间 (单位: ps)</li>
+<li><code>-until &lt;real&gt;</code> (0)<br/>
+延长运行时间直到此时间结束 (单位: ps)</li>
+<li><code>-nsteps &lt;int&gt;</code> (0)<br/>
+修改模拟运行步数</li>
+<li><code>-time &lt;real&gt;</code> (&#8211;1)<br/>
+由此时间(单位: ps)帧继续运行, 而不是从最后一帧继续运行</li>
+<li><code>-[no]zeroq</code> (no)<br/>
+将一个组(来自索引)的电荷设置为零</li>
+<li><code>-[no]vel</code> (yes)<br/>
+需要来自轨迹的速度</li>
+<li><code>-[no]cont</code> (yes)<br/>
+为了精确的延续, 在第一步之前不应施加约束</li>
+<li><code>-init_fep_state &lt;int&gt;</code> (0)<br/>
+由此状态开始初始化fep状态</li>
+</ul>
 
 <h2 id="gmxcovar:计算并对角化协方差矩阵翻译:王浩博">gmx covar: 计算并对角化协方差矩阵(翻译: 王浩博)</h2>
 
@@ -4041,7 +4100,89 @@ xvg绘图格式: xmgrace, xmgr, none</li>
 内插前将第二个结构与第一个结构进行最小二乘叠合</li>
 </ul>
 
-<h2 id="gmxmsd-calculatesmeansquaredisplacements">gmx msd - Calculates mean square displacements</h2>
+<h2 id="gmxmsd:计算均方位移翻译:赵丙春">gmx msd: 计算均方位移(翻译: 赵丙春)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx msd [-f [&lt;.xtc/.trr/...&gt;]] [-s [&lt;.tpr/.tpb/...&gt;]] [-n [&lt;.ndx&gt;]]
+        [-o [&lt;.xvg&gt;]] [-mol [&lt;.xvg&gt;]] [-pdb [&lt;.pdb&gt;]] [-nice ]
+        [-b ] [-e ] [-tu ] [-[no]w] [-xvg ]
+        [-type ] [-lateral ] [-[no]ten] [-ngroup ] [-[no]mw]
+        [-[no]rmcomm] [-tpdb ] [-trestart ] [-beginfit ]
+        [-endfit ]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx msd</code>根据一系列初始位置来计算原子的均方位移(MSD, mean square displacement). 这提供了一个利用爱因斯坦关系式计算扩散常数的简易方法. 计算MSD时, 参考点之间的时间可利用<code>-trestart</code>选项设置. 将从<code>-beginfit</code>到<code>-endfit</code>之间的MSD(t)使用最小二乘法拟合为直线(D*t+c), 就可以得到扩散常数(注意, t为到参考点的时间, 而不是模拟时间). 程序会给出扩散常数误差的估计值, 计算时将拟合区间分为两部分, 分别拟合得到扩散系数, 这两个扩散系数的插值就是误差的估计值.</p>
+
+<p>有三个相互排斥的选项来确定不同类型的均方位移: <code>-type</code>, <code>-lateral</code>和<code>-ten</code>. 选项<code>-ten</code>对每组输出完整的MSD张量, 输出的顺序是: trace xx yy zz yx zx zy.</p>
+
+<p>如果设置了<code>-mol</code>选项, <code>gmx msd</code>计算单个分子的MSD(会保持跨过周期性边界的分子完整): 对每一单个分子, 会计算其质心的扩散常数. 所选的索引组会被划分为分子.</p>
+
+<p>默认计算MSD的方法是使用质量加权平均, 可使用<code>-nomw</code>取消.</p>
+
+<p>使用<code>-rmcomm</code>选项, 可以移除指定组的质心运行. 对于GROMACS输出的轨迹, 通常不需要此选项, 因为<code>gmx mdrun</code>通常已经移除了质心运动. 当你使用此选项时, 请确保轨迹文件中保存了整个体系.</p>
+
+<p>扩散系数由MSD的线性回归确定, 不同于D正常的输出, 时间是根据参考点的数目进行加权的, 即, 短的时间权重较高. 此外, 当<code>-beginfit=-1</code>时, 拟合从10%处开始, 当<code>-endfit=-1</code>时, 拟合结束于90%处. 使用此选项也可以得到精确的误差估计, 它基于单个分子之间的统计. 注意, 只有当MSD在<code>-beginfit</code>到<code>-endfit</code>之间完全呈线性时, 所得的扩散常数和误差估计才准确.</p>
+
+<p>使用<code>-pdb</code>选项可输出一个<code>.pdb</code>文件, 其中包含<code>-tpdb</code>时刻体系的坐标, B因子的值为分子扩散系数的平方根. 此选项暗含<code>-mol</code>选项.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入)<br/>
+轨迹: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入)<br/>
+结构+质量(db): tpr tpb tpa gro g96 pdb brk ent</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入, 可选)<br/>
+索引文件</li>
+<li><code>-o [&lt;.xvg&gt;]</code> (msd.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-mol [&lt;.xvg&gt;]</code> (diff_mol.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-pdb [&lt;.pdb&gt;]</code> (diff_mol.pdb) (输出, 可选)<br/>
+PDB文件</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (19)<br/>
+设置优先级</li>
+<li><code>-b &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的第一帧(ps)</li>
+<li><code>-e &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的最后一帧(ps)</li>
+<li><code>-tu &lt;enum&gt;</code> (ps)<br/>
+时间单位: fs, ps, ns, us, ms, s</li>
+<li><code>-[no]w</code> (no)<br/>
+查看输出.xvg, .xpm, .eps和.pdb文件</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-type &lt;enum&gt;</code> (no)<br/>
+计算某一方向的扩散系数: no, x, y, z</li>
+<li><code>-lateral &lt;enum&gt;</code> (no)<br/>
+计算横向扩散时, 平面的法向: no, x, y, z</li>
+<li><code>-[no]ten</code> (no)<br/>
+计算完整的张量</li>
+<li><code>-ngroup &lt;int&gt;</code> (1)<br/>
+计算MSD的组数</li>
+<li><code>-[no]mw</code> (yes)<br/>
+计算质量加权的MSD</li>
+<li><code>-[no]rmcomm</code> (no)<br/>
+移除质心运动</li>
+<li><code>-tpdb &lt;time&gt;</code> (0)<br/>
+用于<code>-pdb</code>选项的帧(单位: ps)</li>
+<li><code>-trestart &lt;time&gt;</code> (10)<br/>
+轨迹中重起始点之间的间隔(单位: ps)</li>
+<li><code>-beginfit &lt;time&gt;</code> (&#8211;1)<br/>
+拟合MSD的起始时间(单位: ps), &#8211;1为10%</li>
+<li><code>-endfit &lt;time&gt;</code> (&#8211;1)<br/>
+拟合MSD的终止时间(单位: ps), &#8211;1为90%</li>
+</ul>
 
 <h2 id="gmxnmeig-diagonalizethehessianfornormalmodeanalysis">gmx nmeig - Diagonalize the Hessian for normal mode analysis</h2>
 
@@ -4573,7 +4714,48 @@ xvg绘图格式: xmgrace, xmgr, none</li>
 <li>目前, <code>-s</code>选项仅接受<code>.pdb</code>文件.</li>
 </ul>
 
-<h2 id="gmxrama-computeramachandranplots">gmx rama - Compute Ramachandran plots</h2>
+<h2 id="gmxrama:计算ramachandran拉式构象图翻译:杜星">gmx rama:计算Ramachandran拉式构象图(翻译: 杜星)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx rama [-f [&lt;.xtc/.trr/...&gt;]] [-s [&lt;.tpr/.tpb/...&gt;]] [-o [&lt;.xvg&gt;]]
+         [-nice ] [-b ] [-e ] [-dt ] [-[no]w]
+         [-xvg ]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx rama</code>可以从你的拓扑文件中选择出φ/ψ(α-碳与酰胺平面交角)二面角的组合, 并且计算它们随时间变化的函数. 使用简单的Unix工具如grep你就可以选出特定残基的数据.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入)<br/>
+轨迹文件: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入)<br/>
+运行输入文件: tpr tpb tpa</li>
+<li><code>-o [&lt;.xvg&gt;]</code> (rama.xvg) (Output)<br/>
+xvgr/xmgr文件</li>
+</ul>
+
+<p>其它选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (19)<br/>
+设置优先级</li>
+<li><code>-b &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的第一帧(ps)</li>
+<li><code>-e &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的最后一帧(ps)</li>
+<li><code>-dt &lt;time&gt;</code> (0)<br/>
+只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
+<li><code>-[no]</code>w (no)<br/>
+程序运行结束查看输出文件: <code>.xvg</code>, <code>.xpm</code>, <code>.eps</code>和<code>.pdb</code></li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+</ul>
 
 <h2 id="gmxrdf:计算径向分布函数翻译:严立京">gmx rdf: 计算径向分布函数(翻译: 严立京)</h2>
 
@@ -4766,7 +4948,82 @@ PBC检查</li>
 计算RMS的组数</li>
 </ul>
 
-<h2 id="gmxrmsdist-calculateatompairdistancesaveragedwithpower-2-3or-6">gmx rmsdist - Calculate atom pair distances averaged with power &#8211;2, &#8211;3 or &#8211;6</h2>
+<h2 id="gmxrmsdist:计算-2-3或-6次平均的原子对距离翻译:冯佳伟">gmx rmsdist: 计算&#8211;2, &#8211;3或&#8211;6次平均的原子对距离(翻译: 冯佳伟)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx rmsdist [-f [&lt;.xtc/.trr/...&gt;]] [-s [&lt;.tpr/.tpb/...&gt;]] [-n [&lt;.ndx&gt;]]
+            [-equiv [&lt;.dat&gt;]] [-o [&lt;.xvg&gt;]] [-rms [&lt;.xpm&gt;]] [-scl [&lt;.xpm&gt;]]
+            [-mean [&lt;.xpm&gt;]] [-nmr3 [&lt;.xpm&gt;]] [-nmr6 [&lt;.xpm&gt;]]
+            [-noe [&lt;.dat&gt;]] [-nice ] [-b ] [-e ]
+            [-dt ] [-[no]w] [-xvg ] [-nlevels ]
+            [-max ] [-[no]sumh] [-[no]pbc]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx rmsdist</code>用于计算原子距离的根均方偏差(RMSD, root mean square deviation). 该程序的优势在于计算时不需要叠合, 而<code>gmx rms</code>计算标准RMSD时则需要叠合. 参考结构取自结构文件, t时刻的RMSD定义为参考结构与t时刻结构原子对之间距离差值的RMS.</p>
+
+<p><code>gmx rmsdist</code>也可用于生成RMS距离的矩阵, 使用平均距离标度的RMS距离矩阵, 平均距离矩阵, NMR平均距离矩阵(1/r<sup>3和1/r</sup>6平均). 最终, 程序可以生成一个原子对的列表, 其中包含所有1/r<sup>3和1/r</sup>6平均距离小于最大距离(<code>-max</code>指定, 默认为0.6)的原子对. 默认情况下, 平均是对等价氢原子(以*[123]命名的所有氢原子三联对)进行的. 此外, 还可以提供其他等价原子的列表(<code>-equiv</code>), 列表中每行包含一组等价原子, 使用残基序号, 残基名称, 原子名字指定, 如:</p>
+
+<pre><code>HB* 3 SER HB1 3 SER HB2
+</code></pre>
+
+<p>残基名称和原子名称必须与结构文件中的精确匹配, 包括大小写. 程序没有规定如何指定非连续的原子.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入)<br/>
+轨迹文件: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入)<br/>
+结构+质量文件(db): tpr tpb tpa gro g96 pdb brk ent</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入, 可选)<br/>
+索引文件</li>
+<li><code>-equiv [&lt;.dat&gt;]</code> (equiv.dat) (输入, 可选)<br/>
+通用数据文件</li>
+<li><code>-o [&lt;.xvg&gt;]</code> (distrmsd.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-rms [&lt;.xpm&gt;]</code> (rmsdist.xpm) (输出, 可选)<br/>
+X PixMap兼容矩阵文件</li>
+<li><code>-scl [&lt;.xpm&gt;]</code> (rmsscale.xpm) (输出, 可选)<br/>
+X PixMap兼容矩阵文件</li>
+<li><code>-mean [&lt;.xpm&gt;]</code> (rmsmean.xpm) (输出, 可选)<br/>
+X PixMap兼容矩阵文件</li>
+<li><code>-nmr3 [&lt;.xpm&gt;]</code> (nmr3.xpm) (输出, 可选)<br/>
+X PixMap兼容矩阵文件</li>
+<li><code>-nmr6 [&lt;.xpm&gt;]</code> (nmr6.xpm) (输出, 可选)<br/>
+X PixMap兼容矩阵文件</li>
+<li><code>-noe [&lt;.dat&gt;]</code> (noe.dat) (输出, 可选)<br/>
+通用数据文件</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (19)<br/>
+设置优先级</li>
+<li><code>-b &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的第一帧(ps)</li>
+<li><code>-e &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的最后一帧(ps)</li>
+<li><code>-dt &lt;time&gt;</code> (0)<br/>
+只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
+<li><code>-[no]</code>w (no)<br/>
+程序运行结束查看输出的<code>.xvg</code>, <code>.xpm</code>, <code>.eps</code>和<code>.pdb</code>文件</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-nlevels &lt;int&gt;</code> (40)<br/>
+离散化RMS的水平数</li>
+<li><code>-max &lt;real&gt;</code> (&#8211;1)<br/>
+矩阵中的最大水平数</li>
+<li><code>-[no]sumh</code> (yes)<br/>
+对等价氢原子进行平均</li>
+<li><code>-[no]pbc</code> (yes)<br/>
+计算距离时使用周期性边界条件</li>
+</ul>
 
 <h2 id="gmxrmsf:计算原子涨落翻译:杨旭云">gmx rmsf: 计算原子涨落(翻译: 杨旭云)</h2>
 
@@ -5509,7 +5766,116 @@ xvg绘图格式: xmgrace, xmgr, none</li>
 
 <h2 id="gmxtcaf-calculateviscositiesofliquids">gmx tcaf - Calculate viscosities of liquids</h2>
 
-<h2 id="gmxtraj-plotxvfboxtemperatureandrotationalenergyfromtrajectories">gmx traj - Plot x, v, f, box, temperature and rotational energy from trajectories</h2>
+<h2 id="gmxtraj:输出轨迹文件中的坐标x速度v力f盒子温度和转动能翻译:康文斌">gmx traj: 输出轨迹文件中的坐标x, 速度v, 力f, 盒子, 温度和转动能(翻译: 康文斌)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx traj [-f [&lt;.xtc/.trr/...&gt;]] [-s [&lt;.tpr/.tpb/...&gt;]] [-n [&lt;.ndx&gt;]]
+         [-ox [&lt;.xvg&gt;]] [-oxt [&lt;.xtc/.trr/...&gt;]] [-ov [&lt;.xvg&gt;]]
+         [-of [&lt;.xvg&gt;]] [-ob [&lt;.xvg&gt;]] [-ot [&lt;.xvg&gt;]] [-ekt [&lt;.xvg&gt;]]
+         [-ekr [&lt;.xvg&gt;]] [-vd [&lt;.xvg&gt;]] [-cv [&lt;.pdb&gt;]] [-cf [&lt;.pdb&gt;]]
+         [-av [&lt;.xvg&gt;]] [-af [&lt;.xvg&gt;]] [-nice ] [-b ] [-e ]
+         [-dt ] [-tu ] [-[no]w] [-xvg ] [-[no]com]
+         [-[no]pbc] [-[no]mol] [-[no]nojump] [-[no]x] [-[no]y] [-[no]z]
+         [-ng ] [-[no]len] [-[no]fp] [-bin ] [-ctime ]
+         [-scale ]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx traj</code>用于输出坐标, 速度, 力和/或盒子. 使用<code>-com</code>选项可计算每个组质心的坐标, 速度和力. 当指定<code>-mol</code>选项时, 索引文件中的数目被视为分子个数, 并对每一分子使用与<code>-com</code>选项相同的过程.</p>
+
+<p>选项<code>-ot</code>输出每个组的温度, 如果轨迹文件中含有速度信息. 计算时没有对约束自由度进行修正! 此选项暗含<code>-com</code>选项.</p>
+
+<p>选项-ekt和选项-ekr用来画每一个组的平东和转动动能, 同时在轨迹文件中提供当前的速度信息.</p>
+
+<p>选项<code>-cv</code>和<code>-cf</code>可将平均速度和平均力作为温度因子输出到一个<code>.pdb</code>文件中, 其中的坐标为平均坐标或<code>-ctime</code>时刻的坐标. 程序会对温度因子进行标度, 使其最大值为10. 标度因子可以通过选项<code>-scale</code>来改变. 为得到某一帧的速度或力, 可以将选项<code>-b</code>和<code>-e</code>都指定为那一帧的时间值. 当对帧进行平均时, 你可能需要使用<code>-nojump</code>选项以得到正确的平均坐标. 如果你选择了这些选项中一个, 还会将每个原子的平均力和平均速度写入一个<code>.xvg</code>文件(由<code>-av</code>和<code>-af</code>选项指定).</p>
+
+<p>选项<code>-vd</code>可用于计算速度分布, 即, 输出向量的模. 另外, 同时会给出动能的分布.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入)<br/>
+轨迹: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入)<br/>
+结构+质量(db): tpr tpb tpa gro g96 pdb brk ent</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入, 可选)<br/>
+索引文件</li>
+<li><code>-ox [&lt;.xvg&gt;]</code> (coord.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-oxt [&lt;.xtc/.trr/...&gt;]</code> (coord.xtc) (输出, 可选)<br/>
+轨迹: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-ov [&lt;.xvg&gt;]</code> (veloc.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-of [&lt;.xvg&gt;]</code> (force.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-ob [&lt;.xvg&gt;]</code> (box.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-ot [&lt;.xvg&gt;]</code> (temp.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-ekt [&lt;.xvg&gt;]</code> (ektrans.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-ekr [&lt;.xvg&gt;]</code> (ekrot.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-vd [&lt;.xvg&gt;]</code> (veldist.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-cv [&lt;.pdb&gt;]</code> (veloc.pdb) (输出, 可选)<br/>
+Protein data bank文件</li>
+<li><code>-cf [&lt;.pdb&gt;]</code> (force.pdb) (输出, 可选)<br/>
+PDB文件</li>
+<li><code>-av [&lt;.xvg&gt;]</code> (all_veloc.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-af [&lt;.xvg&gt;]</code> (all_force.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice</code> <int> (19)<br/>
+设置优先级</li>
+<li><code>-b</code> <time> (0)<br/>
+从轨迹文件中读取的第一帧(ps)</li>
+<li><code>-e</code> <time> (0)<br/>
+从轨迹文件中读取的最后一帧(ps)</li>
+<li><code>-dt</code> <time> (0)<br/>
+只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
+<li><code>-tu &lt;enum&gt;</code> (ps)<br/>
+时间单位: fs, ps, ns, us, ms, s</li>
+<li><code>-[no]w</code> (no)<br/>
+查看输出.xvg, .xpm, .eps and .pdb文件</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-[no]com</code> (no)<br/>
+输出每组质心的数据</li>
+<li><code>-[no]pbc</code> (yes)<br/>
+对质心, 使分子保持完整</li>
+<li><code>-[no]mol</code> (no)<br/>
+索引包含了分子数, iso原子数</li>
+<li><code>-[no]nojump</code> (no)<br/>
+移除原子对盒子边界的跨越</li>
+<li><code>-[no]x</code> (yes)<br/>
+输出x分量</li>
+<li><code>-[no]y</code> (yes)<br/>
+输出y分量</li>
+<li><code>-[no]z</code> (yes)<br/>
+输出z分量</li>
+<li><code>-ng &lt;int&gt;</code> (1)<br/>
+考虑的组的数目</li>
+<li><code>-[no]len</code> (no)<br/>
+输出向量的长度</li>
+<li><code>-[no]fp</code> (no)<br/>
+全精度输出</li>
+<li><code>-bin &lt;real&gt;</code> (1)<br/>
+速度直方图的分格宽度(单位: nm/ps)</li>
+<li><code>-ctime &lt;real&gt;</code> (&#8211;1)<br/>
+对<code>-cv</code>和<code>-cf</code>使用此时刻帧的x, 而不是平均的x</li>
+<li><code>-scale &lt;real&gt;</code> (0)<br/>
+<code>.pdb</code>输出的标度因子, 0表示自动选择标度</li>
+</ul>
 
 <h2 id="gmxtrjcat-concatenatetrajectoryfiles">gmx trjcat - Concatenate trajectory files</h2>
 
@@ -5919,7 +6285,74 @@ xvg绘图格式: xmgrace, xmgr, none</li>
 
 <h2 id="gmxvanhove-computevanhovedisplacementandcorrelationfunctions">gmx vanhove - Compute Van Hove displacement and correlation functions</h2>
 
-<h2 id="gmxvelacc-calculatevelocityautocorrelationfunctions">gmx velacc - Calculate velocity autocorrelation functions</h2>
+<h2 id="gmxvelacc:计算速度自相关函数翻译:刘建川">gmx velacc: 计算速度自相关函数(翻译: 刘建川)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx velacc [-f [&lt;.trr/.cpt/...&gt;]] [-s [&lt;.tpr/.tpb/...&gt;]] [-n [&lt;.ndx&gt;]]
+           [-o [&lt;.xvg&gt;]] [-os [&lt;.xvg&gt;]] [-nice ] [-b ] [-e ]
+           [-dt ] [-[no]w] [-xvg ] [-[no]m] [-[no]recip]
+           [-[no]mol] [-acflen ] [-[no]normalize] [-P ]
+           [-fitfn ] [-beginfit ] [-endfit ]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx velacc</code>用于计算速度自相关函数. 当使用<code>-m</code>选项时, 可以计算动量自相关函数.</p>
+
+<p>使用<code>-mol</code>选项, 可计算分子的速度自相关函数. 在这种情况下, 索引组应由分子编号组成, 而不是原子编号.</p>
+
+<p>请确保你的轨迹包含具有速度信息的帧(即, 原始的<code>.mdp</code>文件中应设置了<code>nstvout</code>), 数据采集点之间的时间间隔远远短于自相关的时间尺度.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.trr/.cpt/...&gt;]</code> (traj.trr) (Input)<br/>
+全精确轨迹: trr cpt trj tng</li>
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (Input, Optional)<br/>
+结构+质量(db): tpr tpb tpa gro g96 pdb brk ent</li>
+<li><code>-o [&lt;.xvg&gt;]</code> (vac.xvg) (Output)<br/>
+xvgr/xmgr文件</li>
+<li><code>-os [&lt;.xvg&gt;]</code> (spectrum.xvg) (Output, Optional)<br/>
+xvgr/xmgr文件</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice</code> <int> (19)<br/>
+设置优先级</li>
+<li><code>-b</code> <time> (0)<br/>
+从轨迹文件中读取的第一帧(ps)</li>
+<li><code>-e</code> <time> (0)<br/>
+从轨迹文件中读取的最后一帧(ps)</li>
+<li><code>-dt</code> <time> (0)<br/>
+只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
+<li><code>-[no]w</code> (no)<br/>
+查看输出.xvg, .xpm, .eps and .pdb文件</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-[no]m</code> (no)<br/>
+计算动量自相关函数</li>
+<li><code>-[no]recip</code> (yes)<br/>
+在谱图中, x轴使用cm^&#8211;1为单位, 而不是1/ps</li>
+<li><code>-[no]mol</code> (no)<br/>
+计算分子的速度自相关函数</li>
+<li><code>-acflen &lt;int&gt;</code> (&#8211;1)<br/>
+ACF的长度, 默认为帧数的一半</li>
+<li><code>-[no]normalize</code> (yes)<br/>
+归一化ACF</li>
+<li><code>-P &lt;enum&gt;</code> (0)<br/>
+ACF Legendre多项式的阶数(0表示不使用): 0, 1, 2, 3</li>
+<li><code>-fitfn &lt;enum&gt;</code> (none)<br/>
+拟合函数: none, exp, aexp, exp_exp, vac, exp5, exp7, exp9, erfit</li>
+<li><code>-beginfit &lt;real&gt;</code> (0)<br/>
+对相关函数进行指数拟合的起始时间</li>
+<li><code>-endfit &lt;real&gt;</code> (&#8211;1)<br/>
+对相关函数进行指数拟合的终止时间, &#8211;1表示直到最后</li>
+</ul>
 
 <h2 id="gmxview:在x-windows终端显示轨迹翻译:杨旭云">gmx view: 在X-Windows终端显示轨迹(翻译: 杨旭云)</h2>
 
