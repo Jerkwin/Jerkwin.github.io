@@ -4184,7 +4184,72 @@ xvg绘图格式: xmgrace, xmgr, none</li>
 拟合MSD的终止时间(单位: ps), &#8211;1为90%</li>
 </ul>
 
-<h2 id="gmxnmeig-diagonalizethehessianfornormalmodeanalysis">gmx nmeig - Diagonalize the Hessian for normal mode analysis</h2>
+<h2 id="gmxnmeig:对角化简正模式分析的hessian矩阵翻译:杨旭云">gmx nmeig: 对角化简正模式分析的Hessian矩阵(翻译: 杨旭云)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx nmeig [-f [&lt;.mtx&gt;]] [-s [&lt;.tpr/.tpb/...&gt;]] [-of [&lt;.xvg&gt;]] [-ol [&lt;.xvg&gt;]]
+          [-os [&lt;.xvg&gt;]] [-qc [&lt;.xvg&gt;]] [-v [&lt;.trr/.cpt/...&gt;]] [-nice ]
+          [-xvg ] [-[no]m] [-first ] [-last ]
+          [-maxspec ] [-T ] [-[no]constr] [-width ]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx nmeig</code>用于计算(Hessian)矩阵的特征向量/特征值, 矩阵可由<code>gmx mdrun</code>计算. 特征向量会被写入一个轨迹文件(<code>-v</code>), 其中的第一个结构对应t=0时的结构. 特征向量作为帧写入文件, 其序号作为时间戳. 特征向量可利用<code>gmx anaeig</code>进行分析. 使用<code>gmx nmens</code>可以根据特征向量生成结构的系综. 当使用质量加权时, 输出之前产生的特征向量会缩放为普通的直角坐标. 在这种情况下, 对标准的直角坐标形式, 它们将不再精确地正交, 但在质量加权时应该正交.</p>
+
+<p>通过<code>-qcorr</code>选项提供一个额外的参数文件, 此程序也可用于计算热容和焓的量子校正. 详细情况可以参考GROMACS手册的第一章. 结果包括在给定温度下减去简谐自由度. 总的校正值会显示在终端上. 得到校正结果的推荐方式如下:</p>
+
+<pre><code>gmx nmeig -s topol.tpr -f nm.mtx -first 7 -last 10000 -T 300 -qc [-constr]
+</code></pre>
+
+<p>如果在模拟中 <strong>对所有共价键</strong> 使用了键约束, 应该使用<code>-constr</code>选项. 否则, 需要自己分析<code>quant_corr.xvg</code>文件.</p>
+
+<p>为了更加灵活, 计算量子校正时, 程序也可以考虑虚拟位点. 当选择<code>-constr</code>和<code>-qc</code>选项时, 会自动设置<code>-begin</code>和<code>-end</code>选项. 再次, 如果你认为自己知道怎样做更好, 请检查输出文件<code>eigenfreq.xvg</code>.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.mtx&gt;]</code> (hessian.mtx) (输入)<br/>
+Hessian矩阵</li>
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入)<br/>
+运行输入文件: tpr tpb tpa</li>
+<li><code>-of [&lt;.xvg&gt;]</code> (eigenfreq.xvg) (输入)<br/>
+xvgr/xmgr文件</li>
+<li><code>-ol [&lt;.xvg&gt;]</code> (eigenval.xvg) (输入)<br/>
+xvgr/xmgr文件</li>
+<li><code>-os [&lt;.xvg&gt;]</code> (spectrum.xvg) (输入,可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-qc [&lt;.xvg&gt;]</code> (quant_corr.xvg) (输入,可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-v [&lt;.trr/.cpt/...&gt;]</code> (eigenvec.trr) (输入)<br/>
+全精度轨迹: trr cpt trj tng</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (19)<br/>
+设置优先级</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-[no]m</code> (yes)<br/>
+对角化之前, 将Hessian矩阵的元素除上所有涉及原子sqrt(mass)的乘积. &#8217;简正&#8217;分析应使用此方法.</li>
+<li><code>-first &lt;int&gt;</code> (1)<br/>
+写入的第一个特征向量</li>
+<li><code>-last &lt;int&gt;</code> (50)<br/>
+写入的最后一个特征向量</li>
+<li><code>-maxspec &lt;int&gt;</code> (4000)<br/>
+谱图中考虑的最高频率(1/cm)</li>
+<li><code>-T &lt;real&gt;</code> (298.15)<br/>
+当使用简正模式计算校正经典模拟结果时, 计算量子热容和焓的温度</li>
+<li><code>-[no]constr</code> (no)<br/>
+如果模拟中使用了约束而简正分析中不使用(这是推荐办法), 计算量子校正时你需要设置此选项</li>
+<li><code>-width &lt;real&gt;</code> (1)<br/>
+当生成谱图时, 高斯峰的宽度(σ)(1/cm)</li>
+</ul>
 
 <h2 id="gmxnmens:根据简正模式生成结构系综翻译:杨宇">gmx nmens: 根据简正模式生成结构系综(翻译: 杨宇)</h2>
 
@@ -4661,7 +4726,61 @@ xvg绘图格式: xmgrace, xmgr, none</li>
 <li>积分时忽略一些切片并非必要.</li>
 </ul>
 
-<h2 id="gmxprincipal-calculateprincipalaxesofinertiaforagroupofatoms">gmx principal - Calculate principal axes of inertia for a group of atoms</h2>
+<h2 id="gmxprincipal:计算一组原子的惯性主轴翻译:李继存">gmx principal: 计算一组原子的惯性主轴(翻译: 李继存)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx principal [-f [&lt;.xtc/.trr/...&gt;]] [-s [&lt;.tpr/.tpb/...&gt;]] [-n [&lt;.ndx&gt;]]
+             [-a1 [&lt;.xvg&gt;]] [-a2 [&lt;.xvg&gt;]] [-a3 [&lt;.xvg&gt;]] [-om [&lt;.xvg&gt;]]
+             [-nice ] [-b ] [-e ] [-dt ] [-tu ]
+             [-[no]w] [-xvg ] [-[no]foo]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx principal</code>用于计算一组原子的三个惯性主轴. 注意, 老版本的GROMACS以一种奇怪的转置方式输出数据. 对GROMACS&#8211;5.0, 输出文件<code>paxis1.dat</code>中包含了每一帧第一(主)轴的x/y/z分量, 同样, <code>paxis2.dat</code>中包含中间轴的x/y/z分量, <code>paxis3.dat</code>中包含最小轴的x/y/z分量.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入)<br/>
+轨迹: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入)<br/>
+结构+质量(db): tpr tpb tpa gro g96 pdb brk ent</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入, 可选)<br/>
+索引file</li>
+<li><code>-a1 [&lt;.xvg&gt;]</code> (paxis1.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-a2 [&lt;.xvg&gt;]</code> (paxis2.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-a3 [&lt;.xvg&gt;]</code> (paxis3.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-om [&lt;.xvg&gt;]</code> (moi.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (19)<br/>
+设置优先级</li>
+<li><code>-b &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的第一帧(ps)</li>
+<li><code>-e &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的最后一帧(ps)</li>
+<li><code>-dt &lt;time&gt;</code> (0)<br/>
+只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
+<li><code>-tu &lt;enum&gt;</code> (ps)<br/>
+时间单位: fs, ps, ns, us, ms, s</li>
+<li><code>-[no]w</code> (no)<br/>
+查看输出的<code>.xvg</code>, <code>.xpm</code>, <code>.eps</code>和<code>.pdb</code>文件</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-[no]foo</code> (no)<br/>
+用于避免空数组的哑选项</li>
+</ul>
 
 <h2 id="gmxprotonate:结构质子化翻译:杜星">gmx protonate: 结构质子化(翻译: 杜星)</h2>
 
@@ -5764,7 +5883,91 @@ xvg绘图格式: xmgrace, xmgr, none</li>
 分格宽度(nm)</li>
 </ul>
 
-<h2 id="gmxtcaf-calculateviscositiesofliquids">gmx tcaf - Calculate viscosities of liquids</h2>
+<h2 id="gmxtcaf:计算液体的粘度翻译:肖慧芳">gmx tcaf: 计算液体的粘度(翻译: 肖慧芳)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx tcaf [-f [&lt;.trr/.cpt/...&gt;]] [-s [&lt;.tpr/.tpb/...&gt;]] [-n [&lt;.ndx&gt;]]
+         [-ot [&lt;.xvg&gt;]] [-oa [&lt;.xvg&gt;]] [-o [&lt;.xvg&gt;]] [-of [&lt;.xvg&gt;]]
+         [-oc [&lt;.xvg&gt;]] [-ov [&lt;.xvg&gt;]] [-nice ] [-b ] [-e ]
+         [-dt ] [-[no]w] [-xvg ] [-[no]mol] [-[no]k34]
+         [-wt ] [-acflen ] [-[no]normalize] [-P ]
+         [-fitfn ] [-beginfit ] [-endfit ]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx tcaf</code>用于计算横向电流自相关(TCAF, tranverse current autocorrelation), 并可以其来估算剪切粘度η. 详细信息请参考: Palmer, <em>Phys. Rev. E</em> 49 (1994) pp 359&#8211;366.</p>
+
+<p>计算横向电流时会使用k矢量(1,0,0)和(2,0,0), 它们同时也处于y方向和z方向, 也会使用(1,1,0)和(1,&#8211;1,0), 它们同时也处于在2个其他平面(这些矢量不是独立的), 还会使用(1,1,1)以及三个其他的盒子体对角线(也是相关的). 对于每一个k矢量, 会使用正弦和余弦以及两个垂直方向上的速度. 这样共有16<em>2</em>2=64个横向电流. 对每个k矢量会计算并拟合一个自相关, 这就得到了16个TCAF. 每个TCAF会拟合为f(t) = exp(-v)(cosh(Wv) + 1/W sinh(Wv)), v = -t/(2τ), W = sqrt(1 - 4τη/ρk<sup>2</sup>), 这样得到16个τ值和η值. 拟合的权重以指数形式exp(-t/w)衰减, 时间常数为w(由<code>-wt</code>指定), 计算TACF与拟合的时间为5*w. η的值应拟合为1 - aη(k)k<sup>2</sup>, 这样就可以根据k=0时的值估计剪切粘度.</p>
+
+<p>当选用立方体盒子时, 可以使用选项<code>-oc</code>, 这样TCAF会对所有长度相同的k矢量进行平均. 这样得到的TCAF更精确. 立方TCAF与拟合都会写入由<code>-oc</code>指定的文件, 立方η估计值也会写入有<code>-ov</code>指定的文件.</p>
+
+<p>使用选项<code>-mol</code>时, 会根据分子而不是原子来确定横向电流. 在这种情况下, 索引组应包含分子编号而不是原子编号.</p>
+
+<p>为获得无限波长时的粘度, <code>-ov</code>文件中与k依赖的粘度应根据η(k) = η_0 (1 - a k<sup>2</sup>)进行拟合.</p>
+
+<p><strong>注意</strong>: 请确保坐标与速度的输出频率足够高. 自相关函数初始的非指数部分对于获得好的拟合结果非常重要.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.trr/.cpt/...&gt;]</code> (traj.trr) (输入文件)<br/>
+全精度轨迹文件: trr cpt trj tng</li>
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入文件, 可选)<br/>
+结构+质量(db): tpr tpb tpa gro g96 pdb brk ent</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入文件, 可选)<br/>
+索引文件</li>
+<li><code>-ot [&lt;.xvg&gt;]</code> (transcur.xvg) (输出文件, 可选)<br/>
+xvgr/xmgrfile</li>
+<li><code>-oa [&lt;.xvg&gt;]</code> (tcaf_all.xvg) (输出文件)<br/>
+xvgr/xmgr文件</li>
+<li><code>-o [&lt;.xvg&gt;]</code> (tcaf.xvg) (输出文件)<br/>
+xvgr/xmgr文件</li>
+<li><code>-of [&lt;.xvg&gt;]</code> (tcaf_fit.xvg) (输出文件)<br/>
+xvgr/xmgr文件</li>
+<li><code>-oc [&lt;.xvg&gt;]</code> (tcaf_cub.xvg) (输出文件, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-ov [&lt;.xvg&gt;]</code> (visc_k.xvg) (输出文件)<br/>
+xvgr/xmgr文件</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (19)<br/>
+设置优先级</li>
+<li><code>-b &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的第一帧(ps)</li>
+<li><code>-e &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的最后一帧(ps)</li>
+<li><code>-dt &lt;time&gt;</code> (0)<br/>
+只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
+<li><code>-[no]w</code> (no)<br/>
+查看输出的.xvg, .xpm, .eps和.pdb文件</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-[no]mol</code> (no)<br/>
+计算分子的TCAF</li>
+<li><code>-[no]k34</code> (no)<br/>
+也使用k=(3,0,0)和k=(4,0,0)</li>
+<li><code>-wt &lt;real&gt;</code> (5)<br/>
+TCAF拟合权重的指数衰减时间</li>
+<li><code>-acflen &lt;int&gt;</code> (&#8211;1)<br/>
+ACF的长度, 默认为帧数的一半</li>
+<li><code>-[no]normalize</code> (yes)<br/>
+归一化ACF</li>
+<li><code>-P &lt;enum&gt;</code> (0)<br/>
+ACF Legendre多项式的阶数(0表示不使用): 0, 1, 2, 3</li>
+<li><code>-fitfn &lt;enum&gt;</code> (none)<br/>
+拟合函数: none, exp, aexp, exp_exp, vac, exp5, exp7, exp9, erfit</li>
+<li><code>-beginfit &lt;real&gt;</code> (0)<br/>
+对相关函数进行指数拟合的起始时间</li>
+<li><code>-endfit &lt;real&gt;</code> (&#8211;1)<br/>
+对相关函数进行指数拟合的终止时间, &#8211;1表示直到最后</li>
+</ul>
 
 <h2 id="gmxtraj:输出轨迹文件中的坐标x速度v力f盒子温度和转动能翻译:康文斌">gmx traj: 输出轨迹文件中的坐标x, 速度v, 力f, 盒子, 温度和转动能(翻译: 康文斌)</h2>
 
