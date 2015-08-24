@@ -52,7 +52,139 @@ xvg绘图格式: xmgrace, xmgr, none</li>
 属于相同团簇的最大RMSD或距离值. 偏离大于此值时认为属于不同团簇.</li>
 </ul>
 
-<h2 id="gmxanaeig-analyzeeigenvectorsnormalmodes">gmx anaeig - Analyze eigenvectors/normal modes</h2>
+<h2 id="gmxanaeig:分析简正模式翻译:李继存">gmx anaeig: 分析简正模式(翻译: 李继存)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx anaeig [-v [&lt;.trr/.cpt/...&gt;]] [-v2 [&lt;.trr/.cpt/...&gt;]]
+           [-f [&lt;.xtc/.trr/...&gt;]] [-s [&lt;.tpr/.tpb/...&gt;]] [-n [&lt;.ndx&gt;]]
+           [-eig [&lt;.xvg&gt;]] [-eig2 [&lt;.xvg&gt;]] [-comp [&lt;.xvg&gt;]] [-rmsf [&lt;.xvg&gt;]]
+           [-proj [&lt;.xvg&gt;]] [-2d [&lt;.xvg&gt;]] [-3d [&lt;.gro/.g96/...&gt;]]
+           [-filt [&lt;.xtc/.trr/...&gt;]] [-extr [&lt;.xtc/.trr/...&gt;]]
+           [-over [&lt;.xvg&gt;]] [-inpr [&lt;.xpm&gt;]] [-nice ] [-b ]
+           [-e ] [-dt ] [-tu ] [-[no]w] [-xvg ]
+           [-first ] [-last ] [-skip ] [-max ]
+           [-nframes ] [-[no]split] [-[no]entropy] [-temp ]
+           [-nevskip ]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx anaeig</code>用于分析特征向量. 特征向量可以来自协方差矩阵(<code>gmx covar</code>)或简正模式分析(<code>gmx nmeig</code>).</p>
+
+<p>当将一条轨迹投影到特征向量上时, 如果特征向量文件中存在结构, 会将所有结构叠合到特征向量文件中的结构, 否则, 会叠合到结构文件中的结构. 如果没有提供运行输入文件, 程序不会考虑周期性. 程序会对从<code>-first</code>到<code>-last</code>的几个特征向量进行大部分分析, 但当<code>-first</code>设置为&#8211;1时, 程序会提示你选择要分析的特征向量.</p>
+
+<p>几个选项的说明:</p>
+
+<p><code>-comp</code>: 对从<code>-first</code>到<code>-last</code>的特征向量, 给出其每个原子的向量分量</p>
+
+<p><code>-rmsf</code>: 对从<code>-first</code>到<code>-last</code>的特征向量, 给出其每个原子的RMS涨落(需要<code>-eig</code>)</p>
+
+<p><code>-proj</code>: 计算一条轨迹在从<code>-first</code>到<code>-last</code>的特征向量上的投影. 轨迹在其协方差矩阵特征向量上的投影称为主成分(pc, principal components). 检查主成分的余弦含量通常会有帮助, 因为随机扩散的主成分为周期数为主成分数一半的余弦. 可使用<code>gmx analyze</code>计算主成分的余弦含量.</p>
+
+<p><code>-2d</code>: 计算一条轨迹在从<code>-first</code>到<code>-last</code>的特征向量上的2d投影</p>
+
+<p><code>-3d</code>: 计算一条轨迹在从<code>-first</code>到<code>-last</code>的特征向量上的3d投影</p>
+
+<p><code>-filt</code>: 对轨迹进行滤波, 只显示沿从<code>-first</code>到<code>-last</code>特征向量的运动</p>
+
+<p><code>-extr</code>: 计算沿一条轨迹在平均结构上的两个极值投影, 并在它们之间插值<code>-nframe</code>帧, 或使用<code>-max</code>设定你自己的极值数. 会输出特征向量<code>-first</code>, 除非明确指定了<code>-first</code>和<code>-last</code>的值, 在那种情况下, 所有特征向量会写入单独的文件. 当输出<code>.pdb</code>文件时, 若含有两个或三个结构, 会添加链标识(你可以使用<code>rasmol -nmrpdb</code>来查看这样的<code>.pdb</code>文件).</p>
+
+<p>协方差分析的重叠计算:</p>
+
+<p><strong>注意</strong>: 分析时应使用相同的叠合结构</p>
+
+<p><code>-over</code>: 计算文件<code>-v2</code>中的特征向量与文件<code>-v</code>中从<code>-first</code>到<code>-last</code>的特征向量之间的子空间重叠.</p>
+
+<p><code>-inpr</code>: 计算文件<code>-v</code>和<code>-v2</code>中的特征向量间的内积矩阵. 会使用两个文件中的所有特征向量, 除非明确指定了<code>-first</code>和<code>-last</code>.</p>
+
+<p>当给出了<code>-v</code>, <code>-eig</code>, <code>-v2</code>和<code>-eig2</code>时, 会给出表征协方差矩阵之间重叠的一个数值, 其计算公式为:</p>
+
+<p>差异 difference = sqrt(tr((sqrt(M1) - sqrt(M2))^2))</p>
+
+<p>归一化重叠 normalized overlap = 1 - difference/sqrt(tr(M1) + tr(M2))</p>
+
+<p>形状重叠 shape overlap = 1 - sqrt(tr((sqrt(M1/tr(M1)) - sqrt(M2/tr(M2)))^2))</p>
+
+<p>其中M1和M2为两个协方差矩阵, tr为矩阵的迹. 给出的数值正比于涨落平方根的重叠. 归一化的重叠是最有用的数字, 对全等矩阵其值为1, 当抽样子空间正交时, 其值为零.</p>
+
+<p>当给定<code>-entropy</code>选项时, 会依据准简谐近似以及Schlitter公式给出熵估计.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-v [&lt;.trr/.cpt/...&gt;]</code> (eigenvec.trr) (输入)<br/>
+全精度轨迹: trr cpt trj tng</li>
+<li><code>-v2 [&lt;.trr/.cpt/...&gt;]</code> (eigenvec2.trr) (输入, 可选)<br/>
+全精度轨迹: trr cpt trj tng</li>
+<li><code>-f [&lt;.xtc/.trr/...&gt;]</code> (traj.xtc) (输入, 可选)<br/>
+轨迹: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入, 可选)<br/>
+结构+质量(db): tpr tpb tpa gro g96 pdb brk ent</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入, 可选)<br/>
+索引文件</li>
+<li><code>-eig [&lt;.xvg&gt;]</code> (eigenval.xvg) (输入, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-eig2 [&lt;.xvg&gt;]</code> (eigenval2.xvg) (输入, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-comp [&lt;.xvg&gt;]</code> (eigcomp.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-rmsf [&lt;.xvg&gt;]</code> (eigrmsf.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-proj [&lt;.xvg&gt;]</code> (proj.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-2d [&lt;.xvg&gt;]</code> (2dproj.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-3d [&lt;.gro/.g96/...&gt;]</code> (3dproj.pdb) (输出, 可选)<br/>
+结构文件: gro g96 pdb brk ent esp</li>
+<li><code>-filt [&lt;.xtc/.trr/...&gt;]</code> (filtered.xtc) (输出, 可选)<br/>
+轨迹: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-extr [&lt;.xtc/.trr/...&gt;]</code> (extreme.pdb) (输出, 可选)<br/>
+轨迹: xtc trr cpt trj gro g96 pdb tng</li>
+<li><code>-over [&lt;.xvg&gt;]</code> (overlap.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-inpr [&lt;.xpm&gt;]</code> (inprod.xpm) (输出, 可选)<br/>
+X PixMap兼容矩阵文件</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (19)<br/>
+设置优先级</li>
+<li><code>-b &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的第一帧(ps)</li>
+<li><code>-e &lt;time&gt;</code> (0)<br/>
+从轨迹文件中读取的最后一帧(ps)</li>
+<li><code>-dt &lt;time&gt;</code> (0)<br/>
+只使用 t MOD dt = 第一帧时间(ps)的帧, 即两帧之间的时间间隔</li>
+<li><code>-tu &lt;enum&gt;</code> (ps)<br/>
+时间单位: fs, ps, ns, us, ms, s</li>
+<li><code>-[no]</code>w (no)<br/>
+程序运行结束查看输出文件: <code>.xvg</code>, <code>.xpm</code>, <code>.eps</code>和<code>.pdb</code></li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-first &lt;int&gt;</code> (1)<br/>
+要分析的第一个特征向量(&#8211;1则手动选择)</li>
+<li><code>-last &lt;int&gt;</code> (&#8211;1)<br/>
+要分析的最后一个特征向量(&#8211;1则手动选择)</li>
+<li><code>-skip &lt;int&gt;</code> (1)<br/>
+每nr帧分析一次</li>
+<li><code>-max &lt;real&gt;</code> (0)<br/>
+特征向量在平均结构上投影的最大值, 为0时给出极值</li>
+<li><code>-nframes &lt;int&gt;</code> (2)<br/>
+极值输出的帧数</li>
+<li><code>-[no]split</code> (no)<br/>
+当时间为零时拆分特征向量投影</li>
+<li><code>-[no]entropy</code> (no)<br/>
+计算对应于准简谐公式或Schlitter方法的熵</li>
+<li><code>-temp &lt;real&gt;</code> (298.15)<br/>
+计算熵时的温度</li>
+<li><code>-nevskip &lt;int&gt;</code> (6)<br/>
+当计算准简谐近似对应的熵时忽略的特征向量的数目. 当在协方差分析前进行转动/平动叠合时, 会得到3或6个非常接近于零的特征值, 在计算熵时不应该考虑这些特征值.</li>
+</ul>
 
 <h2 id="gmxanalyze:分析数据集翻译:李昊">gmx analyze: 分析数据集(翻译: 李昊)</h2>
 
@@ -2101,10 +2233,10 @@ ACF勒让德多项式的级数(0表示无): 0, 1, 2, 3</li>
 
 <h3 id="概要">概要</h3>
 
-<pre><code>gmx dyecoupl [-f [&lt;.xtc/.trr/...&gt;]]` [-n [&lt;.ndx&gt;]]` [-ot [&lt;.xvg&gt;]]
-             [-oe [&lt;.xvg&gt;]]` [-o [&lt;.dat&gt;]]` [-rhist [&lt;.xvg&gt;]]` [-khist [&lt;.xvg&gt;]]
-             [-nice ]` [-b ]` [-e ]` [-tu ]` [-[no]w]
-             [-xvg ]` [-[no]pbcdist]` [-[no]norm]` [-bins ]
+<pre><code>gmx dyecoupl [-f [&lt;.xtc/.trr/...&gt;]] [-n [&lt;.ndx&gt;]] [-ot [&lt;.xvg&gt;]]
+             [-oe [&lt;.xvg&gt;]] [-o [&lt;.dat&gt;]] [-rhist [&lt;.xvg&gt;]] [-khist [&lt;.xvg&gt;]]
+             [-nice ] [-b ] [-e ] [-tu ] [-[no]w]
+             [-xvg ] [-[no]pbcdist] [-[no]norm] [-bins ]
              [-R0 ]
 </code></pre>
 
@@ -2366,7 +2498,7 @@ DymDom确定的绕旋转矢量的旋转角度</li>
 
 <p>当使用<code>-f</code>选项指定多个文件时:</p>
 
-<p>按顺序将几个能量文件合并在一起. 当发现同一时刻存在两帧时, 会使用后一文件中的帧. 通过使用<code>-settime</code>, 你可以指定每一文件的起始时间. 输入文件由命令行得到, 你可能要使用像<code>gmx eneconv -f \*.edr -o fixed.edr</code>这样的技巧.</p>
+<p>按顺序将几个能量文件合并在一起. 当发现同一时刻存在两帧时, 会使用后一文件中的帧. 通过使用<code>-settime</code>, 你可以指定每一文件的起始时间. 输入文件由命令行得到, 你可能要使用像<code>gmx eneconv -f *.edr -o fixed.edr</code>这样的技巧.</p>
 
 <p>当使用<code>-f</code>选项指定一个文件时:</p>
 
@@ -6256,7 +6388,107 @@ xvg绘图格式: none, xmgrace, xmgr</li>
 启用<code>-olt</code>选项时, 累积计入较长间隔的子间隔</li>
 </ul>
 
-<h2 id="gmxsham-computefreeenergiesorotherhistogramsfromhistograms">gmx sham - Compute free energies or other histograms from histograms</h2>
+<h2 id="gmxsham:根据直方图计算自由能或其他直方图翻译:李卫星">gmx sham: 根据直方图计算自由能或其他直方图(翻译: 李卫星)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx sham [-f [&lt;.xvg&gt;]] [-ge [&lt;.xvg&gt;]] [-ene [&lt;.xvg&gt;]] [-dist [&lt;.xvg&gt;]]
+         [-histo [&lt;.xvg&gt;]] [-bin [&lt;.ndx&gt;]] [-lp [&lt;.xpm&gt;]] [-ls [&lt;.xpm&gt;]]
+         [-lsh [&lt;.xpm&gt;]] [-lss [&lt;.xpm&gt;]] [-ls3 [&lt;.pdb&gt;]] [-g [&lt;.log&gt;]]
+         [-nice ] [-[no]w] [-xvg ] [-[no]time] [-b ]
+         [-e ] [-ttol ] [-n ] [-[no]d] [-[no]sham]
+         [-tsham ] [-pmin ] [-dim ] [-ngrid ]
+         [-xmin ] [-xmax ] [-pmax ] [-gmax ]
+         [-emin ] [-emax ] [-nlevels ]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx sham</code>用于计算多维的自由能, 焓和熵. <code>gmx sham</code>会读取一个或多个<code>.xvg</code>文件并分析数据集. <code>gmx sham</code>的基本功能是利用玻尔兹曼反转多维直方图方法(<code>-lp</code>选项)计算Gibbs自由能形貌图(<code>-ls</code>选项), 但也可用于计算焓(<code>-lsh</code>选项)和熵(<code>-lss</code>选项)的形貌图. 程序可以给出用户提供的任意量的直方图. 输入文件中的一行可能以时间开头(参看选项<code>-time</code>), 后面跟着任意多个y值. 当使用&amp;隔开时(<code>-n</code>选项), 可以读入多个数据集, 在这种情况下每行只会读取一个y值. 所有以#和@开头的行都会被忽略.</p>
+
+<p>当系综并非玻尔兹曼系综, 但又需要使用自由能进行偏置时, 可使用<code>-ge</code>选项提供一个自由能文件. 对由<code>-f</code>选项指定的输入文件中, 每个(多维)数据点需要一个自由能值.</p>
+
+<p>可利用<code>-ene</code>选项提供一个能量文件. 在使用Kumar等人提出的单直方图分析方法时, 这些能量可用作权重函数. 如果提供了温度(处于文件中的第二列), 会应用实验的加权方案. 此外, 这些值还会用于计算焓和熵.</p>
+
+<p>可使用选项<code>-dim</code>给出距离的维度. 当距离为2维或3维时, 由两个粒子所采样的圆周或表面会随着距离的增加而增加. 依据想要展示的量, 可以选择是否修正直方图和自由能的体积效应. 对2维或3维, 概率可分别利用r或r<sup>2</sup>进行归一化. 可使用&#8211;1值来指示两个向量间以度为单位的夹角: 应用角度的正弦进行归一化. <strong>注意</strong>, 对两个向量间的夹角, 内积或余弦是很自然的量, 因为它可以产生相同体积的分格.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.xvg&gt;]</code> (graph.xvg) (输入)<br/>
+xvgr/xmgr文件</li>
+<li><code>-ge [&lt;.xvg&gt;]</code> (gibbs.xvg) (输入, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-ene [&lt;.xvg&gt;]</code> (esham.xvg) (输入, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-dist [&lt;.xvg&gt;]</code> (ener.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-histo [&lt;.xvg&gt;]</code> (edist.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-bin [&lt;.ndx&gt;]</code> (bindex.ndx) (输出, 可选)<br/>
+索引文件</li>
+<li><code>-lp [&lt;.xpm&gt;]</code> (prob.xpm) (输出, 可选)<br/>
+X PixMap兼容的矩阵文件</li>
+<li><code>-ls [&lt;.xpm&gt;]</code> (gibbs.xpm) (输出, 可选)<br/>
+X PixMap兼容的矩阵文件</li>
+<li><code>-lsh [&lt;.xpm&gt;]</code> (enthalpy.xpm) (输出, 可选)<br/>
+X PixMap兼容的矩阵文件</li>
+<li><code>-lss [&lt;.xpm&gt;]</code> (entropy.xpm) (输出, 可选)<br/>
+X PixMap兼容的矩阵文件</li>
+<li><code>-ls3 [&lt;.pdb&gt;]</code> (gibbs3.pdb) (输出, 可选)<br/>
+PDB文件</li>
+<li><code>-g [&lt;.log&gt;]</code> (shamlog.log) (输出, 可选)<br/>
+日志文件</li>
+</ul>
+
+<p>其它选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (19)<br/>
+设置优先级</li>
+<li><code>-[no]w</code> (no)<br/>
+查看输出的<code>.xvg</code>, <code>.xpm</code>, <code>.eps</code>和<code>.pdb</code>文件</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-[no]time</code> (yes)<br/>
+输入文件中包含时间</li>
+<li><code>-b &lt;real&gt;</code> (&#8211;1)<br/>
+从数据集中读取的第一帧</li>
+<li><code>-e &lt;real&gt;</code> (&#8211;1)<br/>
+从数据集中读取的最后一帧</li>
+<li><code>-ttol &lt;real&gt;</code> (0)<br/>
+时间的容差, 适宜的单位(通常为ps)</li>
+<li><code>-n &lt;int&gt;</code> (1)<br/>
+读取的数据集的数目, 不同数据集间以只含&amp;的行分隔</li>
+<li><code>-[no]d</code> (no)<br/>
+使用导数</li>
+<li><code>-[no]sham</code> (yes)<br/>
+不使用能量加权, 即使提供了能量文件</li>
+<li><code>-tsham &lt;real&gt;</code> (298.15)<br/>
+用于单直方图分析的温度</li>
+<li><code>-pmin &lt;real&gt;</code> (0)<br/>
+最小概率. 小于此值的任何值都设置为零</li>
+<li><code>-dim &lt;vector&gt;</code> (1 1 1)<br/>
+计算距离的维数, 用于体积修正(最多3个值, 维数大于3时将得到和最后的一样的值)</li>
+<li><code>-ngrid &lt;vector&gt;</code> (32 32 32)<br/>
+能量形貌的分格数(最多3个值, 维数大于3时将得到和最后的一样的值)</li>
+<li><code>-xmin &lt;vector&gt;</code> (0 0 0)<br/>
+能量形貌图轴的最小值(维数大于3时, 见上)</li>
+<li><code>-xmax &lt;vector&gt;</code> (1 1 1)<br/>
+能量形貌图轴的最大值(维数大于3时, 见上)</li>
+<li><code>-pmax &lt;real&gt;</code> (0)<br/>
+输出概率的最大值, 默认为计算值</li>
+<li><code>-gmax &lt;real&gt;</code> (0)<br/>
+输出自由能的最大值, 默认为计算值</li>
+<li><code>-emin &lt;real&gt;</code> (0)<br/>
+输出焓的最小值, 默认为计算值</li>
+<li><code>-emax &lt;real&gt;</code> (0)<br/>
+输出焓的最大值, 默认为计算值</li>
+<li><code>-nlevels &lt;int&gt;</code> (25)<br/>
+能量形貌的水平数</li>
+</ul>
 
 <h2 id="gmxsigeps:将c612或c6cn组合转换为sigmaepsilon组合或反过来翻译:韩广超">gmx sigeps: 将C6/12或C6/Cn组合转换为sigma/epsilon组合, 或反过来 (翻译: 韩广超)</h2>
 
@@ -7105,21 +7337,21 @@ First doing the rotational fit and then doing the PBC treatment gives incorrect 
 
 <p><code>-pbc</code>几种处理的效果可参看 <a href="/GMX/GMXpbc.html">gmx trjconv选项测试</a></p>
 
-<h2 id="gmxtrjorder:根据与某个组的距离定义分子顺序翻译:李继存">gmx trjorder: 根据与某个组的距离定义分子顺序(翻译: 李继存)</h2>
+<h2 id="gmxtrjorder:根据到参考组原子的距离对分子排序翻译:李培春">gmx trjorder: 根据到参考组原子的距离对分子排序(翻译: 李培春)</h2>
 
 <h3 id="概要">概要</h3>
 
-<pre><code>gmx trjorder [-f [&lt;.xtc/.trr/...&gt;]]` [-s [&lt;.tpr/.tpb/...&gt;]]` [-n [&lt;.ndx&gt;]]
-             [-o [&lt;.xtc/.trr/...&gt;]]` [-nshell [&lt;.xvg&gt;]]` [-nice ]
-             [-b ]` [-e ]` [-dt ]` [-xvg ]` [-na ]
-             [-da ]` [-[no]com]` [-r ]` [-[no]z]
+<pre><code>gmx trjorder [-f [&lt;.xtc/.trr/...&gt;]] [-s [&lt;.tpr/.tpb/...&gt;]] [-n [&lt;.ndx&gt;]]
+             [-o [&lt;.xtc/.trr/...&gt;]] [-nshell [&lt;.xvg&gt;]] [-nice ]
+             [-b ] [-e ] [-dt ] [-xvg ] [-na ]
+             [-da ] [-[no]com] [-r ] [-[no]z]
 </code></pre>
 
 <h3 id="说明">说明</h3>
 
-<p><code>gmx trjorder</code>用于对分子进行排序, 排序依据到参考组原子的最小距离或z坐标(<code>-z</code>选项)进行. 使用距离进行排序时, 需要指定参考原子组以及分子组. 对轨迹中的每一帧, 所选分子会根据分子中编号为<code>-da</code>的原子与参考组中所有原子之间距离的最小值进行重排序. 通过将<code>-da</code>设定为0, 可使用分子的质心而不是参考原子. 轨迹中的所有原子都会写入输出轨迹.</p>
+<p><code>gmx trjorder</code>可根据到参考组原子的最小距离或z坐标(<code>-z</code>选项)对分子排序. 使用距离进行排序时, 需要指定参考原子组以及分子组. 对轨迹中的每一帧, 所选分子会根据分子中编号为<code>-da</code>的原子与参考组中所有原子之间距离的最小值进行重排序. 通过将<code>-da</code>设定为0, 可使用分子的质心而不是参考原子. 轨迹中的所有原子都会写入输出轨迹.</p>
 
-<p>对某些分析, <code>gmx trjorder</code>可能会有用, 例如分析离蛋白最近的n个水分子. 在这种情况下, 参考组为蛋白质, 分子组为所有水分子的原子. 当得到了前n个水分子的索引组后, 排序后的轨迹可使用任何GROMACS工具分析n个最近的水分子.</p>
+<p>对某些分析, <code>gmx trjorder</code>可能会有用, 例如分析离蛋白最近的n个水分子. 在这种情况下, 参考组为蛋白质, 分子组为所有水分子的原子. 当得到了前n个水分子的索引组后, 排序后的轨迹可使用任何GROMACS工具分析最近的n个水分子.</p>
 
 <p>如果输出文件为<code>.pdb</code>文件, 到参考目标的距离会存放于B因子字段, 以便用于使用一些可视化程序加色, 如Rasmol</p>
 
