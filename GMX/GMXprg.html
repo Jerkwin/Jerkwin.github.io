@@ -7814,7 +7814,200 @@ ACF Legendre多项式的阶数(0表示不使用): 0, 1, 2, 3</li>
 <li>有时候会吐核, 原因不明</li>
 </ul>
 
-<h2 id="gmxwham-performweightedhistogramanalysisafterumbrellasampling">gmx wham - Perform weighted histogram analysis after umbrella sampling</h2>
+<h2 id="gmxwham:伞形抽样后进行加权直方分析翻译:陈珂">gmx wham: 伞形抽样后进行加权直方分析(翻译: 陈珂)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx wham [-ix [&lt;.dat&gt;]] [-if [&lt;.dat&gt;]] [-it [&lt;.dat&gt;]] [-ip [&lt;.dat&gt;]]
+         [-is [&lt;.dat&gt;]] [-o [&lt;.xvg&gt;]] [-hist [&lt;.xvg&gt;]] [-oiact [&lt;.xvg&gt;]]
+         [-iiact [&lt;.dat&gt;]] [-bsres [&lt;.xvg&gt;]] [-bsprof [&lt;.xvg&gt;]]
+         [-tab [&lt;.dat&gt;]] [-nice ] [-xvg ] [-min ]
+         [-max ] [-[no]auto] [-bins ] [-temp ] [-tol ]
+         [-[no]v] [-b ] [-e ] [-dt ] [-[no]histonly]
+         [-[no]boundsonly] [-[no]log] [-unit ] [-zprof0 ]
+         [-[no]cycl] [-[no]sym] [-[no]ac] [-acsig ]
+         [-ac-trestart ] [-nBootstrap ] [-bs-method ]
+         [-bs-tau ] [-bs-seed ] [-histbs-block ] [-[no]vbs]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx wham</code>一个用于实现加权直方图分析方法(WHAM, Weighted Histogram Analysis Method)的分析程序, 用于分析伞形抽样模拟的输出文件以计算平均力势(PMF, potential of mean force).</p>
+
+<p>目前此程序支持三种输入模式:</p>
+
+<ul class="incremental">
+<li><p>使用选项<code>-it</code>, 用户需要提供一个文件, 其中包含伞形抽样模拟的运行输入文件(<code>.tpr</code>文件)的文件名, <strong>还要</strong> 使用选项<code>-ix</code>提供另一个文件, 其中包含pullx <code>mdrun</code>输出文件的文件名. <code>.tpr</code>文件和pullx文件的顺序必须对应, 即第一个<code>.tpr</code>文件生成了第一个pullx文件, 并以此类推.</p></li>
+<li><p>除用户使用选项<code>-if</code>提供牵引力输出文件名称(<code>pullf.xvg</code>)以外, 与前述输入模式相同. 伞形势中的位置由牵引力计算得到. 无法用于表格形式的伞形势.</p></li>
+<li><p>使用选项<code>-ip</code>, 用户需提供(gzip压缩的)<code>.pdo</code>文件的文件名, 即GROMACS 3.3的伞形输出文件. 如果你使用某些特殊的反应坐标, 你也可以生成自己的<code>.pdo</code>文件并使用<code>-ip</code>选项将其提供给<code>gmx wham</code>. <code>.pdo</code>文件的文件头必须类似于以下形式:</p>
+
+<pre><code># UMBRELLA 3.0
+# Component selection: 0 0 1
+# nSkip 1
+# Ref. Group 'TestAtom'
+# Nr. of pull groups 2
+# Group 1 'GR1' Umb. Pos. 5.0 Umb. Cons. 1000.0
+# Group 2 'GR2' Umb. Pos. 2.0 Umb. Cons. 500.0
+#####
+</code></pre></li>
+</ul>
+
+<p>牵引组(pull group)的个数, 伞形势位置(umbrella position), 力常数(force constant)和名称(当然)都可以不同. 文件头以下, 需要为每个牵引组提供一个时间列和一个数据列(即相对于伞形势中心的位移). 目前每个<code>.pdo</code>文件最多可以包含四个牵引组.</p>
+
+<p>默认情况下, 在WHAM中会使用所有pullx/pullf文件中找到的所有牵引组. 如果只使用其中的某些牵引组, 用户可以提供一个牵引组选择文件(使用选项<code>-is</code>). 选择文件必须为<code>tpr-files.dat</code>中的每个<code>.tpr</code>文件提供一行说明, 内容必须为相应于<code>.tpr</code>文件中每个牵引组的一位数字(0或1). 在这里1表示该牵引组会在WHAM中使用, 0表示忽略. 例如, 如果你有3个<code>.tpr</code>文件, 每个包含4个牵引组, 但只使用牵引组1和2, 则<code>groupsel.dat</code>文件内容如下:</p>
+
+<pre><code>1 1 0 0
+1 1 0 0
+1 1 0 0
+</code></pre>
+
+<p>默认情况下, 输出文件有:</p>
+
+<p><code>-o</code>: PMF输出文件</p>
+
+<p><code>-hist</code>: 直方图输出文件</p>
+
+<p>请注意, 始终要检查直方图是否充分重叠.</p>
+
+<p>程序假定伞形势为简谐势, 力常数从<code>.tpr</code>或<code>.pdo</code>文件中读取. 如果使用了非简谐的伞形力, 可以用<code>-tab</code>提供一个表格式的势能函数.</p>
+
+<p><strong>WHAM选项</strong></p>
+
+<p><code>-bins</code>: 分析中使用的分格数</p>
+
+<p><code>-temp</code>: 模拟温度</p>
+
+<p><code>-tol</code>: 剖面(概率)的变化小于所给容差时停止迭代</p>
+
+<p><code>-auto</code>: 自动决定边界</p>
+
+<p><code>-min</code>, <code>-max</code>: 剖面的边界</p>
+
+<p>可以使用选项<code>-b</code>, <code>-e</code>和<code>-dt</code>筛选用于计算剖面的数据点. 调整<code>-b</code>以保证每个伞形窗口都达到充分平衡.</p>
+
+<p>使用选项<code>-log</code>时(默认), 会以能量单位输出剖面, 否则(使用<code>-nolog</code>选项)会输出概率. 可以使用选项<code>-unit</code>指定单位. 以能量单位输出时, 第一分格中的能量定义为零. 如果你希望其他位置自由能为零, 可以设置<code>-zprof0</code>(在使用自展法时很有用, 见下文).</p>
+
+<p>对于环形或周期性的反应坐标(二面角, 无渗透梯度的通道PMF), 选项<code>-cycl</code>很有用. <code>gmx wham</code>会利用体系的周期性, 生成一个周期性的PMF. 反应坐标的第一个和最后一个分格会被假定为相邻.</p>
+
+<p>使用选项<code>-sym</code>时, 在输出前会使剖面关于z=0对称, 在某些情况下, 如用于膜体系时很有用.</p>
+
+<p><strong>自相关</strong></p>
+
+<p>使用<code>-ac</code>选项时, <code>gmx wham</code>会估计每个伞形窗口的积分自相关时间(IACT, integrated autocorrelation time)τ, 并使用1/[1+2*τ/dt]作为各个窗口的权重. IACT会写入由选项<code>-oiact</code>指定的文件中. 在冗长(verbose)输出模式下, 所有自相关函数(ACF, autocorrelation functions)都会写入<code>hist_autocorr.xvg</code>文件. 由于在采样不足的情况下可能会严重低估IACT, 利用<code>-acsig</code>选项, 用户可使用高斯函数沿反应坐标对IACT进行平滑(高斯函数的σ由<code>-acsig</code>提供, 见<code>iact.xvg</code>中的输出). 注意, 程序使用简单的积分方法估计IACT, 且只考虑大于0.05的ACF. 如果你想使用更复杂(但可能不那么稳健)的方法, 比如拟合到双指数函数, 来计算IACT, 你可以使用<code>gmx analyze</code>来计算IACT, 并通过<code>iact-in.dat</code>文件(选项<code>-iiact</code>)将其提供给<code>gmx wham</code>. 在这个文件中每个输入文件(<code>.pdo</code>或pullx/f文件)对应一行, 各输入文件的每个牵引组对应一列.</p>
+
+<p><strong>误差分析</strong></p>
+
+<p>可以使用自展分析(bootstrap analysis)来估计统计误差. 请小心使用, 否则实质上可能会低估统计误差. 自展技术的更多背景知识和例子可以在Hub, de Groot and Van der Spoel, JCTC (2010) 6: 3713&#8211;3720中找到.</p>
+
+<p><code>-nBootstrap</code>定义自展的个数(比如使用100). 本程序支持四种自展方法, 通过<code>-bs-method</code>进行选择.</p>
+
+<p>(1) <code>b-hist</code> 默认方法: 将完整的直方图视为独立的数据点, 给直方图赋予随机权重来实现自展(&#8220;贝叶斯自展&#8221;). 注意, 沿反应坐标轴上的每个点都必须被多个独立直方图所覆盖(比如10个直方图), 否则会低估统计误差.</p>
+
+<p>(2) <code>hist</code>: 将完整的直方图视为独立的数据点. 对每个自展, 从给定的N个直方图中随机选取N个直方图(允许重复, 即, 放回抽样). 为避免沿反应坐标轴上无数据的空隙, 可以定义直方图块(<code>-histbs-block</code>). 在那种情况下, 会将给定的直方图划分为块, 只有各块内部的直方图才会混合. 注意, 每块内的直方图必须能代表所有可能出现的直方图, 否则会低估统计误差.</p>
+
+<p>(3) <code>traj</code>: 用给定的直方图产生新的随机轨迹, 这样产生的数据点遵从给定直方图的分布, 并具有适当的自相关. 每个窗口的自相关时间(ACT)必须是已知的, 所以要使用<code>-ac</code>选项或者利用<code>-iiact</code>手动提供ACT. 如果所有窗口的ACT都相同(并且已知), 你也可以用<code>-bs-tau</code>提供ACT. 注意, 在采样不足的情况下, 即如果各个直方图在各自的位置不能代表整个相空间, 此方法可能严重低估误差.</p>
+
+<p>(4) <code>traj-gauss</code>: 与<code>traj</code>方法相同, 但轨迹不是根据伞形直方图自展得到, 而是从均值和宽度与伞形直方图相同的高斯函数得到. 此方法给出的误差估计类似于<code>traj</code>方法.</p>
+
+<p>自展法的输出:</p>
+
+<p><code>-bsres</code>: 平均剖面和标准偏差</p>
+
+<p><code>-bsprof</code>: 所有自展剖面</p>
+
+<p>使用<code>-vbs</code>选项(冗长自展)会输出每个自展使用的直方图, 并且, 使用<code>traj</code>自展方法时, 还会输出直方图的累积分布函数.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-ix [&lt;.dat&gt;]</code> (pullx-files.dat) (输入, 可选)<br/>
+通用数据文件</li>
+<li><code>-if [&lt;.dat&gt;]</code> (pullf-files.dat) (输入, 可选)<br/>
+通用数据文件</li>
+<li><code>-it [&lt;.dat&gt;]</code> (tpr-files.dat) (输入, 可选)<br/>
+通用数据文件</li>
+<li><code>-ip [&lt;.dat&gt;]</code> (pdo-files.dat) (输入, 可选)<br/>
+通用数据文件</li>
+<li><code>-is [&lt;.dat&gt;]</code> (groupsel.dat) (输入, 可选)<br/>
+通用数据文件</li>
+<li><code>-o [&lt;.xvg&gt;]</code> (profile.xvg) (输出)<br/>
+xvgr/xmgr 文件</li>
+<li><code>-hist [&lt;.xvg&gt;]</code> (histo.xvg) (输出)<br/>
+xvgr/xmgr文件</li>
+<li><code>-oiact [&lt;.xvg&gt;]</code> (iact.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-iiact [&lt;.dat&gt;]</code> (iact-in.dat) (输入, 可选)<br/>
+通用数据文件</li>
+<li><code>-bsres [&lt;.xvg&gt;]</code> (bsResult.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-bsprof [&lt;.xvg&gt;]</code> (bsProfs.xvg) (输出, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-tab [&lt;.dat&gt;]</code> (umb-pot.dat) (输入, 可选)<br/>
+通用数据文件</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (19)<br/>
+设置优先级</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-min &lt;real&gt;</code> (0)<br/>
+剖面的最小坐标</li>
+<li><code>-max &lt;real&gt;</code> (0)<br/>
+剖面的最大坐标</li>
+<li><code>-[no]auto</code> (yes)<br/>
+自动确定min和max</li>
+<li><code>-bins &lt;int&gt;</code> (200)<br/>
+剖面使用的分格数</li>
+<li><code>-temp &lt;real&gt;</code> (298)<br/>
+温度</li>
+<li><code>-tol &lt;real&gt;</code> (1e&#8211;06)<br/>
+容差</li>
+<li><code>-[no]v</code> (no)<br/>
+冗长模式</li>
+<li><code>-b &lt;real&gt;</code> (50)<br/>
+要分析的起始时间(ps)</li>
+<li><code>-e &lt;real&gt;</code> (1e+20)<br/>
+要分析的终止时间(ps)</li>
+<li><code>-dt &lt;real&gt;</code> (0)<br/>
+每隔dt ps分析一次</li>
+<li><code>-[no]histonly</code> (no)<br/>
+输出直方图即退出</li>
+<li><code>-[no]boundsonly</code> (no)<br/>
+确定min和max后即退出(使用<code>-auto</code>选项)</li>
+<li><code>-[no]log</code> (yes)<br/>
+计算剖面的对数值后再打印</li>
+<li><code>-unit &lt;enum&gt;</code> (kJ)<br/>
+对数输出时的能量单位: kJ, kCal, kT</li>
+<li><code>-zprof0 &lt;real&gt;</code> (0)<br/>
+将此位置的剖面值定义为0.0(使用<code>-log</code>选项)</li>
+<li><code>-[no]cycl</code> (no)<br/>
+产生环形/周期性的剖面. 假定min和max是同一点.</li>
+<li><code>-[no]sym</code> (no)<br/>
+使剖面关于z=0对称</li>
+<li><code>-[no]ac</code> (no)<br/>
+计算积分自相关时间并在wham中使用</li>
+<li><code>-acsig &lt;real&gt;</code> (0)<br/>
+沿反应坐标轴, 使用以选项值为σ的高斯函数对自相关时间进行平滑</li>
+<li><code>-ac-trestart &lt;real&gt;</code> (1)<br/>
+计算自相关函数时, 不同数据点之间的间隔ps数</li>
+<li><code>-nBootstrap &lt;int&gt;</code> (0)<br/>
+自展的个数, 用以估计统计不确定性(如, 200)</li>
+<li><code>-bs-method &lt;enum&gt;</code> (b-hist)<br/>
+自展方法: b-hist, hist, traj, traj-gauss</li>
+<li><code>-bs-tau &lt;real&gt;</code> (0)<br/>
+假定适用于所有直方图的自相关时间(ACT). 如果ACT未知, 使用选项<code>-ac</code></li>
+<li><code>-bs-seed &lt;int&gt;</code> (&#8211;1)<br/>
+自展的种子(&#8211;1表示使用时间值)</li>
+<li><code>-histbs-block &lt;int&gt;</code> (8)<br/>
+混合直方图时, 仅混合在<code>-histbs-block</code>指定块内的直方图.</li>
+<li><code>-[no]vbs</code> (no)<br/>
+冗长自展. 输出每个自展的CDF和直方图文件.</li>
+</ul>
 
 <h2 id="gmxwheel:绘制螺旋轮图翻译:李继存">gmx wheel: 绘制螺旋轮图(翻译: 李继存)</h2>
 
