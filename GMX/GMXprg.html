@@ -4050,7 +4050,157 @@ LIE方程中能量库伦分量的系数</li>
 能量文件中配体的名称</li>
 </ul>
 
-<h2 id="gmxmake_edi-generateinputfilesforessentialdynamicssampling">gmx make_edi - Generate input files for essential dynamics sampling</h2>
+<h2 id="gmxmake_edi:生成主成分动力学抽样的输入文件翻译:严立京">gmx make_edi: 生成主成分动力学抽样的输入文件(翻译: 严立京)</h2>
+
+<h3 id="概要">概要</h3>
+
+<pre><code>gmx make_edi [-f [&lt;.trr/.cpt/...&gt;]] [-eig [&lt;.xvg&gt;]] [-s [&lt;.tpr/.tpb/...&gt;]]
+             [-n [&lt;.ndx&gt;]] [-tar [&lt;.gro/.g96/...&gt;]] [-ori [&lt;.gro/.g96/...&gt;]]
+             [-o [&lt;.edi&gt;]] [-nice ] [-xvg ] [-mon ]
+             [-linfix ] [-linacc ] [-radfix ]
+             [-radacc ] [-radcon ] [-flood ]
+             [-outfrq ] [-slope ] [-linstep ]
+             [-accdir ] [-radstep ] [-maxedsteps ]
+             [-eqsteps ] [-deltaF0 ] [-deltaF ]
+             [-tau ] [-Eflnull ] [-T ] [-alpha ]
+             [-[no]restrain] [-[no]hessian] [-[no]harmonic]
+             [-constF ]
+</code></pre>
+
+<h3 id="说明">说明</h3>
+
+<p><code>gmx make_edi</code>用于产生一个主成分动力学(ED, essential dynamics)抽样的输入文件供<code>gmx mdrun</code>使用, 产生方法基于来自协方差矩阵(<code>gmx covar</code>)或简正模式分析(<code>gmx nmeig</code>)的特征向量. 在模拟过程中, ED抽样可用于沿集约坐标(特征向量)操控(生物)大分子的位置. 特别地, 通过促使体系沿这些集约坐标探测新的区域, ED抽样可用于提高MD模拟的抽样效率. 有大量的算法可以驱使体系沿特征向量运动(<code>-linfix</code>, <code>-linacc</code>, <code>-radfix</code>, <code>-radacc</code>, <code>-radcon</code>), 维持沿确定(系列)坐标的位置固定(<code>-linfix</code>), 或者仅仅监测位置在这些坐标上的投影(<code>-mon</code>)</p>
+
+<p>参考文献:</p>
+
+<ul class="incremental">
+<li>A. Amadei, A.B.M. Linssen, B.L. de Groot, D.M.F. van Aalten and H.J.C. Berendsen; An efficient method for sampling the essential subspace of proteins., <em>J. Biomol. Struct. Dyn.</em> 13:615&#8211;626 (1996)</li>
+<li>B.L. de Groot, A. Amadei, D.M.F. van Aalten and H.J.C. Berendsen; Towards an exhaustive sampling of the configurational spaces of the two forms of the peptide hormone guanylin, <em>J. Biomol. Struct. Dyn.</em> 13 : 741&#8211;751 (1996)</li>
+<li>B.L. de Groot, A.Amadei, R.M. Scheek, N.A.J. van Nuland and H.J.C. Berendsen; An extended sampling of the configurational space of HPr from E. coli, <em>Proteins: Struct. Funct. Gen.</em> 26: 314&#8211;322 (1996)</li>
+</ul>
+
+<p>运行时程序会提示选择一个或者多个索引组, 它们对应于特征向量, 参考结构, 目标位置等.</p>
+
+<p><code>-mon</code>: 监测坐标在选定特征向量上的投影</p>
+
+<p><code>-linfix</code>: 沿选定特征向量进行固定步数的线性扩张</p>
+
+<p><code>-linacc</code>: 沿选定特征向量进行可接受线性扩张. (接受期望方向上的步进, 拒绝其他的)</p>
+
+<p><code>-radfix</code>: 沿选定特征向量进行固定步数的径向扩张.</p>
+
+<p><code>-radacc</code>: 沿选定特征向量进行可接受径向扩张. (接受期望方向上的步进, 拒绝其他的). <strong>注意</strong>: 默认将使用起始MD结构作为第一次径向扩张循环的起点. 如果指定了<code>-ori</code>选项, 可以读入一个结构文件定义外部起点.</p>
+
+<p><code>-radcon</code>: 沿选定特征向量进行可接受径向收缩, 收缩指向的目标结构由<code>-tar</code>选项指定.</p>
+
+<p><strong>注意</strong>: 每个特征向量只能选择一次.</p>
+
+<p><code>-outfrq</code>: 将投影等写入<code>.xvg</code>文件的频率(以步数为单位)</p>
+
+<p><code>-slope</code>: 可接受径向扩张的最小斜率. 如果半径的瞬时增长率(以nm/step为单位)小于规定数值, 将开始一个新的扩张循环.</p>
+
+<p><code>-maxedsteps</code>: 在开始一个新循环前, 径向扩张中每个循环的最大步数.</p>
+
+<p>并行实现的注意点: 由于ED抽样的&#8220;全局性&#8221;(集约坐标等), 至少在&#8220;蛋白质&#8221;方面, 从实现的角度看ED抽样并不太适合并行. 因为并行ED需要一些额外的通讯, 除非运行性能低于不受约束的MD模拟, 尤其是当进程数目很大和/或当ED组包含大量原子时.</p>
+
+<p>同时请注意如果你的ED组包含不止一个蛋白质, 那么<code>.tpr</code>文件必须包含ED组的正确PBC表示. 查看一下参考结构的初始RMSD值, 这个数值在模拟一开始就会输出; 如果此数值远远高于期望值, 某个ED分子可能沿盒向量方向平移了几个单位.</p>
+
+<p><code>gmx mdrun</code>程序中所有与ED相关的输出作为时间的函数都写在一个<code>.xvg</code>文件中, 输出的间隔步数由<code>-outfrq</code>指定.</p>
+
+<p><strong>注意</strong>, 如果一开始合并了多个<code>.edi</code>文件, 在一个模拟中你可以(在不同分子上)施加多个ED约束和洪泛势能. 约束的施加顺序按照它们出现在<code>.edi</code>文件中的顺序. 根据<code>.edi</code>输入文件中的指定, 对每个ED数据集, 输出文件中可能包含以下内容:</p>
+
+<ul class="incremental">
+<li>分子叠合到参考结构的RMSD值</li>
+<li>位置在选定特征向量上的投影</li>
+</ul>
+
+<p><strong>洪泛</strong></p>
+
+<p>使用<code>-flood</code>选项, 你可以指定使用哪个特征向量计算洪泛势能, 它将导致额外的力, 将结构排除出由协方差矩阵描述的某些区域. 如果你使用了<code>-restrain</code>选项, 势能将反转, 可以将结构保持在特定区域内.</p>
+
+<p>模拟起始点通常是存储在<code>eigvec.trr</code>文件中的平均结构. 使用<code>-ori</code>选项, 可以把起始点更改为构象空间中的任意一个位置. 使用<code>-tau</code>, <code>-deltaF0</code>和<code>-Eflnull</code>选项, 你可以控制洪泛的行为. Efl为洪泛强度, 根据自适应洪泛的规则进行更新. Tau为自适应洪泛的时间常数, 大的τ值意味着自适应慢(即增长慢). DeltaF0为经过tau皮秒模拟之后想达到的洪泛强度. 如果想使Efl为常数, 可将<code>-tau</code>设置成零.</p>
+
+<p><code>-alpha</code>为控制洪泛势能宽度的经验参数. 当其值为2时, 对于蛋白质洪泛的大多数标准例子都能给出很好的结果. α基本用于考虑抽样的不完整性. 如果进行更多的抽样, 系综宽度将会增大, 这可以通过α&gt;1来模拟. 对限制, α&lt;1得到的限制势的宽度更小.</p>
+
+<p>洪泛模拟的重新开始: 如果你想重新开始一个已经崩溃的洪泛模拟, 请在输出文件中找到deltaF和Efl的值, 然后手动地将它们分别放入<code>.edi</code>文件中DELTA_F0和EFL_NULL中.</p>
+
+<h3 id="选项">选项</h3>
+
+<p>指定输入和输出文件的选项:</p>
+
+<ul class="incremental">
+<li><code>-f [&lt;.trr/.cpt/...&gt;]</code> (eigenvec.trr) (输入)<br/>
+全精度轨迹: trr cpt trj tng</li>
+<li><code>-eig [&lt;.xvg&gt;]</code> (eigenval.xvg) (输入, 可选)<br/>
+xvgr/xmgr文件</li>
+<li><code>-s [&lt;.tpr/.tpb/...&gt;]</code> (topol.tpr) (输入)<br/>
+结构+质量(db): tpr tpb tpa gro g96 pdb brk ent</li>
+<li><code>-n [&lt;.ndx&gt;]</code> (index.ndx) (输入, 可选)<br/>
+索引文件</li>
+<li><code>-tar [&lt;.gro/.g96/...&gt;]</code> (target.gro) (输入, 可选)<br/>
+结构文件: gro g96 pdb brk ent esp tpr tpb tpa</li>
+<li><code>-ori [&lt;.gro/.g96/...&gt;]</code> (origin.gro) (输入, 可选)<br/>
+结构文件: gro g96 pdb brk ent esp tpr tpb tpa</li>
+<li><code>-o [&lt;.edi&gt;]</code> (sam.edi) (输出)<br/>
+ED抽样输入</li>
+</ul>
+
+<p>其他选项:</p>
+
+<ul class="incremental">
+<li><code>-nice &lt;int&gt;</code> (0)<br/>
+设置优先级</li>
+<li><code>-xvg &lt;enum&gt;</code> (xmgrace)<br/>
+xvg绘图格式: xmgrace, xmgr, none</li>
+<li><code>-mon &lt;string&gt;</code><br/>
+x投影方向的特征向量索引(如<code>1,2-5,9</code>, 或<code>1-100:10</code>表示1 11 21 31 &#8230; 91)</li>
+<li><code>-linfix &lt;string&gt;</code><br/>
+固定增量线性抽样的特征向量索引</li>
+<li><code>-linacc &lt;string&gt;</code><br/>
+可接受线性抽样的特征向量索引</li>
+<li><code>-radfix &lt;string&gt;</code><br/>
+固定增量径向扩张的特征向量索引</li>
+<li><code>-radacc &lt;string&gt;</code><br/>
+可接受径向扩张的特征向量索引</li>
+<li><code>-radcon &lt;string&gt;</code><br/>
+可接受径向收缩的特征向量索引</li>
+<li><code>-flood &lt;string&gt;</code><br/>
+洪泛的特征向量索引</li>
+<li><code>-outfrq &lt;int&gt;</code> (100)<br/>
+输出<code>.xvg</code>文件的频率(单位: 步数)</li>
+<li><code>-slope &lt;real&gt;</code> (0)<br/>
+可接受径向扩张的最小斜率</li>
+<li><code>-linstep &lt;string&gt;</code><br/>
+固定增量线性抽样的步长(nm/step) (要放在引号内! 如<code>&quot;1.0 2.3 5.1 -3.1&quot;</code>)</li>
+<li><code>-accdir &lt;string&gt;</code><br/>
+可接受线性抽样的方向&#8211;只考虑正负号 (要放在引号内! 如<code>&quot;-1 +1 -1.1&quot;</code>)</li>
+<li><code>-radstep &lt;real&gt;</code> (0)<br/>
+固定增量径向扩张的步长(nm/step)</li>
+<li><code>-maxedsteps &lt;int&gt;</code> (0)<br/>
+每个循环的最大步数</li>
+<li><code>-eqsteps &lt;int&gt;</code> (0)<br/>
+无微扰运行的步数</li>
+<li><code>-deltaF0 &lt;real&gt;</code> (150)<br/>
+洪泛模拟中目标失稳能量</li>
+<li><code>-deltaF &lt;real&gt;</code> (0)<br/>
+起始的deltaF使用指定值. 默认为0, 非零值只用于重启模拟</li>
+<li><code>-tau &lt;real&gt;</code> (0.1)<br/>
+相应于deltaF0洪泛强度自适应的耦合常数, 0等于无限大, 也就是洪泛强度为常数</li>
+<li><code>-Eflnull &lt;real&gt;</code> (0)<br/>
+洪泛强度的起始值. 洪泛强度会根据自适应洪泛方案进行更新. 使用恒定的洪泛强度时请指定<code>-tau 0</code>.</li>
+<li><code>-T &lt;real&gt;</code> (300)<br/>
+T是温度, 做洪泛模拟需要这个数据</li>
+<li><code>-alpha &lt;real&gt;</code> (1)<br/>
+使用alpha<sup>2</sup>缩放高斯洪泛势能的宽度</li>
+<li><code>-[no]restrain</code> (no)<br/>
+使用反转的洪泛势能, 效果类似准简谐限制势</li>
+<li><code>-[no]hessian</code> (no)<br/>
+特性向量和特征值来自Hessian矩阵</li>
+<li><code>-[no]harmonic</code> (no)<br/>
+将特征值视为弹簧常数</li>
+<li><code>-constF &lt;string&gt;</code><br/>
+恒力洪泛: 利用<code>-flood</code>手动设置选定特征向量的力(要放在引号内! 如<code>&quot;1.0 2.3 5.1 -3.1&quot;</code>). 当直接指定力的大小时不需要其他洪泛参数.</li>
+</ul>
 
 <h2 id="gmxmake_ndx:制作索引文件翻译:刘恒江">gmx make_ndx: 制作索引文件(翻译: 刘恒江)</h2>
 
