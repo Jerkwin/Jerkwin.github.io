@@ -9,7 +9,7 @@
 
 <h1 id="计算蛋白质不同螺旋之间的夹角--">计算蛋白质不同螺旋之间的夹角</h1>
 
-<ul class="incremental">
+<ul>
 <li>整理: 王浩博; 补充: 李继存</li>
 </ul>
 
@@ -77,11 +77,30 @@ q
 
 <h3 id="4.分析输出文件">4. 分析输出文件</h3>
 
-<p>倾斜角的计算结果默认存在<code>bun_tilt.xvg</code>中, 但保存的是每个螺旋轴与平均螺旋轴的夹角, 而不是要求的两个螺旋轴之间的夹角.
-容易知道, 两个螺旋轴之间的夹角应该等于第一个螺旋轴与平均轴之间夹角再加上第二个螺旋轴与平均轴之间的夹角, 也就是文件第二栏和第三栏之和.
-利用awk脚本很容易完成, 示例如下</p>
+<p>倾斜角的计算结果默认存在<code>bun_tilt.xvg</code>中, 但保存的是每个螺旋轴与平均螺旋轴的夹角, 而不是要求的两个螺旋轴之间的夹角. </p>
+
+<p>只有当两个螺旋轴处于同一平面内时, 两个螺旋轴之间的夹角才等于第一个螺旋轴与平均轴之间夹角再加上第二个螺旋轴与平均轴之间的夹角, 也就是文件第二栏和第三栏之和. 这时可以简单地利用awk脚本计算夹角, 示例如下:</p>
 
 <pre><code>awk '/^[^#@]/ { print $1, $2+$3 }' bun_tilt.xvg &gt; angle.dat
+</code></pre>
+
+<p>当要研究的两个螺旋轴处于不同平面内时, 上面使用的方法得到的结果不正确. 这种情况下可以利用<code>axes.pdb</code>中保存的两个坐标轴方向来计算, 示例awk脚本如下:</p>
+
+<pre class="line-numbers" data-start="0"><code class="language-bash"># Language: bash
+awk ' BEGIN{rad2deg=45/atan2(1,1)}
+/t=/ {t=$NF}
+/ATOM +1/{x1  = $6; y1  = $7; z1  = $8}
+/ATOM +3/{x1 -= $6; y1 -= $7; z1 -= $8}
+/ATOM +4/{x2  = $6; y2  = $7; z2  = $8}
+/ATOM +6/{x2 -= $6; y2 -= $7; z2 -= $8}
+/TER/ {print t, Acos((x1*x2+y1*y2+z1*z2)/(x1^2+y1^2+z1^2)/(x2^2+y2^2+z2^2))*rad2deg}
+
+function Acos(x) { if(x==0) return 2*atan2(1,1);
+                   if(x >0) return atan2(sqrt(1/x^2-1), 1)
+                   if(x <0) return 4*atan2(1,1)-atan2(sqrt(1/x^2-1), 1)
+                 }
+
+' axes.pdb
 </code></pre>
 
 <p>如果你使用<code>.dcd</code>轨迹文件而没有时间信息的话, 在这时可以添加上时间信息. 然后就可以作图了.</p>
