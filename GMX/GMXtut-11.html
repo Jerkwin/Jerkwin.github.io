@@ -88,18 +88,16 @@ q
 
 <pre class="line-numbers" data-start="0"><code class="language-bash"># Language: bash
 awk ' BEGIN{rad2deg=45/atan2(1,1)}
-/t=/ {t=$NF}
-/ATOM +1/{x1  = $6; y1  = $7; z1  = $8}
-/ATOM +3/{x1 -= $6; y1 -= $7; z1 -= $8}
-/ATOM +4/{x2  = $6; y2  = $7; z2  = $8}
-/ATOM +6/{x2 -= $6; y2 -= $7; z2 -= $8}
-/TER/ {print t, Acos((x1*x2+y1*y2+z1*z2)/(x1^2+y1^2+z1^2)/(x2^2+y2^2+z2^2))*rad2deg}
+	/t=/ {t=$NF}
+	/ATOM +1/{x1  = $6; y1  = $7; z1  = $8}
+	/ATOM +3/{x1 -= $6; y1 -= $7; z1 -= $8}
+	/ATOM +4/{x2  = $6; y2  = $7; z2  = $8}
+	/ATOM +6/{x2 -= $6; y2 -= $7; z2 -= $8}
+	/TER/ {print t, Acos((x1*x2+y1*y2+z1*z2)/sqrt((x1^2+y1^2+z1^2)*(x2^2+y2^2+z2^2)))*rad2deg}
 
-function Acos(x) { if(x==0) return 2*atan2(1,1);
-                   if(x >0) return atan2(sqrt(1/x^2-1), 1)
-                   if(x <0) return 4*atan2(1,1)-atan2(sqrt(1/x^2-1), 1)
-                 }
-
+	function Acos(x) { if(x==0) return 2*atan2(1,1)
+					   return atan2(sqrt(1/x^2-1), 1)
+					 }
 ' axes.pdb
 </code></pre>
 
