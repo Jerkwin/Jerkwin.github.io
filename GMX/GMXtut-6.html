@@ -95,7 +95,7 @@ SOL               596
 
 <p>注意, 在以前版本的GROMACS中, <code>typeB</code>, <code>chargeB</code>和<code>massB</code>头部的内容必须对应于分子的B状态. 自GROMACS 4.0起, 简单的(去)耦合不再需要修改拓扑(极好!), 但对于将一个分子转变为另一个分子的情况, 键合与非键合项可能会发生改变, 这时仍然需要旧式的修改(所谓的&#8220;双拓扑方法&#8221;). GROMACS手册的5.7.4节提供了这种转变的一个例子.</p>
 
-<h2 id="步骤三:工作流程">步骤三: 工作流程</h2>
+<h2 id="第三步:工作流程">第三步: 工作流程</h2>
 
 <p>体系从状态A转变到状态B过程的自由能变化 <span class="math">\(\D G_\text{AB}\)</span> 是耦合参数 <span class="math">\(\l\)</span> 的函数, 它代表了状态A和B之间转变的程度, 也就是哈密顿量的微扰程度以及体系已经变化的程度. 利用不同 <span class="math">\(\l\)</span> 对应的模拟可以绘制 <span class="math">\(\partial H/\partial \l\)</span> 曲线, 并由此得到 <span class="math">\(\D G_\text{AB}\)</span>. 自由能计算的第一步是确定使用多少个点描述从状态A(<span class="math">\(\l\)</span> = 0)到状态B(<span class="math">\(\l\)</span> = 1)的转变, 其目的在于收集足够多的数据, 完全充分地对相空间进行取样, 并得到合理的 <span class="math">\(\partial H/\partial \l\)</span> 曲线.</p>
 <p>
