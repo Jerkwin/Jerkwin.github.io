@@ -170,7 +170,7 @@ Segmentation fault</code>或<code>Illegal instruction (core dumped)</code>之类
 <p>这些文件在GROMACS和APBS编译之后得到的. 如果你没有权限使用上面的命令安装GROMACS和APBS, 那你还需要自己编译GROMACS和APBS. 编译时, 最好对这三个程序使用相同的编译器, 否则出现错误的话, 不易解决.</p>
 
 <ol class="incremental">
-<li><p>编译GROMACS 4.6.5</p>
+<li><p>编译GROMACS 4.6.5(新版本已经支持GMX 5.x)</p>
 
 <p><code>g_mmpbsa</code>支持GROMACS&#8211;4.6.x, 尚未支持5.x. 编译时, GROMACS需要生成静态库, 因为<code>g_mmpbsa</code>不支持MPI, 不能并行, 因此编译GROMACS时, 必须明确地禁用MPI和GPU选项. 此外, 还需要注意<code>fftw</code>的单双精度问题, 需要安装双精度版本的<code>fftw</code>.</p>
 
