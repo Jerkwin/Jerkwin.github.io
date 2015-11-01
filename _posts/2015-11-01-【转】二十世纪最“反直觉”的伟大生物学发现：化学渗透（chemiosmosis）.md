@@ -1,6 +1,6 @@
 ---
  layout: post
- title: 二十世纪最“反直觉”的伟大生物学发现：化学渗透（chemiosmosis）
+ title: 【转】二十世纪最“反直觉”的伟大生物学发现：化学渗透（chemiosmosis）
  categories:
  - 科
  tags:
