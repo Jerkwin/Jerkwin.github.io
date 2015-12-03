@@ -7,6 +7,7 @@
  - GMX
 ---
 
+<script src="/jscss/ChemDoodleWeb.js"></script>
 
 ## 力场的概念及其分类
 
