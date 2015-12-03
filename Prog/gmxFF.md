@@ -69,21 +69,21 @@ __想请教大家一下，如何运用势能面扫描获得范德华相互作用
 
 安装后, GROMACS自带的力场文件放于`GROMACS主目录/share/gromacs/top`(对安装文件放于`GROMACS主目录/share/top`). 以GROMACS 5.1.1安装文件为例, 打开这个目录, 可以看到文件夹下有许多以`.ff`结尾的目录, 那就是各个力场的目录.
 
-![](GROMACS力场拓扑文件的说明以及创建方法-1.png)
+![](/pic/GMX_ff.png)
 
 GROMACS自带了四类力场: AMBER, CHARMM, GROMOS, OPLS-AA, 其中的AMBER和GROMOS还有不同的版本. 以`amber99sb-ildn.ff`为例, 进入这个目录, 可以看到这个力场包含的所有文件:
 
-![](GROMACS力场拓扑文件的说明以及创建方法-2.png)
+![](/pic/GMX_amber.png)
 
 在上面的图中, 我对每个文件进行了简单的注释说明, 以帮助大家理解.
 
 其他力场目录的结构与此类似, 只不过文件有些不同, 比如GROMOS力场
 
-![](GROMACS力场拓扑文件的说明以及创建方法-3.png)
+![](/pic/GMX_gromos.png)
 
 以及OPLS-AA力场
 
-![](GROMACS力场拓扑文件的说明以及创建方法-4.png)
+![](/pic/GMX_oplsaa.png)
 
 ## 拓扑文件说明
 
@@ -215,7 +215,7 @@ GROMACS自带了四类力场: AMBER, CHARMM, GROMOS, OPLS-AA, 其中的AMBER和G
 
 点击[这里](/Prog/amber4.zip)下载AmberTools+ACPYPE, 下载后解压到某一目录(路径中不要包含中文字符), 然后新建环境变量`AMBERHOME`并将其设置为amber14的路径即可. 
 
-![](GROMACS力场拓扑文件的说明以及创建方法-5.png)
+![](/pic/GMX_amberhome.png)
 
 具体操作如下:
 
@@ -232,7 +232,7 @@ GROMACS自带了四类力场: AMBER, CHARMM, GROMOS, OPLS-AA, 其中的AMBER和G
 使用AmberTools+ACPYPE+Gaussian创建小分子GAFF力场拓扑文件的整个流程如下:
 
 
-![](GROMACS力场拓扑文件的说明以及创建方法-6.png)
+![](/pic/GMX_proc.png)
 
 创建过程的大致步骤是先利用Gaussian得到RESP电荷, 然后利用AmberTools得到AMBER的参数文件. 由于GROMACS和AMBER参数文件的格式很不一样，所以最后需要使用ACPYPE将AMBER参数文件转换为GROMACS可识别的.gro和.top文件. 具体步骤说明如下:
 
@@ -258,39 +258,39 @@ Mol.loadMolecule(Mol.frames[0].mols[0]);Mol.startAnimation();</script><br><figur
 
 点击`Calculate`->`Gaussian Calculation Setup`, 打开输入文件编译界面
 
-![](GROMACS力场拓扑文件的说明以及创建方法-7.png)
+![](/pic/GMX_g09.png)
 
 先将计算类型修改为优化,
 
-![](GROMACS力场拓扑文件的说明以及创建方法-8.png)
+![](/pic/GMX_opt.png)
 
 设定优化使用的方法, 基组, 以及体系的电荷, 自旋多重度
 
-![](GROMACS力场拓扑文件的说明以及创建方法-9.png)
+![](/pic/GMX_bs.png)
 
 标题段可改可不改
 
-![](GROMACS力场拓扑文件的说明以及创建方法-10.png)
+![](/pic/GMX_tit.png)
 
 `Link 0`部分可设定计算时所用的内存和核数. Windows下Gaussian最多可使用1 GB内存, 我的电脑是四核的, 这里我设置使用2个核
 
-![](GROMACS力场拓扑文件的说明以及创建方法-11.png)
+![](/pic/GMX_mem.png)
 
 `General`部分设置使用二次收敛的SCF方法以确保收敛, 选择忽略对称性, 不将连接信息写到输入文件中. 其实这些设置影响不大, 不改一般也没事.
 
-![](GROMACS力场拓扑文件的说明以及创建方法-12.png)
+![](/pic/GMX_scf.png)
 
 最后, `Add. Inp.`部分添加静电势输出文件的名称, 并在``中添加计算静电势的关键词
 
-![](GROMACS力场拓扑文件的说明以及创建方法-13.png)
+![](/pic/GMX_add.png)
 
 点击`Submit..`保存为.gjf文件, 并输出直角坐标和附加输入
 
-![](GROMACS力场拓扑文件的说明以及创建方法-14.png)
+![](/pic/GMX_gjf.png)
 
 打开产生的输入文件, 内容如下:
 
-![](GROMACS力场拓扑文件的说明以及创建方法-15.png)
+![](/pic/GMX_file.png)
 
 有关输入文件中关键词的解释, 见参考资料中的博文.
 
