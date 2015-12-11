@@ -1,0 +1,79 @@
+ATOM      1  C           0      -0.639   4.489  -1.288                       C
+ATOM      2  O           0      -0.746   5.881  -1.595                       O
+ATOM      3  H           0      -1.110   3.915  -2.059                       H
+ATOM      4  C           0       0.850   4.102  -1.198                       C
+ATOM      5  O           0       1.497   4.362  -2.447                       O
+ATOM      6  H           0       1.428   5.297  -2.654                       H
+ATOM      7  H           0       1.322   4.675  -0.428                       H
+ATOM      8  C           0       0.949   2.611  -0.865                       C
+ATOM      9  O           0       2.320   2.224  -0.747                       O
+ATOM     10  H           0       2.771   2.385  -1.579                       H
+ATOM     11  H           0       0.486   2.037  -1.641                       H
+ATOM     12  C           0       0.219   2.371   0.459                       C
+ATOM     13  H           0       0.688   2.937   1.236                       H
+ATOM     14  C           0      -1.245   2.826   0.304                       C
+ATOM     15  O           0      -1.290   4.225  -0.032                       O
+ATOM     16  H           0      -1.714   2.259  -0.473                       H
+ATOM     17  C           0      -1.991   2.596   1.631                       C
+ATOM     18  O           0      -3.352   3.013   1.491                       O
+ATOM     19  C           0      -4.045   2.799   2.724                       C
+ATOM     20  H           0      -1.961   1.556   1.881                       H
+ATOM     21  H           0      -1.522   3.163   2.407                       H
+ATOM     22  C           0      -2.126   6.245  -1.683                       C
+ATOM     23  H           0      -2.597   5.673  -2.454                       H
+ATOM     24  H           0      -2.206   7.287  -1.912                       H
+ATOM     25  H           0      -2.607   6.047  -0.748                       H
+ATOM     26  O           0       0.264   0.981   0.791                       O
+ATOM     27  C           0       1.626   0.567   0.927                       C
+ATOM     28  H           0       2.095   1.135   1.703                       H
+ATOM     29  H           0       1.660  -0.473   1.175                       H
+ATOM     30  H           0       2.142   0.730   0.003                       H
+ATOM     31  C           0      -5.553   2.490   2.715                       C
+ATOM     32  O           0      -3.422   2.864   3.815                       O
+ATOM     33  H           0      -5.806   1.974   1.812                       H
+ATOM     34  C           0      -6.348   3.806   2.794                       C
+ATOM     35  H           0      -7.396   3.591   2.788                       H
+ATOM     36  H           0      -6.106   4.421   1.953                       H
+ATOM     37  H           0      -6.095   4.322   3.697                       H
+ATOM     38  O           0      -5.878   1.668   3.840                       O
+ATOM     39  H           0      -6.818   1.475   3.835                       H
+END
+CONECT    1    2    3    4   15
+CONECT    2    1   22
+CONECT    3    1
+CONECT    4    1    5    7    8
+CONECT    5    4    6
+CONECT    6    5
+CONECT    7    4
+CONECT    8    4    9   11   12
+CONECT    9    8   10
+CONECT   10    9
+CONECT   11    8
+CONECT   12    8   13   14   26
+CONECT   13   12
+CONECT   14   12   15   16   17
+CONECT   15    1   14
+CONECT   16   14
+CONECT   17   14   18   20   21
+CONECT   18   17   19
+CONECT   19   18   31   32
+CONECT   20   17
+CONECT   21   17
+CONECT   22    2   23   24   25
+CONECT   23   22
+CONECT   24   22
+CONECT   25   22
+CONECT   26   12   27
+CONECT   27   26   28   29   30
+CONECT   28   27
+CONECT   29   27
+CONECT   30   27
+CONECT   31   19   33   34   38
+CONECT   32   19
+CONECT   33   31
+CONECT   34   31   35   36   37
+CONECT   35   34
+CONECT   36   34
+CONECT   37   34
+CONECT   38   31   39
+CONECT   39   38

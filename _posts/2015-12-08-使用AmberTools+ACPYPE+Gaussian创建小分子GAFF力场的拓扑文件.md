@@ -7,7 +7,11 @@
  - GMX
 ---
 
+<script src="/jscss/ChemDoodleWeb.js"></script>
+
 ## 2015-12-08 22:16:10
+
+- 下载本文用到的[文件](/Prog/GAFF.zip)
 
 使用AMBER的GAFF力场处理有机小分子有很大的优势, 可惜的是GROMACS没有自带GAFF力场, 所以需要组合使用各种软件组合来实现. 这里我们使用的是AmberTools和ACPYPE.
 
@@ -30,7 +34,6 @@
 对电荷的处理, 目前有两种比较合理的方法, AM1-bcc电荷与RESP电荷. AM1-bcc电荷可以使用AmberTools中的antechamber程序直接得到(或使用Chimera软件, 它集成了antechamber). RESP电荷则需借助第三方量子化学程序来得到, 如Gaussian, GAMESS等. 因此, 如果你想使用RESP电荷, 那你还需要安装一种量子化学程序. 由于Gaussian使用方便, 所以使用更广泛些. Windows版本的Gaussian及其自带的GaussView界面安装很容易, 网上资料也很多, 这里不做介绍.
 
 使用AmberTools+ACPYPE+Gaussian创建小分子GAFF力场拓扑文件的整个流程如下:
-
 
 ![](/pic/GMX_proc.png)
 
