@@ -134,7 +134,7 @@ __注意, Gaussian输入文件中的空行非常重要, 要严格按图上的格
 	loadamberparams Lig.frcmod
 	lig=loadmol2 Lig.mol2
 	check lig
-	saveamberparm Lig.prmtop Lig.inpcrd
+	saveamberparm lig Lig.prmtop Lig.inpcrd
 	quit
 
 然后运行`sleap`命令
