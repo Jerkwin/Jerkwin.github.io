@@ -68,7 +68,7 @@
 
 <ol class="incremental">
 <li>常量位置可用<code>[XX, YY, ZZ]</code>定义, 其中<code>XX</code>, <code>YY</code>和<code>ZZ</code>为实数.</li>
-<li><code>com of ATOM_EXPR [pbc]</code>或<code>cog of ATOM_EXPR [pbc]</code>计算<code>ATOM_EXPR</code>的质心/几何中心. 如果指定了<code>pbc</code>, 该迭代地计算中心以应对<code>ATOM_EXPR</code>沿周期性边界条件折叠的情况.</li>
+<li><code>com of ATOM_EXPR [pbc]</code>或<code>cog of ATOM_EXPR [pbc]</code>计算<code>ATOM_EXPR</code>的质心/几何中心. 如果指定了<code>pbc</code>, 会迭代地计算中心以应对<code>ATOM_EXPR</code>沿周期性边界条件折叠的情况.</li>
 <li><code>POSTYPE of ATOM_EXPR</code>为<code>ATOM_EXPR</code>中的原子计算指定的位置. <code>POSTYPE</code>可以是<code>atom</code>, <code>res_com</code>, <code>res_cog</code>, <code>mol_com</code>或<code>mol_cog</code>, 还可使用可选的前缀<code>whole_</code>, <code>part_</code>或<code>dyn_</code>. <code>whole_</code>计算整个残基/分子的中心, 即使它只有一部分被选中. <code>part_</code>前缀计算选中原子的中心, 但对同一残基/分子总是使用相同的原子. 所使用的原子从选区允许的最大组中确定. <code>dyn_</code>严格地只计算选中原子的中心. 如果没有指定前缀, 整个选区默认为<code>part_</code>, 而其他地方则默认为<code>whole_</code>. 后者通常适用于在不同工具中选中相同的分子, 而前者是速度与直觉行为的折衷(求值时<code>dyn_</code>位置会慢于<code>part_</code>).</li>
 <li>对整个选区给出的<code>ATOM_EXPR</code>, 将如上面第3条那样进行处理, 并使用命令行参数<code>-seltype</code>指定的位置类型.</li>
 </ol>
@@ -186,9 +186,11 @@ within REAL of POS_EXPR
 <pre><code>insolidangle center POS span POS_EXPR [cutoff REAL]
 </code></pre>
 
-<p>此关键词选中从<code>POS</code>(一个求值为单个位置的位置表达式)看去, <code>POS_EXPR</code>中任何位置处于<code>REAL</code>度(默认值为5)以内的原子, 即, 在以<code>POS</code>为中心, 由<code>POS_EXPR</code>中的位置张成的立体角之内的原子.</p>
+<p>此关键词选中从<code>POS</code>(一个求值为单个位置的位置表达式)看去, 处于<code>POS_EXPR</code>中任意位置的<code>REAL</code>度(默认为5度)之内的原子, 即, 在以<code>POS</code>为中心, 由<code>POS_EXPR</code>中的位置张成的立体角之内的原子. </p>
 
 <p>技术上, 立体角是一些小圆锥体的合集. 这些小圆锥体的顶点位于<code>POS</code>, 轴线穿过<code>POS_EXPR</code>中的一个点. 对<code>POS_EXPR</code>中的每一位置都有这样一个圆锥体. 如果某点处于这些圆锥体的任意一个之内, 它就处于这个立体角中. <code>cutoff</code>值决定了圆锥的宽度.</p>
+
+<p>【陈珂 注】此段第一句原文为: This keyword selects atoms that are within REAL degrees (default=5) of any position in POS_EXPR as seen from POS (a position expression that evaluates to a single position). 上面的翻译未必准确, 容易使人误解为只有<code>POS_EXPR</code>内的原子才会被选中. 从下文的技术性解释来看, <code>POS_EXPR</code>中的原子只用于确定每个小圆锥的轴线, 而落在任意一个小圆锥内的原子都会被选中. 所以<code>POS_EXPR</code>确定的并不是待选原子的范围, 而是立体角的轴线位置.</p>
 
 <h2 id="合并选区:mergeplus">合并选区: <code>merge</code>, <code>plus</code></h2>
 
@@ -274,7 +276,7 @@ atomnr 13 to 10
 <code>res_com of resnr 1 to 5 10</code></p></li>
 <li><p>距一个固定位置超过1 nm的所有原子<br/>
 <code>not within 1 of [1.2, 3.1, 2.4]</code></p></li>
-<li><p>属于残基LIG并距一个蛋白质(带有自定义名称)0.5 nm以内的所有原子:<br/>
+<li><p>属于残基LIG并距一个蛋白质0.5 nm以内的所有原子(带有自定义名称)<br/>
 <code>&quot;Close to protein&quot; resname LIG and within 0.5 of group &quot;Protein&quot;</code></p></li>
 <li><p>至少有一个原子距残基LIG 0.5 nm以内的所有蛋白质残基<br/>
 <code>group &quot;Protein&quot; and same residue as within 0.5 of resname LIG</code></p></li>
