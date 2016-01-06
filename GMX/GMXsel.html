@@ -1,0 +1,321 @@
+---
+ layout: posttoc
+ title: GROMACS选区(selection)语法及用法
+ categories:
+ - 科
+ tags:
+ - GMX
+---
+
+<h1 id="gromacs选区selection语法及用法--">GROMACS选区(selection)语法及用法</h1>
+
+<h2 id="翻译:陈珂修订:李继存">翻译: 陈珂; 修订: 李继存</h2>
+
+<p>选区用于选择原子/分子/残基以进行后续分析. 与传统索引(index)文件不同, 选区可以是动态的, 即, 可以对轨迹中的不同帧选择不同的原子. GROMACS手册的第八章《分析》中有一小节对选区进行了简短的介绍, 并给出了一些建议. 当你初次接触选区概念时, 这些建议可帮助你熟悉它. 下面将就选区的技术细节和语法方面给出更加详细的说明.</p>
+
+<p>每个分析工具需要的选区数目各不相同, 对选区的解读也不一样, 但大致意思仍然相同: 每个选区最终都归结为一套位置(a set of position), 位置可以是一些原子的原子位置, 质心, 或几何中心. 分析工具可使用这些位置进行分析, 这样处理时更加灵活. 需要注意的是, 某些分析工具对允许使用的选区种类可能存在限制.</p>
+
+<h2 id="在命令行中指定选区">在命令行中指定选区</h2>
+
+<p>如果没有在命令行中提供选区, 分析工具会提示你交互式地输入选区(对大多数工具而言, 在这种情况下也可以用管道提供选区). 尽管测试时这样做很方便, 但当选区很复杂, 或使用脚本时, 在命令行中提供选区更为容易.</p>
+
+<p>每个工具用于指定选区的命令行参数都不一样(参见每个工具的帮助文档). 你可以传递包含所有选区的一个单一字符串(以分号分隔), 或多个字符串, 每个字符串包含一个选区. 注意你需要将选区用引号引起来, 以防止shell对它们进行转换.</p>
+
+<p>如果你设置了一个选区命令行参数, 但没有提供任何选区, 分析工具会提示你交互式地为该参数输入选区. 当选区命令行参数可选时, 这一作法很有用, 因为在这种情况下工具通常不会给出输入提示.</p>
+
+<p>要使用一个文件提供选区, 可以在为选区参数提供的选区处使用<code>-sf file.dat</code>(例如<code>-select -sf file.dat</code>). 通常情况下, <code>-sf</code>参数从所提供的文件中读取选区, 并将它们赋值给所有已设置但尚未指定选区的选区参数. 有一种特殊情况是, <code>-sf</code>单独给出, 而没有前置的选区参数, 这时<code>-sf</code>会把选区赋值给所有(尚未设置)的必需选区参数(即, 那些如果没有从命令行得到选区, 就会给出交互式提示的选区参数).</p>
+
+<p>要使用传统索引文件中的组(group), 可以使用参数<code>-n</code>提供一个文件. 组的使用方法可参见《语法》小节. 如果没有提供此选项, 就会生成默认组. 默认组的生成逻辑与非选区工具中的相同.</p>
+
+<p>根据分析工具的不同, 可能会有两个额外的命令行参数供使用, 以控制分析工具行为:</p>
+
+<ul class="incremental">
+<li><code>-seltype</code> 用于指定对每个选区要计算的默认位置类型.</li>
+<li><code>-selrpos</code> 用于指定按坐标选择原子时使用的默认位置类型.</li>
+</ul>
+
+<p>关于这些选项的更多信息, 参见《位置》小节.</p>
+
+<h2 id="选区语法">选区语法</h2>
+
+<p>一套选区由一个或多个选区组成, 彼此以分号分隔. 每个选区定义了一套位置用于分析. 每个选区也可以用一个前置字符串进行命名, 以便在某些环境, 如图例中使用名称. 如果没有提供名称, 则会自动以描述选区的字符串作为名称.</p>
+
+<p>在交互式输入中, 语法稍有不同: 换行符也可用以分隔选区. 如果需要, 可使用<code>\</code>后接换行符来续行. 注意上述作法仅能用于真正的交互式输入, 而不适用于通过其他渠道, 比如管道, 提供选区的情况.</p>
+
+<p>用户可以使用变量存储选区表达式. 定义变量的语法如下:</p>
+
+<pre><code>VARNAME = EXPR ;
+</code></pre>
+
+<p>其中<code>EXPR</code>可以是任何合法的选区表达式. 定义后, 在任何<code>EXPR</code>合法的地方都可以使用<code>VARNAME</code>.</p>
+
+<p>选区包含三种主要的表达式类型: 定义原子的(<code>ATOM_EXPR</code>), 定义位置的(<code>POS_EXPR</code>), 以及归结为数值的(<code>NUM_EXPR</code>). 每个选区应是一个<code>POS_EXPR</code>或一个<code>ATOM_EXPR</code>(后者会自动转换为位置). 基本规则如下:</p>
+
+<ul class="incremental">
+<li>类似于<code>NUM_EXPR1 &lt; NUM_EXPR2</code>形式的表达式会求值为一个<code>ATOM_EXPR</code>, 其中选中所有使比较表达式成立的原子.</li>
+<li>原子表达式可以与逻辑操作组合使用, 比如<code>not ATOM_EXPR</code>, <code>ATOM_EXPR and ATOM_EXPR</code>, 或<code>ATOM_EXPR or ATOM_EXPR</code>. 可以使用括号来改变求值顺序.</li>
+<li><code>ATOM_EXPR</code>表达式能够以各种方式转换为<code>POS_EXPR</code>表达式, 详见《位置》小节.</li>
+<li><code>POS_EXPR</code>可转换为<code>NUM_EXPR</code>, 其语法类似于<code>x of POS_EXPR</code>. 目前仅支持单个位置, 比如表达式<code>x of cog of ATOM_EXPR</code>.</li>
+</ul>
+
+<p>某些关键词基于字符串的值, 比如原子名称, 来选中原子. 对这些关键词, 用户可以使用通配符(如<code>name &quot;C*&quot;</code>)或正则表达式(如<code>resname &quot;R[AB]&quot;</code>). 匹配类型会自动由字符串进行猜测: 如果它包含除字母, 数字, <code>*</code>或<code>?</code>以外的字符, 就被视为一个正则表达式. 要强制使用字符串的字面内容进行匹配, 可以使用<code>name = &quot;C*&quot;</code>来匹配字面的<code>C*</code>. 要强制使用其他匹配类型, 可以分别用<code>?</code>或<code>~</code>取代<code>=</code>, 这样就可以强制使用通配符或正则表达式进行匹配.</p>
+
+<p>包含非字母数字符号的字符串应该用双引号引起来, 像示例中那样. 对于其他字符串, 双引号是可选的, 但如果字符串的值与保留关键词冲突, 会导致语法错误. 如果你的字符串包含大写字母, 这就不该发生.</p>
+
+<p>由命令行选项<code>-n</code>提供或默认生成的索引组都可以使用<code>group NR</code>或<code>group NAME</code>进行引用, 其中<code>NR</code>为该组以零开始计数的索引号, <code>NAME</code>为该组名称的一部分. 如果整个选区都由一个索引组提供, 关键词<code>group</code>是可选的. 在交互模式下, 在行首按下回车键可以查看到可用组的列表.</p>
+
+<h2 id="在选区中指定位置">在选区中指定位置</h2>
+
+<p>用于在选区中指定位置的方法有:</p>
+
+<ol class="incremental">
+<li>常量位置可用<code>[XX, YY, ZZ]</code>定义, 其中<code>XX</code>, <code>YY</code>和<code>ZZ</code>为实数.</li>
+<li><code>com of ATOM_EXPR [pbc]</code>或<code>cog of ATOM_EXPR [pbc]</code>计算<code>ATOM_EXPR</code>的质心/几何中心. 如果指定了<code>pbc</code>, 该迭代地计算中心以应对<code>ATOM_EXPR</code>沿周期性边界条件折叠的情况.</li>
+<li><code>POSTYPE of ATOM_EXPR</code>为<code>ATOM_EXPR</code>中的原子计算指定的位置. <code>POSTYPE</code>可以是<code>atom</code>, <code>res_com</code>, <code>res_cog</code>, <code>mol_com</code>或<code>mol_cog</code>, 还可使用可选的前缀<code>whole_</code>, <code>part_</code>或<code>dyn_</code>. <code>whole_</code>计算整个残基/分子的中心, 即使它只有一部分被选中. <code>part_</code>前缀计算选中原子的中心, 但对同一残基/分子总是使用相同的原子. 所使用的原子从选区允许的最大组中确定. <code>dyn_</code>严格地只计算选中原子的中心. 如果没有指定前缀, 整个选区默认为<code>part_</code>, 而其他地方则默认为<code>whole_</code>. 后者通常适用于在不同工具中选中相同的分子, 而前者是速度与直觉行为的折衷(求值时<code>dyn_</code>位置会慢于<code>part_</code>).</li>
+<li>对整个选区给出的<code>ATOM_EXPR</code>, 将如上面第3条那样进行处理, 并使用命令行参数<code>-seltype</code>指定的位置类型.</li>
+</ol>
+
+<p>基于位置选择原子的选区关键词, 比如<code>dist from</code>, 默认使用命令行选项<code>-selrpos</code>定义的位置. 可以通过在关键词前面添加<code>POSTYPE</code>限定符来改变这一行为. 例如, <code>res_com dist from POS</code>求值为残基质心的距离. 在这个例子中, 基于计算出来的单个距离值, 一个残基中的所有原子将同时被选中或不被选中.</p>
+
+<h2 id="选区中的算术表达式">选区中的算术表达式</h2>
+
+<p>选区的数值表达式中支持基本的算术求值. 支持的操作有加, 减, 负, 乘, 除和幂(使用<code>^</code>). 除以零或其他非法操作的结果未定义.</p>
+
+<h2 id="选区关键词keyword">选区关键词(keyword)</h2>
+
+<p>以下为当前可用的选区关键词. 带加号标记的关键词会有一小节KEYWORD提供额外的帮助信息, 其中KEYWORD为该关键词的名字.</p>
+
+<ul class="incremental">
+<li><p>根据整数型性质选择原子的关键词:</p>
+
+<ul class="incremental">
+<li><code>atomnr</code></li>
+<li><code>mol</code> (与<code>molindex</code>同义)</li>
+<li><code>molecule</code> (与<code>molindex</code>同义)</li>
+<li><code>molindex</code></li>
+<li><code>resid</code> (与<code>resnr</code>同义)</li>
+<li><code>residue</code> (与<code>resindex</code>同义)</li>
+<li><code>resindex</code></li>
+<li><code>resnr</code></li>
+</ul>
+
+<p>(在表达式中使用, 或类似于<code>atomnr 1 to 5 7 9</code>)</p></li>
+<li><p>根据数值性质选择原子的关键词:</p>
+
+<ul class="incremental">
+<li><code>beta</code> (与<code>betafactor</code>同义)</li>
+<li><code>betafactor</code></li>
+<li><code>charge</code></li>
+<li><code>distance from POS [cutoff REAL]</code></li>
+<li><code>distance from POS [cutoff REAL]</code></li>
+<li><code>mass</code></li>
+<li><code>mindistance from POS_EXPR [cutoff REAL]</code></li>
+<li><code>mindistance from POS_EXPR [cutoff REAL]</code></li>
+<li><code>occupancy</code></li>
+<li><code>x</code></li>
+<li><code>y</code></li>
+<li><code>z</code></li>
+</ul>
+
+<p>(在表达式中使用, 或类似于<code>occupancy 0.5 to 1</code>)</p></li>
+<li><p>使用字符串性质选择原子的关键词:</p>
+
+<ul class="incremental">
+<li><code>altloc</code></li>
+<li><code>atomname</code></li>
+<li><code>atomtype</code></li>
+<li><code>chain</code></li>
+<li><code>insertcode</code></li>
+<li><code>name</code> (与<code>atomname</code>同义)</li>
+<li><code>pdbatomname</code></li>
+<li><code>pdbname</code> (与<code>pdbatomname</code>同义)</li>
+<li><code>resname</code></li>
+<li><code>type</code> (与<code>atomtype</code>同义)</li>
+</ul>
+
+<p>(用法类似于<code>name PATTERN [PATTERN] ...</code>)</p></li>
+<li><p>直接选中原子的额外关键词:</p>
+
+<ul class="incremental">
+<li><code>all</code></li>
+<li><code>insolidangle center POS span POS_EXPR [cutoff REAL]</code></li>
+<li><code>none</code></li>
+<li><code>same KEYWORD as ATOM_EXPR</code></li>
+<li><code>within REAL of POS_EXPR</code></li>
+</ul></li>
+<li><p>直接求值为位置的关键词:</p>
+
+<ul class="incremental">
+<li><code>cog of ATOM_EXPR [pbc]</code></li>
+<li><code>com of ATOM_EXPR [pbc]</code></li>
+</ul>
+
+<p>(另可参见《位置》小节)</p></li>
+<li><p>额外关键词:</p>
+
+<ul class="incremental">
+<li><code>merge POSEXPR</code></li>
+<li><code>POSEXPR permute P1 ... PN</code></li>
+<li><code>plus POSEXPR</code></li>
+</ul></li>
+</ul>
+
+<h2 id="根据原子名称选中原子:atomnamenamepdbatomnamepdbname">根据原子名称选中原子: <code>atomname</code>, <code>name</code>, <code>pdbatomname</code>, <code>pdbname</code></h2>
+
+<pre><code>name
+pdbname
+atomname
+pdbatomname
+</code></pre>
+
+<p>这些关键词通过名称选中原子, <code>name</code>选中使用GROMACS原子命名约定的原子. 对于除PDB以外的输入文件格式, 原子名称严格按照它们在输入文件中出现的形式匹配. 对于PDB文件, 处理以数字开头的4字符原子名称时, 会先把数字移到末尾再进行匹配(例如, 要匹配PDB文件中的<code>3HG2</code>, 应使用<code>name HG23</code>). <code>pdbname</code>只能用于PDB输入文件, 并基于输入文件中给出的精确名称选中原子, 不会进行上述的转换.</p>
+
+<p><code>atomname</code>和<code>pdbatomname</code>是以上两个关键词的同义词.</p>
+
+<h2 id="基于距离选中原子:distdistancemindistmindistancewithin">基于距离选中原子: <code>dist</code>, <code>distance</code>, <code>mindist</code>, <code>mindistance</code>, <code>within</code></h2>
+
+<pre><code>distance from POS [cutoff REAL]
+mindistance from POS_EXPR [cutoff REAL]
+within REAL of POS_EXPR
+</code></pre>
+
+<p><code>distance</code>和<code>mindistance</code>计算到给定位置的距离, 唯一的区别是<code>distance</code>只接受单个位置, 而<code>mindistance</code>可接受任意数目的位置, 然后计算到最近位置的距离. <code>within</code>直接选中到<code>POS_EXPR</code>的距离处于<code>REAL</code>之内的原子.</p>
+
+<p>对前两个关键词, 可以指定截断距离以加速求值: 所有大于指定截断值距离的返回值都等于截断值.</p>
+
+<h2 id="选中立体角内的原子:insolidangle">选中立体角内的原子: <code>insolidangle</code></h2>
+
+<pre><code>insolidangle center POS span POS_EXPR [cutoff REAL]
+</code></pre>
+
+<p>此关键词选中从<code>POS</code>(一个求值为单个位置的位置表达式)看去, <code>POS_EXPR</code>中任何位置处于<code>REAL</code>度(默认值为5)以内的原子, 即, 在以<code>POS</code>为中心, 由<code>POS_EXPR</code>中的位置张成的立体角之内的原子.</p>
+
+<p>技术上, 立体角是一些小圆锥体的合集. 这些小圆锥体的顶点位于<code>POS</code>, 轴线穿过<code>POS_EXPR</code>中的一个点. 对<code>POS_EXPR</code>中的每一位置都有这样一个圆锥体. 如果某点处于这些圆锥体的任意一个之内, 它就处于这个立体角中. <code>cutoff</code>值决定了圆锥的宽度.</p>
+
+<h2 id="合并选区:mergeplus">合并选区: <code>merge</code>, <code>plus</code></h2>
+
+<pre><code>POSEXPR merge POSEXPR [stride INT]
+POSEXPR merge POSEXPR [merge POSEXPR ...]
+POSEXPR plus POSEXPR [plus POSEXPR ...]
+</code></pre>
+
+<p>基本选区关键词只能创建每个原子至多出现一次的选区. <code>merge</code>和<code>plus</code>选区关键词可用于绕开这一限制. 二者创建的选区可以包含所有给定位置表达式中的位置, 即使其中有重复. 二者的差别在于, <code>merge</code>接受两个或以上, 所含位置个数相同的选区, 其输出包含从各选区中依次选出的输入位置, 即, 其输出类似于A1 B1 A2 B2并依此类推. 大小不等的选区也可以使用<code>merge</code>, 只要第一个选区的大小是第二个的整数倍. <code>stride</code>参数可用于显式地指定这个倍数. <code>plus</code>简单地把位置合并在一起, 也能用于大小不等的选区. 这些关键词只在选区级别合法, 不能用于任何子表达式.</p>
+
+<h2 id="排列选区:permute">排列选区: <code>permute</code></h2>
+
+<pre><code>permute P1 ... PN
+</code></pre>
+
+<p>默认情况下, 所有选区求值的返回形式为递增排序的原子索引. 可通过在表达式后面添加<code>permute P1 P2 ... PN</code>来改变这种行为. 所有<code>Pi</code>应形成数字1到N的一个排列. 这个关键词对选区中每个包含N个位置的位置块进行排列, 这样位置块中的第i个位置会变为第Pi个. 注意排列的是位置而不是单个原子. 如果选区的大小不是n的整数倍, 会导致致命错误. 只能对整个选区表达式进行排列, 而不能用于任何子表达式, 即, 关键词<code>permute</code>应出现在选区的最后.</p>
+
+<h2 id="扩展选区:same">扩展选区: <code>same</code></h2>
+
+<pre><code>same KEYWORD as ATOM_EXPR
+</code></pre>
+
+<p>关键词<code>same</code>可用于选中给定<code>KEYWORD</code>匹配<code>ATOM_EXPR</code>中任意原子的所有原子. 支持求值为整数或字符串值的关键词.</p>
+
+<h2 id="选区求值和优化">选区求值和优化</h2>
+
+<p>逻辑求值从左向右进行并使用短路规则, 即, 一旦知道了某一原子被选中与否, 就根本不会对剩余的表达式进行求值. 这个特性可用于优化选区: 在逻辑表达式中, 你应该首先写出最严格和/或最不耗时的表达式. 动态和静态表达式之间的相对顺序是无关紧要的: 所有静态表达式只在第一帧之前求值一次, 其结果将成为最左边的表达式.</p>
+
+<p>优化的另一个要点是公用子表达式: 它们不会被自动识别, 但可通过使用变量手动优化. 对于复杂的选区, 这会对性能产生非常大的影响, 尤其是当你像这样定义了几个索引组的时候:</p>
+
+<pre><code>rdist = distance from com of resnr 1 to 5;
+resname RES and rdist &lt; 2;
+resname RES and rdist &lt; 4;
+resname RES and rdist &lt; 6;
+</code></pre>
+
+<p>如果不设置变量, 这些距离会计算三次, 尽管在各个选区中它们完全一样. 任何赋值给变量的内容都会成为公用子表达式, 在一帧内只求解一次. 目前, 在某些情况下, 使用变量实际上会导致轻微的性能损失, 因为需要进行检查以确定表达式已经对哪些原子进行过求值, 但这应该不是大的问题.</p>
+
+<h2 id="选区的限制">选区的限制</h2>
+
+<ul class="incremental">
+<li><p>某些分析程序可能会要求输入的选区具有特殊的结构(例如, <code>gmx gangle</code>的某些选项要求索引组由包含三或四个原子的组构成). 对于此类程序, 用户需要提供合适的, 总能返回需要位置的选区表达式.</p></li>
+<li><p>所有选区关键词以递增顺序选中原子, 即, 你可以把它们当作集合操作, 在执行结束后按数值排序返回原子. 例如, 以下选区会以同样的顺序选中同样的原子:</p>
+
+<pre><code>resname RA RB RC
+resname RB RC RA
+
+atomnr 10 11 12 13
+atomnr 12 13 10 11
+atomnr 10 to 13
+atomnr 13 to 10
+</code></pre>
+
+<p>如果你需要原子/位置具有不同的顺序, 你可以:</p>
+
+<ul class="incremental">
+<li>使用外部索引组(对于某些静态选区),</li>
+<li>使用<code>permute</code>关键词来改变最终顺序, 或</li>
+<li>使用<code>merge</code>或<code>plus</code>关键词将多个不同选区组成最终选区.</li>
+</ul></li>
+<li><p>由于技术原因, 当表达式的第一个值为负值的时候, 像这样</p>
+
+<pre><code>charge -1 to -0.7
+</code></pre>
+
+<p>会导致语法报错. 一个变通的解决办法是写成</p>
+
+<pre><code>charge {-1 to -0.7}
+</code></pre>
+
+<p>来代替</p></li>
+<li><p>当<code>name</code>选区关键词用于PDB输入文件时, 输出行为可能不符合直觉. 当GROMACS读入一个PDB文件时, 以数字开头的4字符原子名称会进行转换, 例如, <code>1HG2</code>会转换成<code>HG21</code>, 而后者才是<code>name</code>关键词的匹配目标. 你可以使用<code>pdbname</code>来匹配输入PDB文件中本来的原子名称.</p></li>
+</ul>
+
+<h2 id="选区示例">选区示例</h2>
+
+<p>以下, 给出不同类型选区使用方法的示例.</p>
+
+<ul class="incremental">
+<li><p>选中所有水中的氧原子<br/>
+<code>resname SOL and name OW</code></p></li>
+<li><p>残基1到5, 以及残基10的质心<br/>
+<code>res_com of resnr 1 to 5 10</code></p></li>
+<li><p>距一个固定位置超过1 nm的所有原子<br/>
+<code>not within 1 of [1.2, 3.1, 2.4]</code></p></li>
+<li><p>属于残基LIG并距一个蛋白质(带有自定义名称)0.5 nm以内的所有原子:<br/>
+<code>&quot;Close to protein&quot; resname LIG and within 0.5 of group &quot;Protein&quot;</code></p></li>
+<li><p>至少有一个原子距残基LIG 0.5 nm以内的所有蛋白质残基<br/>
+<code>group &quot;Protein&quot; and same residue as within 0.5 of resname LIG</code></p></li>
+<li><p>质心距残基总质心介于2和4 nm之间的所有RES残基<br/>
+<code>rdist = res_com distance from com of resname RES</code><br/>
+<code>resname RES and rdist &gt;= 2 and rdist &lt;= 4</code></p></li>
+<li><p>包含如C1 C2 C2 C3 C3 C4 &#8230; C8 C9的重复原子的选区<br/>
+<code>name &quot;C[1-8]&quot; merge name &quot;C[2-9]&quot;</code></p>
+
+<p>这可用于<code>gmx distance</code>以计算C1-C2, C2-C3等原子之间的距离.</p></li>
+<li><p>具有顺序C2 C1的选区<br/>
+<code>name C1 C2 permute 2 1</code></p>
+
+<p>这可用于<code>gmx gangle</code>以得到C2-&gt;C1矢量而不是C1-&gt;C2矢量.</p></li>
+<li><p>由两个索引组的质心组成的选区<br/>
+<code>com of group 1 plus com of group 2</code></p>
+
+<p>这可用于<code>gmx distance</code>以计算这两个质心间的距离.</p></li>
+<li><p>沿x的固定矢量(可在<code>gmx gangle</code>中用作参考)<br/>
+<code>[0, 0, 0] plus [1, 0, 0]</code></p></li>
+<li><p>以下示例解释了各种位置类型之间的差异. 这个选区在每个残基选中一个位置, 其中三个原子C[123]中的任意一个满足<code>x &lt; 2</code>. 这个位置为所有三个原子的质心. 这是你只写<code>res_com of</code>时的默认行为.</p>
+
+<p><code>part_res_com of name C1 C2 C3 and x &lt; 2</code></p>
+
+<p>下面这个选区完成同样的工作, 但位置是整个残基的质心</p>
+
+<p><code>whole_res_com of name C1 C2 C3 and x &lt; 2</code></p>
+
+<p>最后, 下面这个选区选中同样的残基, 但位置是那些严格满足<code>x &lt; 2</code>判据的原子的质心</p>
+
+<p><code>dyn_res_com of name C1 C2 C3 and x &lt; 2</code></p></li>
+<li><p>没有<code>of</code>关键词时, 默认行为会与以上所述不同, 但除此以外规则是相同的:</p>
+
+<p><code>name C1 C2 C3 and res_com x &lt; 2</code></p>
+
+<p>就像指定了<code>whole_res_com</code>一样工作, 并从质心满足<code>x &lt; 2</code>的残基中选中那三个原子. 使用</p>
+
+<p><code>name C1 C2 C3 and part_res_com x &lt; 2</code></p>
+
+<p>会基于从C[123]原子计算的质心来选中残基.
+</p></li>
+</ul>
