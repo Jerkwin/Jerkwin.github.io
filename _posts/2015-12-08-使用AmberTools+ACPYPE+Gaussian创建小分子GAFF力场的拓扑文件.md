@@ -115,7 +115,7 @@ __注意, Gaussian输入文件中的空行非常重要, 要严格按图上的格
 
 	antechamber -i Lig.gesp -fi gesp -o Lig.mol2 -fo mol2 -pf y -c resp
 
-我们只需要`Lig.mol2`输出文件, 它包含了构型以及RESP电荷, 其他文件`ANTECHAMBER*`, `ATOMTYPE.INF` `BCCTYPE.INF` `NEWPDB.PDB` `PREP.INF`, `esout`, `qout`, 'punch`等都可删除.
+我们只需要`Lig.mol2`输出文件, 它包含了构型以及RESP电荷, 其他文件`ANTECHAMBER*`, `ATOMTYPE.INF` `BCCTYPE.INF` `NEWPDB.PDB` `PREP.INF`, `esout`, `qout`, `punch`等都可删除.
 
 ## 4. 使用parmchk2检查GAFF参数并生成缺失参数文件
 
