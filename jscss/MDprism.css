@@ -1,4 +1,29 @@
-html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup,menu,nav,output,ruby,section,summary,time,mark,audio,video{margin:0;padding:0;border:0;font-size:100%;font:inherit}article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block}body{font:21px/1.5 Helvetica,arial,"Microsoft YaHei",\5b8b\4f53,sans-serif;margin:0 auto;padding:0;max-width:100%;color:#276904}body>div{max-width:70%;padding:1em 1em 1em;margin:1em auto;border-top:.5em solid #e00;box-shadow:0 0 .5em 0 #737660;-moz-box-shadow:0 0 .5em 0 #737660;-webkit-box-shadow:0 0 .5em 0 #737660}
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup,menu,nav,output,ruby,section,summary,time,mark,audio,video{margin:0;padding:0;border:0;font-size:100%;font:inherit}article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block}body{font:21px/1.5 Helvetica,arial,"Microsoft YaHei",\5b8b\4f53,sans-serif;margin:0 auto;padding:0;max-width:100%;color:#276904}
+
+body{
+/*font:21px/1.5 Helvetica,arial,"Microsoft YaHei",\5b8b\4f53,sans-serif;margin:0 auto;padding:0;max-width:100%;color:#276904
+*/
+text-align:center;
+}
+
+body>div{
+/*
+max-width:70%;padding:1em 1em 1em;margin:1em auto;border-top:.5em solid #e00;box-shadow:0 0 .5em 0 #737660;-moz-box-shadow:0 0 .5em 0 #737660;-webkit-box-shadow:0 0 .5em 0 #737660
+*/
+}
+
+article { text-align:left; }
+div {
+position:relative;
+table-layout:fixed;
+word-break:break-all;
+margin:0 auto;
+display:inline-block;
+padding:0 5px 0 5px;
+text-align:center;
+width:930px;
+}
+
 #Bkg{display:none;position:absolute;left:0;width:100%;height:100%;max-width:100%;background-color:black;z-index:0;-moz-opacity:.85;opacity:.85;filter:alpha(opacity=85);padding:0;margin:0;border-top:0;box-shadow:0;-moz-box-shadow:0;-webkit-box-shadow:0}#Box{display:none;position:absolute;left:0;width:100%;height:100%;max-width:100%;border:5px solid #CCC;text-align:center;z-index:1;padding:0;margin:0;border-top:0;box-shadow:0;-moz-box-shadow:0;-webkit-box-shadow:0}#Box img{vertical-align:middle;max-width:100%}#Box i{display:inline-block;width:1px;height:30px;overflow:hidden;margin-left:-1px;vertical-align:middle}h1,h2,h3,h4,h5{font:bold 18px/1.5 Arial,SimHei;color:#000;margin-top:18px;margin-bottom:18px;padding:0}h1{font-size:36px;line-height:36px;color:#f8f8f8;background:#432;margin:0 0 28px 0;padding:12px;display:inline-block;border:1px solid #ccc;border-radius:10px;box-shadow:0 1px 0 2px #ddd}h2{font-size:30px;margin:18px 0 6px;border-bottom:1px solid}h3{font-size:24px}h4{font-size:21px}h5{font-size:18px}section>h3{margin:18px 0 18px 0}a,a:link,a:hover,a:active{color:#e00;margin:0 auto;padding:0;text-decoration:none;border-bottom-width:1px;border-bottom-style:solid;vertical-align:baseline}a:visited{color:#b22222}
 #TOC {
 	padding:0;margin:0 auto;
