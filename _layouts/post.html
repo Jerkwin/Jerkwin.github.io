@@ -4,6 +4,7 @@ layout: default
 
 {{ content }}
 
+</article>
 <section class="meta">
 <span style="display:table;margin:0 auto;">◆本文地址: <a href="{{ site.url }}{{ page.url }}" id="pageURL">{{ site.url }}{{ page.date | date:"%Y/%m/%d" }}/{{ page.title }}</a>, 转载请注明◆</span>
 </section>
@@ -16,15 +17,6 @@ MathJax.Hub.Config({TeX:{extensions: ["cancel.js", "enclose.js", "AMScd.js", "mh
 Macros:{a:"\\alpha",b:"\\beta",c:"\\chi",d:"\\delta",e:"\\epsilon",f:"\\phi",g:"\\gamma",h:"\\eta",i:"\\iota",j:"\\varphi",k:"\\kappa",l:"\\lambda",m:"\\mu",n:"\\nu",o:"\\omicron",p:"\\pi",q:"\\theta",r:"\\rho",s:"\\sigma",t:"\\tau",u:"\\upsilon",v:"\\varpi",w:"\\omega",x:"\\xi",y:"\\psi",z:"\\zeta",D:"\\Delta",F:"\\Phi",G:"\\Gamma",J:"\\vartheta",L:"\\Lambda",P:"\\Pi",Q:"\\Theta",S:"\\Sigma",U:"\\Upsilon",V:"\\varsigma",W:"\\Omega",X:"\\Xi",Y:"\\Psi",ve:"\\varepsilon",vk:"\\varkappa",vq:"\\vartheta",vp:"\\varpi",vr:"\\varrho",vs:"\\varsigma",vf:"\\varphi",alg:"\\begin{align}", ealg:"\\end{align}",bmat:"\\begin{bmatrix}", Bmat:"\\begin{Bmatrix}", pmat:"\\begin{pmatrix}", Pmat:"\\begin{Pmatrix}", vmat:"\\begin{vmatrix}", Vmat:"\\begin{Vmatrix}",ebmat:"\\end{bmatrix}", eBmat:"\\end{Bmatrix}",  epmat:"\\end{pmatrix}",  ePmat:"\\end{Pmatrix}",  evmat:"\\end{vmatrix}",  eVmat:"\\end{Vmatrix}",AA:"\\unicode{x212B}", Sum:"\\sum\\limits", abs:['\\lvert #1\\rvert',1], rmd:['\\mathop{\\mathrm{d}#1}',1],bi:['\\boldsymbol{#1}', 1], obar:['0\\!\\!\\!\\raise{.05em}{-}'],opar:['\\frac{\\partial #1}{\\partial #2}', 2], oppar:['\\frac{\\partial^2 #1}{\\partial #2^2}', 2]}}});
 MathJax.Hub.Queue(function(){
 var all=MathJax.Hub.getAllJax(),i;for(i=0;i<all.length;i+=1){all[i].SourceElement().parentNode.className+=' has-jax';}});
-</script>
-
-<script>
-$(function(){$(document).keydown(function(e){
-var url = false;
-if(e.which==37||e.which==74){ {% if page.previous %} url='{{ site.url }}{{ page.previous.url }}';{% endif %} }
-else if(e.which==39||e.which==75){ {% if page.next %}  url='{{ site.url }}{{ page.next.url }}';{% endif %} }
-if(url){window.location=url;} });})
-pageURL.innerHTML=decodeURI('{{ site.url }}{{ page.url }}');
 </script>
 
 <div class="ds-share" data-thread-key="{{ page.id }}" data-title="{{ page.title }}" data-images="此处请替换为分享时显示的图片的链接地址" data-content="此处请替换为分享时显示的内容" data-url="{{ site.url }}{{ page.url | remove:'index.html' }}">
@@ -41,10 +33,9 @@ pageURL.innerHTML=decodeURI('{{ site.url }}{{ page.url }}');
     </div>
  </div>
 
-<section class="comment">
 
 <div class="ds-thread" data-thread-key="{{ page.id }}" data-title="{{ page.title }}" data-url="{{ site.url }}{{ page.url | remove:'index.html' }}"></div>
-
+</div>
 <script>
 var duoshuoQuery = {short_name:"jerkwin"};
 	(function() {
@@ -60,6 +51,6 @@ var duoshuoQuery = {short_name:"jerkwin"};
 
 <hr>
 <section class="meta">
-<span style="float:left;"><a {% if page.previous %} href="{{ site.url }}{{ page.previous.url }}" style="font-size: 21px" {% endif %} {% unless page.previous %} class="pageNavInvalid" {% endunless %} >前一篇:　{{ page.previous.title }}</a></span>
-<br><span style="float:right;"><a {% if page.next %} href="{{ site.url }}{{ page.next.url }}" style="font-size: 21px" {% endif %} {% unless page.next %} class="pageNavInvalid" {% endunless %} >后一篇:　{{ page.next.title }}</a></span><br><hr>
+<span style="float:left;"><a {% if page.previous %} href="{{ site.url }}{{ page.previous.url }}" {% endif %} {% unless page.previous %} class="pageNavInvalid" {% endunless %} >前一篇:　{{ page.previous.title }}</a></span>
+<br><span style="float:right;"><a {% if page.next %} href="{{ site.url }}{{ page.next.url }}" {% endif %} {% unless page.next %} class="pageNavInvalid" {% endunless %} >后一篇:　{{ page.next.title }}</a></span><br><hr>
 </section>
