@@ -6,3 +6,5 @@ pygments: true
 safe: true
 paginate: 25
 auto: true
+kramdown:
+    toc_levels: 1..3
