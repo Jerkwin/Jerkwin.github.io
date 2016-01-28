@@ -8,17 +8,6 @@ footer, header, hgroup, menu, nav, section {
 	display: block;
 }
 */
-body {
-	font-size:1em;
-	font-family:Helvetica, arial, "Microsoft YaHei", \5b8b\4f53, sans-serif;
-line-height:150%;
-
-	margin: 0 auto;
-/*	padding: 0 0 0 17%;
-	max-width: 95%; 960px;*/
-	color:#276904;
-	/*background-color:#FAFFD0;*/
-}
 body>section {
 /*	width: 75%;
 	max-width: 50em;*/
@@ -35,8 +24,22 @@ body>section {
 html, body { height: 100%; }
 
 body {
-	font: 1em/1.5 Helvetica, arial, "Microsoft YaHei", \5b8b\4f53, sans-serif;
+	font-size:1em;
+	font-family:Helvetica, arial, "Microsoft YaHei", \5b8b\4f53, sans-serif;
+line-height:150%;
     background-color: #fdfdfd;
+
+/*	font: 1em/1.5 Helvetica, arial, "Microsoft YaHei", \5b8b\4f53, sans-serif;
+}
+body {
+		font: 14px Arial,Helvetica,sans-serif;
+
+
+	margin: 0 auto;
+	padding: 0 0 0 17%;
+	max-width: 95%; 960px;
+	color:#276904;
+	background-color:#FAFFD0;*/
 }
 
 a {
