@@ -2,12 +2,25 @@
 	margin: 0;
 	padding: 0;
 }
-/* HTML5 display-role reset for older browsers
-article, aside, details, figcaption, figure,
-footer, header, hgroup, menu, nav, section {
-	display: block;
+html, body { height: 100%; }
+
+body {
+	font-family:Helvetica, arial, "Microsoft YaHei", \5b8b\4f53, sans-serif;
+	font-size:1em;
+line-height:1.5;
+    background-color: #fdfdfd;
+
 }
-*/
+/*
+		font: 14px Arial,Helvetica,sans-serif;
+
+
+	margin: 0 auto;
+	padding: 0 0 0 17%;
+	max-width: 95%; 960px;
+	color:#276904;
+	background-color:#FAFFD0;*/
+
 body>section {
 /*	width: 75%;
 	max-width: 50em;*/
@@ -21,26 +34,6 @@ body>section {
 	-webkit-box-shadow: 0 0 10px 0 #737660;*/
 }
 
-html, body { height: 100%; }
-
-body {
-	font-size:1em;
-	font-family:Helvetica, arial, "Microsoft YaHei", \5b8b\4f53, sans-serif;
-line-height:150%;
-    background-color: #fdfdfd;
-
-/*	font: 1em/1.5 Helvetica, arial, "Microsoft YaHei", \5b8b\4f53, sans-serif;
-}
-body {
-		font: 14px Arial,Helvetica,sans-serif;
-
-
-	margin: 0 auto;
-	padding: 0 0 0 17%;
-	max-width: 95%; 960px;
-	color:#276904;
-	background-color:#FAFFD0;*/
-}
 
 a {
 	color: #EE0000;
