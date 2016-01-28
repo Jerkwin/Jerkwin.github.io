@@ -164,9 +164,9 @@ section>h3 {
 }
 .TOCEntry { font-family: sans-serif; }
 .TOCEntry a { text-decoration: none; }
-.TOCLevel1 { font-size: 16pt; font-weight: bold;margin-left: .1in; }
-.TOCLevel2 { font-size: 14pt; margin-left: .2in; }
-.TOCLevel3 { font-size: 12pt; margin-left: .4in; }
+.TOCLevel1 { font-size: 1.2em; font-weight: bold;margin-left: .5em; }
+.TOCLevel2 { font-size: 1em; margin-left: 1em; }
+.TOCLevel3 { font-size: 0.8em; margin-left: 2em; }
 .TOCSectNum:after { content: " "; }
 
 #Bkg {
@@ -300,6 +300,8 @@ table {
 	color:#000000;
 	background-color:#ECE8CD;
 	width:750px; overflow:auto;
+		max-width:100%;
+
 }
 th {
 	color:#ffffff;
@@ -318,7 +320,7 @@ td, tr {
 figure,img {
 	font: bold 21px/1 Helvetica, arial, "Microsoft YaHei", \5b8b\4f53, sans-serif;
 	text-align: center;
-	max-width:800px;
+	max-width:100%;
 	width:expression(this.width>800 ? "800px" : this.width);
 }
 figure figcaption { display: block; text-align: center; }
