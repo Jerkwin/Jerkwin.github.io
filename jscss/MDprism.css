@@ -104,6 +104,34 @@ h4 { font-size: 1.2em; }
 h5 { font-size: 1.1em; }
 .ds-comment-body,.ds-comment-header, .ds-replybox{ text-align:left; }
 
+#scrollTop, .menu-button {
+	position: fixed;
+	width: 1em;
+	height: 1.4em;
+	font-weight: bold;
+	background: #6E7173;
+	color: white;
+	border-radius: 50px;
+	font-size: 1.2em;
+	opacity: .75;
+	cursor: pointer;
+	-moz-transition: all 1s ease-out 0s;
+	-webkit-transition: all 1s ease-out 0s;
+}
+#scrollTop:hover,.menu-button:hover { background: #40AA53; }
+
+#scrollTop {
+	bottom: 2px;
+	right: 2px;
+	display: none;
+	z-index: 200;
+}
+.menu-button {
+	top: 2px;
+	left: 2px;
+	z-index: 20;
+}
+
 
 /* 
     background-color: #FBFBFB;
