@@ -9,7 +9,10 @@ footer, header, hgroup, menu, nav, section {
 }
 */
 body {
-	font: 21px/1.5 Helvetica, arial, "Microsoft YaHei", \5b8b\4f53, sans-serif;
+	font-size:1em;
+	font-family:Helvetica, arial, "Microsoft YaHei", \5b8b\4f53, sans-serif;
+line-height:150%;
+
 	margin: 0 auto;
 /*	padding: 0 0 0 17%;
 	max-width: 95%; 960px;*/
