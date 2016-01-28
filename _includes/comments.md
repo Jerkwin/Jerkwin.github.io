@@ -11,10 +11,8 @@
       </div>
     </div>
  </div>
-
-<section class="comment">
-
 <div class="ds-thread" data-thread-key="{{ page.id }}" data-title="{{ page.title }}" data-url="{{ site.url }}{{ page.url | remove:'index.html' }}"></div>
+</div>
 
 <script>
 var duoshuoQuery = {short_name:"jerkwin"};

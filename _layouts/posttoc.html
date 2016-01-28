@@ -16,21 +16,12 @@ function show(str) {
 }
 </script>
 
-<section class="post"> {{ content }} </section>
+{{ content }}
 
+</article>
 <section class="meta">
-</br><div style="text-align:center;color:#000"><strong style="font-size: 21px">◆本文地址: <a href="{{ site.url }}{{ page.url }}" id="pageURL">{{ site.url }}{{ page.date | date:"%Y/%m/%d" }}/{{ page.title }}</a>, 转载请注明◆</strong></div>
-<hr><span style="float:left;"><a {% if page.previous %} href="{{ site.url }}{{ page.previous.url }}" style="font-size: 21px" {% endif %} {% unless page.previous %} class="pageNavInvalid" {% endunless %} >前一篇:　{{ page.previous.title }}</a></span>
-<br/><span style="float:right;"><a {% if page.next %} href="{{ site.url }}{{ page.next.url }}" style="font-size: 21px" {% endif %} {% unless page.next %} class="pageNavInvalid" {% endunless %} >后一篇:　{{ page.next.title }}</a></span><br/><br/><hr>
-<!--span class="author"> <a href="http://Jerkwin.github.com">{{ site.author }}</a> </span>
-<span class="time"> / <time datetime="{{ page.date | date:"%Y-%m-%d" }}">{{ page.date | date:"%Y-%m-%d" }}</time> </span><br/>
-<span class="license">版权: <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">(CC) BY-NC-SA</a>&nbsp;</span>
-{% if page.categories %}<span class="categories">类别:
-{% for cat in page.categories %} <a href="/categories/#{{ cat }}" title="{{ cat }}">{{ cat }}</a>&nbsp;{% endfor %}</span>
-{% endif %}
-{% if page.tags %}<span class="tags">标签:
-{% for tag in page.tags %} <a href="/tags/#{{ tag }}" title="{{ tag }}">{{ tag }}</a>&nbsp;{% endfor %}</span>
-{% endif %} -->
+<span style="display:table;margin:0 auto;">◆本文地址: <a href="{{ site.url }}{{ page.url }}" id="pageURL">{{ site.url }}{{ page.date | date:"%Y/%m/%d" }}/{{ page.title }}</a>, 转载请注明◆</span>
+<hr>
 </section>
 
 <style> #container {margin:0 0 0 25%} </style>
@@ -45,13 +36,10 @@ MathJax.Hub.Queue(function(){
 var all=MathJax.Hub.getAllJax(),i;for(i=0;i<all.length;i+=1){all[i].SourceElement().parentNode.className+=' has-jax';}});
 </script>
 
-<script>
-$(function(){$(document).keydown(function(e){
-var url = false;
-if(e.which==37||e.which==74){ {% if page.previous %} url='{{ site.url }}{{ page.previous.url }}';{% endif %} }
-else if(e.which==39||e.which==75){ {% if page.next %}  url='{{ site.url }}{{ page.next.url }}';{% endif %} }
-if(url){window.location=url;} });})
-pageURL.innerHTML=decodeURI('{{ site.url }}{{ page.url }}');
-</script>
-
 {% include comments.md %}
+
+<hr>
+<section class="meta">
+<span style="float:left;"><a {% if page.previous %} href="{{ site.url }}{{ page.previous.url }}" {% endif %} {% unless page.previous %} class="pageNavInvalid" {% endunless %} >前一篇:　{{ page.previous.title }}</a></span>
+<br><span style="float:right;"><a {% if page.next %} href="{{ site.url }}{{ page.next.url }}" {% endif %} {% unless page.next %} class="pageNavInvalid" {% endunless %} >后一篇:　{{ page.next.title }}</a></span><br><hr>
+</section>
