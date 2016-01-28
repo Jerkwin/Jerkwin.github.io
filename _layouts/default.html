@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
 <head>
-<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta name=viewport content="width=device-width, initial-scale=1">
 <meta name="author" content="{{ site.author }}" />
 <title>{{ page.title }} | {{ site.author }}</title>
@@ -12,30 +12,39 @@
 
 <body>
 <span id="tblcontents" class="menu-button" onClick="show(this.innerHTML)">✕</span>
-<div id="container"><div id="main" role="main">
-<header><div class="buttons">
-<a href="/" title="Go to homepage">主页</a>
-<a href="/categories" title="Category" >类别</a>
-<a href="/tags" title="Tag Cloud" >标签</a>
-<a href="/guestbook" title="Guest Book" >留言</a>
-<a href="/links" title="Links" >链接</a>
-<a href="/about" title="About" >关于</a>
-<a href="/feed" title="Subscribe by RSS" >订阅</a>
-</div><h1>{{ page.title }}</h1></header>
-<hr>
-{% if page.categories %}<span class="categories">类别:
-{% for cat in page.categories %} <a href="/categories/#{{ cat }}" title="{{ cat }}">{{ cat }}</a>&nbsp;{% endfor %}</span>
+
+	<header class="site-header"><div class="wrap">
+		<a class="site-title" href="Jerkwin.html"><strong><font style="color:#39B3D7">哲</font><font style="color:#ED9C28">◆</font><font style="color:#47A447">科</font><font style="color:#D9534F">●</font><font style="color:#3276B1">文</font></strong></a>
+
+<a class="page-link" href="/categories">类别</a>
+<a class="page-link" href="/tags">标签</a>
+<a class="page-link" href="/guestbook">留言</a>
+<a class="page-link" href="/links">链接</a>
+<a class="page-link" href="/about">关于</a>
+<a class="page-link" href="/feed">订阅</a>
+</div></header>
+
+	<div class="wrap">
+
+<h1>{{ page.title }}</h1>
+<p class="meta">
+
+{% if page.categories %}类别:
+{% for cat in page.categories %} <a href="/categories/#{{ cat }}" title="{{ cat }}">{{ cat }}</a>&nbsp;{% endfor %}
 {% endif %}
-{% if page.tags %}<span class="tags">&nbsp;&nbsp;标签:
-{% for tag in page.tags %} <a href="/tags/#{{ tag }}" title="{{ tag }}">{{ tag }}</a>&nbsp;{% endfor %}</span>
+{% if page.tags %}&nbsp;&nbsp;标签:
+{% for tag in page.tags %} <a href="/tags/#{{ tag }}" title="{{ tag }}">{{ tag }}</a>&nbsp;{% endfor %}
 <span id="busuanzi_container_page_pv">&nbsp;&nbsp;阅读次数: <span id="busuanzi_value_page_pv"></span></span>
-<span class="license">&nbsp;&nbsp;版权: <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">(CC) BY-NC-SA</a></span>
+&nbsp;&nbsp;版权: <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">(CC) BY-NC-SA</a>
 {% endif %}
 
-<article class="content">{{ content }}</article></div>
-<footer><p><small><span id="busuanzi_container_site_uv">访问人次(2015年7月9日起): <span id="busuanzi_value_site_uv"></span></span> | <span class="label label-info">最后更新: {{site.time | date:"%Y-%m-%d %H:%M:%S %Z"}}</span><BR>
-后台支持: <a href="https://github.com/mojombo/jekyll">Jekyll</a> | 版权所有 © 2008 - {{site.time | date:"%Y"}} <a href="http://jerkwin.github.io/about/">Jerkwin</a></small></p></footer>
+<article class="content">{{ content }}</article>
+
 </div>
+
+<span id="busuanzi_container_site_uv">访问人次(2015年7月9日起): <span id="busuanzi_value_site_uv"></span></span> | <span class="label label-info">最后更新: {{site.time | date:"%Y-%m-%d %H:%M:%S %Z"}}</span><BR>
+后台支持: <a href="https://github.com/mojombo/jekyll">Jekyll</a> | 版权所有 © 2008 - {{site.time | date:"%Y"}} <a href="http://jerkwin.github.io/about/">Jerkwin</a>
+
 <a id="scrollTop" href="javascript:scroll(0,0)">&#8657;</a>
 </body>
 <script>
