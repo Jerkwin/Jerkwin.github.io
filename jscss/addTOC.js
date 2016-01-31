@@ -70,7 +70,7 @@ function toc() {
 		// We place the number in a <span> to make it styleable.
 		var span = document.createElement("span");
 		span.className = "TOCSectNum";
-		//span.innerHTML = sectionNumber;
+		//span.innerHTML = sectionNumber; //不增加数字
 		heading.insertBefore(span, heading.firstChild);
 		// Wrap the heading in a named anchor so we can link to it.
 		var anchor = document.createElement("a");
