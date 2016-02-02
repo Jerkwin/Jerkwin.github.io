@@ -17,10 +17,11 @@ comments: yes
 >the finite lives and the infinite cosmos.  
 
 
-这里存留我学习思考的痕迹   
+这里存留我学习思考的痕迹
+
 或许对你也有所启发
 
+如果你想联系我, 请试试下面方式
 
-
-* 个人邮箱:Jerkwin@gmail.com      
-* github : [https://github.com/jerkwin](https://github.com/jerkwin)      
+* 个人邮箱: <Jerkwin@gmail.com>
+* GitHub : [https://github.com/jerkwin](https://github.com/jerkwin)      
