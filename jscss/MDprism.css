@@ -62,14 +62,15 @@ a:hover { color: #000; }
 
 h1, h2, h3, h4, h5, h6 {
     color: #333;
+	margin: .5em 0 .2em 1em;
 }
 h1 {     font-size: 1.5em;
 	color: #000;
 	margin: 1em 0 0.2em 0;
 }
-h2 { font-size: 1.3em; margin: .5em 0 .2em 1em; border-bottom: 1px solid;}
-h3 { font-size: 1.2em; }
-h4 { font-size: 1.1em; }
+h2 { font-size: 1.2em;  border-bottom: 1px solid;}
+h3 { font-size: 1.1em; }
+h4 { font-size: 1em; }
 
 p {
 	margin: 1em  0 .5em 0 ;
@@ -97,8 +98,8 @@ blockquote, q {
 	background: #CCE8CF;
 	border-left: 2.5em solid #2f6fab;*/
 }
-blockquote ol { margin: .5em;  }
-blockquote li { margin: .5em; }
+blockquote ol { margin: 1em;  }
+blockquote li { margin: 1em; }
 q:before, q:after,
 blockquote:before, blockquote:after {
 	content: open-quote;
@@ -272,7 +273,7 @@ hr {
 }
 
 table {
-	font: bold 1em/1.5 Consolas, "Courier New",  Monaco;
+	font: bold 1em/1.2 Consolas, "Courier New",  Monaco;
 	text-align:left;
 	vertical-align: baseline;
 	border: 2px solid #888;
