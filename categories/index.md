@@ -3,9 +3,11 @@ title: 类别
 layout: page
 ---
 
+<span>
 {% for cat in site.categories %}
 <a href="#{{ cat[0] }}" rel="{{ cat[1].size }}">{{ cat[0] }}<sup style="color:#07e">{{ cat[1].size }}</sup></a>&nbsp;&nbsp;&nbsp;
 {% endfor %}
+</span>
 
 <hr>
 

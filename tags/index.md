@@ -3,9 +3,11 @@ title: 标签
 layout: page
 ---
 
+<span>
 {% for tag in site.tags %}
 <a href="#{{ tag[0] }}" rel="{{ tag[1].size }}">{{ tag[0] }}</a><sup style="color:#07e">{{ tag[1].size }}</sup>&nbsp;&nbsp;&nbsp;
 {% endfor %}
+</span>
 <hr>
 <ul class="listing">
 {% for tag in site.tags %}
