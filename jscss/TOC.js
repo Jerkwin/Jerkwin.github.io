@@ -1,6 +1,6 @@
 
 function box() {
-	var Box = C$("div");   
+	var Box = C$("div");
 	Box.id = "Box";
 	Box.innerHTML="<img id='TopImg'><br><span id='TopTxt'><br></span><span id='TopIdx'></span>";
 	document.body.insertBefore(Box, document.body.firstChild);

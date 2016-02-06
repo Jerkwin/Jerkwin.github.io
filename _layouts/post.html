@@ -9,6 +9,16 @@ layout: default
 <span style="display:table;margin:0 auto;">◆本文地址: <a href="{{ site.url }}{{ page.url }}" id="pageURL">{{ site.url }}{{ page.date | date:"%Y/%m/%d" }}/{{ page.title }}</a>, 转载请注明◆</span>
 <hr></span>
 
+
+{% include comments.md %}
+
+<hr>
+<span class="meta">
+<a {% if page.previous %} href="{{ site.url }}{{ page.previous.url }}" {% endif %} {% unless page.previous %} class="pageNavInvalid" {% endunless %} >前一篇:　{{ page.previous.title }}</a>
+<br><a {% if page.next %} href="{{ site.url }}{{ page.next.url }}" {% endif %} {% unless page.next %} class="pageNavInvalid" {% endunless %} >后一篇:　{{ page.next.title }}</a>
+</span>
+</div>
+
 <script src="/jscss/TOC.js"></script>
 <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 <script type="text/x-mathjax-config">
@@ -19,10 +29,3 @@ MathJax.Hub.Queue(function(){
 var all=MathJax.Hub.getAllJax(),i;for(i=0;i<all.length;i+=1){all[i].SourceElement().parentNode.className+=' has-jax';}});
 </script>
 
-{% include comments.md %}
-
-<hr>
-<span class="meta">
-<a {% if page.previous %} href="{{ site.url }}{{ page.previous.url }}" {% endif %} {% unless page.previous %} class="pageNavInvalid" {% endunless %} >前一篇:　{{ page.previous.title }}</a>
-<br><a {% if page.next %} href="{{ site.url }}{{ page.next.url }}" {% endif %} {% unless page.next %} class="pageNavInvalid" {% endunless %} >后一篇:　{{ page.next.title }}</a>
-</span>
