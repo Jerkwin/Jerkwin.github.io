@@ -6,9 +6,9 @@ layout: default
 
 </article>
 <span class="meta">
-<span style="display:table;margin:0 auto;">◆本文地址: <a href="{{ site.url }}{{ page.url }}" id="pageURL">{{ site.url }}{{ page.date | date:"%Y/%m/%d" }}/{{ page.title }}</a>, 转载请注明◆</span>
+<span style="display:table;margin:0 auto;">◆本文地址: <a href="{{ site.url }}{{ page.url }}" id="pageURL"></a>, 转载请注明◆</span>
 <hr></span>
-
+<script>var url=document.getElementById('pageURL');url.innerHTML=decodeURI(url.href)</script>
 
 {% include comments.md %}
 
