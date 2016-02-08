@@ -20,6 +20,12 @@
 	<a class="page-link" href="/about">关于</a>
 	<a class="page-link" href="/feed">订阅</a>
 </div></header>
+
+{% if page.title %}
+* Put anything here
+{:toc}
+{% endif %}
+
 <span id="tblcontents" onClick="show(this.innerHTML)">✕</span>
 <div class="wrap">
 <h1>{{ page.title }}</h1>
@@ -45,6 +51,15 @@
 </body>
 <script>
 var $=function(id){return document.getElementById(id)}, $top=$("scrollTop")
+function show(str) {
+	if(str=='☰') {
+		$('tblcontents').innerHTML="✕";
+		$('markdown-toc').style.display="block"
+	} else {
+		$('tblcontents').innerHTML='☰';
+		$('markdown-toc').style.display="none"
+	}
+}
 window.onscroll = function() {
 	var docTop=document.documentElement.scrollTop||document.body.scrollTop
 	docTop>0 ? $top.style.display="block" : $top.style.display="none"
