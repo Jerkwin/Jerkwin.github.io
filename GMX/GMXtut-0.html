@@ -756,12 +756,12 @@ Performance:       30.231        0.794
 选择<code>protein</code>可以只显示蛋白质分子, 而隐藏盒子中的水分子.</p>
 
 <figure>
-<img src="GMXtut-0_ngmx-1.png" alt="ngmx的初始启动对话框" />
+<img src="/GMX/GMXtut-0_ngmx-1.png" alt="ngmx的初始启动对话框" />
 <figcaption>ngmx的初始启动对话框</figcaption>
 </figure>
 
 <figure>
-<img src="GMXtut-0_ngmx-2.png" alt="ngmx查看蛋白质结构" />
+<img src="/GMX/GMXtut-0_ngmx-2.png" alt="ngmx查看蛋白质结构" />
 <figcaption>ngmx查看蛋白质结构</figcaption>
 </figure>
 
@@ -836,7 +836,7 @@ Temperature                 299.932      0.053    2.62809 0.00744002  (K)
 下面是模拟过程中温度的变化图.</p>
 
 <figure>
-<img src="GMXtut-0_Temp.png" alt="" />
+<img src="/GMX/GMXtut-0_Temp.png" alt="" />
 </figure>
 
 <h3 id="3.g_confrms比较结构差异">3. g_confrms比较结构差异</h3>
@@ -850,7 +850,7 @@ Temperature                 299.932      0.053    2.62809 0.00744002  (K)
 <p>运行命令后会提示选择一个组, 两次都选择<code>4 (Backbone)</code>. 程序会对两个结构进行最小二乘拟合, 计算其RMSD值, 并输出结构文件(<code>fit.pdb</code>), 其中包含了叠合后的两个结构.</p>
 
 <figure>
-<img src="GMXtut-0_Fit.png" alt="叠合后的结构, 红色为初始结构, 青色为模拟完成后的结构." />
+<img src="/GMX/GMXtut-0_Fit.png" alt="叠合后的结构, 红色为初始结构, 青色为模拟完成后的结构." />
 <figcaption>叠合后的结构, 红色为初始结构, 青色为模拟完成后的结构.</figcaption>
 </figure>
 
@@ -875,7 +875,7 @@ Temperature                 299.932      0.053    2.62809 0.00744002  (K)
 <p>程序会对结构进行最小二乘拟合并给出RMSD随时间的变化.</p>
 
 <figure>
-<img src="GMXtut-0_RMSD.png" alt="" />
+<img src="/GMX/GMXtut-0_RMSD.png" alt="" />
 </figure>
 
 <p><code>g_rmsdist</code>命令可计算原子之间距离变化的RMSD:</p>
@@ -883,7 +883,7 @@ Temperature                 299.932      0.053    2.62809 0.00744002  (K)
 <p><code>g_rmsdist -s npt-nopr.tpr -f npt-nopr.xtc -o distrmsd.xvg</code></p>
 
 <figure>
-<img src="GMXtut-0_RMSDist.png" alt="" />
+<img src="/GMX/GMXtut-0_RMSDist.png" alt="" />
 </figure>
 
 <p><strong>说明</strong>: 上面两个命令也可以使用索引文件选择需要计算的原子.</p>
@@ -932,7 +932,7 @@ Temperature                 299.932      0.053    2.62809 0.00744002  (K)
 </code></pre>
 
 <figure>
-<img src="GMXtut-0_bfac.png" alt="温度因子填色结构图, 蓝色为冷区域, 绿色为中等区域, 红色为热区域." />
+<img src="/GMX/GMXtut-0_bfac.png" alt="温度因子填色结构图, 蓝色为冷区域, 绿色为中等区域, 红色为热区域." />
 <figcaption>温度因子填色结构图, 蓝色为冷区域, 绿色为中等区域, 红色为热区域.</figcaption>
 </figure>
 
@@ -945,7 +945,7 @@ Temperature                 299.932      0.053    2.62809 0.00744002  (K)
 <p>选择<code>1 Protein</code>并回车.</p>
 
 <figure>
-<img src="GMXtut-0_Rg.png" alt="" />
+<img src="/GMX/GMXtut-0_Rg.png" alt="" />
 </figure>
 
 <h3 id="8.g_sas计算溶剂可及表面积">8. g_sas计算溶剂可及表面积</h3>
@@ -968,7 +968,7 @@ Temperature                 299.932      0.053    2.62809 0.00744002  (K)
 <code>convert fws_ss.eps fws_ss.png</code></p>
 
 <figure>
-<img src="GMXtut-0_2ndStructure.png" alt="二级结构图" />
+<img src="/GMX/GMXtut-0_2ndStructure.png" alt="二级结构图" />
 <figcaption>二级结构图</figcaption>
 </figure>
 
@@ -985,7 +985,7 @@ Temperature                 299.932      0.053    2.62809 0.00744002  (K)
 <p>GROAMCS中氢键的默认判断标准如下</p>
 
 <figure>
-<img src="GMXtut-0_hbond.png" alt="判断氢键的几何条件" />
+<img src="/GMX/GMXtut-0_hbond.png" alt="判断氢键的几何条件" />
 <figcaption>判断氢键的几何条件</figcaption>
 </figure>
 
@@ -1032,7 +1032,7 @@ r &\le 0.35 \text{nm} \\
 <p>使用<code>ghostview</code>(或<code>PhotoShop</code>)来查看得到的图片(<code>gv covara.eps</code>). 使用<code>xpm2ps -rainbow</code>选项来采用其他的颜色方案.</p>
 
 <figure>
-<img src="GMXtut-0_covara.png" alt="" />
+<img src="/GMX/GMXtut-0_covara.png" alt="" />
 </figure>
 
 <p>典型的情况, 只有非常少的几个本征矢量(涨落模式)对蛋白质的整体运动有显著贡献. 要查看最主要的模式(1), 可使用下面的命令:</p>

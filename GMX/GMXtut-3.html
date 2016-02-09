@@ -18,7 +18,7 @@
 </ul>
 
 <figure>
-<img src="GMXtut-3_pull_start.png" alt="" />
+<img src="/GMX/GMXtut-3_pull_start.png" alt="" />
 <figcaption></figcaption></figure>
 
 
@@ -78,7 +78,7 @@
 <p>在VMD的窗口中, 你会看到类似下面的图:</p>
 
 <figure>
-<img src="GMXtut-3_box.jpg" alt="" />
+<img src="/GMX/GMXtut-3_box.jpg" alt="" />
 <figcaption></figcaption></figure>
 
 <h2 id="第三步:添加溶剂和离子">第三步: 添加溶剂和离子</h2>
@@ -118,7 +118,7 @@ gmx mdrun -deffnm npt
 <p>为了运行伞形采样, 我们必须沿反应坐标 <span class="math">\(\z\)</span> 生成一系列构型. 其中的一些构型将作为伞形采样窗口的初始构型, 并进行独立的模拟. 下图解释了这些原则. 图的上部显示了我们将要运行的牵引模拟, 目的在于产生一系列沿反应坐标的构型, 模拟完成后会抽取这些构型(图片上部和中部之间的虚线箭头). 图的中部对应着每一采样窗口内的独立模拟, 其中使用伞形偏离势将自由多肽的质心限制在窗口中. 图的底部展示了构型直方图的理想结果, 相邻窗口存在重叠, 这样以后就可以从这些模拟得到连续的能量函数.</p>
 
 <figure>
-<img src="GMXtut-3_umbrella_schematic.jpg" alt="" />
+<img src="/GMX/GMXtut-3_umbrella_schematic.jpg" alt="" />
 <figcaption></figcaption></figure>
 
 <p>对本教程的例子, 反应坐标为Z轴. 为产生这些构型, 我们必须牵引多肽A, 使其远离原丝纤维. 我们将运行500 ps的牵引MD, 每1 ps保存一张快照. 这一设置是基于试错法(trial-and-error)得到的, 可得到合理的构型分布. 对于其他体系, 保存构型的频率可能需要更高或者更低, 只要足够就好. 关键是沿反应坐标获得足够的构型, 以使伞形采样窗口的间距正常, 窗口间距以多肽A和B的质心距离表示, 其中B为参考组.</p>
@@ -256,7 +256,7 @@ umbrella22.tpr
 <p><code>gmx wham</code>工具会依次打开每一个<code>umbrella.tpr</code>和<code>pullf.xvg</code>文件, 并对它们进行WHAM分析. <code>-unit kCal</code>选项表明输出单位为kcal/mol, 但你也可以设置为kJ/mol或k<sub>B</sub>T. 注意: 你可能不得不舍去用于平衡的前几百ps轨迹(使用<code>gmx wham -b</code>), 因为我们是从非平衡模拟产生的起始构型. 一旦PMF曲线收敛, 你就会知道体系需要多长时间才能达到平衡. 最后, 你会得到一个<code>profile.xvg</code>文件, 其图形看起来像这样:</p>
 
 <figure>
-<img src="GMXtut-3_PMF_WT_31windows.jpg" alt="" />
+<img src="/GMX/GMXtut-3_PMF_WT_31windows.jpg" alt="" />
 <figcaption></figcaption></figure>
 
 <p>请注意, 你得到的结果可能有所不同, 因为本教程中建议的间距与我之前的原始研究中实际用于生成上图数据所用的间距不同, 并且, 更重要的是, 我论文中的数据是对原丝纤维结构进行100 ns非限制MD平衡后得到的, 其结构实际上与本教程中的有很大不同. 曲线的整体形状应该是类似的, 如果你遵循论文中的流程, <span class="math">\(\D G\)</span> 的值(PMF曲线平台区与曲线能量最小点之间的差)应接近&#8211;50.5 kcal/mol(如上图所示). 如果你遵循本教程中的流程, 得到的值大约为&#8211;37 kcal/mol.</p>
@@ -264,7 +264,7 @@ umbrella22.tpr
 <p><code>gmx wham</code>命令的另一个输出文件为<code>histo.xvg</code>, 其中包含了伞形采样窗口中各个构型的直方图, 这些直方图决定了每个窗口与临近窗口之间是否有足够的重叠. 对于本教程所用的模拟, 得到的图可能类似下面这样:</p>
 
 <figure>
-<img src="GMXtut-3_histo.jpg" alt="" />
+<img src="/GMX/GMXtut-3_histo.jpg" alt="" />
 <figcaption></figcaption></figure>
 
 <p>上面的直方图显示了质心距离大约从1.2到5 nm的采样窗口之间的合理重叠, 1 nm处(绿线和蓝线)表明可能需要更多的采样窗口以便根据WHAM算法得到更好的结果. 事实上, 这两个窗口之间的重叠非常小.</p>
