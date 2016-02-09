@@ -18,7 +18,7 @@
 </ul>
 
 <figure>
-<img src="GMXtut-6_system.png" alt="" />
+<img src="/GMX/GMXtut-6_system.png" alt="" />
 <figcaption></figcaption></figure>
 <h2 id="概述">概述</h2>
 
@@ -103,9 +103,9 @@ SOL               596
 
 <p>体系从状态A转变到状态B过程的自由能变化 <span class="math">\(\D G_\text{AB}\)</span> 是耦合参数 <span class="math">\(\l\)</span> 的函数, 它代表了状态A和B之间转变的程度, 也就是哈密顿量的微扰程度以及体系已经变化的程度. 利用不同 <span class="math">\(\l\)</span> 对应的模拟可以绘制 <span class="math">\(\partial H/\partial \l\)</span> 曲线, 并由此得到 <span class="math">\(\D G_\text{AB}\)</span>. 自由能计算的第一步是确定使用多少个点描述从状态A(<span class="math">\(\l\)</span> = 0)到状态B(<span class="math">\(\l\)</span> = 1)的转变, 其目的在于收集足够多的数据, 完全充分地对相空间进行取样, 并得到合理的 <span class="math">\(\partial H/\partial \l\)</span> 曲线.</p>
 <p>
-<img src="GMXtut-6_lambda0.png" alt="λ = 0" />
-<img src="GMXtut-6_lambda0.5.png" alt="λ = 0.5" />
-<img src="GMXtut-6_lambda1.png" alt="λ = 1" />
+<img src="/GMX/GMXtut-6_lambda0.png" alt="λ = 0" />
+<img src="/GMX/GMXtut-6_lambda0.5.png" alt="λ = 0.5" />
+<img src="/GMX/GMXtut-6_lambda1.png" alt="λ = 1" />
 <figcaption>λ = 0.5 λ = 0       λ = 1</figcaption>
 </p>
 
@@ -394,7 +394,7 @@ total      0 -     20,   DG -9.25 +/-  0.15
 <p>让我们开始检查<code>gmx bar</code>给出的其他输入文件, 从<code>bar.xvg</code>开始. 这个输出文件给出了每个 <span class="math">\(\l\)</span> 区间(即相邻哈密顿量之间)的相对自由能差, 并且看起来应该类似下面的图(使用柱状图绘制, 而没有使用默认的线状图, 为便于查看添加了一些网格线)</p>
 
 <figure>
-<img src="GMXtut-6_bar_plot.jpg" alt="" />
+<img src="/GMX/GMXtut-6_bar_plot.jpg" alt="" />
 <figcaption></figcaption></figure>
 
 <p>灰色竖线代表去耦合过程中使用的 <span class="math">\(\l\)</span> 值, 因此, 每一黑色柱代表了相邻 <span class="math">\(\l\)</span> 值之间的自由能差. 在<code>bar.xvg</code>文件中, 我们首先可以看到模拟中使用了什么<code>calc_lambda_neighbors</code>. 例如在<code>init_lambda_state = 0</code>的模拟中, <span class="math">\(\l=0.05\)</span> 的自由能(最近的临近窗口, 由<code>calc_lambda_neighbors = 1</code>设定)每<code>nstdhdl</code>(10)步计算一次. 这些&#8220;外部&#8221; <span class="math">\(\l\)</span> 计算可导致不同 <span class="math">\(\l\)</span> 值之间的能量发生重叠, 这样就存在相空间之间的重叠, 从而抽样充分. 感兴趣的读者可参看<code>gmx bar</code>说明中引用的Wu和Kofke的<a href="http://link.aip.org/link/doi/10.1063/1.2011391">论文</a>, 以了解这些概念以及熵值s<sub>A</sub>和是s<sub>B</sub>的解释.</p>
@@ -415,7 +415,7 @@ total      0 -     20,   DG -9.25 +/-  0.15
 <p>因此, <code>barint.xvg</code>中累积 <span class="math">\(\D G\)</span> 的值当 <span class="math">\(\l=0\)</span> 时为0, 当 <span class="math">\(\l=0.1\)</span> 时为0.0+0.07=0.07, 这就是我们在<code>barint.xvg</code>中发现的值. 下面就是<code>barint.xvg</code>的图(蓝色), 图中同时还绘制了<code>bar.xvg</code>的数据(黑色, 不同 <span class="math">\(\l\)</span> 值之间的 <span class="math">\(\D G\)</span> 值)以展示累积 <span class="math">\(\D G\)</span>. 通过 <span class="math">\(\l=20\)</span> 处 <span class="math">\(\D G\)</span> 的值(&#8211;3.71 kT), 我们可以计算出 <span class="math">\(\D G\)</span> 为&#8211;9.25 kJ/mol.</p>
 
 <figure>
-<img src="GMXtut-6_barint_plot.jpg" alt="" />
+<img src="/GMX/GMXtut-6_barint_plot.jpg" alt="" />
 <figcaption></figcaption></figure>
 
 <p><strong>输出文件3: histogram.xvg</strong></p>
@@ -423,13 +423,13 @@ total      0 -     20,   DG -9.25 +/-  0.15
 <p><code>histogram.xvg</code>文件包含许多信息. 如果将其载入xmgrace, 可能看起来并不是特别有意义, 而且图例会超出屏幕. 为易于理解, 我将两类数据分别绘图, 第一个图中包含在<code>md*.xvg</code>文件中找到的每个 <span class="math">\(\l\)</span> 值对应的 <span class="math">\(\partial H/\partial \l\)</span> 值的分布(单位为kJ/mol), 它类似下面:</p>
 
 <figure>
-<img src="GMXtut-6_histo_dhdl.jpg" alt="" />
+<img src="/GMX/GMXtut-6_histo_dhdl.jpg" alt="" />
 <figcaption></figcaption></figure>
 
 <p><code>histogram.xvg</code>文件的其他部分为相邻(所谓的&#8220;本地&#8221;和&#8220;外部&#8221;) <span class="math">\(\l\)</span> 值之间 <span class="math">\(\D H\)</span> 值(这里的 <span class="math">\(H\)</span> 代表哈密顿量而非焓)的分布. 对本地 <span class="math">\(\l\)</span> 值(即.mdp文件中的<code>init_lambda_state</code>)对应轨迹中的构型, 会计算此构型在任何需要的外部 <span class="math">\(\l\)</span> 值下的 <span class="math">\(\D H\)</span> 的值. 结果(缩放至适当轴)如下:</p>
 
 <figure>
-<img src="GMXtut-6_histo_deltah.jpg" alt="" />
+<img src="/GMX/GMXtut-6_histo_deltah.jpg" alt="" />
 <figcaption></figcaption></figure>
 
 <p>注意, 由于数据集过多, 因此图例被切断了. 每一分布的图例提供了所绘量的说明. 例如, <span class="math">\(N(\DH(\l=0.05) | \l=0)\)</span> 表示外部 <span class="math">\(\l\)</span> 值为0.05时根据 <span class="math">\(\l=0\)</span> 轨迹中的构型计算的 <span class="math">\(\D H\)</span> 值的分布. 有关此图隐含信息的完整讨论, 请参考<a href="http://dx.doi.org/10.1016/0021-9991%2876%2990078-4">BAR论文</a>中的图5(及其相关讨论).</p>
@@ -447,14 +447,14 @@ total      0 -     20,   DG -9.25 +/-  0.15
 <p>结合的 <span class="math">\(\D G\)</span> 为这两个态之间的差值, 可以通过下面(有些简化)的热力学循环进行计算, 其中 <span class="math">\(\D G_1\)</span> 和 <span class="math">\(\D G_3\)</span> 分布为上面方程中的 <span class="math">\(\D G_\text{solvation}\)</span> 和 <span class="math">\(\D G_\text{complexation}\)</span>.</p>
 
 <figure>
-<img src="GMXtut-6_ti_cycle.jpg" alt="" />
+<img src="/GMX/GMXtut-6_ti_cycle.jpg" alt="" />
 <figcaption></figcaption></figure>
 
 <p>这类过程的一个特别详细的热力学循环可在<a href="http://dx.doi.org/10.1063/1.2221683">此论文</a>的图1中找到.</p>
 
 <p>一个完全相互作用的物种(例如配体)到&#8220;哑&#8221;物种(与配体构型相同的一组原子中心, 与周围没有任何非键相互作用)的转变, 需要关闭待研究溶质的与其周围环境之间的范德华相互作用(如此教程所示)与库伦相互作用. 甲烷转变的完整序列如下:</p>
 
-<p><img src="GMXtut-6_methane_full.png" alt="完全相互作用" /> <img src="GMXtut-6_methane_noq.png" alt="无电荷, 全LJ" /> <img src="GMXtut-6_methane_none.png" alt="哑分子" />
+<p><img src="/GMX/GMXtut-6_methane_full.png" alt="完全相互作用" /> <img src="/GMX/GMXtut-6_methane_noq.png" alt="无电荷, 全LJ" /> <img src="/GMX/GMXtut-6_methane_none.png" alt="哑分子" />
 <figcaption>完全相互作用 无电荷, 全LJ       哑分子</figcaption>
 </p>
 

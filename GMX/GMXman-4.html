@@ -34,7 +34,7 @@
 <p>非键相互作用包含排斥项, 色散项和库仑项. 组合起来的排斥项和色散项可以取Lennard-Jones(或6&#8211;12相互作用)或Buckingham(或exp&#8211;6势)形式. 此外, (部分)带电的原子之间的非键相互作用通过库仑项表达.</p>
 
 <figure>
-<img src="4.1.png" alt="图4.1: Lennard-Jones相互作用" />
+<img src="/GMX/4.1.png" alt="图4.1: Lennard-Jones相互作用" />
 <figcaption>图4.1: Lennard-Jones相互作用</figcaption>
 </figure>
 
@@ -78,7 +78,7 @@ C_{ij}^{(12)} &= \left(C_{ii}^{(12)} C_{jj}^{(12)} \right)^{1/2}
 <p>OPLS力场就采用这个规则.</p>
 
 <figure>
-<img src="4.2.png" alt="图4.2: Buckingham相互作用" />
+<img src="/GMX/4.2.png" alt="图4.2: Buckingham相互作用" />
 <figcaption>图4.2: Buckingham相互作用</figcaption>
 </figure>
 
@@ -105,7 +105,7 @@ C_{ij}^{(12)} &= \left(C_{ii}^{(12)} C_{jj}^{(12)} \right)^{1/2}
 <p><span class="math">\[\bi F_i(r_{ij}) = f{q_i q_j \over \varepsilon_r r_{ij}^2} {\bi r_{ij} \over r_{ij}} \tag{4.12}\]</span></p>
 
 <figure>
-<img src="4.3.png" alt="图4.3: 反应场与非反应场的库仑相互作用（带同种电荷的粒子之间）. 在非反应场的情况下 $\ve_r$ 为1, $\ve_{rf}$ 为78, $r_c$ 为0.9纳米. 除相差一个常数外, 点划线与虚线完全相同. " />
+<img src="/GMX/4.3.png" alt="图4.3: 反应场与非反应场的库仑相互作用（带同种电荷的粒子之间）. 在非反应场的情况下 $\ve_r$ 为1, $\ve_{rf}$ 为78, $r_c$ 为0.9纳米. 除相差一个常数外, 点划线与虚线完全相同. " />
 <figcaption>图4.3: 反应场与非反应场的库仑相互作用（带同种电荷的粒子之间）. 在非反应场的情况下 <span class="math">\(\ve_r\)</span> 为1, <span class="math">\(\ve_{rf}\)</span> 为78, <span class="math">\(r_c\)</span> 为0.9纳米. 除相差一个常数外, 点划线与虚线完全相同. </figcaption>
 </figure>
 
@@ -207,7 +207,7 @@ B &= {(\a+3)r_c - (\a+1)r_1 \over r_c^{\a+2} (r_c-r_1)^3}
 <p><span class="math">\[C = {1 \over r_c^\a } - {A \over 3}(r_c - r_1)^3 - {B \over 4}(r_c - r_1)^4 \tag{4.30}\]</span></p>
 
 <figure>
-<img src="4.4.png" alt="图4.4: 库仑力, 移位力与移位函数 $S(r)$, 其中 $r_1=2, r_c=4$. " />
+<img src="/GMX/4.4.png" alt="图4.4: 库仑力, 移位力与移位函数 $S(r)$, 其中 $r_1=2, r_c=4$. " />
 <figcaption>图4.4: 库仑力, 移位力与移位函数 <span class="math">\(S(r)\)</span>, 其中 <span class="math">\(r_1=2, r_c=4\)</span>. </figcaption>
 </figure>
 
@@ -230,7 +230,7 @@ B &= {(\a+3)r_c - (\a+1)r_1 \over r_c^{\a+2} (r_c-r_1)^3}
 <p>其中, <span class="math">\(\b\)</span> 参数用于决定直接空间和与倒易空间和之间的相对比重, <span class="math">\(\text{erfc}(x)\)</span> 是余误差函数. 关于长程静电相互作用的详细讨论见4.8节.</p>
 
 <figure>
-<img src="4.5.png" alt="图4.5: 键伸缩的原理（左）以及键伸缩的势能（右）. " />
+<img src="/GMX/4.5.png" alt="图4.5: 键伸缩的原理（左）以及键伸缩的势能（右）. " />
 <figcaption>图4.5: 键伸缩的原理（左）以及键伸缩的势能（右）. </figcaption>
 </figure>
 
@@ -300,7 +300,7 @@ V_{morse}(r_{ij}) &= D_{ij} [1 - \exp(-\beta_{ij} (r_{ij}-b_{ij}))]^2 \\
 <p>就得到了简谐键伸缩势.</p>
 
 <figure>
-<img src="4.6.png" alt="图4.6: Morse势阱, 键长为0.15nm. " />
+<img src="/GMX/4.6.png" alt="图4.6: Morse势阱, 键长为0.15nm. " />
 <figcaption>图4.6: Morse势阱, 键长为0.15nm. </figcaption>
 </figure>
 
@@ -329,7 +329,7 @@ V_{morse}(r_{ij}) &= D_{ij} [1 - \exp(-\beta_{ij} (r_{ij}-b_{ij}))]^2 \\
 <p>在短距离处此势不对称地接近力常数为 <span class="math">\(k^b\)</span> 的简谐势, 而在距离为 <span class="math">\(b\)</span> 时发散.</p>
 
 <figure>
-<img src="4.7.png" alt="图4.7: 角振动原理（左）和键角势（右）. " />
+<img src="/GMX/4.7.png" alt="图4.7: 角振动原理（左）和键角势（右）. " />
 <figcaption>图4.7: 角振动原理（左）和键角势（右）. </figcaption>
 </figure>
 
@@ -366,7 +366,7 @@ V_{morse}(r_{ij}) &= D_{ij} [1 - \exp(-\beta_{ij} (r_{ij}-b_{ij}))]^2 \\
 <p><span class="math">\[k^\theta \sin^2(\theta_{ijk}^0) = k^{\theta,\text{harm}} \tag{4.53}\]</span></p>
 
 <figure>
-<img src="4.8.png" alt="图4.8: 弯曲键角势: 余弦简谐（黑实线）, 简谐角（虚黑线）和限制弯曲（红色）, 三者具有相同的弯曲常数 $k_{\theta} = 85 \text{kJ mol}^{-1}$ 和平衡角 $\theta_0 = 130^{\circ}$. 橙色线表示余弦简谐($k = 50 \text{kJ mol}^{-1}$)与限制弯曲($k = 25 \text{kJ mol}^{-1}$)的和, 二者的 $\theta_0 = 130^{\circ}$. " />
+<img src="/GMX/4.8.png" alt="图4.8: 弯曲键角势: 余弦简谐（黑实线）, 简谐角（虚黑线）和限制弯曲（红色）, 三者具有相同的弯曲常数 $k_{\theta} = 85 \text{kJ mol}^{-1}$ 和平衡角 $\theta_0 = 130^{\circ}$. 橙色线表示余弦简谐($k = 50 \text{kJ mol}^{-1}$)与限制弯曲($k = 25 \text{kJ mol}^{-1}$)的和, 二者的 $\theta_0 = 130^{\circ}$. " />
 <figcaption>图4.8: 弯曲键角势: 余弦简谐（黑实线）, 简谐角（虚黑线）和限制弯曲（红色）, 三者具有相同的弯曲常数 <span class="math">\(k_{\theta} = 85 \text{kJ mol}^{-1}\)</span> 和平衡角 <span class="math">\(\theta_0 = 130^{\circ}\)</span>. 橙色线表示余弦简谐(<span class="math">\(k = 50 \text{kJ mol}^{-1}\)</span>)与限制弯曲(<span class="math">\(k = 25 \text{kJ mol}^{-1}\)</span>)的和, 二者的 <span class="math">\(\theta_0 = 130^{\circ}\)</span>. </figcaption>
 </figure>
 
@@ -423,7 +423,7 @@ V_{morse}(r_{ij}) &= D_{ij} [1 - \exp(-\beta_{ij} (r_{ij}-b_{ij}))]^2 \\
 <p><span class="math">\[V_q(\theta_{ijk})=\sum_{n=0}^5 C_n(\theta_{ijk}-\theta_{ijk}^0)^n \tag{4.61}\]</span></p>
 
 <figure>
-<img src="4.9.png" alt="图4.9: 异常二面角原理. 环的面外弯曲（左）, 环的取代（中）, 四面体偏离（右）. 在所有情况下, 异常二面角 $\x$ 被定义为平面 $(i,j,k)$ 和 $(j,k,l)$ 之间的夹角. " />
+<img src="/GMX/4.9.png" alt="图4.9: 异常二面角原理. 环的面外弯曲（左）, 环的取代（中）, 四面体偏离（右）. 在所有情况下, 异常二面角 $\x$ 被定义为平面 $(i,j,k)$ 和 $(j,k,l)$ 之间的夹角. " />
 <figcaption>图4.9: 异常二面角原理. 环的面外弯曲（左）, 环的取代（中）, 四面体偏离（右）. 在所有情况下, 异常二面角 <span class="math">\(\x\)</span> 被定义为平面 <span class="math">\((i,j,k)\)</span> 和 <span class="math">\((j,k,l)\)</span> 之间的夹角. </figcaption>
 </figure>
 
@@ -444,7 +444,7 @@ V_{morse}(r_{ij}) &= D_{ij} [1 - \exp(-\beta_{ij} (r_{ij}-b_{ij}))]^2 \\
 <p>这种势函数等同于周期性的正常二面角（见下文）. 将此种二面角类型（类型4）单独分类只是为了在参数部分和输出中将异常二面角和正常二面角区分开来.</p>
 
 <figure>
-<img src="4.10.png" alt="图4.10: 异常二面角的势能" />
+<img src="/GMX/4.10.png" alt="图4.10: 异常二面角的势能" />
 <figcaption>图4.10: 异常二面角的势能</figcaption>
 </figure>
 
@@ -475,7 +475,7 @@ V_{morse}(r_{ij}) &= D_{ij} [1 - \exp(-\beta_{ij} (r_{ij}-b_{ij}))]^2 \\
 <p>常数C的一个示例在表4.1中给出.</p>
 
 <figure>
-<img src="4.11.png" alt="图4.11: 正常二面角的原理（左, 反式trans构型）和二面角势（右）" />
+<img src="/GMX/4.11.png" alt="图4.11: 正常二面角的原理（左, 反式trans构型）和二面角势（右）" />
 <figcaption>图4.11: 正常二面角的原理（左, 反式trans构型）和二面角势（右）</figcaption>
 </figure>
 
@@ -493,7 +493,7 @@ V_{morse}(r_{ij}) &= D_{ij} [1 - \exp(-\beta_{ij} (r_{ij}-b_{ij}))]^2 \\
 </table>
 
 <figure>
-<img src="4.12.png" alt="图4.12: Ryckaert-Bellemans二面角势" />
+<img src="/GMX/4.12.png" alt="图4.12: Ryckaert-Bellemans二面角势" />
 <figcaption>图4.12: Ryckaert-Bellemans二面角势</figcaption>
 </figure>
 
@@ -560,7 +560,7 @@ C_5 &= 0
 <p>CBT基于无多重性的余弦形式, 因此它只在 <span class="math">\(0^{\circ}\)</span> 左右对称. 为获得一个不对称的二面角分布（如在[<span class="math">\(-180^{\circ}:180^{\circ}\)</span>]区间内只有一个最大值）, 应该使用标准的扭转势, 如简谐角势或周期性的余弦势来代替CBT势. 然而, 这两种形式对于力的微分（ <span class="math">\(1/\sin\phi\)</span> ）和珠子的直线排列（ <span class="math">\(\theta_i\)</span> 或 <span class="math">\(\theta_{i-1} = 0^{\circ}, 180^{\circ}\)</span> ）都不方便. 非 <span class="math">\(\cos\phi\)</span> 势与 <span class="math">\(\sin^3\theta\)</span> 因子的耦合并不能提高模拟的稳定性, 因为在某些情况下 <span class="math">\(\theta\)</span> 和 <span class="math">\(\phi\)</span> 同时为 <span class="math">\(180^{\circ}\)</span>. 在此步的积分是可能的（由于扭转势的抵消）, 但下一步积分将是病态的（ <span class="math">\(\theta\)</span> 不是 <span class="math">\(180^{\circ}\)</span> 而 <span class="math">\(\phi\)</span> 非常接近 <span class="math">\(180^{\circ}\)</span> ）.</p>
 
 <figure>
-<img src="4.13.png" alt="图4.13: 蓝色: 组合弯曲扭转势的表面图(方程4.69, 其中 $k=10 \text{kJ mol}^{-1},a_0 = 2.41, a_1 = -2.95, a_2 = 0.36, a_3 = 1.33$), 为简单起见, 弯曲角相同($\theta_1=\theta_2=\theta$). 灰色: 同样的扭转势函数但不含 $\sin^3\theta$ 项（Ryckaert-Bellemans型）. $\phi$ 为二面角. " />
+<img src="/GMX/4.13.png" alt="图4.13: 蓝色: 组合弯曲扭转势的表面图(方程4.69, 其中 $k=10 \text{kJ mol}^{-1},a_0 = 2.41, a_1 = -2.95, a_2 = 0.36, a_3 = 1.33$), 为简单起见, 弯曲角相同($\theta_1=\theta_2=\theta$). 灰色: 同样的扭转势函数但不含 $\sin^3\theta$ 项（Ryckaert-Bellemans型）. $\phi$ 为二面角. " />
 <figcaption>图4.13: 蓝色: 组合弯曲扭转势的表面图(方程4.69, 其中 <span class="math">\(k=10 \text{kJ mol}^{-1},a_0 = 2.41, a_1 = -2.95, a_2 = 0.36, a_3 = 1.33\)</span>), 为简单起见, 弯曲角相同(<span class="math">\(\theta_1=\theta_2=\theta\)</span>). 灰色: 同样的扭转势函数但不含 <span class="math">\(\sin^3\theta\)</span> 项（Ryckaert-Bellemans型）. <span class="math">\(\phi\)</span> 为二面角. </figcaption>
 </figure>
 
@@ -611,12 +611,12 @@ F_i^z &=-k_{pr}^z (z_i-Z_i) \\
 <p>使用三个不同的力常数就可以在每个空间方向上打开或关闭位置限制, 这意味着原子可以简谐地限制于平面或直线上. 位置限制施加于指定的固定原子列表上, 这一列表通常使用<code>pdb2gmx</code>程序产生.</p>
 
 <figure>
-<img src="4.14.png" alt="图4.14: 位置限制势" />
+<img src="/GMX/4.14.png" alt="图4.14: 位置限制势" />
 <figcaption>图4.14: 位置限制势</figcaption>
 </figure>
 
 <figure>
-<img src="4.15.png" alt="图4.15: 平底位置限制势. (A) 未反转, (B) 反转" />
+<img src="/GMX/4.15.png" alt="图4.15: 平底位置限制势. (A) 未反转, (B) 反转" />
 <figcaption>图4.15: 平底位置限制势. (A) 未反转, (B) 反转</figcaption>
 </figure>
 
@@ -708,7 +708,7 @@ F_i^z &=-k_{pr}^z (z_i-Z_i) \\
 <p>对不是由NMR数据导出的限制, 这个函数通常足够了, <code>[ bonds ]</code>类型10的段可用于在原子对之间施加独立的限制, 见5.7.1节. 对由NMR测量导出的限制, 可能需要更复杂的函数, 这可通过<code>[ distance_restraints ]</code>段提供, 具体将在下面论述.</p>
 
 <figure>
-<img src="4.16.png" alt="图4.16: 距离限制势" />
+<img src="/GMX/4.16.png" alt="图4.16: 距离限制势" />
 <figcaption>图4.16: 距离限制势</figcaption>
 </figure>
 
@@ -1054,7 +1054,7 @@ C_\l &= \Sum_k \l_k g_k \tag{4.131} \\
 <p>在自由能计算中, 当有粒子出现或消失时, 对Lennard-Jones势和库仑势使用方程4.125和4.123中的简单线性插值, 可能收敛很差. 当粒子几乎消失或接近消失时(<span class="math">\(\l\)</span> 接近0或1), 相互作用能会变得足够弱, 粒子彼此可能非常接近, 致使得到的 <span class="math">\(\partial V/\partial \l\)</span> 值的涨落非常大(因为简单线性插值同时取决于 <span class="math">\(\l\)</span> 两端点的值).</p>
 
 <figure>
-<img src="4.17.png" alt="图4.17: $\l=0.5$ 时的软核作用势, 其中 $p=2$, $C_6^A=C_{12}^A=C_6^B=C_{12}^B=1$." />
+<img src="/GMX/4.17.png" alt="图4.17: $\l=0.5$ 时的软核作用势, 其中 $p=2$, $C_6^A=C_{12}^A=C_6^B=C_{12}^B=1$." />
 <figcaption>图4.17: <span class="math">\(\l=0.5\)</span> 时的软核作用势, 其中 <span class="math">\(p=2\)</span>, <span class="math">\(C_6^A=C_{12}^A=C_6^B=C_{12}^B=1\)</span>.</figcaption>
 </figure>
 
@@ -1105,7 +1105,7 @@ r_B &= \left( \a \s_B^{48}(1-\l)^p + r^{48} \right)^{1\over 48} \tag{4.140}
 <p>一个分子链中互相邻近的原子, 即那些以共价键结合, 或者通过一个或两个原子相连的原子分别被称为 <strong>第一相邻原子</strong>, <strong>第二相邻原子</strong> 和 <strong>第三相邻原子</strong>(见图4.18). 由于原子 <strong>i</strong> 与原子 <strong>i+1</strong> 和 <strong>i+2</strong> 之间的相互作用主要是量子力学的, 因此不能用Lennard-Jones势进行描述. 作为替代, 我们假定这些相互作用可以利用简谐键项或约束(<strong>i</strong>, <strong>i+1</strong>)和简谐键角项(<strong>i</strong>, <strong>i+2</strong>)进行充分的描述. 因此, 将第一和第二相邻原子(原子 <strong>i+1</strong>, <strong>i+2</strong>) 从原子 <strong>i</strong> 的Lennard-Jones相互作用列表中 <strong>排除</strong>. 原子 <strong>i+1</strong>, <strong>i+2</strong> 被称为原子 <strong>i</strong> 的排除原子.</p>
 
 <figure>
-<img src="4.18.png" alt="图4.18: 沿烷烃链的原子" />
+<img src="/GMX/4.18.png" alt="图4.18: 沿烷烃链的原子" />
 <figcaption>图4.18: 沿烷烃链的原子</figcaption>
 </figure>
 
@@ -1185,7 +1185,7 @@ r_B &= \left( \a \s_B^{48}(1-\l)^p + r^{48} \right)^{1\over 48} \tag{4.140}
 <p>其中 <span class="math">\(\bi F_s\)</span> 为虚拟位点上的力, <span class="math">\(x_s\)</span>, <span class="math">\(y_s\)</span> 和 <span class="math">\(z_s\)</span> 为虚拟位点的坐标. 这样, 合力和总的力矩都是守恒的.</p>
 
 <figure>
-<img src="4.19.png" alt="图4.19: GROMACS中六种不同类型虚拟位点的构建方式. 黑色为构建原子, 灰色为虚拟位点." />
+<img src="/GMX/4.19.png" alt="图4.19: GROMACS中六种不同类型虚拟位点的构建方式. 黑色为构建原子, 灰色为虚拟位点." />
 <figcaption>图4.19: GROMACS中六种不同类型虚拟位点的构建方式. 黑色为构建原子, 灰色为虚拟位点.</figcaption>
 </figure>
 
@@ -1270,7 +1270,7 @@ b        &  cz_{ij} & -cy_{ij} \\
 \tag{4.153}\]</span></p>
 
 <figure>
-<img src="4.20.png" alt="图4.20: 新的4fdn虚拟位点的构建方法. 即便所有构建原子都处于同一平面内时, 这种虚拟位点也是稳定的." />
+<img src="/GMX/4.20.png" alt="图4.20: 新的4fdn虚拟位点的构建方法. 即便所有构建原子都处于同一平面内时, 这种虚拟位点也是稳定的." />
 <figcaption>图4.20: 新的4fdn虚拟位点的构建方法. 即便所有构建原子都处于同一平面内时, 这种虚拟位点也是稳定的.</figcaption>
 </figure>
 

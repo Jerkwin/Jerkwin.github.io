@@ -118,7 +118,7 @@
 <p>为了利用这些选择的优点, 你也可以编写自己的分析工具, 具的例子请参看安装目录下<code>share/gromacs/template</code>中的<code>template.cpp</code>文件.</p>
 
 <figure>
-<img src="8.1.png" alt="图 8.1 显示水盒子的gmx view窗口" />
+<img src="/GMX/8.1.png" alt="图 8.1 显示水盒子的gmx view窗口" />
 <figcaption>图 8.1 显示水盒子的<code>gmx view</code>窗口</figcaption>
 </figure>
 
@@ -141,7 +141,7 @@
 <p>其中 <span class="math">\(M=\sum_{i=1}^N m_i\)</span> 为体系的总质量. 可以利用程序<code>gmx traj -com -ov</code>对质心进行监测. 然而我们建议模拟时在每一步都移除质心的速度(参看第三章)!</p>
 
 <figure>
-<img src="8.2.png" alt="图 8.2: gmx rdf中切片的定义: A. $g_{AB}(r)$. B. $g_{AB}(r,\q)$. 切片为灰色, C. $&lt;\r_B&gt;_{local}$ 的归一化. D. $&lt;\r_B&gt;_{local,\q}$ 的归一化. 灰色为归一化体积." />
+<img src="/GMX/8.2.png" alt="图 8.2: gmx rdf中切片的定义: A. $g_{AB}(r)$. B. $g_{AB}(r,\q)$. 切片为灰色, C. $&lt;\r_B&gt;_{local}$ 的归一化. D. $&lt;\r_B&gt;_{local,\q}$ 的归一化. 灰色为归一化体积." />
 <figcaption>图 8.2: <code>gmx rdf</code>中切片的定义: A. <span class="math">\(g_{AB}(r)\)</span>. B. <span class="math">\(g_{AB}(r,\q)\)</span>. 切片为灰色, C. <span class="math">\(<\r_B>_{local}\)</span> 的归一化. D. <span class="math">\(<\r_B>_{local,\q}\)</span> 的归一化. 灰色为归一化体积.</figcaption>
 </figure>
 
@@ -168,7 +168,7 @@ g_{AB}(r,\q) &= {1 \over {<\r_B>}_{local,\q} } {1 \over N_A} \sum_{i \in A}^{N_A
 \ealg\]</span></p>
 
 <figure>
-<img src="8.3.png" alt="图8.3 SPC水模型的氧-氧RDF gOO(r)" />
+<img src="/GMX/8.3.png" alt="图8.3 SPC水模型的氧-氧RDF gOO(r)" />
 <figcaption>图8.3 SPC水模型的氧-氧RDF gOO(r)</figcaption>
 </figure>
 
@@ -259,7 +259,7 @@ g_{AB}(r,\q) &= {1 \over {<\r_B>}_{local,\q} } {1 \over N_A} \sum_{i \in A}^{N_A
 <p>SPC水模型均方位移的一个例子如图8.4所示.</p>
 
 <figure>
-<img src="8.4.png" alt="图 8.4 SPC水模型的均方位移" />
+<img src="/GMX/8.4.png" alt="图 8.4 SPC水模型的均方位移" />
 <figcaption>图 8.4 SPC水模型的均方位移</figcaption>
 </figure>
 
@@ -301,12 +301,12 @@ g_{AB}(r,\q) &= {1 \over {<\r_B>}_{local,\q} } {1 \over N_A} \sum_{i \in A}^{N_A
 <p>对二面角, 你可以使用 &#8220;生化约定&#8221;(<span class="math">\(\f=0\equiv cis\)</span>)或&#8220;聚合物决定&#8221;(<span class="math">\(\f=0\equiv trans\)</span>), 参考图8.5.</p>
 
 <figure>
-<img src="8.5.png" alt="图 8.5 不同的二面角约定: A. 生化约定. B. 聚合物约定." />
+<img src="/GMX/8.5.png" alt="图 8.5 不同的二面角约定: A. 生化约定. B. 聚合物约定." />
 <figcaption>图 8.5 不同的二面角约定: A. &#8220;生化约定&#8221;. B. &#8220;聚合物约定&#8221;.</figcaption>
 </figure>
 
 <figure>
-<img src="8.6.png" alt="图 8.6 gmx gangle的角度选项: A. 两个矢量间的夹角. B. 两个平面间的夹角. C. 矢量和 $z$ 轴间的夹角. D. 矢量和球的法向间的夹角. 也支持其他组合: 平面和矢量可以交换使用." />
+<img src="/GMX/8.6.png" alt="图 8.6 gmx gangle的角度选项: A. 两个矢量间的夹角. B. 两个平面间的夹角. C. 矢量和 $z$ 轴间的夹角. D. 矢量和球的法向间的夹角. 也支持其他组合: 平面和矢量可以交换使用." />
 <figcaption>图 8.6 <code>gmx gangle</code>的角度选项: A. 两个矢量间的夹角. B. 两个平面间的夹角. C. 矢量和 <span class="math">\(z\)</span> 轴间的夹角. D. 矢量和球的法向间的夹角. 也支持其他组合: 平面和矢量可以交换使用.</figcaption>
 </figure>
 
@@ -325,7 +325,7 @@ g_{AB}(r,\q) &= {1 \over {<\r_B>}_{local,\q} } {1 \over N_A} \sum_{i \in A}^{N_A
 <p>有时描绘出两个原子间 <strong>距离</strong> 或是两个原子组(例如: 盐桥中的蛋白质支链)之间 <strong>最小</strong> 距离的图形很有趣, 一些组之间距离的计算可采用下面的方法:</p>
 
 <figure>
-<img src="8.7.png" alt="图 8.7:多肽的最小距离矩阵" />
+<img src="/GMX/8.7.png" alt="图 8.7:多肽的最小距离矩阵" />
 <figcaption>图 8.7:多肽的最小距离矩阵[157]</figcaption>
 </figure>
 
@@ -433,12 +433,12 @@ r &\le r_{HB} = 0.35 \ \text{nm} \\
 <p><code>gmx hbond</code>程序以下面的方式分析两组原子(它们必须相同或没有重叠)或指定的施体-氢-受体之间所有可能存在的氢键:</p>
 
 <figure>
-<img src="8.8.png" alt="图8.8 氢键的几何准则" />
+<img src="/GMX/8.8.png" alt="图8.8 氢键的几何准则" />
 <figcaption>图8.8 氢键的几何准则</figcaption>
 </figure>
 
 <figure>
-<img src="8.9.png" alt="图 8.9: 水对氢键的插入. (1) 两残基间正常的氢键. (2) 通过一个水分子形成的氢键桥." />
+<img src="/GMX/8.9.png" alt="图 8.9: 水对氢键的插入. (1) 两残基间正常的氢键. (2) 通过一个水分子形成的氢键桥." />
 <figcaption>图 8.9: 水对氢键的插入. (1) 两残基间正常的氢键. (2) 通过一个水分子形成的氢键桥.</figcaption>
 </figure>
 
@@ -469,28 +469,28 @@ r &\le r_{HB} = 0.35 \ \text{nm} \\
 <p>在运行中你也可以观察 <strong>二级结构元素</strong> 的变化, 为此, 你可以使用<code>gmx do_dssp</code>程序, 它是商业程序<code>DSSP</code>[165]的接口界面. 更多的信息请参看<code>DSSP</code>的手册. 图 8.10 给出了一个典型的<code>gmx do_dssp</code>输出图.</p>
 
 <figure>
-<img src="8.10.png" alt="图 8.10: 多肽二级结构元素的时间演化分析" />
+<img src="/GMX/8.10.png" alt="图 8.10: 多肽二级结构元素的时间演化分析" />
 <figcaption>图 8.10: 多肽二级结构元素的时间演化分析</figcaption>
 </figure>
 
 <p>另一个重要的蛋白质分析是所谓的 <strong>Ramachandran图</strong>, 它是结构在蛋白质骨架的两个二面角 <span class="math">\(\f\)</span> 和 <span class="math">\(\y\)</span> 形成的平面上的投影. 参看图8.11.</p>
 
 <figure>
-<img src="8.11.png" alt="图 8.11: 蛋白质骨架的二面角 $\f$ 和 $\y$ 的定义" />
+<img src="/GMX/8.11.png" alt="图 8.11: 蛋白质骨架的二面角 $\f$ 和 $\y$ 的定义" />
 <figcaption>图 8.11: 蛋白质骨架的二面角 <span class="math">\(\f\)</span> 和 <span class="math">\(\y\)</span> 的定义</figcaption>
 </figure>
 
 <p>你可以使用<code>gmx rama</code>获得Ramachandran图. 图 8.12是一个典型的输出.</p>
 
 <figure>
-<img src="8.12.png" alt="图 8.12: 一个小蛋白质分子的Ramachandran图" />
+<img src="/GMX/8.12.png" alt="图 8.12: 一个小蛋白质分子的Ramachandran图" />
 <figcaption>图 8.12: 一个小蛋白质分子的Ramachandran图</figcaption>
 </figure>
 
 <p>当研究 <span class="math">\(\a\)</span> 螺旋时, 多肽的 <strong>旋轮投影</strong> 很有用, 它可用于查看一个多肽是否是两性的. 你可以使用<code>gmx wheel</code>程序获得这样的投影图. 图 8.13给出了两个例子.</p>
 
 <figure>
-<img src="8.13.png" alt="图 8.13: HPr N端螺旋的旋轮投影图" />
+<img src="/GMX/8.13.png" alt="图 8.13: HPr N端螺旋的旋轮投影图" />
 <figcaption>图 8.13: HPr N端螺旋的旋轮投影图</figcaption>
 </figure>
 
