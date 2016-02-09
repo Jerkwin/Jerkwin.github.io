@@ -11,7 +11,7 @@
 {:toc}
 
 
-<h2 id="水中的溶菌酶">水中的溶菌酶</h2>
+<h2 id="水中的溶菌酶" name="水中的溶菌酶">水中的溶菌酶</h2>
 
 <ul class="incremental">
 <li>本教程的翻译参考了yongma2008和Youngchsh网友的译文, 特此说明.</li>
