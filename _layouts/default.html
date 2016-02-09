@@ -12,7 +12,6 @@
 <body>
 <header class="site-header"><div class="wrap">
 	<a class="site-title" href="/"><strong><font style="color:#39B3D7">哲</font><font style="color:#ED9C28">●</font><font style="color:#47A447">科</font><font style="color:#D9534F">●</font><font style="color:#3276B1">文</font><font style="color:#4885ed">J</font><font style="color:#db3236">e</font><font style="color:#f4c20d">r</font><font style="color:#3cba54">k</font><font style="color:#3276B1">w</font><font style="color:#db3236">i</font><font style="color:#f4c20d">n</font></strong></a>
-
 	<a class="page-link" href="/categories">类别</a>
 	<a class="page-link" href="/tags">标签</a>
 	<a class="page-link" href="/guestbook">留言</a>
@@ -21,12 +20,6 @@
 	<a class="page-link" href="/feed">订阅</a>
 </div></header>
 
-{% if page.title %}
-* Put anything here
-{:toc}
-{% endif %}
-
-<span id="tblcontents" onClick="show(this.innerHTML)">✕</span>
 <div class="wrap">
 <h1>{{ page.title }}</h1>
 <span class="meta" style="padding-left: 1em;">
@@ -40,6 +33,7 @@
 {% endif %}
 </span>
 
+<span id="tblcontents" onClick="show(this.innerHTML)">✕</span>
 <article class="content">{{ content }}
 
 <hr>
@@ -50,30 +44,41 @@
 
 </body>
 <script>
-var $=function(id){return document.getElementById(id)}, $top=$("scrollTop")
+var $=function(id){return document.getElementById(id)},
+	$top=$("scrollTop"), $wrap=document.getElementsByClassName('wrap')
+	if($('markdown-toc')) {
+		for(var i=0; i<$wrap.length; i++)
+		$wrap[i].style.margin='0 0 0 25%'
+	}
 function show(str) {
 	if(str=='☰') {
 		$('tblcontents').innerHTML="✕";
 		$('markdown-toc').style.display="block"
+		for(var i=0; i<$wrap.length; i++)
+		$wrap[i].style.margin='0 0 0 25%'
 	} else {
 		$('tblcontents').innerHTML='☰';
 		$('markdown-toc').style.display="none"
+		for(var i=0; i<$wrap.length; i++)
+		$wrap[i].style.margin='0 auto'
 	}
 }
 window.onscroll = function() {
 	var docTop=document.documentElement.scrollTop||document.body.scrollTop
 	docTop>0 ? $top.style.display="block" : $top.style.display="none"
 
-	var i, tocName=[], tocHref=[], tocLink=document.getElementsByTagName('a')
-	for(i=0; i<tocLink.length; i++) {
-		if(tocLink[i].name.match("TOC"))  tocName.push(tocLink[i])
-		if(tocLink[i].href.match("#TOC")) tocHref.push(tocLink[i])
+	var i, tocLink=[], tocHref=[], allLink=document.getElementsByTagName('a')
+	for(i=0; i<allLink.length; i++) {
+		if(allLink[i].id.match('markdown-toc')) {
+			tocLink.push(allLink[i])
+			tocHref.push($(allLink[i].id.replace('markdown-toc-','')))
+		}
 	}
-	if(tocHref.length) {
-		for(i=0; i<tocHref.length; i++) tocHref[i].style.background=""
-		i=0; while(docTop>tocName[i].offsetTop) i++
-		tocHref[i-1].style.background="#aaaaaa"
-		$('TOC').scrollTop=tocHref[i].offsetTop-$('TOC').clientHeight/3
+	if(tocLink.length) {
+		for(i=0; i<tocLink.length; i++) tocLink[i].style.background=""
+		i=0; while(docTop>tocHref[i].offsetTop) i++
+		tocLink[i-1].style.background="#aaa"
+		$('markdown-toc').scrollTop=tocLink[i].offsetTop-$('markdown-toc').clientHeight/3
 	}
 }
 

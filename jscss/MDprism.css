@@ -29,9 +29,12 @@ ul#markdown-toc{
 	box-shadow: 2px 2px 2px #999;
 	-moz-box-shadow:2px 2px 2px #999;
 	-webkit-box-shadow:2px 2px 2px #999;
+	left:1em;
+	top:1em;
+	position: fixed;
 }
-ul#markdown-toc li{margin-left:.1em }
-ul#markdown-toc:before{content:"Ŀ¼";font-weight:900}
+ul#markdown-toc li{margin-left:-.2em }
+ul#markdown-toc:before{content:"目录";font-weight:900}
 
 .site-header {
 	border-bottom: 2px solid #e8e8e8;
@@ -163,17 +166,19 @@ code {
 	cursor: pointer;
 	-moz-transition: all 1s ease-out 0s;
 	-webkit-transition: all 1s ease-out 0s;
+	position: fixed;
 }
 #scrollTop:hover,#tblcontents:hover { background: #40AA53; }
 
 #scrollTop {
-	position: fixed;
 	bottom: 1px;
 	right: 1px;
 	display: none;
 	z-index: 200;
 }
 #tblcontents {
+	top: 1px;
+	left: 1px;
 	z-index: 20;
 }
 
