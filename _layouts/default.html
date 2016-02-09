@@ -41,6 +41,7 @@
 <span id="busuanzi_container_site_uv">访问人次(2015年7月9日起): <span id="busuanzi_value_site_uv"></span></span> | <span class="label label-info">最后更新: {{site.time | date:"%Y-%m-%d %H:%M:%S %Z"}}</span> | 版权所有 © 2008 - {{site.time | date:"%Y"}} <a href="http://jerkwin.github.io/about/">Jerkwin</a>
 </span>
 <a id="scrollTop" href="javascript:scroll(0,0)">个</a>
+</div>
 
 </body>
 <script>
@@ -48,14 +49,14 @@ var $=function(id){return document.getElementById(id)},
 	$top=$("scrollTop"), $wrap=document.getElementsByClassName('wrap')
 	if($('markdown-toc')) {
 		for(var i=0; i<$wrap.length; i++)
-		$wrap[i].style.margin='0 0 0 25%'
+		$wrap[i].style.margin='0 0 0 30%'
 	}
 function show(str) {
 	if(str=='☰') {
 		$('tblcontents').innerHTML="✕";
 		$('markdown-toc').style.display="block"
 		for(var i=0; i<$wrap.length; i++)
-		$wrap[i].style.margin='0 0 0 25%'
+		$wrap[i].style.margin='0 0 0 30%'
 	} else {
 		$('tblcontents').innerHTML='☰';
 		$('markdown-toc').style.display="none"

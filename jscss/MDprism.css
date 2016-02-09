@@ -18,19 +18,18 @@ body {
 ul#markdown-toc{
 	font-size:.8em;
 	margin:0;
-	padding:1em;
-	float:left;
-	max-width: 15%;
-	height: 90%;
-	overflow: hidden;
+	padding:.5em;
+	max-width: 20%;
+	height: 95%;
+	overflow: auto;
 	border:solid 1px #999;
 	border-radius:1em;
 	-moz-border-radius:1em;
 	box-shadow: 2px 2px 2px #999;
 	-moz-box-shadow:2px 2px 2px #999;
 	-webkit-box-shadow:2px 2px 2px #999;
-	left:1em;
-	top:1em;
+	left:1px;
+	top:0;
 	position: fixed;
 }
 ul#markdown-toc li{margin-left:-.2em }
@@ -52,7 +51,7 @@ ul#markdown-toc:before{content:"目录";font-weight:900}
 }
 
 .page-link {
-	margin-left: 2em;
+	margin-left: .5em;
 }
 .page-link:visited {
 	color: #E00;
