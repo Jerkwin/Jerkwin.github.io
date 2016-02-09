@@ -21,8 +21,8 @@ ul#markdown-toc{
 	padding:1em;
 	float:left;
 	max-width: 15%;
-	/*height: 100%;
-	overflow: hidden; auto;*/
+	height: 100%;
+	overflow: hidden;
 	border:solid 1px #999;
 	border-radius:1em;
 	-moz-border-radius:1em;
