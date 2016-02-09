@@ -1,6 +1,5 @@
 markdown: kramdown
 permalink: /:year/:month/:day/:title/
-relative_permalinks: true
 url: http://jerkwin.github.io
 author: Jerkwin
 pygments: true
