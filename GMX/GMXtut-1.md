@@ -1,6 +1,6 @@
 ---
  layout: post
- title: GROMACS教程: 水中的溶菌酶
+ title: GROMACS教程之水中的溶菌酶
  categories:
  - 科
  tags:
