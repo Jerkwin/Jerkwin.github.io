@@ -7,7 +7,7 @@
 <title>{{ page.title }} | {{ site.author }}</title>
 <link href="data:image/x-icon;base64,AAABAAEAEBAQAAAAAAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAD/APr59wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIiIiIiIiAAAiIiIiIiIAACIiIiIiIgERERERERIiAREREREREiIBERERERESIgERIiIiERIiAREiIiIREiIBESIhERESIgERIiERERIiAREiIiIiIiIBESIiIiIiIgERIiIiIiIiAREREREREAABEREREREQAAERERERERAADgAQAA4AEAAOABAAAAAQAAAAEAAAABAAAAAQAAAAEAAAABAAAAAQAAAAEAAAABAAAAAQAAAA8AAAAPAAAADwAA" rel="icon" type="image/x-icon" />
 <link href="/feed/" rel="alternate" title="{{ site.author }}" type="application/atom+xml" />
-<link rel="stylesheet" href="/jscss/MDprism.css">
+<link rel="stylesheet" href="/jscss/pmd.css">
 
 </head>
 <body>
@@ -34,7 +34,7 @@
 {% endif %}
 </span>
 
-<span id="tblcontents" onClick="show(this.innerHTML)">✕</span>
+<span id="tocbtn" onClick="showTOC(this.innerHTML)">✕</span>
 <article class="content">{{ content }}
 
 <hr>
@@ -46,44 +46,6 @@
 
 </body>
 <script>
-var $=function(id){return document.getElementById(id)},
-	$top=$("scrollTop"), $wrap=document.getElementsByClassName('wrap')
-	if($('markdown-toc')) {
-		for(var i=0; i<$wrap.length; i++)
-		$wrap[i].style.margin='0 0 0 30%'
-	}
-function show(str) {
-	if(str=='☰') {
-		$('tblcontents').innerHTML="✕";
-		$('markdown-toc').style.display="block"
-		for(var i=0; i<$wrap.length; i++)
-		$wrap[i].style.margin='0 0 0 30%'
-	} else {
-		$('tblcontents').innerHTML='☰';
-		$('markdown-toc').style.display="none"
-		for(var i=0; i<$wrap.length; i++)
-		$wrap[i].style.margin='0 auto'
-	}
-}
-window.onscroll = function() {
-	var docTop=document.documentElement.scrollTop||document.body.scrollTop
-	docTop>0 ? $top.style.display="block" : $top.style.display="none"
-
-	var i, tocLink=[], tocHref=[], allLink=document.getElementsByTagName('a')
-	for(i=0; i<allLink.length; i++) {
-		if(allLink[i].id.match('markdown-toc')) {
-			tocLink.push(allLink[i])
-			tocHref.push($(allLink[i].id.replace('markdown-toc-','')))
-		}
-	}
-	if(tocLink.length) {
-		for(i=0; i<tocLink.length; i++) tocLink[i].style.background=""
-		i=0; while(docTop>tocHref[i].offsetTop) i++
-		tocLink[i-1].style.background="#aaa"
-		$('markdown-toc').scrollTop=tocLink[i].offsetTop-$('markdown-toc').clientHeight/3
-	}
-}
-
 var _hmt = _hmt || [];
 (function() {
   var hm = document.createElement("script");
@@ -92,5 +54,6 @@ var _hmt = _hmt || [];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
+<script src="/jscss/box.js"></script>
 <script async src="/jscss/busuanzi.pure.mini.js"></script>
 </html>
