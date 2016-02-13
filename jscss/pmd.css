@@ -12,6 +12,7 @@ body {
 }
 
 ul#markdown-toc{
+	display: none;
 	font-size:.8em;
 	margin:0;
 	padding:.5em;
@@ -55,7 +56,7 @@ ul#markdown-toc:before{content:"目录";font-weight:900}
 
 .wrap {
 	max-width: 800px;
-	margin: 0 0 0 30%;
+	margin: 0 auto;
 	zoom: 1;
 	text-align: left;
 	overflow:auto;

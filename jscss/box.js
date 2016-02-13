@@ -89,10 +89,10 @@ var $top=$("scrollTop"), $wrap=document.getElementsByClassName('wrap')
 var i, winWH, winWidth, winHeight, tocLink=[], tocHref=[], allLink=document.getElementsByTagName('a')
 
 window.onload=function(){ box(); flcviz();
-	var $wrap=document.getElementsByClassName('wrap')
-	for(var i=0; i<$wrap.length; i++) {
-		if($('markdown-toc')) $wrap[i].style.margin='0 0 0 30%'
-		else $wrap[i].style.margin='0 auto'
+	if($('markdown-toc')) {
+		var $wrap=document.getElementsByClassName('wrap')
+		for(var i=0; i<$wrap.length; i++) $wrap[i].style.margin='0 0 0 30%'
+		$('markdown-toc').style.display="block"
 	}
 	for(i=0; i<allLink.length; i++) {
 		if(allLink[i].id.match('markdown-toc')) {
