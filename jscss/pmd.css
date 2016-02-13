@@ -55,7 +55,7 @@ ul#markdown-toc:before{content:"目录";font-weight:900}
 
 .wrap {
 	max-width: 800px;
-	margin: 0 auto;
+	margin: 0 0 0 30%;
 	zoom: 1;
 	text-align: left;
 	overflow:auto;
@@ -184,9 +184,10 @@ code {
 	background-color: #999;
 }
 #TopImg {
-	max-width:100%;
 	text-align:center;
 	vertical-align:middle;
+	position: relative;
+	bottom: 1em;
 }
 #TopSpan {
 	display: inline-block;/*将行内元素改变为行内块元素显示*/
@@ -238,8 +239,9 @@ figure,img {
 	font: bold 1em/1 Helvetica, arial, "Microsoft YaHei", sans-serif;
 	text-align: center;
 	max-width:100%;
-	margin-left: -2em;
-/*	width:expression(this.width>800 ? "800px" : this.width);*/
+	margin: 0 auto;
+/*	margin-left: -2em;
+	width:expression(this.width>800 ? "800px" : this.width);*/
 }
 figure figcaption { display: block; text-align: center; }
 
