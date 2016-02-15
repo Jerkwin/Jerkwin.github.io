@@ -6,10 +6,8 @@
  tags:
  - markdown
  - js
+ flc: true
 ---
-
-<script src="/jscss/raphael-min.js"></script>
-<script src="/jscss/flowchart.min.js"></script>
 
 ## 2014-12-25 12:08:34
 

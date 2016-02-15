@@ -170,6 +170,7 @@ code {
 	z-index: 200;
 }
 #tocbtn {
+	display: none;
 	top: 1px;
 	left: 1px;
 	z-index: 20;

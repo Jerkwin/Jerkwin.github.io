@@ -5,9 +5,8 @@
  - 科
  tags:
  - GMX
+ chem: true
 ---
-
-<script src="/jscss/ChemDoodleWeb.js"></script>
 
 ## 2015-12-08 22:16:10
 

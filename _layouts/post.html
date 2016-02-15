@@ -18,6 +18,7 @@ layout: default
 <br><a {% if page.next %} href="{{ site.url }}{{ page.next.url }}" {% endif %} {% unless page.next %} class="pageNavInvalid" {% endunless %} >后一篇:　{{ page.next.title }}</a>
 </span>
 
+{% if page.mathjax %}
 <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({tex2jax:{processEscapes: true, inlineMath: [ ['$','$'], ["\\(","\\)"] ], skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}});
@@ -26,4 +27,10 @@ Macros:{a:"\\alpha",b:"\\beta",c:"\\chi",d:"\\delta",e:"\\epsilon",f:"\\phi",g:"
 MathJax.Hub.Queue(function(){
 var all=MathJax.Hub.getAllJax(),i;for(i=0;i<all.length;i+=1){all[i].SourceElement().parentNode.className+=' has-jax';}});
 </script>
+{% endif %}
+
+{% if page.chem %} <script src="/jscss/ChemDoodleWeb.js"></script> {% endif %}
+{% if page.viz %} <script src="/jscss/viz.js"></script> {% endif %}
+{% if page.flc %} <script src="/jscss/raphael-min.js"></script><script src="/jscss/flowchart.min.js"></script> {% endif %}
+
 

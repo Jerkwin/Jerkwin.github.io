@@ -6,9 +6,8 @@
  tags:
  - 数理
  - 汉化
+ chem: true
 ---
-
-<script src="/jscss/ChemDoodleWeb.js"></script>
 
 ## 2015-02-02 08:51:05
 

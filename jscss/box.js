@@ -93,6 +93,7 @@ window.onload=function(){ box(); flcviz();
 		var $wrap=document.getElementsByClassName('wrap')
 		for(var i=0; i<$wrap.length; i++) $wrap[i].style.margin='0 0 0 30%'
 		$('markdown-toc').style.display="block"
+		$('tocbtn').style.display="block";
 	}
 	for(i=0; i<allLink.length; i++) {
 		if(allLink[i].id.match('markdown-toc')) {
