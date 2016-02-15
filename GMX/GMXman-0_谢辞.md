@@ -7,9 +7,6 @@
  - GMX
 ---
 
-* toc
-{:toc}
-
 <p>没有下面这些人, 这本手册肯定要来的晚一些.</p>
 
 <ul class="incremental">

@@ -6,6 +6,7 @@
  tags:
  - GMX
  chem: true
+ mathjax: true
 ---
 
 * toc
