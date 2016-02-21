@@ -263,7 +263,7 @@ canvas.ChemDoodleWebComponent {
 }
 
 .listing-item time { color:#999; }
-.listing-seperator { font-weight:bold;}
+.listing-seperator { font-weight:bold;margin-left:0}
 .listing-item, .listing-seperator{ list-style-type:none; }
 
 .paginator {
