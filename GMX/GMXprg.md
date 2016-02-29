@@ -9858,6 +9858,8 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
 </tr>
 </table>
 
+
+
 ## gmx potential: 计算盒子内的静电势(翻译: 陈珂)
 
 <pre><code>gmx potential [-f [&lt;.xtc/.trr/...&gt;]] [-n [&lt;.ndx&gt;]] [-s [&lt;.tpr/.tpb/...&gt;]]
