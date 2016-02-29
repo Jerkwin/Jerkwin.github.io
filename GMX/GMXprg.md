@@ -11312,7 +11312,7 @@ ED(主成分动力学)采样和/或额外的洪泛势可使用`-ei`选项启用,
   <td rowspan="1" colspan="1" style="text-align:left;">计算距离时使用周期性边界条件</td>
 </tr>
 <tr>
-  <td rowspan="1" colspan="2" style="text-align:left;"><coce>-sf &lt;file></code></td>
+  <td rowspan="1" colspan="2" style="text-align:left;"><code>-sf &lt;file></code></td>
   <td rowspan="1" colspan="1" style="text-align:left;">使用文件提供的选择</td>
 </tr>
 <tr>
@@ -11615,7 +11615,7 @@ ED(主成分动力学)采样和/或额外的洪泛势可使用`-ei`选项启用,
   <td rowspan="1" colspan="1" style="text-align:left;">选区的参考位置: atom,  res_com,  res_cog,  mol_com,  mol_cog, <br/> whole_res_com, whole_res_cog,  whole_mol_com,  whole_mol_cog, <br/>part_res_com,  part_res_cog,  part_mol_com,  part_mol_cog, <br/>dyn_res_com,  dyn_res_cog,  dyn_mol_com,  dyn_mol_cog</td>
 </tr>
 <tr>
-  <td rowspan="1" colspan="2" style="text-align:left;">code>-select &lt;selection></code></td>
+  <td rowspan="1" colspan="2" style="text-align:left;"><code>-select &lt;selection></code></td>
   <td rowspan="1" colspan="1" style="text-align:left;">要分析的选区</td>
 </tr>
 <tr>
