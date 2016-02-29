@@ -18,9 +18,9 @@
             [-cutoff ]
 </code></pre>
 
-<p><code>gmx anadock</code>基于距离或RMSD对分子对接(docking)软件Autodock的计算结果进行分析, 并将结构划分成团簇. 程序会分析对接能和自由能, 并打印每个团簇的能量统计情况.</p>
+<code>gmx anadock</code>基于距离或RMSD对分子对接(docking)软件Autodock的计算结果进行分析, 并将结构划分成团簇. 程序会分析对接能和自由能, 并打印每个团簇的能量统计情况.
 
-<p>另一个可采用的方法是先使用<code>gmx cluster</code>将结构划分为团簇, 然后按照最低能量或最低平均能量对这些团簇进行排序.</p>
+另一个可采用的方法是先使用<code>gmx cluster</code>将结构划分为团簇, 然后按照最低能量或最低平均能量对这些团簇进行排序.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -102,45 +102,45 @@
            [-nevskip ]
 </code></pre>
 
-<p><code>gmx anaeig</code>用于分析特征向量. 特征向量可以来自协方差矩阵(<code>gmx covar</code>)或简正模式分析(<code>gmx nmeig</code>).</p>
+<code>gmx anaeig</code>用于分析特征向量. 特征向量可以来自协方差矩阵(<code>gmx covar</code>)或简正模式分析(<code>gmx nmeig</code>).
 
-<p>当将一条轨迹投影到特征向量上时, 如果特征向量文件中存在结构, 会将所有结构叠合到特征向量文件中的结构, 否则, 会叠合到结构文件中的结构. 如果没有提供运行输入文件, 程序不会考虑周期性. 程序会对从<code>-first</code>到<code>-last</code>的几个特征向量进行大部分分析, 但当<code>-first</code>设置为&#8211;1时, 程序会提示你选择要分析的特征向量.</p>
+当将一条轨迹投影到特征向量上时, 如果特征向量文件中存在结构, 会将所有结构叠合到特征向量文件中的结构, 否则, 会叠合到结构文件中的结构. 如果没有提供运行输入文件, 程序不会考虑周期性. 程序会对从<code>-first</code>到<code>-last</code>的几个特征向量进行大部分分析, 但当<code>-first</code>设置为&#8211;1时, 程序会提示你选择要分析的特征向量.
 
-<p>几个选项的说明:</p>
+几个选项的说明:
 
-<p><code>-comp</code>: 对从<code>-first</code>到<code>-last</code>的特征向量, 给出其每个原子的向量分量</p>
+<code>-comp</code>: 对从<code>-first</code>到<code>-last</code>的特征向量, 给出其每个原子的向量分量
 
-<p><code>-rmsf</code>: 对从<code>-first</code>到<code>-last</code>的特征向量, 给出其每个原子的RMS涨落(需要<code>-eig</code>)</p>
+<code>-rmsf</code>: 对从<code>-first</code>到<code>-last</code>的特征向量, 给出其每个原子的RMS涨落(需要<code>-eig</code>)
 
-<p><code>-proj</code>: 计算一条轨迹在从<code>-first</code>到<code>-last</code>的特征向量上的投影. 轨迹在其协方差矩阵特征向量上的投影称为主成分(pc, principal components). 检查主成分的余弦含量通常会有帮助, 因为随机扩散的主成分为周期数为主成分数一半的余弦. 可使用<code>gmx analyze</code>计算主成分的余弦含量.</p>
+<code>-proj</code>: 计算一条轨迹在从<code>-first</code>到<code>-last</code>的特征向量上的投影. 轨迹在其协方差矩阵特征向量上的投影称为主成分(pc, principal components). 检查主成分的余弦含量通常会有帮助, 因为随机扩散的主成分为周期数为主成分数一半的余弦. 可使用<code>gmx analyze</code>计算主成分的余弦含量.
 
-<p><code>-2d</code>: 计算一条轨迹在从<code>-first</code>到<code>-last</code>的特征向量上的2d投影</p>
+<code>-2d</code>: 计算一条轨迹在从<code>-first</code>到<code>-last</code>的特征向量上的2d投影
 
-<p><code>-3d</code>: 计算一条轨迹在从<code>-first</code>到<code>-last</code>的特征向量上的3d投影</p>
+<code>-3d</code>: 计算一条轨迹在从<code>-first</code>到<code>-last</code>的特征向量上的3d投影
 
-<p><code>-filt</code>: 对轨迹进行滤波, 只显示沿从<code>-first</code>到<code>-last</code>特征向量的运动</p>
+<code>-filt</code>: 对轨迹进行滤波, 只显示沿从<code>-first</code>到<code>-last</code>特征向量的运动
 
-<p><code>-extr</code>: 计算沿一条轨迹在平均结构上的两个极值投影, 并在它们之间插值<code>-nframe</code>帧, 或使用<code>-max</code>设定你自己的极值数. 会输出特征向量<code>-first</code>, 除非明确指定了<code>-first</code>和<code>-last</code>的值, 在那种情况下, 所有特征向量会写入单独的文件. 当输出<code>.pdb</code>文件时, 若含有两个或三个结构, 会添加链标识(你可以使用<code>rasmol -nmrpdb</code>来查看这样的<code>.pdb</code>文件).</p>
+<code>-extr</code>: 计算沿一条轨迹在平均结构上的两个极值投影, 并在它们之间插值<code>-nframe</code>帧, 或使用<code>-max</code>设定你自己的极值数. 会输出特征向量<code>-first</code>, 除非明确指定了<code>-first</code>和<code>-last</code>的值, 在那种情况下, 所有特征向量会写入单独的文件. 当输出<code>.pdb</code>文件时, 若含有两个或三个结构, 会添加链标识(你可以使用<code>rasmol -nmrpdb</code>来查看这样的<code>.pdb</code>文件).
 
-<p>协方差分析的重叠计算:</p>
+协方差分析的重叠计算:
 
-<p><strong>注意</strong>: 分析时应使用相同的叠合结构</p>
+<strong>注意</strong>: 分析时应使用相同的叠合结构
 
-<p><code>-over</code>: 计算文件<code>-v2</code>中的特征向量与文件<code>-v</code>中从<code>-first</code>到<code>-last</code>的特征向量之间的子空间重叠.</p>
+<code>-over</code>: 计算文件<code>-v2</code>中的特征向量与文件<code>-v</code>中从<code>-first</code>到<code>-last</code>的特征向量之间的子空间重叠.
 
-<p><code>-inpr</code>: 计算文件<code>-v</code>和<code>-v2</code>中的特征向量间的内积矩阵. 会使用两个文件中的所有特征向量, 除非明确指定了<code>-first</code>和<code>-last</code>.</p>
+<code>-inpr</code>: 计算文件<code>-v</code>和<code>-v2</code>中的特征向量间的内积矩阵. 会使用两个文件中的所有特征向量, 除非明确指定了<code>-first</code>和<code>-last</code>.
 
-<p>当给出了<code>-v</code>, <code>-eig</code>, <code>-v2</code>和<code>-eig2</code>时, 会给出表征协方差矩阵之间重叠的一个数值, 其计算公式为:</p>
+当给出了<code>-v</code>, <code>-eig</code>, <code>-v2</code>和<code>-eig2</code>时, 会给出表征协方差矩阵之间重叠的一个数值, 其计算公式为:
 
-<p>差异 difference = sqrt(tr((sqrt(M1) - sqrt(M2))^2))</p>
+差异 difference = sqrt(tr((sqrt(M1) - sqrt(M2))^2))
 
-<p>归一化重叠 normalized overlap = 1 - difference/sqrt(tr(M1) + tr(M2))</p>
+归一化重叠 normalized overlap = 1 - difference/sqrt(tr(M1) + tr(M2))
 
-<p>形状重叠 shape overlap = 1 - sqrt(tr((sqrt(M1/tr(M1)) - sqrt(M2/tr(M2)))^2))</p>
+形状重叠 shape overlap = 1 - sqrt(tr((sqrt(M1/tr(M1)) - sqrt(M2/tr(M2)))^2))
 
-<p>其中M1和M2为两个协方差矩阵, tr为矩阵的迹. 给出的数值正比于涨落平方根的重叠. 归一化的重叠是最有用的数字, 对全等矩阵其值为1, 当抽样子空间正交时, 其值为零.</p>
+其中M1和M2为两个协方差矩阵, tr为矩阵的迹. 给出的数值正比于涨落平方根的重叠. 归一化的重叠是最有用的数字, 对全等矩阵其值为1, 当抽样子空间正交时, 其值为零.
 
-<p>当给定<code>-entropy</code>选项时, 会依据准简谐近似以及Schlitter公式给出熵估计.</p>
+当给定<code>-entropy</code>选项时, 会依据准简谐近似以及Schlitter公式给出熵估计.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -349,47 +349,47 @@
             [-beginfit ] [-endfit ]
 </code></pre>
 
-<p><code>gmx analyze</code>可以读取一个ASCII文本文件并对其中的数据集进行分析. 输入文件中每行的第一个数据可以为时间(见<code>-time</code>选项), 后面跟着任意数目的y值. 程序也可以读入多个数据集, 各个数据集之间以<code>&amp;</code>分割(<code>-n</code>选项). 在这种情况下, 对每一行, 程序只会读入一个y值. 程序会忽略所有以<code>#</code>和<code>@</code>开始的行. 所有的分析方法都可用于数据集的导数(<code>-d</code>选项).</p>
+<code>gmx analyze</code>可以读取一个ASCII文本文件并对其中的数据集进行分析. 输入文件中每行的第一个数据可以为时间(见<code>-time</code>选项), 后面跟着任意数目的y值. 程序也可以读入多个数据集, 各个数据集之间以<code>&amp;</code>分割(<code>-n</code>选项). 在这种情况下, 对每一行, 程序只会读入一个y值. 程序会忽略所有以<code>#</code>和<code>@</code>开始的行. 所有的分析方法都可用于数据集的导数(<code>-d</code>选项).
 
-<p>除<code>-av</code>和<code>-power</code>外, 所有选项都假定数据点之间的时间间隔是相等的.</p>
+除<code>-av</code>和<code>-power</code>外, 所有选项都假定数据点之间的时间间隔是相等的.
 
-<p><code>gmx analyze</code>总会给出各数据集的平均值和标准偏差, 以及来自具有相同标准偏差的高斯分布的三阶和四阶累积量的相对偏差.</p>
+<code>gmx analyze</code>总会给出各数据集的平均值和标准偏差, 以及来自具有相同标准偏差的高斯分布的三阶和四阶累积量的相对偏差.
 
-<p>选项<code>-ac</code>计算自相关函数. 请确保数据点之间的时间间隔远远小于自相关的时间尺度.</p>
+选项<code>-ac</code>计算自相关函数. 请确保数据点之间的时间间隔远远小于自相关的时间尺度.
 
-<p>选项<code>-cc</code>给出数据集 <span class="math">\(i\)</span> 与周期为 <span class="math">\(i/2\)</span> 的余弦函数的相似性, 公式为:</p>
+选项<code>-cc</code>给出数据集 <span class="math">\(i\)</span> 与周期为 <span class="math">\(i/2\)</span> 的余弦函数的相似性, 公式为:
 
-<p><span class="math">\[{2 \left(\int_0^T y(t) \cos(i\p t) dt \right)^2 / \int_0^T y^2(t) dt}\]</span></p>
+<span class="math">\[{2 \left(\int_0^T y(t) \cos(i\p t) dt \right)^2 / \int_0^T y^2(t) dt}\]</span>
 
-<p>这可用于由协方差分析得到的主成分, 因为随机扩散的主成分是单纯的余弦.</p>
+这可用于由协方差分析得到的主成分, 因为随机扩散的主成分是单纯的余弦.
 
-<p>选项<code>-msd</code>计算均方位移.</p>
+选项<code>-msd</code>计算均方位移.
 
-<p>选项<code>-dist</code>计算分布图.</p>
+选项<code>-dist</code>计算分布图.
 
-<p>选项<code>-av</code>计算数据集的平均值. 可以使用<code>-errbar</code>选项得到平均值的误差. 误差可代表标准偏差, 误差(假定点是独立的), 或通过弃去顶部和底部5%的点而包含90%的点的区间.</p>
+选项<code>-av</code>计算数据集的平均值. 可以使用<code>-errbar</code>选项得到平均值的误差. 误差可代表标准偏差, 误差(假定点是独立的), 或通过弃去顶部和底部5%的点而包含90%的点的区间.
 
-<p>选项<code>-ee</code>使用块平均估计误差. 数据集被分成几块, 并计算每块的平均值. 总平均值的误差由 <span class="math">\(m\)</span> 个块平均值 <span class="math">\(B_i\)</span> 的方差进行计算:</p>
+选项<code>-ee</code>使用块平均估计误差. 数据集被分成几块, 并计算每块的平均值. 总平均值的误差由 <span class="math">\(m\)</span> 个块平均值 <span class="math">\(B_i\)</span> 的方差进行计算:
 
-<p><span class="math">\[error^2 = \Sum (B_i - \lt B \gt)^2 / (m(m-1))\]</span></p>
+<span class="math">\[error^2 = \Sum (B_i - \lt B \gt)^2 / (m(m-1))\]</span>
 
-<p>程序会给出误差随块数的变化关系. 假定自相关是两个指数函数的加和, 程序还会给出解析的块平均值曲线. 块平均值的解析曲线为:</p>
+程序会给出误差随块数的变化关系. 假定自相关是两个指数函数的加和, 程序还会给出解析的块平均值曲线. 块平均值的解析曲线为:
 
-<p><span class="math">\[f(t) = \s \sqrt{2/T ( \a (\t_1 ((\exp(-t/\t_1) - 1) \t_1/t + 1)) +(1-\a) (\t_2 ((\exp(-t/\t_2) - 1) \t_2/t + 1)))}\]</span></p>
+<span class="math">\[f(t) = \s \sqrt{2/T ( \a (\t_1 ((\exp(-t/\t_1) - 1) \t_1/t + 1)) +(1-\a) (\t_2 ((\exp(-t/\t_2) - 1) \t_2/t + 1)))}\]</span>
 
-<p>其中 <span class="math">\(T\)</span> 为总时间, <span class="math">\(\a\)</span>, <span class="math">\(\t_1\)</span> 和 <span class="math">\(\t_2\)</span> 通过将 <span class="math">\(error^2\)</span> 拟合为 <span class="math">\(f^2(t)\)</span> 得到. 当实际的块平均值与解析曲线十分接近时, 误差为 <span class="math">\(\s \sqrt{2/T (a \t_1 + (1-a) \t_2)}\)</span>. 完整的推导见B. Hess, <em>J. Chem. Phys.</em> 116:209&#8211;217, 2002.</p>
+其中 <span class="math">\(T\)</span> 为总时间, <span class="math">\(\a\)</span>, <span class="math">\(\t_1\)</span> 和 <span class="math">\(\t_2\)</span> 通过将 <span class="math">\(error^2\)</span> 拟合为 <span class="math">\(f^2(t)\)</span> 得到. 当实际的块平均值与解析曲线十分接近时, 误差为 <span class="math">\(\s \sqrt{2/T (a \t_1 + (1-a) \t_2)}\)</span>. 完整的推导见B. Hess, <em>J. Chem. Phys.</em> 116:209&#8211;217, 2002.
 
-<p>选项<code>-bal</code>通过多指数拟合发现并减去来自于氢键自相关函数的超快&#8220;弹道&#8221;分量, 具体请参考O. Markovitch, <em>J. Chem. Phys.</em> 129:084505, 2008. 最快项对应于具有最大负系数的指数项. 或者使用<code>-d</code>选项时, 最快项对应于0时刻具有最负的时间导数的项. <code>-nbalexp</code>设定用于拟合的指数函数的数目.</p>
+选项<code>-bal</code>通过多指数拟合发现并减去来自于氢键自相关函数的超快&#8220;弹道&#8221;分量, 具体请参考O. Markovitch, <em>J. Chem. Phys.</em> 129:084505, 2008. 最快项对应于具有最大负系数的指数项. 或者使用<code>-d</code>选项时, 最快项对应于0时刻具有最负的时间导数的项. <code>-nbalexp</code>设定用于拟合的指数函数的数目.
 
-<p>选项<code>-gem</code>根据可逆成对重组模型拟合氢键自相关函数的双分子速率常数ka和kb(以及可选的kD). 强烈建议先去除弹道分量. 模型的细节见O. Markovitch, <em>J. Chem. Phys.</em> 129:084505, 2008.</p>
+选项<code>-gem</code>根据可逆成对重组模型拟合氢键自相关函数的双分子速率常数ka和kb(以及可选的kD). 强烈建议先去除弹道分量. 模型的细节见O. Markovitch, <em>J. Chem. Phys.</em> 129:084505, 2008.
 
-<p>选项<code>-filter</code>打印每个数据集和所有数据集相对于滤波器平均值的RMS高频涨落. 滤波器正比于 <span class="math">\(\cos(\p t/len)\)</span>, 其中 <span class="math">\(t\)</span> 从 <span class="math">\(-len/2\)</span> 到 <span class="math">\(len/2\)</span>. <span class="math">\(len\)</span> 由<code>-filter</code>选项提供. 此滤波器可以将周期为 <span class="math">\(len/2\)</span> 和 <span class="math">\(len\)</span> 的振动分别降低为原来的79%和33%.</p>
+选项<code>-filter</code>打印每个数据集和所有数据集相对于滤波器平均值的RMS高频涨落. 滤波器正比于 <span class="math">\(\cos(\p t/len)\)</span>, 其中 <span class="math">\(t\)</span> 从 <span class="math">\(-len/2\)</span> 到 <span class="math">\(len/2\)</span>. <span class="math">\(len\)</span> 由<code>-filter</code>选项提供. 此滤波器可以将周期为 <span class="math">\(len/2\)</span> 和 <span class="math">\(len\)</span> 的振动分别降低为原来的79%和33%.
 
-<p>选项<code>-g</code>使用选项<code>-fitfn</code>给出的函数对数据进行拟合.</p>
+选项<code>-g</code>使用选项<code>-fitfn</code>给出的函数对数据进行拟合.
 
-<p>选项<code>-power</code>使用 <span class="math">\(b t^a\)</span> 对数据进行拟合, 这是通过在双对数尺度下进行 <span class="math">\(at+b\)</span> 拟合来完成的. 拟合时, 第一个零之后或值为负的所有点都被忽略.</p>
+选项<code>-power</code>使用 <span class="math">\(b t^a\)</span> 对数据进行拟合, 这是通过在双对数尺度下进行 <span class="math">\(at+b\)</span> 拟合来完成的. 拟合时, 第一个零之后或值为负的所有点都被忽略.
 
-<p>选项<code>-luzar</code>对<code>gmx hbond</code>的输出进行Luzar-Chandler动力学分析. 输入文件可直接来自<code>gmx hbond -ac</code>, 并应得到相同的结果.</p>
+选项<code>-luzar</code>对<code>gmx hbond</code>的输出进行Luzar-Chandler动力学分析. 输入文件可直接来自<code>gmx hbond -ac</code>, 并应得到相同的结果.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -618,27 +618,27 @@
           [-endfit ]
 </code></pre>
 
-<p><code>gmx angle</code>用于计算一些键角或二面角的角度分布.</p>
+<code>gmx angle</code>用于计算一些键角或二面角的角度分布.
 
-<p>利用<code>-ov</code>选项, 可以得到一组键角的平均值随时间的变化关系图. 使用<code>-all</code>选项时, 第一幅图为平均键角, 其他则为单个键角.
-例如, 如果我们选择几个不同的原子组合来计算其角度</p>
+利用<code>-ov</code>选项, 可以得到一组键角的平均值随时间的变化关系图. 使用<code>-all</code>选项时, 第一幅图为平均键角, 其他则为单个键角.
+例如, 如果我们选择几个不同的原子组合来计算其角度
 
 <pre><code>75    76   1145
 75    76   1147
 222  223   1145
 </code></pre>
 
-<p>则默认输出文件<code>angaver.xvg</code>中共包含4列数据, 首列为3个角度平均值, 之后每列为每个角度值.</p>
+则默认输出文件<code>angaver.xvg</code>中共包含4列数据, 首列为3个角度平均值, 之后每列为每个角度值.
 
-<p>利用<code>-of</code>选项, <code>gmx angle</code>也会计算反式二面角的比例(仅适用于二面角)与时间的函数关系, 但这可能只适用于少量的二面角.</p>
+利用<code>-of</code>选项, <code>gmx angle</code>也会计算反式二面角的比例(仅适用于二面角)与时间的函数关系, 但这可能只适用于少量的二面角.
 
-<p>利用<code>-oc</code>选项, 可计算二面角的相关函数.</p>
+利用<code>-oc</code>选项, 可计算二面角的相关函数.
 
-<p>需要注意, 对键角, 在索引文件中必须包含原子三元组, 对二面角则必须包含原子四元组. 否则, 程序会崩溃.</p>
+需要注意, 对键角, 在索引文件中必须包含原子三元组, 对二面角则必须包含原子四元组. 否则, 程序会崩溃.
 
-<p>利用<code>-or</code>选项, 可生成包含所选二面角sin和cos函数值的轨迹文件. 当利用<code>gmx covar</code>进行主成分分析时, 此轨迹文件可作为输入.</p>
+利用<code>-or</code>选项, 可生成包含所选二面角sin和cos函数值的轨迹文件. 当利用<code>gmx covar</code>进行主成分分析时, 此轨迹文件可作为输入.
 
-<p>利用<code>-ot</code>选项, 可以记录多重度为3的二面角旋转异构体之间的转变. 假定输入轨迹各帧之间的时间间隔相等, 可利用<code>-oh</code>选项得到转变间隔时间的直方图.</p>
+利用<code>-ot</code>选项, 可以记录多重度为3的二面角旋转异构体之间的转变. 假定输入轨迹各帧之间的时间间隔相等, 可利用<code>-oh</code>选项得到转变间隔时间的直方图.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -815,28 +815,28 @@
         [-nbmax ] [-nbin ] [-[no]extp]
 </code></pre>
 
-<p><code>gmx bar</code>通过Bennett接受率方法(BAR, Bennett&#8217;s acceptance ratio)估计自由能差值, 也可以自动将由BAR得到的一系列分立自由能进行组合得到自由能估计值.</p>
+<code>gmx bar</code>通过Bennett接受率方法(BAR, Bennett&#8217;s acceptance ratio)估计自由能差值, 也可以自动将由BAR得到的一系列分立自由能进行组合得到自由能估计值.
 
-<p>每个分立的BAR自由能差值依赖于两个不同状态的模拟, 且称为态A和态B, 它们由参数λ控制(见<code>.mdp</code>参数<code>init_lambda</code>). 给定态A, BAR方法可以计算态B相对于态A的哈密顿差的加权平均的比率, 反之亦然. 相对于另一状态的能量差在模拟中必须显式地计算, 可以通过<code>.mdp</code>选项<code>foreign_lambda</code>实现.</p>
+每个分立的BAR自由能差值依赖于两个不同状态的模拟, 且称为态A和态B, 它们由参数λ控制(见<code>.mdp</code>参数<code>init_lambda</code>). 给定态A, BAR方法可以计算态B相对于态A的哈密顿差的加权平均的比率, 反之亦然. 相对于另一状态的能量差在模拟中必须显式地计算, 可以通过<code>.mdp</code>选项<code>foreign_lambda</code>实现.
 
-<p>输入选项<code>-f</code>需要读入多个<code>dhdl.xvg</code>文件, 支持两种输入文件类型:</p>
+输入选项<code>-f</code>需要读入多个<code>dhdl.xvg</code>文件, 支持两种输入文件类型:
 
 <ul class="incremental">
 <li>包含多于一个y值的文件, 其中应包含dH/dλ和Δλ的列. λ的值根据列标题推定: 模拟使用的λ根据dH/dλ列的标题推定, 外部λ值根据Delta H列的标题推定.</li>
 <li>仅有一个y值的文件. 对这些文件应使用<code>-extp</code>选项, 并假定y值为dH/dλ, 而哈密顿量与λ呈线性关系. 模拟的λ值根据子标题(如果存在)推定, 否则会根据子目录下文件名中的数字推定.</li>
 </ul>
 
-<p>模拟的λ值根据<code>dhdl.xvg</code>文件中包含字符串<code>dH</code>的列标题解析得出, 外部λ值根据包含大写字母<code>D</code>和<code>H</code>的列标题解析得出, 温度根据包含<code>T=</code>的标题解析得出.</p>
+模拟的λ值根据<code>dhdl.xvg</code>文件中包含字符串<code>dH</code>的列标题解析得出, 外部λ值根据包含大写字母<code>D</code>和<code>H</code>的列标题解析得出, 温度根据包含<code>T=</code>的标题解析得出.
 
-<p>输入选项<code>-g</code>需要读入多个<code>.edr</code>文件, 它们可以包含能量差列表(见<code>.mdp</code>选项<code>separate_dhdl_file</code>), 或者一系列直方图(见<code>.mdp</code>选项<code>dh_hist_size</code>和<code>dh_hist_spacing</code>). 程序会自动从<code>ener.edr</code>文件中推断出温度和λ值.</p>
+输入选项<code>-g</code>需要读入多个<code>.edr</code>文件, 它们可以包含能量差列表(见<code>.mdp</code>选项<code>separate_dhdl_file</code>), 或者一系列直方图(见<code>.mdp</code>选项<code>dh_hist_size</code>和<code>dh_hist_spacing</code>). 程序会自动从<code>ener.edr</code>文件中推断出温度和λ值.
 
-<p>除了<code>.mdp</code>的<code>foreign_lambda</code>选项外, 也可以根据dH/dλ值外推得到能量差. 这可通过<code>-extp</code>选项实现, 它假定系统的哈密顿量与λ呈线性关系, 虽然通常并非如此.</p>
+除了<code>.mdp</code>的<code>foreign_lambda</code>选项外, 也可以根据dH/dλ值外推得到能量差. 这可通过<code>-extp</code>选项实现, 它假定系统的哈密顿量与λ呈线性关系, 虽然通常并非如此.
 
-<p>自由能估计由使用二分法的BAR方法确定, 输出精度由<code>-prec</code>设定. 误差估计考虑了时间相关, 这是通过将数据分块, 并假定这些分块之间互相独立, 计算它们之间的自由能差来实现的. 最终的误差估计由5个分块的平均方差决定. 用于误差估计的分块数可以通过选项<code>-nbmin</code>和<code>-nbmax</code>来指定.</p>
+自由能估计由使用二分法的BAR方法确定, 输出精度由<code>-prec</code>设定. 误差估计考虑了时间相关, 这是通过将数据分块, 并假定这些分块之间互相独立, 计算它们之间的自由能差来实现的. 最终的误差估计由5个分块的平均方差决定. 用于误差估计的分块数可以通过选项<code>-nbmin</code>和<code>-nbmax</code>来指定.
 
-<p><code>gmx bar</code>会尝试合计具有相同&#8217;本地&#8217;和&#8217;外部&#8217;λ值的样本, 但总会假定样本互相独立. <strong>注意</strong>, 当合计具有不同采样间隔的能量差或能量导数时, 这个假定几乎肯定是不正确的. 连续的能量通常是相关的, 不同的时间间隔意味着样本间的相关度不同.</p>
+<code>gmx bar</code>会尝试合计具有相同&#8217;本地&#8217;和&#8217;外部&#8217;λ值的样本, 但总会假定样本互相独立. <strong>注意</strong>, 当合计具有不同采样间隔的能量差或能量导数时, 这个假定几乎肯定是不正确的. 连续的能量通常是相关的, 不同的时间间隔意味着样本间的相关度不同.
 
-<p>结果分为两部分: 后一部分包含了以kJ/mol为单位的最终结果, 以及每一部分和总体的误差估计. 前一部分包含了详细的自由能差估计和相空间重叠量度, 以kT为单位(以及它们的误差估计). 打印出的值为:</p>
+结果分为两部分: 后一部分包含了以kJ/mol为单位的最终结果, 以及每一部分和总体的误差估计. 前一部分包含了详细的自由能差估计和相空间重叠量度, 以kT为单位(以及它们的误差估计). 打印出的值为:
 
 <ul class="incremental">
 <li>lam_A: A点的λ值.</li>
@@ -847,11 +847,11 @@
 <li>stdev: 每个样本标准偏差的估计期望</li>
 </ul>
 
-<p>两个状态在彼此系综内的相对熵可以理解为相空间重叠的量度: lambda_B的工作样本在lambda_A系综内的相对熵s_A(对s_B反之亦然), 是两个状态Boltzmann分布之间&#8217;距离&#8217;的量度, 当分布相同时, 其值为0. 详见Wu &amp; Kofke, <em>J. Chem. Phys.</em> 123 084109 (2005).</p>
+两个状态在彼此系综内的相对熵可以理解为相空间重叠的量度: lambda_B的工作样本在lambda_A系综内的相对熵s_A(对s_B反之亦然), 是两个状态Boltzmann分布之间&#8217;距离&#8217;的量度, 当分布相同时, 其值为0. 详见Wu &amp; Kofke, <em>J. Chem. Phys.</em> 123 084109 (2005).
 
-<p>每个样本标准偏差的估计期望, 见Bennett BAR方法的原始论文 Bennett, <em>J. Comp. Phys.</em> 22, p 245 (1976). 其中的Eq. 10给出了采样质量的估计(并非直接的实际统计误差, 因为它假定了样本相互独立).</p>
+每个样本标准偏差的估计期望, 见Bennett BAR方法的原始论文 Bennett, <em>J. Comp. Phys.</em> 22, p 245 (1976). 其中的Eq. 10给出了采样质量的估计(并非直接的实际统计误差, 因为它假定了样本相互独立).
 
-<p>要得到相空间重叠估计的可视化结果, 可使用<code>-oh</code>选项及<code>-nbin</code>选项输出一系列直方图.</p>
+要得到相空间重叠估计的可视化结果, 可使用<code>-oh</code>选项及<code>-nbin</code>选项输出一系列直方图.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -965,11 +965,11 @@
            [-[no]z]
 </code></pre>
 
-<p><code>gmx bundle</code>用于分析轴束, 例如螺旋轴. 程序读入两个索引组, 把它们分成<code>-na</code>个部分. 不同部分的质心确定轴的顶部和底部. 以下几个量会写入输出文件中: 轴的长度, 轴中点相对于所有轴的平均中点的距离和Z方向的偏移量, 轴相对于平均轴的总倾斜, 径向倾斜, 侧向倾斜.</p>
+<code>gmx bundle</code>用于分析轴束, 例如螺旋轴. 程序读入两个索引组, 把它们分成<code>-na</code>个部分. 不同部分的质心确定轴的顶部和底部. 以下几个量会写入输出文件中: 轴的长度, 轴中点相对于所有轴的平均中点的距离和Z方向的偏移量, 轴相对于平均轴的总倾斜, 径向倾斜, 侧向倾斜.
 
-<p>使用选项<code>-ok</code>, <code>-okr</code>和<code>-okl</code>可输出轴的总扭结, 径向扭结和侧向扭结. 这种情况下还需要定义扭结原子的索引组, 它也会被分为<code>-na</code>个部分. 扭结角定义为扭结顶部和扭结底部矢量间的夹角.</p>
+使用选项<code>-ok</code>, <code>-okr</code>和<code>-okl</code>可输出轴的总扭结, 径向扭结和侧向扭结. 这种情况下还需要定义扭结原子的索引组, 它也会被分为<code>-na</code>个部分. 扭结角定义为扭结顶部和扭结底部矢量间的夹角.
 
-<p>使用选项<code>-oa</code>时, 每帧中每个轴的顶点, 中点(或扭结, 若指定了<code>-ok</code>), 最低点会写入一个<code>.pdb</code>文件, 残基编号对应于轴的编号. 当使用Rasmol查看这个文件时, 指定命令行选项<code>-nmrpdb</code>, 并输入<code>set axis true</code>来显示参考轴.</p>
+使用选项<code>-oa</code>时, 每帧中每个轴的顶点, 中点(或扭结, 若指定了<code>-ok</code>), 最低点会写入一个<code>.pdb</code>文件, 残基编号对应于轴的编号. 当使用Rasmol查看这个文件时, 指定命令行选项<code>-nmrpdb</code>, 并输入<code>set axis true</code>来显示参考轴.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -1116,19 +1116,19 @@
           [-[no]ab] [-lastener ]
 </code></pre>
 
-<p><code>gmx check</code>读取一个轨迹文件(<code>.trj</code>, <code>.trr</code>或<code>.xtc</code>), 一个能量文件(<code>.ene</code>或<code>.edr</code>), 或一个索引文件(<code>.ndx</code>), 并输出与其相关的有用信息.</p>
+<code>gmx check</code>读取一个轨迹文件(<code>.trj</code>, <code>.trr</code>或<code>.xtc</code>), 一个能量文件(<code>.ene</code>或<code>.edr</code>), 或一个索引文件(<code>.ndx</code>), 并输出与其相关的有用信息.
 
-<p>如果指定了<code>-c</code>选项, 程序就会检查文件中是否包含了坐标, 速度和盒子大小. 如果存在坐标, 程序进而会检查原子是不是有近距离的接触(距离小于<code>-vdwfac</code>, 而且没有键相连, 即距离不在<code>-bonlo</code>和<code>-bonhi</code>之间. 注意这几个选项指定的都是与两个原子范德华半径之和的比例). 程序还会检查处于盒子外面的原子(这是经常发生的事情, 并不是什么问题). 如果文件中含有速度, 程序就会根据温度估算出温度.</p>
+如果指定了<code>-c</code>选项, 程序就会检查文件中是否包含了坐标, 速度和盒子大小. 如果存在坐标, 程序进而会检查原子是不是有近距离的接触(距离小于<code>-vdwfac</code>, 而且没有键相连, 即距离不在<code>-bonlo</code>和<code>-bonhi</code>之间. 注意这几个选项指定的都是与两个原子范德华半径之和的比例). 程序还会检查处于盒子外面的原子(这是经常发生的事情, 并不是什么问题). 如果文件中含有速度, 程序就会根据温度估算出温度.
 
-<p>如果指定了一个索引文件, 程序会对索引文件中的所有索引进行处理, 并给出一个总结.</p>
+如果指定了一个索引文件, 程序会对索引文件中的所有索引进行处理, 并给出一个总结.
 
-<p>如果同时给定了轨迹文件和<code>.tpr</code>文件(使用<code>-s1</code>选项), 程序就会检查<code>.tpr</code>文件中定义的键长在轨迹中是否正确. 如果不正确, 那么轨迹文件和<code>.tpr</code>文件可能不匹配, 原因可能出于原子重组或虚拟位点的问题. 所以, 通过这些选项, 你可以快速检查这些问题.</p>
+如果同时给定了轨迹文件和<code>.tpr</code>文件(使用<code>-s1</code>选项), 程序就会检查<code>.tpr</code>文件中定义的键长在轨迹中是否正确. 如果不正确, 那么轨迹文件和<code>.tpr</code>文件可能不匹配, 原因可能出于原子重组或虚拟位点的问题. 所以, 通过这些选项, 你可以快速检查这些问题.
 
-<p>当同时指定<code>-s1</code>和<code>-s2</code>时, 程序还可以对比两个输入文件(<code>.tpr</code>, <code>.tpb</code>或<code>.tpa</code>). 类似的, 程序也可以对比两个轨迹文件(使用<code>-f2</code>选项), 或对比两个能量文件(使用<code>-e2</code>选项).</p>
+当同时指定<code>-s1</code>和<code>-s2</code>时, 程序还可以对比两个输入文件(<code>.tpr</code>, <code>.tpb</code>或<code>.tpa</code>). 类似的, 程序也可以对比两个轨迹文件(使用<code>-f2</code>选项), 或对比两个能量文件(使用<code>-e2</code>选项).
 
-<p>对于自由能计算, 来自同一运行输入文件A和B两种状态的拓扑, 可以通过<code>-s1</code>和<code>-ab</code>选项进行比较.</p>
+对于自由能计算, 来自同一运行输入文件A和B两种状态的拓扑, 可以通过<code>-s1</code>和<code>-ab</code>选项进行比较.
 
-<p>指定了<code>-m</code>选项后, 程序会输出一个LaTeX文件, 其中包含了可用于论文方法部分的粗略提纲.</p>
+指定了<code>-m</code>选项后, 程序会输出一个LaTeX文件, 其中包含了可用于论文方法部分的粗略提纲.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -1261,13 +1261,13 @@
         [-endfit ]
 </code></pre>
 
-<p><code>gmx chi</code>用于计算所有氨基酸骨架和侧链的φ, ψ, ω以及χ二面角. 它也可以计算二面角与时间的函数关系, 以及二面角的直方图分布. 分布(<code>histo-(dihedral) (RESIDUE).xvg</code>)会对每一类型的所有残基进行累计.</p>
+<code>gmx chi</code>用于计算所有氨基酸骨架和侧链的φ, ψ, ω以及χ二面角. 它也可以计算二面角与时间的函数关系, 以及二面角的直方图分布. 分布(<code>histo-(dihedral) (RESIDUE).xvg</code>)会对每一类型的所有残基进行累计.
 
-<p>如果使用<code>-corr</code>选项, 程序会计算二面角的自相关函数 C(t) = &lt;cos(χ(τ)) cos(χ(τ+t))&gt;. 之所以使用余弦而不是角度自身, 是为了解决周期性的问题(Van der Spoel &amp; Berendsen (1997), <em>Biophys. J.</em> 72, 2032&#8211;2041). 程序会将每个残基的每个二面角输出到单独的文件(<code>corr(dihedral) (RESIDUE) (nresnr).xvg</code>)中, 同时还会输出一个包含所有残基信息的文件(<code>-corr</code>选项).</p>
+如果使用<code>-corr</code>选项, 程序会计算二面角的自相关函数 C(t) = &lt;cos(χ(τ)) cos(χ(τ+t))&gt;. 之所以使用余弦而不是角度自身, 是为了解决周期性的问题(Van der Spoel &amp; Berendsen (1997), <em>Biophys. J.</em> 72, 2032&#8211;2041). 程序会将每个残基的每个二面角输出到单独的文件(<code>corr(dihedral) (RESIDUE) (nresnr).xvg</code>)中, 同时还会输出一个包含所有残基信息的文件(<code>-corr</code>选项).
 
-<p>使用<code>-all</code>选项, 程序会将每个残基的角度与时间的函数关系输出到独立的文件<code>(dihedral) (RESIDUE) (nresnr).xvg</code>中. 所用的单位可以是弧度或度.</p>
+使用<code>-all</code>选项, 程序会将每个残基的角度与时间的函数关系输出到独立的文件<code>(dihedral) (RESIDUE) (nresnr).xvg</code>中. 所用的单位可以是弧度或度.
 
-<p>程序还会输出一个日志文件(<code>-g</code>选项), 其中包含:</p>
+程序还会输出一个日志文件(<code>-g</code>选项), 其中包含:
 
 <ul class="incremental">
 <li>(a) 每种类型残基的数目信息.</li>
@@ -1276,13 +1276,13 @@
 <li>(d) 一个表格, 其中包含每个残基旋转异构体的占据率.</li>
 </ul>
 
-<p>所有的旋转异构体的多重度都视为3, 除平面基团的ω和χ二面角(如芳香化合物, Asp和Asn的χ_2; Glu和Gln的χ_3; 以及Arg的χ_4)外, 它们的多重度为2. &#8220;rotamer 0&#8221;表示二面角不处于每个旋转异构体的核心区域. 核心区域的宽度可使用<code>-core_rotamer</code>设置.</p>
+所有的旋转异构体的多重度都视为3, 除平面基团的ω和χ二面角(如芳香化合物, Asp和Asn的χ_2; Glu和Gln的χ_3; 以及Arg的χ_4)外, 它们的多重度为2. &#8220;rotamer 0&#8221;表示二面角不处于每个旋转异构体的核心区域. 核心区域的宽度可使用<code>-core_rotamer</code>设置.
 
-<p>S<sup>2序参数也会输出到一个</sup><code>.xvg</code>文件(由<code>-o</code>选项指定), 作为可选项, 可将S<sup>2的值作为B因子输出到一个</sup><code>.pdb</code>文件中(由<code>-p</code>选项指定). 每个时间步旋转异构体转变的总数(<code>-ot</code>选项), 每个旋转异构体的转变数(<code>-rt</code>选项)和<sup>3</sup>J 偶合(<code>-jc</code>选项)也可以写入到<code>.xvg</code>文件中. 注意, 在分析旋转异构体转变时, 假定所提供的轨迹帧之间的时间间隔是相等的.</p>
+S<sup>2序参数也会输出到一个</sup><code>.xvg</code>文件(由<code>-o</code>选项指定), 作为可选项, 可将S<sup>2的值作为B因子输出到一个</sup><code>.pdb</code>文件中(由<code>-p</code>选项指定). 每个时间步旋转异构体转变的总数(<code>-ot</code>选项), 每个旋转异构体的转变数(<code>-rt</code>选项)和<sup>3</sup>J 偶合(<code>-jc</code>选项)也可以写入到<code>.xvg</code>文件中. 注意, 在分析旋转异构体转变时, 假定所提供的轨迹帧之间的时间间隔是相等的.
 
-<p>如果设置了<code>-chi_prod</code>选项(并且<code>-maxchi &gt; 0</code>), 会计算累积旋转异构体, 如1+9(χ_1&#8211;1)3(χ_2&#8211;1)+(χ_3&#8211;1)(如果残基具有三个3重二面角, 并且<code>-maxchi &gt;= 3</code>). 如前所述, 任何二面角如果不处于核心区域内, 旋转异构体取为0. 这些累积旋转异构体的占据率(由旋转异构体0开始)会写入由<code>-cp</code>选项指定的文件中, 如果使用<code>-all</code>选项, 旋转异构体作为时间的函数会写入<code>chiproduct (RESIDUE) (nresnr).xvg</code>文件中, 其占据率会写入<code>histo-chiproduct (RESIDUE) (nresnr).xvg</code>文件.</p>
+如果设置了<code>-chi_prod</code>选项(并且<code>-maxchi &gt; 0</code>), 会计算累积旋转异构体, 如1+9(χ_1&#8211;1)3(χ_2&#8211;1)+(χ_3&#8211;1)(如果残基具有三个3重二面角, 并且<code>-maxchi &gt;= 3</code>). 如前所述, 任何二面角如果不处于核心区域内, 旋转异构体取为0. 这些累积旋转异构体的占据率(由旋转异构体0开始)会写入由<code>-cp</code>选项指定的文件中, 如果使用<code>-all</code>选项, 旋转异构体作为时间的函数会写入<code>chiproduct (RESIDUE) (nresnr).xvg</code>文件中, 其占据率会写入<code>histo-chiproduct (RESIDUE) (nresnr).xvg</code>文件.
 
-<p>选项<code>-r</code>可生成作为φ和ψ角函数的平均ω角的等值线图, 也就是使用颜色编码的平均ω角的Ramachandran图.</p>
+选项<code>-r</code>可生成作为φ和ψ角函数的平均ω角的等值线图, 也就是使用颜色编码的平均ω角的Ramachandran图.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -1552,9 +1552,9 @@
             [-nrandom ] [-kT ] [-[no]pbc]
 </code></pre>
 
-<p><code>gmx cluster</code>可以使用几种不同的方法团簇化结构. 结构之间的距离可由轨迹来确定, 或使用<code>-dm</code>选项从<code>.xpm</code>矩阵文件读取. 结构间的距离可以由叠合后的RMS偏差或原子对距离的RMS偏差来定义.</p>
+<code>gmx cluster</code>可以使用几种不同的方法团簇化结构. 结构之间的距离可由轨迹来确定, 或使用<code>-dm</code>选项从<code>.xpm</code>矩阵文件读取. 结构间的距离可以由叠合后的RMS偏差或原子对距离的RMS偏差来定义.
 
-<p>确定团簇的方法有以下几种:</p>
+确定团簇的方法有以下几种:
 
 <ul class="incremental">
 <li>single linkage(单连接): 当一个结构到团簇中任何一个原子的距离小于<code>cutoff</code>时, 就将此结构加入到团簇中.</li>
@@ -1564,16 +1564,16 @@
 <li>gromos: 利用Daura等介绍的算法(Angew. Chem. Int. Ed. <strong>1999</strong>, 38, pp 236&#8211;240). 使用截断来数算近邻结构的个数, 把具有最多近邻的结构及其所有近邻作为一个团簇, 并从团簇池中将这个团簇移除. 然后对团簇池中剩下的结构重复以上算法.</li>
 </ul>
 
-<p>当团簇化算法(single linkage, Jarvis Patrick and gromos) 将每个结构都精确地分配到了一个团簇, 并且提供了轨迹文件时, 在每一个团簇中, 相对于其他结构或平均结构或所有结构拥有最小平均距离的结构将被写入到轨迹文件中. 当输出所有结构时, 对每个团簇会使用单独编号的文件.</p>
+当团簇化算法(single linkage, Jarvis Patrick and gromos) 将每个结构都精确地分配到了一个团簇, 并且提供了轨迹文件时, 在每一个团簇中, 相对于其他结构或平均结构或所有结构拥有最小平均距离的结构将被写入到轨迹文件中. 当输出所有结构时, 对每个团簇会使用单独编号的文件.
 
-<p>程序总会给出两个输出文件:</p>
+程序总会给出两个输出文件:
 
 <ul class="incremental">
 <li><code>-o</code>: 输出矩阵左上半区域的RMSD值, 团簇图像的右下半区域. 当<code>-minstruct = 1</code>时, 若两个结构属于同一团簇, 相应的图像点为黑色; 当<code>-minstruct &gt; 1</code>时, 对每一个团簇使用不同的颜色.</li>
 <li><code>-g</code>: 输出所用选项的信息和所有团簇及其成员的详细列表.</li>
 </ul>
 
-<p>此外, 程序也可以给出多个可选的输出文件:</p>
+此外, 程序也可以给出多个可选的输出文件:
 
 <ul class="incremental">
 <li><code>-dist</code>: 输出RMSD的分布</li>
@@ -1838,13 +1838,13 @@
               [-rgbhi ]
 </code></pre>
 
-<p><code>gmx clustsize</code>用于计算气相中的分子/原子团簇的尺寸分布. 结果以<code>.xpm</code>格式的文件给出. 总的团簇数目会写入一个<code>.xvg</code>文件中.</p>
+<code>gmx clustsize</code>用于计算气相中的分子/原子团簇的尺寸分布. 结果以<code>.xpm</code>格式的文件给出. 总的团簇数目会写入一个<code>.xvg</code>文件中.
 
-<p>当指定<code>-mol</code>选项时, 计算团簇时将以分子为基本单元, 而不是以原子为基本单元, 这样允许对大分子进行团簇化. 在这种情况下, 索引文件中仍然应当包括原子编号, 否则计算会终止并给出SEGV信号.</p>
+当指定<code>-mol</code>选项时, 计算团簇时将以分子为基本单元, 而不是以原子为基本单元, 这样允许对大分子进行团簇化. 在这种情况下, 索引文件中仍然应当包括原子编号, 否则计算会终止并给出SEGV信号.
 
-<p>当轨迹中包含速度时, 程序假定所有粒子都可自由移动, 并将最大团簇的温度输出在一个独立的<code>.xvg</code>文件中. 如果使用了约束, 则需要校正温度. 例如, 使用SHAKE或SETTLE算法模拟水时, 得到的温度是正常温度的1/1.5. 你可以使用<code>-ndf</code>选项来补偿这一点. 请记得计算时去除质心的运动.</p>
+当轨迹中包含速度时, 程序假定所有粒子都可自由移动, 并将最大团簇的温度输出在一个独立的<code>.xvg</code>文件中. 如果使用了约束, 则需要校正温度. 例如, 使用SHAKE或SETTLE算法模拟水时, 得到的温度是正常温度的1/1.5. 你可以使用<code>-ndf</code>选项来补偿这一点. 请记得计算时去除质心的运动.
 
-<p>使用<code>-mc</code>选项将输出一个索引文件, 其中包含最大团簇的原子编号.</p>
+使用<code>-mc</code>选项将输出一个索引文件, 其中包含最大团簇的原子编号.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -2012,9 +2012,9 @@
             [-[no]pbc] [-[no]fit] [-[no]name] [-[no]label] [-[no]bfac]
 </code></pre>
 
-<p><code>gmx confrms</code>首先将第二个结构最小二乘叠合到第一个结构, 然后再计算两个结构的均方根偏差(RMSD, root mean square deviation). 两个结构的原子数 <strong>不必</strong> 相同, 只要用于叠合的两个索引组一样即可. 使用<code>-name</code>选项时, 只对所选组中名称匹配的原子进行叠合和RMSD计算. 当比较蛋白质的突变体时这个功能很有用.</p>
+<code>gmx confrms</code>首先将第二个结构最小二乘叠合到第一个结构, 然后再计算两个结构的均方根偏差(RMSD, root mean square deviation). 两个结构的原子数 <strong>不必</strong> 相同, 只要用于叠合的两个索引组一样即可. 使用<code>-name</code>选项时, 只对所选组中名称匹配的原子进行叠合和RMSD计算. 当比较蛋白质的突变体时这个功能很有用.
 
-<p>叠合的结构会写入一个文件中. 在这个<code>.pdb</code>文件中, 两个结构会当作独立的模型(使用<code>rasmol –nmrpdb</code>). 使用<code>-bfac</code>选项时, 根据原子的MSD值计算的B因子也会写入这个<code>.pdb</code>文件中.</p>
+叠合的结构会写入一个文件中. 在这个<code>.pdb</code>文件中, 两个结构会当作独立的模型(使用<code>rasmol –nmrpdb</code>). 使用<code>-bfac</code>选项时, 根据原子的MSD值计算的B因子也会写入这个<code>.pdb</code>文件中.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -2122,7 +2122,7 @@
                 [-[no]zeroq] [-[no]vel] [-[no]cont] [-init_fep_state ]
 </code></pre>
 
-<p><code>gmx convert-tpr</code>可以四种方式来编辑运行输入文件:</p>
+<code>gmx convert-tpr</code>可以四种方式来编辑运行输入文件:
 
 <ol class="incremental">
 <li>修改运行输入文件中的模拟步数, 可使用选项<code>-extend</code>, <code>-until</code>或<code>-nsteps</code>(<code>nsteps=-1</code>表示步数不受限制).</li>
@@ -2233,19 +2233,19 @@
           [-[no]pbc]
 </code></pre>
 
-<p><code>gmx covar</code>用于计算并对角化(质量加权的)协方差矩阵. 所有结构都叠合到结构文件中的结构. 当结构文件不是运行输入文件时, 将不考虑周期性. 如果叠合组与分析组相同, 分析时不使用质量加权, 叠合也不使用质量加权.</p>
+<code>gmx covar</code>用于计算并对角化(质量加权的)协方差矩阵. 所有结构都叠合到结构文件中的结构. 当结构文件不是运行输入文件时, 将不考虑周期性. 如果叠合组与分析组相同, 分析时不使用质量加权, 叠合也不使用质量加权.
 
-<p>本征向量会写入一个轨迹文件(<code>-v</code>). 如果叠合与协方差分析的原子相同, 会首先输出用于叠合的参考结构, 其t=&#8211;1. 平均(或参考, 若使用了<code>-ref</code>)结构的t=0, 本征向量会写入不同的帧, 以其本征向量序号为时间戳.</p>
+本征向量会写入一个轨迹文件(<code>-v</code>). 如果叠合与协方差分析的原子相同, 会首先输出用于叠合的参考结构, 其t=&#8211;1. 平均(或参考, 若使用了<code>-ref</code>)结构的t=0, 本征向量会写入不同的帧, 以其本征向量序号为时间戳.
 
-<p>本征向量可使用<code>gmx anaeig</code>分析.</p>
+本征向量可使用<code>gmx anaeig</code>分析.
 
-<p>选项<code>-ascii</code>会将整个协方差矩阵写入一个ASCII文件. 元素的顺序为: x1x1, x1y1, x1z1, x1x2, &#8230;</p>
+选项<code>-ascii</code>会将整个协方差矩阵写入一个ASCII文件. 元素的顺序为: x1x1, x1y1, x1z1, x1x2, &#8230;
 
-<p>选项<code>-xpm</code>会将整个协方差矩阵写入一个<code>.xpm</code>文件.</p>
+选项<code>-xpm</code>会将整个协方差矩阵写入一个<code>.xpm</code>文件.
 
-<p>选项<code>-xpma</code>会将原子的协方差矩阵写入一个<code>. xpm</code>文件, 即, 写入每个原子对xx, yy和zz协方差的总和.</p>
+选项<code>-xpma</code>会将原子的协方差矩阵写入一个<code>. xpm</code>文件, 即, 写入每个原子对xx, yy和zz协方差的总和.
 
-<p>注意, 对角化一个矩阵所需的内存和时间至少会以原子数平方的速度增加, 因此很容易耗尽内存. 在这种情况下, 程序很可能会出现段错误并推出. 你应该仔细考虑数目更少的一组原子是否能满足你的需求, 这样计算成本更低.</p>
+注意, 对角化一个矩阵所需的内存和时间至少会以原子数平方的速度增加, 因此很容易耗尽内存. 在这种情况下, 程序很可能会出现段错误并推出. 你应该仔细考虑数目更少的一组原子是否能满足你的需求, 这样计算成本更低.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -2389,15 +2389,15 @@
             [-bvit ] [-evit ] [-tr ] [-temp ]
 </code></pre>
 
-<p><code>gmx current</code>可用于计算电流自相关函数, 体系转动偶极矩和平动偶极矩的相关, 以及相关的静态介电常数. 为得到合理的结果, 索引组应当是中性的. 更进一步, 如果给出了速度, 程序也可以根据电流自相关函数计算静态电导率. 此外, 也可以利用Einstein-Helfand拟合得到静态电导率.</p>
+<code>gmx current</code>可用于计算电流自相关函数, 体系转动偶极矩和平动偶极矩的相关, 以及相关的静态介电常数. 为得到合理的结果, 索引组应当是中性的. 更进一步, 如果给出了速度, 程序也可以根据电流自相关函数计算静态电导率. 此外, 也可以利用Einstein-Helfand拟合得到静态电导率.
 
-<p><code>-caf</code>选项用于指定电流自相关函数的输出文件, <code>-mc</code>选项用于指定偶极矩转动和平动部分相关的输出文件. 但这些选项只适用于包含速度的轨迹. 选项<code>-sh</code>和<code>-tr</code>对自相关函数进行平均和积分. 由于平均是通过移动轨迹的起始点进行的, 可以利用<code>-sh</code>选项修改移动以便选择不相关的起始点. 当接近终止点时, 统计的不精确度增加, 对自相关函数进行积分只有在某一点之前才能得到合理的值, 数据的可靠性取决于帧数. 选项<code>-tr</code>控制用于计算静态介电常数的积分区域的大小.</p>
+<code>-caf</code>选项用于指定电流自相关函数的输出文件, <code>-mc</code>选项用于指定偶极矩转动和平动部分相关的输出文件. 但这些选项只适用于包含速度的轨迹. 选项<code>-sh</code>和<code>-tr</code>对自相关函数进行平均和积分. 由于平均是通过移动轨迹的起始点进行的, 可以利用<code>-sh</code>选项修改移动以便选择不相关的起始点. 当接近终止点时, 统计的不精确度增加, 对自相关函数进行积分只有在某一点之前才能得到合理的值, 数据的可靠性取决于帧数. 选项<code>-tr</code>控制用于计算静态介电常数的积分区域的大小.
 
-<p>选项<code>-temp</code>可以设置计算静态介电常数所需要的温度.</p>
+选项<code>-temp</code>可以设置计算静态介电常数所需要的温度.
 
-<p>当模拟中使用了反应场或偶极修正Ewald加和(<code>-eps=0</code>对应于圆罐边界条件)时, 选项<code>-eps</code>可以控制周围介质的介电常数.</p>
+当模拟中使用了反应场或偶极修正Ewald加和(<code>-eps=0</code>对应于圆罐边界条件)时, 选项<code>-eps</code>可以控制周围介质的介电常数.
 
-<p><code>-[no]nojump</code>选项取消坐标折叠允许自由扩散. 这需要一个连续的平动偶极矩以便进行Einstein-Helfand拟合. 拟合结果可用于确定带电分子体系的介电常数. 然而, 也可以根据折叠坐标的总偶极矩涨落计算介电常数. 但使用此选项时需要小心, 因为只有在非常小的时间跨度内才能满足分子密度近似恒定且平均值收敛的条件. 为保险起见, 计算介电常数时, 应借助Einstein-Helfand方法计算介电常数的平动部分.</p>
+<code>-[no]nojump</code>选项取消坐标折叠允许自由扩散. 这需要一个连续的平动偶极矩以便进行Einstein-Helfand拟合. 拟合结果可用于确定带电分子体系的介电常数. 然而, 也可以根据折叠坐标的总偶极矩涨落计算介电常数. 但使用此选项时需要小心, 因为只有在非常小的时间跨度内才能满足分子密度近似恒定且平均值收敛的条件. 为保险起见, 计算介电常数时, 应借助Einstein-Helfand方法计算介电常数的平动部分.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -2554,34 +2554,34 @@
             [-[no]relative]
 </code></pre>
 
-<p><code>gmx density</code>用于计算盒子中的局部密度, 需要使用索引文件.</p>
+<code>gmx density</code>用于计算盒子中的局部密度, 需要使用索引文件.
 
-<p>对于NPT模拟的总密度, 可以直接使用<code>gmx energy</code>来得到.</p>
+对于NPT模拟的总密度, 可以直接使用<code>gmx energy</code>来得到.
 
-<p>选项<code>-center</code>相对任意组中心以绝对盒子坐标进行直方图分格. 如果你想计算沿盒子Z轴的密度剖面, 盒子Z方向的大小为bZ, 如果基于整个体系进行居中, 输出的坐标范围从-bZ/2到bZ/2. 注意, 在GROMACS 5.0中, 这种行为有所改变. 早期的版本中只是在(0, bZ)范围内进行简单的静态分格, 并将输出进行移动. 新版本会计算每一帧的中心并在(-bZ/2,bZ/2)范围内进行分格.</p>
+选项<code>-center</code>相对任意组中心以绝对盒子坐标进行直方图分格. 如果你想计算沿盒子Z轴的密度剖面, 盒子Z方向的大小为bZ, 如果基于整个体系进行居中, 输出的坐标范围从-bZ/2到bZ/2. 注意, 在GROMACS 5.0中, 这种行为有所改变. 早期的版本中只是在(0, bZ)范围内进行简单的静态分格, 并将输出进行移动. 新版本会计算每一帧的中心并在(-bZ/2,bZ/2)范围内进行分格.
 
-<p>选项<code>-symn</code>使输出结果关于中心对称. 这一选项也会自动打开<code>-center</code>选项. 选项<code>-relative</code>基于盒子的相对坐标而不是绝对坐标进行分格, 然后对输出结果按输出轴方向盒子的平均尺寸进行标定.
-这一选项可以与<code>-center</code>结合使用.</p>
+选项<code>-symn</code>使输出结果关于中心对称. 这一选项也会自动打开<code>-center</code>选项. 选项<code>-relative</code>基于盒子的相对坐标而不是绝对坐标进行分格, 然后对输出结果按输出轴方向盒子的平均尺寸进行标定.
+这一选项可以与<code>-center</code>结合使用.
 
-<p>密度的单位为kg/m<sup>3</sup>, 同时也可以计算数密度或电子密度. 计算电子密度时, 需要使用选项<code>-ei</code>提供一个文件, 其中包含了每一原子类型的电子数. 文件内容如下所示:</p>
+密度的单位为kg/m<sup>3</sup>, 同时也可以计算数密度或电子密度. 计算电子密度时, 需要使用选项<code>-ei</code>提供一个文件, 其中包含了每一原子类型的电子数. 文件内容如下所示:
 
 <pre><code>2
 atomname = nrelectrons
 atomname = nrelectrons
 </code></pre>
 
-<p>第一行指明了该文件的行数. 体系中每个唯一的原子名称对应于一行. 每个原子的电子数会根据其原子部分电荷进行修改.</p>
+第一行指明了该文件的行数. 体系中每个唯一的原子名称对应于一行. 每个原子的电子数会根据其原子部分电荷进行修改.
 
-<p><strong>对双层体系需要注意的几点</strong></p>
+<strong>对双层体系需要注意的几点</strong>
 
-<p>最常见的使用情境之一是计算跨脂质双层的各种原子组的密度, 通常是以Z轴作为法线方向. 对小体系的短时间模拟, 当固定盒子尺寸时, 比较好处理, 但对更一般的情况, 脂质双层可能比较复杂. 第一个问题就是蛋白质和脂质的体积压缩率都很小, 而脂质有非常高的面积压缩率.
-这意味即便对完全弛豫好的体系, 在模拟过程中盒子形状(厚度或是面积/脂质)的涨落仍然很大.</p>
+最常见的使用情境之一是计算跨脂质双层的各种原子组的密度, 通常是以Z轴作为法线方向. 对小体系的短时间模拟, 当固定盒子尺寸时, 比较好处理, 但对更一般的情况, 脂质双层可能比较复杂. 第一个问题就是蛋白质和脂质的体积压缩率都很小, 而脂质有非常高的面积压缩率.
+这意味即便对完全弛豫好的体系, 在模拟过程中盒子形状(厚度或是面积/脂质)的涨落仍然很大.
 
-<p>因为GROMACS将盒子置于原点和正轴之上, 这也就意味着居于盒子中间的脂质双层由于涨落将会上下移动, 并进而模糊密度剖面. 解决这个问题的最简单方法(如果你要使用压力耦合)就是使用<code>-center</code>选项以计算相对于盒子中心的密度剖面. 注意, 你仍然可以用双层部分居中, 即使你有一个复杂的非对称的脂质双层和膜蛋白体系. 这样输出的数据点在(中心)原点参考位置的某一侧会较多.</p>
+因为GROMACS将盒子置于原点和正轴之上, 这也就意味着居于盒子中间的脂质双层由于涨落将会上下移动, 并进而模糊密度剖面. 解决这个问题的最简单方法(如果你要使用压力耦合)就是使用<code>-center</code>选项以计算相对于盒子中心的密度剖面. 注意, 你仍然可以用双层部分居中, 即使你有一个复杂的非对称的脂质双层和膜蛋白体系. 这样输出的数据点在(中心)原点参考位置的某一侧会较多.
 
-<p>因为脂质本身会被压缩和膨胀, 居中计算会导致输出的密度剖面模糊. 即使如此, 在多数情况下你希望得到这样的结果(因为它对应于宏观实验). 但如果你要关注分子细节, 可以使用<code>-relative</code>选项来尝试消除体积涨落带来的影响.</p>
+因为脂质本身会被压缩和膨胀, 居中计算会导致输出的密度剖面模糊. 即使如此, 在多数情况下你希望得到这样的结果(因为它对应于宏观实验). 但如果你要关注分子细节, 可以使用<code>-relative</code>选项来尝试消除体积涨落带来的影响.
 
-<p>最后, 对不受表面张力影响的大的双层, 在体系中形成&#8220;波浪&#8221;的地方会表现出起伏涨落. 这是生物体系的基本性质, 如果要和实验做对比, 你可能要包括这种波动模糊效应.</p>
+最后, 对不受表面张力影响的大的双层, 在体系中形成&#8220;波浪&#8221;的地方会表现出起伏涨落. 这是生物体系的基本性质, 如果要和实验做对比, 你可能要包括这种波动模糊效应.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -2703,12 +2703,12 @@ atomname = nrelectrons
 
 ### 补充说明
 
-<p><code>gmx density</code>是获取体系或各个组分在盒子内分布密度的一个程序. 一般来说可使用如命令:</p>
+<code>gmx density</code>是获取体系或各个组分在盒子内分布密度的一个程序. 一般来说可使用如命令:
 
 <pre><code>gmx density -f *.trr -n *.ndx -s *.tpr -d z -o density.xvg
 </code></pre>
 
-<p>其中</p>
+其中
 
 <ul class="incremental">
 <li><code>-f *.trr</code>指定要分析的轨迹文件</li>
@@ -2717,12 +2717,12 @@ atomname = nrelectrons
 <li><code>-d z</code>指定沿着z轴方向进行分析</li>
 </ul>
 
-<p>如果要指定分析索引组1的密度, 可以使用命令管道:</p>
+如果要指定分析索引组1的密度, 可以使用命令管道:
 
 <pre><code>echo 1 | gmx density -f npt.trr -n system.ndx -s npt.tpr -d z -o density_DRG.xvg
 </code></pre>
 
-<p>此程序不支持根据残基名称来获取密度, 可通过<code>gmx make_ndx</code>来获取索引组代号再通过命令管道传给<code>gmx density</code>实现.</p>
+此程序不支持根据残基名称来获取密度, 可通过<code>gmx make_ndx</code>来获取索引组代号再通过命令管道传给<code>gmx density</code>实现.
 
 ## gmx densmap: 计算二维的平面或轴径向密度映射图(翻译: 姚闯)
 
@@ -2734,13 +2734,13 @@ atomname = nrelectrons
             [-unit ] [-dmin ] [-dmax ]
 </code></pre>
 
-<p><code>gmx densmap</code>用于计算2D数密度的映射图. 它可以计算平面和轴径向的密度映射图. 输出的<code>.xpm</code>文件可以利用XV等程序进行可视化, 也可以利用<code>xpm2ps</code>转换为psotscript. 利用<code>-od</code>选项可将数据输出为文本形式的<code>.dat</code>文件, 而不是<code>-o</code>输出的通常<code>.xpm</code>文件.</p>
+<code>gmx densmap</code>用于计算2D数密度的映射图. 它可以计算平面和轴径向的密度映射图. 输出的<code>.xpm</code>文件可以利用XV等程序进行可视化, 也可以利用<code>xpm2ps</code>转换为psotscript. 利用<code>-od</code>选项可将数据输出为文本形式的<code>.dat</code>文件, 而不是<code>-o</code>输出的通常<code>.xpm</code>文件.
 
-<p>程序默认计算选定的一组原子在xy平面内的2D数密度映射图. 可以使用<code>-aver</code>选项改变平均方向. 当设定了<code>-xmin</code>和/或<code>-xmax</code>时, 计算时只会考虑平均方向上处于限制范围之内的原子. 使用<code>-bin</code>设置格点间距. 当<code>-n1</code>或<code>-n2</code>取非零值时, 格点尺寸由该选项决定. 计算时考虑了盒子尺寸的涨落.</p>
+程序默认计算选定的一组原子在xy平面内的2D数密度映射图. 可以使用<code>-aver</code>选项改变平均方向. 当设定了<code>-xmin</code>和/或<code>-xmax</code>时, 计算时只会考虑平均方向上处于限制范围之内的原子. 使用<code>-bin</code>设置格点间距. 当<code>-n1</code>或<code>-n2</code>取非零值时, 格点尺寸由该选项决定. 计算时考虑了盒子尺寸的涨落.
 
-<p>当设定了<code>-amax</code>和<code>-rmax</code>选项时, 会计算轴径向数密度映射图. 应提供三个组, 前两个组的质心用与定义轴线, 第三个组为要分析组. 轴向范围从-amax至+amax, 中心为两质心的中点, 并且正方向为第一组的质心到第二组的质心. 径向范围从0到rmax. 当指定了<code>-mirror</code>选项时, 径向范围从-rmax至+rmax.</p>
+当设定了<code>-amax</code>和<code>-rmax</code>选项时, 会计算轴径向数密度映射图. 应提供三个组, 前两个组的质心用与定义轴线, 第三个组为要分析组. 轴向范围从-amax至+amax, 中心为两质心的中点, 并且正方向为第一组的质心到第二组的质心. 径向范围从0到rmax. 当指定了<code>-mirror</code>选项时, 径向范围从-rmax至+rmax.
 
-<p>可使用<code>-unit</code>选项对输出进行归一化. 默认给出实际的数密度. 使用<code>-unit nm-2</code>选项忽略对平均值或角方向的归一化处理. 使用<code>-unit count</code>选项可得到每个格点单元的计数值. 如果不想在输出中使用从零到最大密度的标尺, 你可以使用<code>-dmax</code>选项设定最大密度值.</p>
+可使用<code>-unit</code>选项对输出进行归一化. 默认给出实际的数密度. 使用<code>-unit nm-2</code>选项忽略对平均值或角方向的归一化处理. 使用<code>-unit count</code>选项可得到每个格点单元的计数值. 如果不想在输出中使用从零到最大密度的标尺, 你可以使用<code>-dmax</code>选项设定最大密度值.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -2895,7 +2895,7 @@ atomname = nrelectrons
               [-d2 ] [-tblock ] [-nlevel ]
 </code></pre>
 
-<p><code>gmx densorder</code>利用MD轨迹计算沿着某一方向的双相密度分布, 通过将界面密度拟合为函数的剖面, 可得到二维表面随时间的涨落. 利用<code>-tavg</code>选项可输出界面的时间平均的空间表示.</p>
+<code>gmx densorder</code>利用MD轨迹计算沿着某一方向的双相密度分布, 通过将界面密度拟合为函数的剖面, 可得到二维表面随时间的涨落. 利用<code>-tavg</code>选项可输出界面的时间平均的空间表示.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -3041,7 +3041,7 @@ atomname = nrelectrons
                [-ffn ] [-nsmooth ]
 </code></pre>
 
-<p><code>gmx dielectric</code>可以利用模拟得到的总偶极矩的自相关函数(ACF)计算频率依赖的介电常数. ACF可由<code>gmx dipoles</code>计算得到. 可使用的函数形式如下:</p>
+<code>gmx dielectric</code>可以利用模拟得到的总偶极矩的自相关函数(ACF)计算频率依赖的介电常数. ACF可由<code>gmx dipoles</code>计算得到. 可使用的函数形式如下:
 
 <ul class="incremental">
 <li>单参数: y = exp(-a_1 x)</li>
@@ -3049,9 +3049,9 @@ atomname = nrelectrons
 <li>三参数: y = a_2 exp(-a_1 x) + (1 - a_2) exp(-a_3 x)</li>
 </ul>
 
-<p>拟合的初始值可以在命令行中指定, 也可以使用<code>-fix</code>和参数编号将需要固定的参数的值固定为初始值.</p>
+拟合的初始值可以在命令行中指定, 也可以使用<code>-fix</code>和参数编号将需要固定的参数的值固定为初始值.
 
-<p>程序会生成三个输出文件. 第一个文件中包含了ACF, 对ACF使用1, 2, 3个参数的指数拟合, 以及组合的数据/拟合的数值导数. 第二个文件中包含了频率依赖介电常数的实部和虚部. 最后一个文件给出了所谓的Cole-Cole图, 图中虚部是实部的函数. 对于一个纯指数弛豫(也称德拜弛豫), Cole-Cole图应该是个半圆.</p>
+程序会生成三个输出文件. 第一个文件中包含了ACF, 对ACF使用1, 2, 3个参数的指数拟合, 以及组合的数据/拟合的数值导数. 第二个文件中包含了频率依赖介电常数的实部和虚部. 最后一个文件给出了所谓的Cole-Cole图, 图中虚部是实部的函数. 对于一个纯指数弛豫(也称德拜弛豫), Cole-Cole图应该是个半圆.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -3210,17 +3210,17 @@ atomname = nrelectrons
             [-endfit ]
 </code></pre>
 
-<p><code>gmx dipoles</code>用于计算模拟体系的总偶极及其涨落. 利用这些数据, 你可以计算其他一些性质, 如低介电介质的介电常数. 对于具有净电荷的分子, 会在分子质心处减去分子的净电荷.</p>
+<code>gmx dipoles</code>用于计算模拟体系的总偶极及其涨落. 利用这些数据, 你可以计算其他一些性质, 如低介电介质的介电常数. 对于具有净电荷的分子, 会在分子质心处减去分子的净电荷.
 
-<p><code>Mtot.xvg</code>文件中包含了每帧的总偶极矩, 总偶极矩的分量以及大小. <code>aver.xvg</code>文件中包含了模拟过程中的&lt;|μ|^2&gt;和|&lt;μ&gt;|^2. <code>dipdist.xvg</code>文件包含了模拟过程中偶极矩的分布. <code>-mumax</code>的值是来统计分布图的最高值.</p>
+<code>Mtot.xvg</code>文件中包含了每帧的总偶极矩, 总偶极矩的分量以及大小. <code>aver.xvg</code>文件中包含了模拟过程中的&lt;|μ|^2&gt;和|&lt;μ&gt;|^2. <code>dipdist.xvg</code>文件包含了模拟过程中偶极矩的分布. <code>-mumax</code>的值是来统计分布图的最高值.
 
-<p>而且, 如果使用了<code>-corr</code>选项, 程序会计算偶极的自相关函数, 输出文件的名字可通过<code>-c</code>选项来指定. 相关函数可以对所有分子进行平均, 独立地绘制每个分子(<code>molsep</code>)的分布, 或计算模拟盒子的总偶极矩(<code>total</code>).</p>
+而且, 如果使用了<code>-corr</code>选项, 程序会计算偶极的自相关函数, 输出文件的名字可通过<code>-c</code>选项来指定. 相关函数可以对所有分子进行平均, 独立地绘制每个分子(<code>molsep</code>)的分布, 或计算模拟盒子的总偶极矩(<code>total</code>).
 
-<p>选项<code>-g</code>可以给出依赖距离的Kirkwood G因子, 以及偶极夹角余弦平均值与距离的函数关系. 图中包括了gOO和hOO, 请参考Nymand &amp; Linse, <em>J. Chem. Phys.</em> 112 (2000) pp 6386&#8211;6395. 在同一图中, 还包括了每一尺度的能量, 它是偶极矩内积与距离三次方的商.</p>
+选项<code>-g</code>可以给出依赖距离的Kirkwood G因子, 以及偶极夹角余弦平均值与距离的函数关系. 图中包括了gOO和hOO, 请参考Nymand &amp; Linse, <em>J. Chem. Phys.</em> 112 (2000) pp 6386&#8211;6395. 在同一图中, 还包括了每一尺度的能量, 它是偶极矩内积与距离三次方的商.
 
-<p>示例: <code>gmx dipoles -corr mol -P 1 -o dip_sqr -mu 2.273 -mumax 5.0</code></p>
+示例: <code>gmx dipoles -corr mol -P 1 -o dip_sqr -mu 2.273 -mumax 5.0</code>
 
-<p>上面的命令将计算分子偶极矩的自相关函数, 计算时使用了偶极矩向量与其t时刻后的值之间的夹角的一阶Legendre多项式. 此计算将会使用1001帧. 更进一步, 可以计算<code>-epsilonRF</code>无穷大(默认), 温度300 K(默认), 分子平均偶极矩2.273(SPC)条件下的介电常数. 对分布函数, 其最大值被设定为5.0.</p>
+上面的命令将计算分子偶极矩的自相关函数, 计算时使用了偶极矩向量与其t时刻后的值之间的夹角的一阶Legendre多项式. 此计算将会使用1001帧. 更进一步, 可以计算<code>-epsilonRF</code>无穷大(默认), 温度300 K(默认), 分子平均偶极矩2.273(SPC)条件下的介电常数. 对分布函数, 其最大值被设定为5.0.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -3484,15 +3484,15 @@ atomname = nrelectrons
           [-nlevels ] [-[no]third]
 </code></pre>
 
-<p><code>gmx disre</code>计算距离限制的方差. 如果需要, 可以使用<code>gmx protonate</code>程序将所有的质子添加到蛋白质分子中.</p>
+<code>gmx disre</code>计算距离限制的方差. 如果需要, 可以使用<code>gmx protonate</code>程序将所有的质子添加到蛋白质分子中.
 
-<p><code>gmx disre</code>总是计算瞬时方差而不是时间平均的方差, 因为分析是根据轨迹文件进行的, 使用时间平均没有意义. 尽管如此, 每个限制的时间平均值还是都会输出在日志文件中.</p>
+<code>gmx disre</code>总是计算瞬时方差而不是时间平均的方差, 因为分析是根据轨迹文件进行的, 使用时间平均没有意义. 尽管如此, 每个限制的时间平均值还是都会输出在日志文件中.
 
-<p>为输出所选的特定限制, 可以使用索引文件.</p>
+为输出所选的特定限制, 可以使用索引文件.
 
-<p>当给定<code>-q</code>选项时, 会输出<code>.pdb</code>文件, 并使用平均方差对其着色.</p>
+当给定<code>-q</code>选项时, 会输出<code>.pdb</code>文件, 并使用平均方差对其着色.
 
-<p>当给定<code>-c</code>选项时, 程序将读取一个索引文件, 其中包含了轨迹中与你要分析的团簇(以另一种方式定义)相应的帧. 对这些团簇, 程序将使用三次平均算法来计算平均方差, 并将其输出在日志文件中.</p>
+当给定<code>-c</code>选项时, 程序将读取一个索引文件, 其中包含了轨迹中与你要分析的团簇(以另一种方式定义)相应的帧. 对这些团簇, 程序将使用三次平均算法来计算平均方差, 并将其输出在日志文件中.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -3643,9 +3643,9 @@ atomname = nrelectrons
              [-tol ] [-binw ]
 </code></pre>
 
-<p><code>gmx distance</code>计算一对位置间的距离随时间变化的函数. 每个选择指定要计算的一组独立距离. 每个选择应包括位置对, 要计算的, 如位置1&#8211;2, 3&#8211;4等之间的距离.</p>
+<code>gmx distance</code>计算一对位置间的距离随时间变化的函数. 每个选择指定要计算的一组独立距离. 每个选择应包括位置对, 要计算的, 如位置1&#8211;2, 3&#8211;4等之间的距离.
 
-<p><code>-oav</code>记录下每个选择的平均距离随时间变化的函数. <code>-oall</code>记录下所有独立的间距随时间变化的函数; <code>-oxyz</code>也是记录所有独立的间距, 但会记录距离的x, y, z分量而不是距离向量的大小. <code>-oh</code>记录每个选择的距离的直方图, 直方图的位置由<code>-len</code>和<code>–tol</code>来进行设置, 分格的宽度由<code>-binw</code>设置. <code>-oallstat</code>记录下所有帧的每个单独距离的平均值和标准偏差.</p>
+<code>-oav</code>记录下每个选择的平均距离随时间变化的函数. <code>-oall</code>记录下所有独立的间距随时间变化的函数; <code>-oxyz</code>也是记录所有独立的间距, 但会记录距离的x, y, z分量而不是距离向量的大小. <code>-oh</code>记录每个选择的距离的直方图, 直方图的位置由<code>-len</code>和<code>–tol</code>来进行设置, 分格的宽度由<code>-binw</code>设置. <code>-oallstat</code>记录下所有帧的每个单独距离的平均值和标准偏差.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -3779,12 +3779,12 @@ atomname = nrelectrons
 
 ### 补充说明
 
-<p>可以使用<code>gmx distance</code>提取两个原子间的距离随时间的变化, 需要一个索引文件, 其写法是, 在里面加入两个组, 内容分别是这两个原子序号, 再运行</p>
+可以使用<code>gmx distance</code>提取两个原子间的距离随时间的变化, 需要一个索引文件, 其写法是, 在里面加入两个组, 内容分别是这两个原子序号, 再运行
 
 <pre><code>gmx distance -f file.xtc -s file.tpr -n index.ndx
 </code></pre>
 
-<p>会提示选择组, 分别选择那两个组即可. 计算结果输出在<code>dist.xvg</code>文件中, 其中第二列是距离, 后面三列是距离的x/y/z分量.</p>
+会提示选择组, 分别选择那两个组即可. 计算结果输出在<code>dist.xvg</code>文件中, 其中第二列是距离, 后面三列是距离的x/y/z分量.
 
 ## gmx do_dssp: 指定二级结构并计算溶剂可及表面积(翻译: 杨旭云)
 
@@ -3795,17 +3795,17 @@ atomname = nrelectrons
             [-xvg ] [-sss ] [-ver ]
 </code></pre>
 
-<p><code>gmx do_dssp</code>读取轨迹文件, 并调用第三方程序dssp计算每一时间帧蛋白质的二级结构信息. 如果你还没有安装dssp程序, 可以在这里获得: <a href="http://swift.cmbi.ru.nl/gv/dssp">http://swift.cmbi.ru.nl/gv/dssp</a>. <code>gmx do_dssp</code>假定dssp可执行程序的路径为<code>/usr/local/bin/dssp</code>. 如果不是, 那么需要设置环境变量<code>DSSP</code>, 并将其指向dssp可执行程序的路径, 例如<code>setenv DSSP /opt/dssp/bin/dssp</code>. 如果使用bash, 可使用<code>export DSSP='/opt/dssp/bin/dssp'</code>, 也可以直接将该变量加到bash的配置文件中.</p>
+<code>gmx do_dssp</code>读取轨迹文件, 并调用第三方程序dssp计算每一时间帧蛋白质的二级结构信息. 如果你还没有安装dssp程序, 可以在这里获得: <a href="http://swift.cmbi.ru.nl/gv/dssp">http://swift.cmbi.ru.nl/gv/dssp</a>. <code>gmx do_dssp</code>假定dssp可执行程序的路径为<code>/usr/local/bin/dssp</code>. 如果不是, 那么需要设置环境变量<code>DSSP</code>, 并将其指向dssp可执行程序的路径, 例如<code>setenv DSSP /opt/dssp/bin/dssp</code>. 如果使用bash, 可使用<code>export DSSP='/opt/dssp/bin/dssp'</code>, 也可以直接将该变量加到bash的配置文件中.
 
-<p>自2.0.0版本起, dssp的语法不同于之前的版本. 如果你正在使用旧版本的dssp程序, 可用选项<code>-ver</code>指示<code>do_dssp</code>使用旧的语法. 默认情况下, <code>do_dssp</code>使用2.0.0版本引入的语法. 即使更新的版本(编写此文档时尚未发布)也被假定与2.0.0版本使用同样的语法.</p>
+自2.0.0版本起, dssp的语法不同于之前的版本. 如果你正在使用旧版本的dssp程序, 可用选项<code>-ver</code>指示<code>do_dssp</code>使用旧的语法. 默认情况下, <code>do_dssp</code>使用2.0.0版本引入的语法. 即使更新的版本(编写此文档时尚未发布)也被假定与2.0.0版本使用同样的语法.
 
-<p>程序会将每一残基每一时间帧的二级结构写入一个<code>.xpm</code>矩阵文件. 该文件实际上是一个文本文件, 可以用文本编辑器打开. 文件中用不同字符表示蛋白质每一残基属于何种二级结构, 并随时间变化, 同时定义了每个字符的颜色. 这一文件可使用<code>xv</code>之类的程序可视化, 也可使用<code>xpm2ps</code>转换为PostScript格式, 扩展名为<code>.eps</code>, 这样就可以直接打开或用到Latex文件中. 在<code>.xpm</code>和PostScript文件中, 每个链以浅灰线分割开.</p>
+程序会将每一残基每一时间帧的二级结构写入一个<code>.xpm</code>矩阵文件. 该文件实际上是一个文本文件, 可以用文本编辑器打开. 文件中用不同字符表示蛋白质每一残基属于何种二级结构, 并随时间变化, 同时定义了每个字符的颜色. 这一文件可使用<code>xv</code>之类的程序可视化, 也可使用<code>xpm2ps</code>转换为PostScript格式, 扩展名为<code>.eps</code>, 这样就可以直接打开或用到Latex文件中. 在<code>.xpm</code>和PostScript文件中, 每个链以浅灰线分割开.
 
-<p>程序可以统计每个二级结构类型的残基数目和总的二级结构类型数(<code>-sss</code>), 并将统计结果随时间的变化写入文件中(<code>-sc</code>). 输出文件中包含了所有不同二级结构的氨基酸残基数目, 可以用xmgrace的<code>-nxy</code>选项打开.</p>
+程序可以统计每个二级结构类型的残基数目和总的二级结构类型数(<code>-sss</code>), 并将统计结果随时间的变化写入文件中(<code>-sc</code>). 输出文件中包含了所有不同二级结构的氨基酸残基数目, 可以用xmgrace的<code>-nxy</code>选项打开.
 
-<p>程序可以计算每个残基的溶剂可及表面积(SAS, Solvent Accesible Surface), 包括绝对值(&#197;^2^)和相对于残基最大可及表面积的比例. 残基的最大可及表面积定义为该残基在甘氨酸链中的可及表面积. <strong>注意</strong>, <code>gmx sas</code>程序也可用于计算SAS且更简单高效.</p>
+程序可以计算每个残基的溶剂可及表面积(SAS, Solvent Accesible Surface), 包括绝对值(&#197;^2^)和相对于残基最大可及表面积的比例. 残基的最大可及表面积定义为该残基在甘氨酸链中的可及表面积. <strong>注意</strong>, <code>gmx sas</code>程序也可用于计算SAS且更简单高效.
 
-<p>最后, 这个程序可以将二级结构信息转存在一个特殊的文件<code>ssdump.dat</code>中(此文件为文本文件, 里面用字符代表残基的二级结构类型, 如H表示螺旋, B表示折叠等), 以供<code>gmx chi</code>程序使用. 将这两个程序结合起来, 就可以分析残基二面角性质与二级结构类型的关系.</p>
+最后, 这个程序可以将二级结构信息转存在一个特殊的文件<code>ssdump.dat</code>中(此文件为文本文件, 里面用字符代表残基的二级结构类型, 如H表示螺旋, B表示折叠等), 以供<code>gmx chi</code>程序使用. 将这两个程序结合起来, 就可以分析残基二面角性质与二级结构类型的关系.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -3939,7 +3939,7 @@ atomname = nrelectrons
         [-fitfn ] [-beginfit ] [-endfit ]
 </code></pre>
 
-<p><code>gmx dos</code>根据模拟计算态密度. 为使计算结果有意义, 必须使用足够高的频率来保存轨迹中的速度, 这样才能包含所有的振动. 对于柔性体系, 保存轨迹的时间间隔大约是几飞秒. 程序会将基于DoS的性质在打印在标准输出.</p>
+<code>gmx dos</code>根据模拟计算态密度. 为使计算结果有意义, 必须使用足够高的频率来保存轨迹中的速度, 这样才能包含所有的振动. 对于柔性体系, 保存轨迹的时间间隔大约是几飞秒. 程序会将基于DoS的性质在打印在标准输出.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -4098,9 +4098,9 @@ atomname = nrelectrons
          [-nice ] [-[no]nr] [-[no]sys]
 </code></pre>
 
-<p><code>gmx dump</code>读取一个运行输入文件(<code>.tpa</code>/<code>.tpr</code>/<code>.tpb</code>), 轨迹文件(<code>.trj</code>/<code>.trr</code>/<code>.xtc</code>), 能量文件(<code>.ene</code>/<code>.edr</code>), 或检查点文件(<code>.cpt</code>), 而后将其以可读格式打印到标准输出. 在检查运行输入文件是否有误时, 此程序至关重要.</p>
+<code>gmx dump</code>读取一个运行输入文件(<code>.tpa</code>/<code>.tpr</code>/<code>.tpb</code>), 轨迹文件(<code>.trj</code>/<code>.trr</code>/<code>.xtc</code>), 能量文件(<code>.ene</code>/<code>.edr</code>), 或检查点文件(<code>.cpt</code>), 而后将其以可读格式打印到标准输出. 在检查运行输入文件是否有误时, 此程序至关重要.
 
-<p>此程序也能预处理拓扑文件以此帮助发现问题. 注意, 目前定制包含文件搜索目录的唯一方法是设置<code>GMXLIB</code>.</p>
+此程序也能预处理拓扑文件以此帮助发现问题. 注意, 目前定制包含文件搜索目录的唯一方法是设置<code>GMXLIB</code>.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -4191,7 +4191,7 @@ atomname = nrelectrons
              [-R0 ]
 </code></pre>
 
-<p><code>gmx dyecoupl</code>用于从轨迹文件中抽取染料动力学. 目前, 可抽取染料分子间的R和kappa<sup>2</sup>, 用于假定偶极耦合遵从Foerster方程的(F)RET模拟. 进一步, 程序也可计算R(t)和kappa<sup>2</sup>(t), R和kappa<sup>2</sup>的直方图与平均, 以及指定Foerster半径R_0(<code>-R0</code>选项)的瞬时FRET效率E(t). 输入染料分子必须是完整的(参看<code>gmx trjconv</code>的<code>res</code>和<code>mol pbc</code>选项). 染料的转移偶极矩至少要使用一个原子对进行定义, 但也可使用索引文件提供的多个原子对. 距离R基于给定原子对的COM进行计算. <code>-pbcdist</code>选项指定计算到最近周期映象的距离, 而不是盒子内的距离, 但这仅适用于具有3维周期性边界的情况. <code>-norm</code>选项用于(面积)归一化直方图.</p>
+<code>gmx dyecoupl</code>用于从轨迹文件中抽取染料动力学. 目前, 可抽取染料分子间的R和kappa<sup>2</sup>, 用于假定偶极耦合遵从Foerster方程的(F)RET模拟. 进一步, 程序也可计算R(t)和kappa<sup>2</sup>(t), R和kappa<sup>2</sup>的直方图与平均, 以及指定Foerster半径R_0(<code>-R0</code>选项)的瞬时FRET效率E(t). 输入染料分子必须是完整的(参看<code>gmx trjconv</code>的<code>res</code>和<code>mol pbc</code>选项). 染料的转移偶极矩至少要使用一个原子对进行定义, 但也可使用索引文件提供的多个原子对. 距离R基于给定原子对的COM进行计算. <code>-pbcdist</code>选项指定计算到最近周期映象的距离, 而不是盒子内的距离, 但这仅适用于具有3维周期性边界的情况. <code>-norm</code>选项用于(面积)归一化直方图.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -4310,9 +4310,9 @@ atomname = nrelectrons
            [-tail ]
 </code></pre>
 
-<p><code>gmx dyndom</code>读取DynDom程序(<a href="http://www.cmp.uea.ac.uk/dyndom/">http://www.cmp.uea.ac.uk/dyndom/</a>)输出的<code>.pdb</code>文件. 它会读取坐标, 旋转轴的坐标以及包含分区的索引文件. 而且, 它把矢量文件的第一个和最后一个原子当作命令行参数(头和尾), 最终得到平移矢量(DynDom的info文件给出)和旋转角度(也当作命令行参数). 如果给出了DynDom确定的角度, 你应该能够恢复用于生成DynDom输出文件的二级结构. 由于数值精度的限制, 需要通过计算所有原子的RMSD(<code>gmx confrms</code>)而不是文件对比(使用<code>diff</code>)来进行确认.</p>
+<code>gmx dyndom</code>读取DynDom程序(<a href="http://www.cmp.uea.ac.uk/dyndom/">http://www.cmp.uea.ac.uk/dyndom/</a>)输出的<code>.pdb</code>文件. 它会读取坐标, 旋转轴的坐标以及包含分区的索引文件. 而且, 它把矢量文件的第一个和最后一个原子当作命令行参数(头和尾), 最终得到平移矢量(DynDom的info文件给出)和旋转角度(也当作命令行参数). 如果给出了DynDom确定的角度, 你应该能够恢复用于生成DynDom输出文件的二级结构. 由于数值精度的限制, 需要通过计算所有原子的RMSD(<code>gmx confrms</code>)而不是文件对比(使用<code>diff</code>)来进行确认.
 
-<p>此程序的目的是对DynDom揭示的旋转进行内插和外推. 所以, 可能会产生含有过长或过短键的不现实结构, 或者原子会重叠在一起. 因此, 可能需要查看结构和并进行能量优化以验证结构.</p>
+此程序的目的是对DynDom揭示的旋转进行内插和外推. 所以, 可能会产生含有过长或过短键的不现实结构, 或者原子会重叠在一起. 因此, 可能需要查看结构和并进行能量优化以验证结构.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -4402,47 +4402,47 @@ atomname = nrelectrons
              [-[no]conect]
 </code></pre>
 
-<p><code>gmx editconf</code>的主要功能是对体系结构进行编辑, 也可以将通用结构格式保存或转换为<code>.gro</code>, <code>.g96</code>或<code>.pdb</code>等其他格式.</p>
+<code>gmx editconf</code>的主要功能是对体系结构进行编辑, 也可以将通用结构格式保存或转换为<code>.gro</code>, <code>.g96</code>或<code>.pdb</code>等其他格式.
 
-<p>在分子动力学模拟中, 通常会给体系添加一个周期性的模拟盒子. <code>gmx editconf</code>有许多控制盒子的选项.</p>
+在分子动力学模拟中, 通常会给体系添加一个周期性的模拟盒子. <code>gmx editconf</code>有许多控制盒子的选项.
 
-<p>利用选项<code>-box</code>, <code>-d</code>和<code>-angles</code>可以对盒子进行修改. 除非明确使用了<code>-noc</code>选项, <code>-box</code>和<code>-d</code>都可以使体系在盒子内居中.</p>
+利用选项<code>-box</code>, <code>-d</code>和<code>-angles</code>可以对盒子进行修改. 除非明确使用了<code>-noc</code>选项, <code>-box</code>和<code>-d</code>都可以使体系在盒子内居中.
 
-<p>选项<code>-bt</code>设定盒子类型: <code>triclinic</code>为三斜盒子, <code>cubic</code>为所有边长都相等的长方体盒子(即立方体盒子), <code>dodecahedron</code>代表菱形十二面体盒子(等边十二面体), <code>octahedron</code>为截角八面体盒子(即将两个底面重合的四面体切去方向相反的两头, 同时保证所有的边长相等). 后面两种盒子是三斜盒子的特殊情况. 截角八面体三个盒向量的长度是两个相对六边形之间的最短距离. 相对于具有周期性映象距离的立方盒子, 具有相同周期距离的菱形十二面体盒子的体积是立方盒子的71%, 而截角八面体盒子的体积是立方盒子的77%.</p>
+选项<code>-bt</code>设定盒子类型: <code>triclinic</code>为三斜盒子, <code>cubic</code>为所有边长都相等的长方体盒子(即立方体盒子), <code>dodecahedron</code>代表菱形十二面体盒子(等边十二面体), <code>octahedron</code>为截角八面体盒子(即将两个底面重合的四面体切去方向相反的两头, 同时保证所有的边长相等). 后面两种盒子是三斜盒子的特殊情况. 截角八面体三个盒向量的长度是两个相对六边形之间的最短距离. 相对于具有周期性映象距离的立方盒子, 具有相同周期距离的菱形十二面体盒子的体积是立方盒子的71%, 而截角八面体盒子的体积是立方盒子的77%.
 
-<p>对一般的三斜盒子, <code>-box</code>的参数是三个实数, 为长方体的边长. 对于立方盒子, 菱形十二面体盒子或者截面八面体盒子, 选项<code>-box</code>只需要提供一个数值, 即盒子边长.</p>
+对一般的三斜盒子, <code>-box</code>的参数是三个实数, 为长方体的边长. 对于立方盒子, 菱形十二面体盒子或者截面八面体盒子, 选项<code>-box</code>只需要提供一个数值, 即盒子边长.
 
-<p><code>-d</code>选项指定体系中的原子到盒子编边界的最小距离. 使用<code>-d</code>选项时, 对三斜盒子会使用体系在x, y和z方向的大小, 对立方盒子, 菱形十二面体盒子或截角八面体盒子, 盒子的大小被设定为体系直径(原子间的最大距离)加上两倍的指定距离.</p>
+<code>-d</code>选项指定体系中的原子到盒子编边界的最小距离. 使用<code>-d</code>选项时, 对三斜盒子会使用体系在x, y和z方向的大小, 对立方盒子, 菱形十二面体盒子或截角八面体盒子, 盒子的大小被设定为体系直径(原子间的最大距离)加上两倍的指定距离.
 
-<p>选项<code>-angles</code>只能与选项<code>-box</code>和三斜盒子一起使用才有意义, 而且不能和选项<code>-d</code>一起使用.</p>
+选项<code>-angles</code>只能与选项<code>-box</code>和三斜盒子一起使用才有意义, 而且不能和选项<code>-d</code>一起使用.
 
-<p>当使用<code>-n</code>或<code>-ndef</code>时, 可以指定一个索引文件, 并选择其中的一个组来计算大小和几何中心, 否则会使用整个体系的大小和几何中心.</p>
+当使用<code>-n</code>或<code>-ndef</code>时, 可以指定一个索引文件, 并选择其中的一个组来计算大小和几何中心, 否则会使用整个体系的大小和几何中心.
 
-<p><code>-rotate</code>选项可以对坐标和速度进行旋转. 如<code>-rotate 0 30 0</code>表示将体系绕Y轴沿顺时针方向旋转30度.</p>
+<code>-rotate</code>选项可以对坐标和速度进行旋转. 如<code>-rotate 0 30 0</code>表示将体系绕Y轴沿顺时针方向旋转30度.
 
-<p><code>-princ</code>选项将体系(或体系某一部分)的主轴与坐标轴平齐, 并且最长的轴沿x轴方向. 这可以减小盒子的体积, 特别当分子为长条形时. 但是注意分子在纳秒的时间尺度内可能发生明显的旋转, 所以使用时要小心.</p>
+<code>-princ</code>选项将体系(或体系某一部分)的主轴与坐标轴平齐, 并且最长的轴沿x轴方向. 这可以减小盒子的体积, 特别当分子为长条形时. 但是注意分子在纳秒的时间尺度内可能发生明显的旋转, 所以使用时要小心.
 
-<p>缩放会在任何其他操作之前进行. 可以对盒子和坐标进行缩放以得到一定的密度(选项<code>-density</code>). 注意如果输入是<code>.gro</code>文件的话, 密度可能不够精确. <code>-scale</code>选项的一个特性是, 当某一维度的缩放因子为&#8211;1时, 可以得到体系相对于一个平面的镜面映象. 当三个维度的缩放因子都是&#8211;1时, 可以获得体系相对于坐标原点的对称映象.</p>
+缩放会在任何其他操作之前进行. 可以对盒子和坐标进行缩放以得到一定的密度(选项<code>-density</code>). 注意如果输入是<code>.gro</code>文件的话, 密度可能不够精确. <code>-scale</code>选项的一个特性是, 当某一维度的缩放因子为&#8211;1时, 可以得到体系相对于一个平面的镜面映象. 当三个维度的缩放因子都是&#8211;1时, 可以获得体系相对于坐标原点的对称映象.
 
-<p>组的选择是在其他所有操作都完成之后进行的. 在程序输出时, 可以只输出体系中的某一个组, 或者某一个部分, 还可以建立划分更细致的索引文件, 以便进行更加细致的选择.</p>
+组的选择是在其他所有操作都完成之后进行的. 在程序输出时, 可以只输出体系中的某一个组, 或者某一个部分, 还可以建立划分更细致的索引文件, 以便进行更加细致的选择.
 
-<p>可以粗略地去除体系的周期性. 当去除周期性时, 输入文件最底部的盒向量必须保证正确, 这非常重要, 因为<code>gmx editconf</code>去除周期性的算法十分简单, 只是将原子坐标直接减去盒子边长.</p>
+可以粗略地去除体系的周期性. 当去除周期性时, 输入文件最底部的盒向量必须保证正确, 这非常重要, 因为<code>gmx editconf</code>去除周期性的算法十分简单, 只是将原子坐标直接减去盒子边长.
 
-<p>当输出<code>.pdb</code>文件时, 可以使用<code>-bf</code>选项添加B因子. B因子可以从文件中读取, 格式如下: 第一行声明文件中所含B因子数值的个数, 从第二行开始, 每行声明一个索引号, 后面跟着B因子. 默认情况下, B因子将附加到每个残基上, 每个残基一个数值, 除非索引大于残基数目或者设定了<code>-atom</code>选项. 显然, 可以添加任何类型的数值数据而不仅仅是B因子. <code>-legend</code>选项将生成一列CA原子, 其B因子的范围为所用数据的最小值到最大值, 可以有效地作为查看的图例, 便于可视化软件显示.</p>
+当输出<code>.pdb</code>文件时, 可以使用<code>-bf</code>选项添加B因子. B因子可以从文件中读取, 格式如下: 第一行声明文件中所含B因子数值的个数, 从第二行开始, 每行声明一个索引号, 后面跟着B因子. 默认情况下, B因子将附加到每个残基上, 每个残基一个数值, 除非索引大于残基数目或者设定了<code>-atom</code>选项. 显然, 可以添加任何类型的数值数据而不仅仅是B因子. <code>-legend</code>选项将生成一列CA原子, 其B因子的范围为所用数据的最小值到最大值, 可以有效地作为查看的图例, 便于可视化软件显示.
 
-<p>使用<code>-mead</code>选项时可以生成一个特殊的<code>.pdb</code>文件(<code>.pqr</code>), 它可用于MEAD静电程序(泊松玻尔兹曼方程求解器). 使用这个选项的前提条件是输入文件必须为运行输入文件(如tpr), 因为这样的文件中才包含了力场参数. 输出文件中的B因子段为原子的范德华半径而占有率段为原子的电荷.</p>
+使用<code>-mead</code>选项时可以生成一个特殊的<code>.pdb</code>文件(<code>.pqr</code>), 它可用于MEAD静电程序(泊松玻尔兹曼方程求解器). 使用这个选项的前提条件是输入文件必须为运行输入文件(如tpr), 因为这样的文件中才包含了力场参数. 输出文件中的B因子段为原子的范德华半径而占有率段为原子的电荷.
 
-<p><code>-grasp</code>选项的作用与上一选项类似, 只不过互换了电荷与半径的位置, 电荷位于B因子段, 而半径位于占有率段.</p>
+<code>-grasp</code>选项的作用与上一选项类似, 只不过互换了电荷与半径的位置, 电荷位于B因子段, 而半径位于占有率段.
 
-<p>选项<code>-align</code>可以将特定组的主轴与给定的向量平齐, <code>-aligncenter</code>选项指定可选的旋转中心.</p>
+选项<code>-align</code>可以将特定组的主轴与给定的向量平齐, <code>-aligncenter</code>选项指定可选的旋转中心.
 
-<p>最后, 使用选项<code>-label</code>, <code>gmx editconf</code>可以为<code>.pdb</code>文件添加一个链标识符. 如果一个文件中不同残基属于不同肽链, 那么这个选项可以为残基指定肽链归属, 这样不但有利于可视化, 在使用一些程序如Rasmol进行分析时也很有帮助, 在建立模拟体系时也十分方便.</p>
+最后, 使用选项<code>-label</code>, <code>gmx editconf</code>可以为<code>.pdb</code>文件添加一个链标识符. 如果一个文件中不同残基属于不同肽链, 那么这个选项可以为残基指定肽链归属, 这样不但有利于可视化, 在使用一些程序如Rasmol进行分析时也很有帮助, 在建立模拟体系时也十分方便.
 
-<p>对一些软件包(如GROMOS), 会使用对立方盒子进行角截断的方法生成截角八面体, 为转换这种截角八面体文件, 可使用以下命令:</p>
+对一些软件包(如GROMOS), 会使用对立方盒子进行角截断的方法生成截角八面体, 为转换这种截角八面体文件, 可使用以下命令:
 
-<p><code>gmx editconf -f in -rotate 0 45 35.264 -bt o -box veclen -o out</code></p>
+<code>gmx editconf -f in -rotate 0 45 35.264 -bt o -box veclen -o out</code>
 
-<p>其中<code>veclen</code>是立方盒子大小乘以sqrt(3)/2.</p>
+其中<code>veclen</code>是立方盒子大小乘以sqrt(3)/2.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -4629,9 +4629,9 @@ atomname = nrelectrons
 
 ### 补充说明
 
-<p>在使用<code>pdb2gmx</code>创建了模拟分子体系之后, 可以使用<code>editconf</code>为你的分子创建一个模拟盒子, 也可以认为是使用<code>editconf</code>将分子放进一个盒子中. 这样, 你就可以往盒子里面添加水分子, 离子或者其他溶剂等等了.</p>
+在使用<code>pdb2gmx</code>创建了模拟分子体系之后, 可以使用<code>editconf</code>为你的分子创建一个模拟盒子, 也可以认为是使用<code>editconf</code>将分子放进一个盒子中. 这样, 你就可以往盒子里面添加水分子, 离子或者其他溶剂等等了.
 
-<p><code>-princ</code>这个选项可以用来对齐分子, 比如使分子沿X轴对齐. 例如, 你想将分子中的两个残基沿Y轴对齐, 那么就在索引文件中将这俩个残基标记一下, 然后使用<code>-princ</code>, 根据提示就能对齐分子了.</p>
+<code>-princ</code>这个选项可以用来对齐分子, 比如使分子沿X轴对齐. 例如, 你想将分子中的两个残基沿Y轴对齐, 那么就在索引文件中将这俩个残基标记一下, 然后使用<code>-princ</code>, 根据提示就能对齐分子了.
 
 ## gmx eneconv: 转换能量文件(翻译: 李继存)
 
@@ -4640,15 +4640,15 @@ atomname = nrelectrons
             [-[no]sort] [-[no]rmdh] [-scalefac ] [-[no]error]
 </code></pre>
 
-<p>当使用<code>-f</code>选项指定多个文件时:</p>
+当使用<code>-f</code>选项指定多个文件时:
 
-<p>按顺序将几个能量文件合并在一起. 当发现同一时刻存在两帧时, 会使用后一文件中的帧. 通过使用<code>-settime</code>, 你可以指定每一文件的起始时间. 输入文件由命令行得到, 你可能要使用像<code>gmx eneconv -f *.edr -o fixed.edr</code>这样的技巧.</p>
+按顺序将几个能量文件合并在一起. 当发现同一时刻存在两帧时, 会使用后一文件中的帧. 通过使用<code>-settime</code>, 你可以指定每一文件的起始时间. 输入文件由命令行得到, 你可能要使用像<code>gmx eneconv -f *.edr -o fixed.edr</code>这样的技巧.
 
-<p>当使用<code>-f</code>选项指定一个文件时:</p>
+当使用<code>-f</code>选项指定一个文件时:
 
-<p>读入一个能量文件, 并根据<code>-dt</code>, <code>-offset</code>, <code>-t0</code>和<code>-settime</code>选项输出到另一个文件, 需要时还会转换为不同的格式(有文件扩展名确定).</p>
+读入一个能量文件, 并根据<code>-dt</code>, <code>-offset</code>, <code>-t0</code>和<code>-settime</code>选项输出到另一个文件, 需要时还会转换为不同的格式(有文件扩展名确定).
 
-<p>程序会首先应用<code>-settime</code>选项, 然后是<code>-dt</code>/<code>-offset</code>选项, <code>-b</code>和<code>-e</code>选项, 用以选择输出哪些帧.</p>
+程序会首先应用<code>-settime</code>选项, 然后是<code>-dt</code>/<code>-offset</code>选项, <code>-b</code>和<code>-e</code>选项, 用以选择输出哪些帧.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -4737,18 +4737,18 @@ atomname = nrelectrons
 
 ### 补充说明
 
-<p>GROMACS模拟有一个非常重要的能量输出文件, 即<code>.edr</code>文件. <code>gmx eneconv</code>就是对能量输出文件进行处理的程序.</p>
+GROMACS模拟有一个非常重要的能量输出文件, 即<code>.edr</code>文件. <code>gmx eneconv</code>就是对能量输出文件进行处理的程序.
 
-<p>一个模拟可以分多次进行, 于是得到很多<code>.edr</code>文件. 使用<code>gmx eneconv</code>的<code>-f</code>选项, 然后把这些能量文件罗列出来, 就可以对这些能量文件进行合并, 并输出一个完整的能量文件.
+一个模拟可以分多次进行, 于是得到很多<code>.edr</code>文件. 使用<code>gmx eneconv</code>的<code>-f</code>选项, 然后把这些能量文件罗列出来, 就可以对这些能量文件进行合并, 并输出一个完整的能量文件.
 如果几个能量文件中有重复的时间帧, 那么后一个读入的能量文件将覆盖前一个. 也可以使用<code>-settime</code>选项对每一个输入文件的起始时间进行设置, 以免互相覆盖.
-如下是一个示例:</p>
+如下是一个示例:
 
 <pre><code>eneconv -o fixed.edr -f *.edr
 </code></pre>
 
-<p>即对当前目录下所有<code>.edr</code>文件进行合并, 然后输出为<code>fixed.edr</code>文件.</p>
+即对当前目录下所有<code>.edr</code>文件进行合并, 然后输出为<code>fixed.edr</code>文件.
 
-<p>当使用<code>-f</code>选项读入单独一个能量文件时, 可以配合其他参数对能量文件进行编辑.</p>
+当使用<code>-f</code>选项读入单独一个能量文件时, 可以配合其他参数对能量文件进行编辑.
 
 ## gmx enemat: 从能量文件中提取能量矩阵(翻译: 赵丙春)
 
@@ -4761,16 +4761,16 @@ atomname = nrelectrons
            [-[no]free] [-temp ]
 </code></pre>
 
-<p><code>gmx enemat</code>从能量文件(<code>-f</code>)中提取能量矩阵. 使用<code>-group</code>选项时必须提供一个文件名称, 文件中每行包含一组使用的原子. 通过寻找名称对应于原子组对名称的能量组, 会从能量文件中提取这些组的相互作用能的矩阵. 例如, 如果<code>-group</code>文件中包含:</p>
+<code>gmx enemat</code>从能量文件(<code>-f</code>)中提取能量矩阵. 使用<code>-group</code>选项时必须提供一个文件名称, 文件中每行包含一组使用的原子. 通过寻找名称对应于原子组对名称的能量组, 会从能量文件中提取这些组的相互作用能的矩阵. 例如, 如果<code>-group</code>文件中包含:
 
 <pre><code>2
 Protein
 SOL
 </code></pre>
 
-<p>程序会预期能量文件中包含具有<code>Coul-SR:Protein-SOL</code>和<code>LJ:Protein-SOL</code>名称的能量组(尽管同时分析很多组时, <code>gmx enemat</code>非常有用). 不同能量类型的矩阵会分开输出, 由<code>-[no]coul</code>, <code>-[no]coulr</code>, <code>-[no]coul14</code>, <code>-[no]lj</code>, <code>-[no]lj14</code>, <code>-[no]bham</code>和<code>-[no]free</code>选项控制. 最后, 可以计算每组的总相互作用能(<code>-etot</code>).</p>
+程序会预期能量文件中包含具有<code>Coul-SR:Protein-SOL</code>和<code>LJ:Protein-SOL</code>名称的能量组(尽管同时分析很多组时, <code>gmx enemat</code>非常有用). 不同能量类型的矩阵会分开输出, 由<code>-[no]coul</code>, <code>-[no]coulr</code>, <code>-[no]coul14</code>, <code>-[no]lj</code>, <code>-[no]lj14</code>, <code>-[no]bham</code>和<code>-[no]free</code>选项控制. 最后, 可以计算每组的总相互作用能(<code>-etot</code>).
 
-<p>近似的自由能可以如下计算: <span class="math">\(E_{free} = E_0 + kT \log(<\exp((E-E_0)/kT)>)\)</span>, 其中 <span class="math">\(<>\)</span> 代表时间平均. 可以提供包含参考自由能的文件, 用以计算相对于一些参考状态的自由能差值. 参考文件中的组名称(如残基名称)应当与<code>-group</code>文件中的组名称一致, 但在<code>-group</code>中追加的数字(如残基编号)在比较时将会被忽略.</p>
+近似的自由能可以如下计算: <span class="math">\(E_{free} = E_0 + kT \log(<\exp((E-E_0)/kT)>)\)</span>, 其中 <span class="math">\(<>\)</span> 代表时间平均. 可以提供包含参考自由能的文件, 用以计算相对于一些参考状态的自由能差值. 参考文件中的组名称(如残基名称)应当与<code>-group</code>文件中的组名称一致, 但在<code>-group</code>中追加的数字(如残基编号)在比较时将会被忽略.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -4944,13 +4944,13 @@ SOL
            [-endfit ]
 </code></pre>
 
-<p><code>gmx energy</code>用于从能量文件中提取能量组分或距离限制数据. 程序会提示用户以交互方式选择所需的能量项.</p>
+<code>gmx energy</code>用于从能量文件中提取能量组分或距离限制数据. 程序会提示用户以交互方式选择所需的能量项.
 
-<p>程序会使用全精度计算模拟中能量的平均值, RMSD和漂移(参见手册). 漂移是通过使用最小二乘法将数据拟合为直线得到的. 报告的总漂移是拟合直线第一个点和最后一个点的差值. 平均值的误差估计是基于5个块的块平均得到的, 计算时使用了全精度的平均值. 利用<code>-nbmin</code>和<code>-nbmax</code>选项, 可以使用多个块长度进行误差估计. <strong>注意</strong>, 在大多数情况下, 能量文件包含了对所有MD步骤的平均, 或进行平均的点比能量文件中的帧数多很多. 这使得<code>gmx energy</code>的统计输出比<code>.xvg</code>文件中的数据更准确. 当能量文件中不存在精确的平均值时, 上述统计数据只是简单地对每帧能量数据的平均.</p>
+程序会使用全精度计算模拟中能量的平均值, RMSD和漂移(参见手册). 漂移是通过使用最小二乘法将数据拟合为直线得到的. 报告的总漂移是拟合直线第一个点和最后一个点的差值. 平均值的误差估计是基于5个块的块平均得到的, 计算时使用了全精度的平均值. 利用<code>-nbmin</code>和<code>-nbmax</code>选项, 可以使用多个块长度进行误差估计. <strong>注意</strong>, 在大多数情况下, 能量文件包含了对所有MD步骤的平均, 或进行平均的点比能量文件中的帧数多很多. 这使得<code>gmx energy</code>的统计输出比<code>.xvg</code>文件中的数据更准确. 当能量文件中不存在精确的平均值时, 上述统计数据只是简单地对每帧能量数据的平均.
 
-<p>涨落项给出了围绕最小二乘拟合线的RMSD.</p>
+涨落项给出了围绕最小二乘拟合线的RMSD.
 
-<p>如果选择了正确的能量项, 并且使用了该命令行选项<code>-fluct_props</code>, 程序可以计算一些涨落相关的性质. 会计算以下性质:</p>
+如果选择了正确的能量项, 并且使用了该命令行选项<code>-fluct_props</code>, 程序可以计算一些涨落相关的性质. 会计算以下性质:
 
 <table><caption></caption>
 <tr>
@@ -4979,29 +4979,29 @@ SOL
 </tr>
 </table>
 
-<p>你也需要通过<code>-nmol</code>来设定分子的数目. C_p/C_v的计算 <strong>不</strong> 包含任何量子效应校正. 如果需要考虑量子效应可以使用<code>gmx dos</code>程序.</p>
+你也需要通过<code>-nmol</code>来设定分子的数目. C_p/C_v的计算 <strong>不</strong> 包含任何量子效应校正. 如果需要考虑量子效应可以使用<code>gmx dos</code>程序.
 
-<p>当设置<code>-viol</code>选项时, 会绘制时间平均的背离数据, 并重新计算背离的实时时间平均值和瞬时累计值. 此外, 可以利用<code>-pairs</code>选项来绘制选定原子对之间的实时时间平均距离和瞬时距离.</p>
+当设置<code>-viol</code>选项时, 会绘制时间平均的背离数据, 并重新计算背离的实时时间平均值和瞬时累计值. 此外, 可以利用<code>-pairs</code>选项来绘制选定原子对之间的实时时间平均距离和瞬时距离.
 
-<p>选项<code>-ora</code>, <code>-ort</code>, <code>-oda</code>, <code>-odr</code>和<code>-odt</code>用于分析取向限制数据. 前两个选项绘制取向, 后三个选项绘制来自实验值的取向偏差. 以上选项中以<code>a</code>结尾的选项绘制时间平均随限制的变化. 以<code>t</code>结尾选项会提示用户限制标签号并绘制数据随时间的变化. 选项<code>-odr</code>绘制RMS偏差随限制的变化. 当使用时间或系综平均的取向限制运行时, 选项<code>-orinst</code>可以用来分析瞬时, 非系综平均的取向和偏差, 而不是时间和系综平均的值.</p>
+选项<code>-ora</code>, <code>-ort</code>, <code>-oda</code>, <code>-odr</code>和<code>-odt</code>用于分析取向限制数据. 前两个选项绘制取向, 后三个选项绘制来自实验值的取向偏差. 以上选项中以<code>a</code>结尾的选项绘制时间平均随限制的变化. 以<code>t</code>结尾选项会提示用户限制标签号并绘制数据随时间的变化. 选项<code>-odr</code>绘制RMS偏差随限制的变化. 当使用时间或系综平均的取向限制运行时, 选项<code>-orinst</code>可以用来分析瞬时, 非系综平均的取向和偏差, 而不是时间和系综平均的值.
 
-<p>选项<code>-oten</code>用于绘制每个取向限制实验中分子序张量的特征值. 与选项<code>-ovec</code>同用时还可以绘制特征向量.</p>
+选项<code>-oten</code>用于绘制每个取向限制实验中分子序张量的特征值. 与选项<code>-ovec</code>同用时还可以绘制特征向量.
 
-<p>选项<code>-odh</code>用于从<code>ener.edr</code>文件中提取并绘制自由能数据(哈密顿差值和/或哈密顿导数dhdl).</p>
+选项<code>-odh</code>用于从<code>ener.edr</code>文件中提取并绘制自由能数据(哈密顿差值和/或哈密顿导数dhdl).
 
-<p>使用<code>-fee</code>选项会计算体系与理想气体状态时的自由能差值:</p>
+使用<code>-fee</code>选项会计算体系与理想气体状态时的自由能差值:
 
-<p><span class="math">\[\D A = A(N,V,T) - A_{idealgas}(N,V,T) = kT \ln(<\exp(U_{pot}/kT)>)\]</span></p>
+<span class="math">\[\D A = A(N,V,T) - A_{idealgas}(N,V,T) = kT \ln(<\exp(U_{pot}/kT)>)\]</span>
 
-<p><span class="math">\[\D G = G(N,p,T) - G_{idealgas}(N,p,T) = kT \ln(<\exp(U_{pot}/kT)>)\]</span></p>
+<span class="math">\[\D G = G(N,p,T) - G_{idealgas}(N,p,T) = kT \ln(<\exp(U_{pot}/kT)>)\]</span>
 
-<p>其中, <span class="math">\(k\)</span> 为玻尔兹曼常数, <span class="math">\(T\)</span> 由<code>-fetemp</code>设定, 平均对整个系综(或轨迹中的时间)进行. 请注意, 只有当平均是对整个(玻尔兹曼)系综进行并使用势能时, 这种作法在理论上才是正确的. 这允许对熵进行估计:</p>
+其中, <span class="math">\(k\)</span> 为玻尔兹曼常数, <span class="math">\(T\)</span> 由<code>-fetemp</code>设定, 平均对整个系综(或轨迹中的时间)进行. 请注意, 只有当平均是对整个(玻尔兹曼)系综进行并使用势能时, 这种作法在理论上才是正确的. 这允许对熵进行估计:
 
-<p><span class="math">\[\D S(N,V,T) = S(N,V,T) - S_{idealgas}(N,V,T) = (< U_{pot} > - \D A)/T\]</span></p>
+<span class="math">\[\D S(N,V,T) = S(N,V,T) - S_{idealgas}(N,V,T) = (< U_{pot} > - \D A)/T\]</span>
 
-<p><span class="math">\[\D S(N,p,T) = S(N,p,T) - S_{idealgas}(N,p,T) = (< U_{pot} > + pV - \D G)/T\]</span></p>
+<span class="math">\[\D S(N,p,T) = S(N,p,T) - S_{idealgas}(N,p,T) = (< U_{pot} > + pV - \D G)/T\]</span>
 
-<p>当指定了第二个能量文件(<code>-f2</code>)时, 将计算自由能量差值 <span class="math">\(dF = -kT \ln(<\exp(-(E_B-E_A)/kT)>_A)\)</span>, 其中 <span class="math">\(E_A\)</span> 和 <span class="math">\(E_B\)</span> 分布为第一个和第二个能量文件中的能量值, 平均对系综A进行. 自由能差的实时平均值会输出到由<code>-ravg</code>指定的文件中. <strong>注意</strong>, 能量必须由同一轨迹计算而来.</p>
+当指定了第二个能量文件(<code>-f2</code>)时, 将计算自由能量差值 <span class="math">\(dF = -kT \ln(<\exp(-(E_B-E_A)/kT)>_A)\)</span>, 其中 <span class="math">\(E_A\)</span> 和 <span class="math">\(E_B\)</span> 分布为第一个和第二个能量文件中的能量值, 平均对系综A进行. 自由能差的实时平均值会输出到由<code>-ravg</code>指定的文件中. <strong>注意</strong>, 能量必须由同一轨迹计算而来.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -5253,19 +5253,19 @@ SOL
 
 ### 补充说明
 
-<p><code>gmx energy</code>可提取<code>.edr</code>文件中的能量数据并将结果输出为<code>.xvg</code>文件, 一般来说, 命令为:</p>
+<code>gmx energy</code>可提取<code>.edr</code>文件中的能量数据并将结果输出为<code>.xvg</code>文件, 一般来说, 命令为:
 
 <pre><code>gmx energy -f edr_file -o result.xvg
 </code></pre>
 
-<p>如果加上<code>-b</code>, <code>-e</code>选项, 可以从具体时间段提取结果而不是全部时间.</p>
+如果加上<code>-b</code>, <code>-e</code>选项, 可以从具体时间段提取结果而不是全部时间.
 
-<p>如果要编写bash脚本, 可以使用命令管道, 比如提取温度:</p>
+如果要编写bash脚本, 可以使用命令管道, 比如提取温度:
 
 <pre><code>echo &quot;temperature&quot; | gmx energy -f npt.edr -o temperature.xvg
 </code></pre>
 
-<p><code>gmx energy</code>的分析项目有以下这些方面</p>
+<code>gmx energy</code>的分析项目有以下这些方面
 
 <pre><code>Select the terms you want from the following list by
 selecting either (part of) the name or the number or a combination.
@@ -5286,7 +5286,7 @@ End your selection with an empty line or a zero.
  49  Lamb-OIL        50  Lamb-SOL
 </code></pre>
 
-<p>常用的一些如下:</p>
+常用的一些如下:
 
 <ul class="incremental">
 <li><code>Potential</code> 体系势能</li>
@@ -5300,7 +5300,7 @@ End your selection with an empty line or a zero.
 <li><code>#Surf*SurfTen</code> 表面或界面张力</li>
 </ul>
 
-<p><code>gmx energy</code>用于得到体系的各个能量, 一般跑完MD之后, 使用<code>gmx energy</code>处理<code>ener.edr</code>只能得到体系的各个能量项. 但如果想求体系中两个不同部分在模拟过程中的相互作用能, 那就要使用一些小窍门. 以下是实现的一种方法:</p>
+<code>gmx energy</code>用于得到体系的各个能量, 一般跑完MD之后, 使用<code>gmx energy</code>处理<code>ener.edr</code>只能得到体系的各个能量项. 但如果想求体系中两个不同部分在模拟过程中的相互作用能, 那就要使用一些小窍门. 以下是实现的一种方法:
 
 <ol class="incremental">
 <li>根据原来的<code>.tpr</code>文件建立一个新<code>.tpr</code>, 在新的<code>.tpr</code>中, 使用索引文件明确定义感兴趣的组.</li>
@@ -5316,11 +5316,11 @@ End your selection with an empty line or a zero.
            [-[no]all]` [-[no]nojump]` [-[no]fit]
 </code></pre>
 
-<p><code>gmx filter</code>用于对轨迹进行频率滤波. 滤波器的形状为从-A到+A的cos(π t/A) + 1, 其中A为选项<code>-nf</code>与输入文件中时间步的乘积. 对低通滤波, 滤波器可将周期为A的涨落降低85%, 周期为2<em>A的降低50%, 周期为3</em>A的降低17%. 程序可输出低通和高通滤波后的轨迹.</p>
+<code>gmx filter</code>用于对轨迹进行频率滤波. 滤波器的形状为从-A到+A的cos(π t/A) + 1, 其中A为选项<code>-nf</code>与输入文件中时间步的乘积. 对低通滤波, 滤波器可将周期为A的涨落降低85%, 周期为2<em>A的降低50%, 周期为3</em>A的降低17%. 程序可输出低通和高通滤波后的轨迹.
 
-<p>选项<code>-ol</code>输出低通滤波后的轨迹, 每<code>-nf</code>输入帧输出一次. 滤波器长度与输出间隔的比值保证了可很好地抑制高频运动的混淆, 这非常有利于制作平滑的电影. 此外, 对与坐标有线性关系的性质, 其平均值会保持不变, 因为所有输入帧在输出中的权重都是相同的. 当需要所有帧时, 可使用<code>-all</code>选项.</p>
+选项<code>-ol</code>输出低通滤波后的轨迹, 每<code>-nf</code>输入帧输出一次. 滤波器长度与输出间隔的比值保证了可很好地抑制高频运动的混淆, 这非常有利于制作平滑的电影. 此外, 对与坐标有线性关系的性质, 其平均值会保持不变, 因为所有输入帧在输出中的权重都是相同的. 当需要所有帧时, 可使用<code>-all</code>选项.
 
-<p>选项<code>-oh</code>输出高通滤波后的轨迹. 高通滤波后的坐标会加到结构文件中的坐标上. 当使用高通滤波时, 请使用<code>-fit</code>选项或保证所用轨迹已经叠合到结构文件中的坐标.</p>
+选项<code>-oh</code>输出高通滤波后的轨迹. 高通滤波后的坐标会加到结构文件中的坐标上. 当使用高通滤波时, 请使用<code>-fit</code>选项或保证所用轨迹已经叠合到结构文件中的坐标.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -5423,13 +5423,13 @@ End your selection with an empty line or a zero.
                [-ninsert ]
 </code></pre>
 
-<p><code>gmx freevolume</code>用于计算一个盒子中的自由体积及其与时间的函数关系, 输出自由体积所占总体积的比例. 程序会尝试将一个指定半径的探针插入模拟盒子中, 如果探针与任何原子之间的距离小于两个原子的范德华半径之和, 就认为这个位置已被占据, 即非自由. 通过利用半径为0的探针, 可以计算出真实的自由体积. 通过利用较大半径的探针, 如0.14 nm, 大致对应于水分子的半径, 可计算对应于指定大小假想粒子的自由体积. 然而, 值得注意的是, 由于将原子视为硬球, 这些数字是非常近似的, 通常只有相对变化才有意义, 例如进行不同温度下的一系列模拟.</p>
+<code>gmx freevolume</code>用于计算一个盒子中的自由体积及其与时间的函数关系, 输出自由体积所占总体积的比例. 程序会尝试将一个指定半径的探针插入模拟盒子中, 如果探针与任何原子之间的距离小于两个原子的范德华半径之和, 就认为这个位置已被占据, 即非自由. 通过利用半径为0的探针, 可以计算出真实的自由体积. 通过利用较大半径的探针, 如0.14 nm, 大致对应于水分子的半径, 可计算对应于指定大小假想粒子的自由体积. 然而, 值得注意的是, 由于将原子视为硬球, 这些数字是非常近似的, 通常只有相对变化才有意义, 例如进行不同温度下的一系列模拟.
 
-<p>通过选择指定的组来用于描述非自由体积. 单位体积的插入数目对结果的收敛影响很大. 使用大约1000/nm<sup>3</sup>的值可得到总的标准偏差, 这是由轨迹的涨落决定而不是由随机数的涨落决定的.</p>
+通过选择指定的组来用于描述非自由体积. 单位体积的插入数目对结果的收敛影响很大. 使用大约1000/nm<sup>3</sup>的值可得到总的标准偏差, 这是由轨迹的涨落决定而不是由随机数的涨落决定的.
 
-<p>所得结果非常依赖于范德华半径; 我们推荐使用Bondi(1964)给出的数值.</p>
+所得结果非常依赖于范德华半径; 我们推荐使用Bondi(1964)给出的数值.
 
-<p>一些作者喜欢使用部分自由体积(FFV, Fractional Free Volume), 它的值为1&#8211;1.3*(1-Free Volume). 此值会显示在终端上.</p>
+一些作者喜欢使用部分自由体积(FFV, Fractional Free Volume), 它的值为1&#8211;1.3*(1-Free Volume). 此值会显示在终端上.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -5542,21 +5542,21 @@ End your selection with an empty line or a zero.
            [-group2 ]
 </code></pre>
 
-<p><code>gmx gangle</code>计算矢量之间不同类型的角度, 它支持由两个位置定义的矢量, 也支持由三个位置定义的平面的法线. 矢量还可以是z轴或球面的局部法线. 此外, 选项<code>angle</code>和<code>dihedral</code>可方便地用于计算由三/四个位置定义的键角和二面角.</p>
+<code>gmx gangle</code>计算矢量之间不同类型的角度, 它支持由两个位置定义的矢量, 也支持由三个位置定义的平面的法线. 矢量还可以是z轴或球面的局部法线. 此外, 选项<code>angle</code>和<code>dihedral</code>可方便地用于计算由三/四个位置定义的键角和二面角.
 
-<p>角度类型通过<code>-g1</code>和<code>-g2</code>指定. 如果<code>-g1</code>为<code>angle</code>或<code>dihedral</code>, 就不应再指定<code>-g2</code>. 在这种情况下, <code>-group1</code>应指定一个或多个选择, 并且每个选择应包括位置的三联对或四联对, 它们定义了要计算的角度.</p>
+角度类型通过<code>-g1</code>和<code>-g2</code>指定. 如果<code>-g1</code>为<code>angle</code>或<code>dihedral</code>, 就不应再指定<code>-g2</code>. 在这种情况下, <code>-group1</code>应指定一个或多个选择, 并且每个选择应包括位置的三联对或四联对, 它们定义了要计算的角度.
 
-<p>如果<code>-g1</code>为<code>vector</code>或<code>plane</code>, <code>-group1</code>指定的选择应包含位置对(<code>vector</code>)或位置三元对(<code>plane</code>). 对矢量, 位置设置了矢量的端点, 对平面, 三个位置用于计算平面的法向. 在这两种情况下, <code>-g2</code>指定要使用的其它矢量(见下文).</p>
+如果<code>-g1</code>为<code>vector</code>或<code>plane</code>, <code>-group1</code>指定的选择应包含位置对(<code>vector</code>)或位置三元对(<code>plane</code>). 对矢量, 位置设置了矢量的端点, 对平面, 三个位置用于计算平面的法向. 在这两种情况下, <code>-g2</code>指定要使用的其它矢量(见下文).
 
-<p>使用<code>-g2 vector</code>或<code>-g2 plane</code>时, <code>-group2</code>应指定另一组矢量. <code>-group1</code>和<code>-group2</code>应指定相同的选择数目. 对其中的一个选项也可以只有一个选择, 在这种情况下, 对其他组中的每个选择会使用相同的选择. 同样, 对<code>-group1</code>中的每个选择, 相应的<code>-group2</code>中的选择应指定相同数目的矢量或单独一个矢量. 在后一种情况下, 会计算这个单一矢量与其它选择中的每个矢量之间的角度.</p>
+使用<code>-g2 vector</code>或<code>-g2 plane</code>时, <code>-group2</code>应指定另一组矢量. <code>-group1</code>和<code>-group2</code>应指定相同的选择数目. 对其中的一个选项也可以只有一个选择, 在这种情况下, 对其他组中的每个选择会使用相同的选择. 同样, 对<code>-group1</code>中的每个选择, 相应的<code>-group2</code>中的选择应指定相同数目的矢量或单独一个矢量. 在后一种情况下, 会计算这个单一矢量与其它选择中的每个矢量之间的角度.
 
-<p>使用<code>-g2 sphnorm</code>时, <code>-group2</code>中的每个选择应指定单一的位置, 它是球的中心. 第二个矢量从中心到由<code>-group1</code>指定的位置的中点.</p>
+使用<code>-g2 sphnorm</code>时, <code>-group2</code>中的每个选择应指定单一的位置, 它是球的中心. 第二个矢量从中心到由<code>-group1</code>指定的位置的中点.
 
-<p>使用<code>-g2 z</code>时, 不需要指定<code>-group2</code>, 会计算第一个矢量与Z轴正半轴之间的角度.</p>
+使用<code>-g2 z</code>时, 不需要指定<code>-group2</code>, 会计算第一个矢量与Z轴正半轴之间的角度.
 
-<p>使用<code>-g2 t0</code>时, 不需要指定<code>-group2</code>, 会利用第一帧的矢量计算角度.</p>
+使用<code>-g2 t0</code>时, 不需要指定<code>-group2</code>, 会利用第一帧的矢量计算角度.
 
-<p>有三个输出选项: <code>-oav</code>会将每一帧的时间与平均角度写入一个xvg文件. <code>-oall</code>会输出单独的角度. <code>-oh</code>输出角度的直方图. 分格的宽度由<code>-binw</code>设置. 对<code>-oav</code>和<code>-oh</code>, 会计算<code>-group1</code>中每个选择的单独平均/直方图.</p>
+有三个输出选项: <code>-oav</code>会将每一帧的时间与平均角度写入一个xvg文件. <code>-oall</code>会输出单独的角度. <code>-oh</code>输出角度的直方图. 分格的宽度由<code>-binw</code>设置. 对<code>-oav</code>和<code>-oh</code>, 会计算<code>-group1</code>中每个选择的单独平均/直方图.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -5692,11 +5692,11 @@ End your selection with an empty line or a zero.
             [-[no]renumber]
 </code></pre>
 
-<p><code>gmx genconf</code>程序对给定的坐标文件进行简单的堆叠, 就像小孩子玩积木一样. 该程序会根据用户定义的比例(<code>-nbox</code>)创建一个网格, 格点间的额外空间由<code>-dist</code>指定.</p>
+<code>gmx genconf</code>程序对给定的坐标文件进行简单的堆叠, 就像小孩子玩积木一样. 该程序会根据用户定义的比例(<code>-nbox</code>)创建一个网格, 格点间的额外空间由<code>-dist</code>指定.
 
-<p>指定<code>-rot</code>选项时, 程序不会检查格点上分子之间的重叠. 建议输入文件中的盒子边长至少等于原子坐标与范德华半径之和.</p>
+指定<code>-rot</code>选项时, 程序不会检查格点上分子之间的重叠. 建议输入文件中的盒子边长至少等于原子坐标与范德华半径之和.
 
-<p>如果给出了可选的轨迹文件, 不会产生构象, 但会从文件中读取构象, 经过适当平移后创建格点.</p>
+如果给出了可选的轨迹文件, 不会产生构象, 但会从文件中读取构象, 经过适当平移后创建格点.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -5802,13 +5802,13 @@ End your selection with an empty line or a zero.
            [-rmin ] [-seed ] [-conc ] [-[no]neutral]
 </code></pre>
 
-<p><code>gmx genion</code>用单原子离子随机地取代溶剂分子. 溶剂分子组应该连续, 且所有分子的原子数应该相同. 用户应该将离子添加到拓扑文件中, 或使用<code>-p</code>选项自动修改拓扑文件.</p>
+<code>gmx genion</code>用单原子离子随机地取代溶剂分子. 溶剂分子组应该连续, 且所有分子的原子数应该相同. 用户应该将离子添加到拓扑文件中, 或使用<code>-p</code>选项自动修改拓扑文件.
 
-<p>在所有力场中, 离子的分子类型, 残基名称和原子名称都是大写的元素名称且不含符号. 分子名称应使用<code>-pname</code>或<code>-nname</code>给出, 并且拓扑文件的<code>[ molecules ]</code>段也要相应地更新, 可以手动更新或使用<code>-p</code>选项. 不要使用原子名称!</p>
+在所有力场中, 离子的分子类型, 残基名称和原子名称都是大写的元素名称且不含符号. 分子名称应使用<code>-pname</code>或<code>-nname</code>给出, 并且拓扑文件的<code>[ molecules ]</code>段也要相应地更新, 可以手动更新或使用<code>-p</code>选项. 不要使用原子名称!
 
-<p>具有多个电荷态的离子会添加多重度, 不含符号, 只用于非常见态.</p>
+具有多个电荷态的离子会添加多重度, 不含符号, 只用于非常见态.
 
-<p>对更大的离子, 例如硫酸根, 我们建议使用<code>gmx insert-molecules</code></p>
+对更大的离子, 例如硫酸根, 我们建议使用<code>gmx insert-molecules</code>
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -5914,9 +5914,9 @@ End your selection with an empty line or a zero.
 
 ### 附加说明
 
-<p>在给蛋白质添加了水环境之后, 一般要在水环境中添加离子, 使模拟体系更接近真实体系. 如果体系中的蛋白质本身已经带了静电荷, 那么就更要给体系加几个带相反电荷的离子, 使体系处于电中性.</p>
+在给蛋白质添加了水环境之后, 一般要在水环境中添加离子, 使模拟体系更接近真实体系. 如果体系中的蛋白质本身已经带了静电荷, 那么就更要给体系加几个带相反电荷的离子, 使体系处于电中性.
 
-<p>几个常用选项的说明:</p>
+几个常用选项的说明:
 
 <ul class="incremental">
 <li><code>-np/-nn/-conc</code>: 带正/负电离子的数目.<br/>
@@ -5932,7 +5932,7 @@ End your selection with an empty line or a zero.
 <pre><code>gmx genion -s topol.tpr -o system_ion.pdb -p system.top -np 100 -pname Na -nn 100 -nname Cl
 </code></pre>
 
-<p>添加100个Na+离子和100个Cl离子, 输出文件为<code>system_ion.pdb</code>文件.</p>
+添加100个Na+离子和100个Cl离子, 输出文件为<code>system_ion.pdb</code>文件.
 
 ## gmx genrestr: 生成索引组的位置限制或距离限制(翻译: 廖华东)
 
@@ -5942,13 +5942,13 @@ End your selection with an empty line or a zero.
              [-disre_up2 ] [-cutoff ] [-[no]constr]
 </code></pre>
 
-<p>基于<code>-f</code>指定的文件内容, <code>gmx genrestr</code>为拓扑生成一个<code>#include</code>头文件, 其中包含一个原子编号列表以及x, y和z三个方向的力常数. 也可以在命令行中指定单一的各向同性力常数, 而不是给出三个分量.</p>
+基于<code>-f</code>指定的文件内容, <code>gmx genrestr</code>为拓扑生成一个<code>#include</code>头文件, 其中包含一个原子编号列表以及x, y和z三个方向的力常数. 也可以在命令行中指定单一的各向同性力常数, 而不是给出三个分量.
 
-<p><strong>警告</strong>: 位置限制是分子内的相互作用, 因此在拓扑文件中它们必须被包含在正确的<code>[ moleculetype ]</code>段中. 而<code>[ position_restraints ]</code>段中的原子索引必须在相应分子类型的原子索引范围之内. 因为在每个分子类型中原子编号都是从1开始的, 而在<code>gmx genrestr</code>命令的输入文件中却是从1开始连续编号, 所以<code>gmx genrestr</code>命令只会对第一个分子生成有用的文件. 你可能需要编辑生成的索引文件以删除第一个分子后面的原子, 或构建一个合适的索引组作为<code>gmx genrestr</code>的输入.</p>
+<strong>警告</strong>: 位置限制是分子内的相互作用, 因此在拓扑文件中它们必须被包含在正确的<code>[ moleculetype ]</code>段中. 而<code>[ position_restraints ]</code>段中的原子索引必须在相应分子类型的原子索引范围之内. 因为在每个分子类型中原子编号都是从1开始的, 而在<code>gmx genrestr</code>命令的输入文件中却是从1开始连续编号, 所以<code>gmx genrestr</code>命令只会对第一个分子生成有用的文件. 你可能需要编辑生成的索引文件以删除第一个分子后面的原子, 或构建一个合适的索引组作为<code>gmx genrestr</code>的输入.
 
-<p><code>-of</code>选项可生成一个用于冻结原子的索引文件. 在这种情况下, 输入文件必须是<code>.pdb</code>文件.</p>
+<code>-of</code>选项可生成一个用于冻结原子的索引文件. 在这种情况下, 输入文件必须是<code>.pdb</code>文件.
 
-<p>使用<code>-disre</code>选项会生成距离限制而非位置限制的半个矩阵. 该矩阵通常用于蛋白质中的C<sub>α</sub>原子, 这样可以维持一个蛋白质的总体构象而不必将其绑定到特定位置(使用位置限制时).</p>
+使用<code>-disre</code>选项会生成距离限制而非位置限制的半个矩阵. 该矩阵通常用于蛋白质中的C<sub>α</sub>原子, 这样可以维持一个蛋白质的总体构象而不必将其绑定到特定位置(使用位置限制时).
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -6046,11 +6046,11 @@ End your selection with an empty line or a zero.
            [-[no]rmvsbds] [-maxwarn ] [-[no]zero] [-[no]renum]
 </code></pre>
 
-<p><code>gmx grompp</code>(gromacs预处理器)读取分子的拓扑文件, 检查其合理性, 并将拓扑从分子描述拓展到原子描述. 拓扑文件包含了分子类型和分子数目的信息, 预处理器会复制每个需要的分子. 对分子类型的数目没有限制. 键和键角可以转换为约束, 对氢原子和重原子独立进行. 然后读入坐标文件, 如果需要可以由Maxwell分布生成速度. <code>gmx grompp</code>还会读取用于<code>gmx mdrun</code>的参数(例如, MD的步数, 时间步长和截断)以及其他一些参数, 如NEMD参数. 程序会对这些参数进行校正以使得净加速度为零. 程序最终会生成一个二进制文件, 它可以单独地作为MD程序的输入文件.</p>
+<code>gmx grompp</code>(gromacs预处理器)读取分子的拓扑文件, 检查其合理性, 并将拓扑从分子描述拓展到原子描述. 拓扑文件包含了分子类型和分子数目的信息, 预处理器会复制每个需要的分子. 对分子类型的数目没有限制. 键和键角可以转换为约束, 对氢原子和重原子独立进行. 然后读入坐标文件, 如果需要可以由Maxwell分布生成速度. <code>gmx grompp</code>还会读取用于<code>gmx mdrun</code>的参数(例如, MD的步数, 时间步长和截断)以及其他一些参数, 如NEMD参数. 程序会对这些参数进行校正以使得净加速度为零. 程序最终会生成一个二进制文件, 它可以单独地作为MD程序的输入文件.
 
-<p><code>gmx grompp</code>使用来自拓扑文件的原子名称. 当坐标文件中(选项<code>-c</code>)的原子名称与拓扑文件中的不一致时, 会产生警告. 注意, 原子名称与模拟无关, 因为生成相互作用参数只使用了原子类型.</p>
+<code>gmx grompp</code>使用来自拓扑文件的原子名称. 当坐标文件中(选项<code>-c</code>)的原子名称与拓扑文件中的不一致时, 会产生警告. 注意, 原子名称与模拟无关, 因为生成相互作用参数只使用了原子类型.
 
-<p><code>gmx grompp</code>使用内置的预处理器来解决包含, 宏等问题. 预处理器支持下面的关键词:</p>
+<code>gmx grompp</code>使用内置的预处理器来解决包含, 宏等问题. 预处理器支持下面的关键词:
 
 <pre><code>#ifdef VARIABLE
 #ifndef VARIABLE
@@ -6062,25 +6062,25 @@ End your selection with an empty line or a zero.
 #include &lt;filename&gt;
 </code></pre>
 
-<p>在<code>.mdp</code>文件中, 拓扑文件中的这些语句的功能可以通过以下两个选项来模块化：</p>
+在<code>.mdp</code>文件中, 拓扑文件中的这些语句的功能可以通过以下两个选项来模块化：
 
 <pre><code>define = -DVARIABLE1 -DVARIABLE2
 include = -I/home/john/doe
 </code></pre>
 
-<p>要了解更多的信息, 可以学习C语言程序的教材. 指定<code>-pp</code>选项可以输出预处理的拓扑文件, 这样你就可以验证其内容了.</p>
+要了解更多的信息, 可以学习C语言程序的教材. 指定<code>-pp</code>选项可以输出预处理的拓扑文件, 这样你就可以验证其内容了.
 
-<p>当使用位置限制时, 可以使用<code>-r</code>选项提供一个包含限制坐标的文件, 否则将会使用相对于来自<code>-c</code>选项的构象进行限制. 对自由能计算, B拓扑的坐标可使用<code>-rb</code>提供, 否则它们将等同于A拓扑的坐标.</p>
+当使用位置限制时, 可以使用<code>-r</code>选项提供一个包含限制坐标的文件, 否则将会使用相对于来自<code>-c</code>选项的构象进行限制. 对自由能计算, B拓扑的坐标可使用<code>-rb</code>提供, 否则它们将等同于A拓扑的坐标.
 
-<p>起始坐标可以由<code>-t</code>提供的轨迹文件中读取. 程序会读取最后一帧的坐标和速度, 除非使用了<code>-time</code>选项. 只有当这些信息缺失时才会使用由<code>-c</code>提供的文件中的坐标. 注意, 当<code>.mdp</code>文件中设置了<code>gen_vel = yes</code>时, 不会使用文件中的速度信息. 可以使用选项<code>-e</code>提供能量文件, 以读取Nose-Hoover和/或Parrinello-Rahman耦合变量.</p>
+起始坐标可以由<code>-t</code>提供的轨迹文件中读取. 程序会读取最后一帧的坐标和速度, 除非使用了<code>-time</code>选项. 只有当这些信息缺失时才会使用由<code>-c</code>提供的文件中的坐标. 注意, 当<code>.mdp</code>文件中设置了<code>gen_vel = yes</code>时, 不会使用文件中的速度信息. 可以使用选项<code>-e</code>提供能量文件, 以读取Nose-Hoover和/或Parrinello-Rahman耦合变量.
 
-<p><code>gmx grompp</code>可用于重启模拟(保持连续), 只需要使用<code>-t</code>选项提供一个检查点文件即可. 然而, 如果只是简单地改变运行步数以延长模拟, 使用<code>gmx convert-tpr</code>比使用<code>gmx grompp</code>更方便. 你只需要使用<code>-cpi</code>选项将旧的检查点文件直接提供给<code>gmx mdrun</code>即可. 如果想要改变系综或是输出频率等, 建议使用<code>-t</code>为<code>gmx grompp</code>提供检查点文件, 并使用<code>-f</code>提供新的<code>.mdp</code>文件.</p>
+<code>gmx grompp</code>可用于重启模拟(保持连续), 只需要使用<code>-t</code>选项提供一个检查点文件即可. 然而, 如果只是简单地改变运行步数以延长模拟, 使用<code>gmx convert-tpr</code>比使用<code>gmx grompp</code>更方便. 你只需要使用<code>-cpi</code>选项将旧的检查点文件直接提供给<code>gmx mdrun</code>即可. 如果想要改变系综或是输出频率等, 建议使用<code>-t</code>为<code>gmx grompp</code>提供检查点文件, 并使用<code>-f</code>提供新的<code>.mdp</code>文件.
 
-<p>默认情况下, 所有由构建虚拟位点引入的具有恒定能量的键合相互作用都会被移除. 如果此恒定能量不为零, 将会导致总能量移动. 所有键合相互作用都可以通过关闭<code>-rmvsbds</code>来维持. 另外, 所有因虚拟位点构建引入的距离约束都具有恒定能量, 它们都会被移除. 如果仍然存在涉及虚拟位点的任何约束, 将导致致命错误.</p>
+默认情况下, 所有由构建虚拟位点引入的具有恒定能量的键合相互作用都会被移除. 如果此恒定能量不为零, 将会导致总能量移动. 所有键合相互作用都可以通过关闭<code>-rmvsbds</code>来维持. 另外, 所有因虚拟位点构建引入的距离约束都具有恒定能量, 它们都会被移除. 如果仍然存在涉及虚拟位点的任何约束, 将导致致命错误.
 
-<p>为验证运行输入文件, 请注意屏幕上显示的所有警告, 并对必要的警告加以纠正. 此外也需要查看<code>mdout.mdp</code>文件的内容, 其中包括注释行以及<code>gmx grompp</code>读入的输入信息. 如果有疑问, 你可以使用<code>-debug</code>选项启动<code>gmx grompp</code>, 这将会生成一个<code>grompp.log</code>文件(以及真正的调试信息), 里面包含了更多的信息. 你可以使用<code>gmx dump</code>程序查看运行输入文件的内容. <code>gmx check</code>可用于比较两个运行输入文件的内容.</p>
+为验证运行输入文件, 请注意屏幕上显示的所有警告, 并对必要的警告加以纠正. 此外也需要查看<code>mdout.mdp</code>文件的内容, 其中包括注释行以及<code>gmx grompp</code>读入的输入信息. 如果有疑问, 你可以使用<code>-debug</code>选项启动<code>gmx grompp</code>, 这将会生成一个<code>grompp.log</code>文件(以及真正的调试信息), 里面包含了更多的信息. 你可以使用<code>gmx dump</code>程序查看运行输入文件的内容. <code>gmx check</code>可用于比较两个运行输入文件的内容.
 
-<p><code>-maxwarn</code>选项可用于覆盖<code>gmx grompp</code>给出的警告, 否则会停止输出. 在某些情况下, 警告无关紧要, 但大多数情况下并非如此. 建议用户在使用这个选项绕过这些警告之前认真阅读并理解输出信息.</p>
+<code>-maxwarn</code>选项可用于覆盖<code>gmx grompp</code>给出的警告, 否则会停止输出. 在某些情况下, 警告无关紧要, 但大多数情况下并非如此. 建议用户在使用这个选项绕过这些警告之前认真阅读并理解输出信息.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -6222,11 +6222,11 @@ include = -I/home/john/doe
            [-endfit ]
 </code></pre>
 
-<p><code>gmx gyrate</code>用于计算分子的回旋半径, 分子关于X, Y和Z轴的回旋半径, 并给出它们随时间的变化关系. 计算时会明确地使用原子的质量权重.</p>
+<code>gmx gyrate</code>用于计算分子的回旋半径, 分子关于X, Y和Z轴的回旋半径, 并给出它们随时间的变化关系. 计算时会明确地使用原子的质量权重.
 
-<p>将分析组划分为大小相同的几部分后, 可使用<code>-nmol</code>选项可以计算多个分子的回旋半径.</p>
+将分析组划分为大小相同的几部分后, 可使用<code>-nmol</code>选项可以计算多个分子的回旋半径.
 
-<p>使用<code>-nz</code>选项可计算沿Z轴方向X-Y切面内的2D回旋半径.</p>
+使用<code>-nz</code>选项可计算沿Z轴方向X-Y切面内的2D回旋半径.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -6362,7 +6362,7 @@ include = -I/home/john/doe
 
 ### 补充说明
 
-<p>蛋白质的回旋半径反映了蛋白质分子的体积和形状. 同一体系的回旋半径越大, 说明体系越膨松.</p>
+蛋白质的回旋半径反映了蛋白质分子的体积和形状. 同一体系的回旋半径越大, 说明体系越膨松.
 
 ## gmx h2order: 计算水分子的取向(翻译: 嘉晔, 严立京)
 
@@ -6372,7 +6372,7 @@ include = -I/home/john/doe
             [-sl ]
 </code></pre>
 
-<p><code>gmx h2order</code>用于计算水分子相对于盒子法向的取向, 确定水分子偶极矩与盒子轴线间夹角的余弦平均值. 计算时盒子被划分为许多切片, 程序会输出每一切片的平均取向. 根据氧原子的位置, 每一时间帧中的每个水分子都被归属到某一切片中. 如果使用了<code>-nm</code>选项, 程序将计算水分子偶极与从质心到氧原子的轴线之间的夹角, 而不是偶极与盒子轴线间的夹角.</p>
+<code>gmx h2order</code>用于计算水分子相对于盒子法向的取向, 确定水分子偶极矩与盒子轴线间夹角的余弦平均值. 计算时盒子被划分为许多切片, 程序会输出每一切片的平均取向. 根据氧原子的位置, 每一时间帧中的每个水分子都被归属到某一切片中. 如果使用了<code>-nm</code>选项, 程序将计算水分子偶极与从质心到氧原子的轴线之间的夹角, 而不是偶极与盒子轴线间的夹角.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -6482,13 +6482,13 @@ include = -I/home/john/doe
           [-fitfn ] [-beginfit ] [-endfit ]
 </code></pre>
 
-<p><code>gmx hbond</code>用于计算和分析氢键. 氢键是由氢原子-施体-受体所成角度(0为扩展)的截断值与施体-受体之间距离(当使用<code>-noda</code>时为氢原子-受体距离)的截断值共同决定的. OH和NH被认作氢键施体, O总是作为氢键受体, N默认为受体, 但可以利用<code>-nitacc</code>更改为施体. 哑的氢原子被假定为与前面的第一个非氢原子相连.</p>
+<code>gmx hbond</code>用于计算和分析氢键. 氢键是由氢原子-施体-受体所成角度(0为扩展)的截断值与施体-受体之间距离(当使用<code>-noda</code>时为氢原子-受体距离)的截断值共同决定的. OH和NH被认作氢键施体, O总是作为氢键受体, N默认为受体, 但可以利用<code>-nitacc</code>更改为施体. 哑的氢原子被假定为与前面的第一个非氢原子相连.
 
-<p>你需要指定用于分析的两个组, 它们必须完全相同或者彼此之间无任何重叠. 程序会分析两组间形成的所有氢键.</p>
+你需要指定用于分析的两个组, 它们必须完全相同或者彼此之间无任何重叠. 程序会分析两组间形成的所有氢键.
 
-<p>如果设置了<code>-shell</code>, 就需要指定一个额外的索引组, 其中应该只包含一个原子. 在这种情况下, 计算时只会考虑距离这个原子某一壳层距离范围内的原子之间所形成的氢键.</p>
+如果设置了<code>-shell</code>, 就需要指定一个额外的索引组, 其中应该只包含一个原子. 在这种情况下, 计算时只会考虑距离这个原子某一壳层距离范围内的原子之间所形成的氢键.
 
-<p>使用选项<code>-ac</code>, 会给出氢键的速率常数, 计算时采用Luzar和Chandler(Nature 394, 1996; J. Chem. Phys. 113:23, 2000)的模型或Markovitz和Agmon (J. Chem. Phys 129, 2008)的模型. 如果使用<code>-contact</code>选项分析接触动力学, n(t)可以定义为t时刻不处于接触距离r范围内的所有对(对应于<code>-r2</code>选项使用默认值0), 或者处于距离r2范围内的所有对(对应于使用<code>-r2</code>选项设置第二个截断值). 更多细节和定义请参考上面提到的文献.</p>
+使用选项<code>-ac</code>, 会给出氢键的速率常数, 计算时采用Luzar和Chandler(Nature 394, 1996; J. Chem. Phys. 113:23, 2000)的模型或Markovitz和Agmon (J. Chem. Phys 129, 2008)的模型. 如果使用<code>-contact</code>选项分析接触动力学, n(t)可以定义为t时刻不处于接触距离r范围内的所有对(对应于<code>-r2</code>选项使用默认值0), 或者处于距离r2范围内的所有对(对应于使用<code>-r2</code>选项设置第二个截断值). 更多细节和定义请参考上面提到的文献.
 
 <pre><code>[ selected ]
 20 21 24
@@ -6496,9 +6496,9 @@ include = -I/home/john/doe
 1 3 6
 </code></pre>
 
-<p>注意, 三联对需要处于同一行中. 每个原子三联对指定了要分析的氢键, 也要注意计算前不会对原子类型进行核对.</p>
+注意, 三联对需要处于同一行中. 每个原子三联对指定了要分析的氢键, 也要注意计算前不会对原子类型进行核对.
 
-<p><strong>输出</strong></p>
+<strong>输出</strong>
 
 <ul class="incremental">
 <li><code>-num</code>: 随时间变化的氢键数目</li>
@@ -6512,7 +6512,7 @@ include = -I/home/john/doe
 <li><code>-nhbdist</code>: 计算每个氢原子的氢键数, 以便将结果与Raman光谱相比较.</li>
 </ul>
 
-<p>注意: 选项<code>-ac</code>, <code>-life</code>, <code>-hbn</code>和<code>-hbm</code>需要的内存量正比于所选组中施体的总数目乘上受体的总数目.</p>
+注意: 选项<code>-ac</code>, <code>-life</code>, <code>-hbn</code>和<code>-hbm</code>需要的内存量正比于所选组中施体的总数目乘上受体的总数目.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -6769,15 +6769,15 @@ include = -I/home/john/doe
 
 ### 补充说明
 
-<p>使用<code>-hbn</code>选项时默认输出<code>hbond.ndx</code>文件, 其中列出了两个所选组中的氢键受体, 施体, 施体氢和两个组间氢键的Acceptor-Donor-Hydrogen的原子序号.
-其中<code>donors_hydrogens</code>部分数据格式类似如下:</p>
+使用<code>-hbn</code>选项时默认输出<code>hbond.ndx</code>文件, 其中列出了两个所选组中的氢键受体, 施体, 施体氢和两个组间氢键的Acceptor-Donor-Hydrogen的原子序号.
+其中<code>donors_hydrogens</code>部分数据格式类似如下:
 
 <pre><code>1    2    1    3    1    4
 18   19
 56   57
 </code></pre>
 
-<p>示例所用为CRM1-NES binding domain, 首个残基为GLU, 上面的第一行1所指为N(donor), 之后2, 3, 4为N上所带的H(hydogens). 18, 19也是一样.</p>
+示例所用为CRM1-NES binding domain, 首个残基为GLU, 上面的第一行1所指为N(donor), 之后2, 3, 4为N上所带的H(hydogens). 18, 19也是一样.
 
 ## gmx helix: 计算α螺旋结构的基本性质(翻译: 李卫星)
 
@@ -6787,7 +6787,7 @@ include = -I/home/john/doe
           [-[no]ev] [-ahxstart ] [-ahxend ]
 </code></pre>
 
-<p><code>gmx helix</code>计算各种类型螺旋的性质. 程序首先会检查多肽段, 找到最长的螺旋部分, 这由氢键和φ/ψ角度确定的. 再将其拟合成一个绕z轴的理想螺旋, 以原点居中. 然后计算以下性质:</p>
+<code>gmx helix</code>计算各种类型螺旋的性质. 程序首先会检查多肽段, 找到最长的螺旋部分, 这由氢键和φ/ψ角度确定的. 再将其拟合成一个绕z轴的理想螺旋, 以原点居中. 然后计算以下性质:
 
 <ol class="incremental">
 <li>螺旋半径(<code>radius.xvg</code>输出文件). 这仅仅是二维平面内所有C<sub>α</sub>原子的RMS偏差, 计算方法为sqrt((sum_i (x^2(i)+y^2(i)))/N), 其中N为骨干原子数. 理想螺旋的半径为0.23 nm.</li>
@@ -6912,15 +6912,15 @@ include = -I/home/john/doe
                 [-[no]incremental]
 </code></pre>
 
-<p><code>gmx helixorient</code>用于计算α螺旋内部平均轴的坐标和方向, C<sub>α</sub>与(可选)侧链原子相对于轴的的方向/向量.</p>
+<code>gmx helixorient</code>用于计算α螺旋内部平均轴的坐标和方向, C<sub>α</sub>与(可选)侧链原子相对于轴的的方向/向量.
 
-<p>对输入, 你需要指定索引组, 其中的C<sub>α</sub>原子对应于连续残基的α螺旋. 侧链方向需要另一个原子数目相同的索引组, 包括每个残基中代表残基的重原子.</p>
+对输入, 你需要指定索引组, 其中的C<sub>α</sub>原子对应于连续残基的α螺旋. 侧链方向需要另一个原子数目相同的索引组, 包括每个残基中代表残基的重原子.
 
-<p><strong>注意</strong>, 此程序不会对结构进行叠合.</p>
+<strong>注意</strong>, 此程序不会对结构进行叠合.
 
-<p>我们需要四个C<sub>α</sub>的坐标来定义α螺旋轴的局部方向.</p>
+我们需要四个C<sub>α</sub>的坐标来定义α螺旋轴的局部方向.
 
-<p>倾斜/旋转根据欧拉旋转计算, 其中定义的螺旋轴作为x轴方向, 残基/C<sub>α</sub>向量作为y轴方向, z轴方向由它们的叉积确定. 我们使用Y-Z-X次序的欧拉旋转, 这意味着我们 (1) 首先倾斜螺旋轴, (2) 然后使其与残基向量正交, (3) 最终对齐进行旋转. 为便于调试或满足其他用途, 我们在<code>theta[1-3].xvg</code>文件中输出了实际的欧拉旋转角.</p>
+倾斜/旋转根据欧拉旋转计算, 其中定义的螺旋轴作为x轴方向, 残基/C<sub>α</sub>向量作为y轴方向, z轴方向由它们的叉积确定. 我们使用Y-Z-X次序的欧拉旋转, 这意味着我们 (1) 首先倾斜螺旋轴, (2) 然后使其与残基向量正交, (3) 最终对齐进行旋转. 为便于调试或满足其他用途, 我们在<code>theta[1-3].xvg</code>文件中输出了实际的欧拉旋转角.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -7051,9 +7051,9 @@ include = -I/home/john/doe
              [-tblock ] [-nlevel ]
 </code></pre>
 
-<p><code>gmx hydorder</code>计算一个给定原子周围的四面体序参数, 可同时计算角和距离的序参数. 更多细节请参考 P.-L. Chau and A.J. Hardwick, <em>Mol. Phys.</em>, 93, (1998), 511&#8211;518.</p>
+<code>gmx hydorder</code>计算一个给定原子周围的四面体序参数, 可同时计算角和距离的序参数. 更多细节请参考 P.-L. Chau and A.J. Hardwick, <em>Mol. Phys.</em>, 93, (1998), 511&#8211;518.
 
-<p><code>gmx hydorder</code>计算盒子内3维网格中的序参数. 当盒子中存在两相时, 用户可以通过指定参数<code>-sgang1</code>和<code>-sgang2</code>来定义不同时刻分开两相的二维界面(明智地选择这些参数很重要).</p>
+<code>gmx hydorder</code>计算盒子内3维网格中的序参数. 当盒子中存在两相时, 用户可以通过指定参数<code>-sgang1</code>和<code>-sgang2</code>来定义不同时刻分开两相的二维界面(明智地选择这些参数很重要).
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -7172,13 +7172,13 @@ include = -I/home/john/doe
                      [-[no]allpair]
 </code></pre>
 
-<p><code>gmx insert-molecules</code>命令可以插入<code>-nmol</code>个体系的副本到盒子中, 体系由<code>-ci</code>输入文件定义. 插入的分子可以填充由<code>-f</code>指定的溶质分子构型中的空位, 或者填充由<code>-box</code>指定的空盒子. 同时指定<code>-f</code>和<code>-box</code>选项等同于<code>-f</code>, 但插入前会在溶质周围放置一个新盒子. 该命令运行过程中, 坐标文件中的速度不予考虑.</p>
+<code>gmx insert-molecules</code>命令可以插入<code>-nmol</code>个体系的副本到盒子中, 体系由<code>-ci</code>输入文件定义. 插入的分子可以填充由<code>-f</code>指定的溶质分子构型中的空位, 或者填充由<code>-box</code>指定的空盒子. 同时指定<code>-f</code>和<code>-box</code>选项等同于<code>-f</code>, 但插入前会在溶质周围放置一个新盒子. 该命令运行过程中, 坐标文件中的速度不予考虑.
 
-<p>默认情况下, 插入的位置是随机的(初始随机数种子由<code>-seed</code>设置). 程序将会迭代直至将<code>-nmol</code>个分子插入盒子中. 对某一位置, 若已存在的任意原子和插入分子任意原子之间的距离小于两个原子范德华半径之和, 则不会插入分子. 程序会读取数据文件(<code>vdwradii.dat</code>)中的范德华半径, 并根据<code>-scale</code>选项的设置进行缩放. 若不能在数据文件中找到所需的半径值, 相应的原子将通过<code>-radius</code>来设定(未缩放)距离.</p>
+默认情况下, 插入的位置是随机的(初始随机数种子由<code>-seed</code>设置). 程序将会迭代直至将<code>-nmol</code>个分子插入盒子中. 对某一位置, 若已存在的任意原子和插入分子任意原子之间的距离小于两个原子范德华半径之和, 则不会插入分子. 程序会读取数据文件(<code>vdwradii.dat</code>)中的范德华半径, 并根据<code>-scale</code>选项的设置进行缩放. 若不能在数据文件中找到所需的半径值, 相应的原子将通过<code>-radius</code>来设定(未缩放)距离.
 
-<p>停止前共进行<code>-nmol</code>*<code>-try</code>次尝试插入. 若存在一些小的空隙需要填充, 可以增加<code>-try</code>的值. <code>-rot</code>选项用于指定在尝试插入前是否对插入分子进行随机旋转.</p>
+停止前共进行<code>-nmol</code>*<code>-try</code>次尝试插入. 若存在一些小的空隙需要填充, 可以增加<code>-try</code>的值. <code>-rot</code>选项用于指定在尝试插入前是否对插入分子进行随机旋转.
 
-<p>作为替代, 也可以仅将分子插入到<code>positions.dat</code>(<code>-ip</code>)文件中指定的特定位置. 此文件应包含三列信息(x,y,z), 它们给出了相对于输入分子位置(<code>-ci</code>)的偏离位移. 因此, 如果该文件应包含绝对位置, 使用<code>gmx insert-molecules</code>命令前必须把分子的中心置于(0, 0, 0)(例如, 使用<code>gmx editconf -center</code>). 该文件中以<code>#</code>开始的内容为注释, 会被忽略. <code>-dr</code>选项定义了插入尝试中允许的最大位移. <code>-try</code>和<code>-rot</code>以默认模式运行(见上文).</p>
+作为替代, 也可以仅将分子插入到<code>positions.dat</code>(<code>-ip</code>)文件中指定的特定位置. 此文件应包含三列信息(x,y,z), 它们给出了相对于输入分子位置(<code>-ci</code>)的偏离位移. 因此, 如果该文件应包含绝对位置, 使用<code>gmx insert-molecules</code>命令前必须把分子的中心置于(0, 0, 0)(例如, 使用<code>gmx editconf -center</code>). 该文件中以<code>#</code>开始的内容为注释, 会被忽略. <code>-dr</code>选项定义了插入尝试中允许的最大位移. <code>-try</code>和<code>-rot</code>以默认模式运行(见上文).
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -7292,9 +7292,9 @@ include = -I/home/john/doe
         [-Clj ] [-Cqq ] [-ligand ]
 </code></pre>
 
-<p><code>gmx lie</code>基于对非键能的能量分析估算自由能. 程序需要包含Coul-(A-B), LJ-SR(A-B)等能量项的能量文件.</p>
+<code>gmx lie</code>基于对非键能的能量分析估算自由能. 程序需要包含Coul-(A-B), LJ-SR(A-B)等能量项的能量文件.
 
-<p>为正确使用<code>g_lie</code>, 需要进行两次模拟: 一次是目标分子与受体结合的模拟, 一次是目标分子在水中的模拟. 两者都需要利用<code>energygrps</code>以使Coul-SR(A-B), LJ-SR(A-B)等能量项写入<code>.edr</code>文件. 水中分子的模拟数据可提供-Elj和-Eqq的合适值.</p>
+为正确使用<code>g_lie</code>, 需要进行两次模拟: 一次是目标分子与受体结合的模拟, 一次是目标分子在水中的模拟. 两者都需要利用<code>energygrps</code>以使Coul-SR(A-B), LJ-SR(A-B)等能量项写入<code>.edr</code>文件. 水中分子的模拟数据可提供-Elj和-Eqq的合适值.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -7395,9 +7395,9 @@ include = -I/home/john/doe
              [-constF ]
 </code></pre>
 
-<p><code>gmx make_edi</code>用于产生一个主成分动力学(ED, essential dynamics)抽样的输入文件供<code>gmx mdrun</code>使用, 产生方法基于来自协方差矩阵(<code>gmx covar</code>)或简正模式分析(<code>gmx nmeig</code>)的特征向量. 在模拟过程中, ED抽样可用于沿集约坐标(特征向量)操控(生物)大分子的位置. 特别地, 通过促使体系沿这些集约坐标探测新的区域, ED抽样可用于提高MD模拟的抽样效率. 有大量的算法可以驱使体系沿特征向量运动(<code>-linfix</code>, <code>-linacc</code>, <code>-radfix</code>, <code>-radacc</code>, <code>-radcon</code>), 维持沿确定(系列)坐标的位置固定(<code>-linfix</code>), 或者仅仅监测位置在这些坐标上的投影(<code>-mon</code>)</p>
+<code>gmx make_edi</code>用于产生一个主成分动力学(ED, essential dynamics)抽样的输入文件供<code>gmx mdrun</code>使用, 产生方法基于来自协方差矩阵(<code>gmx covar</code>)或简正模式分析(<code>gmx nmeig</code>)的特征向量. 在模拟过程中, ED抽样可用于沿集约坐标(特征向量)操控(生物)大分子的位置. 特别地, 通过促使体系沿这些集约坐标探测新的区域, ED抽样可用于提高MD模拟的抽样效率. 有大量的算法可以驱使体系沿特征向量运动(<code>-linfix</code>, <code>-linacc</code>, <code>-radfix</code>, <code>-radacc</code>, <code>-radcon</code>), 维持沿确定(系列)坐标的位置固定(<code>-linfix</code>), 或者仅仅监测位置在这些坐标上的投影(<code>-mon</code>)
 
-<p>参考文献:</p>
+参考文献:
 
 <ul class="incremental">
 <li>A. Amadei, A.B.M. Linssen, B.L. de Groot, D.M.F. van Aalten and H.J.C. Berendsen; An efficient method for sampling the essential subspace of proteins., <em>J. Biomol. Struct. Dyn.</em> 13:615&#8211;626 (1996)</li>
@@ -7405,50 +7405,50 @@ include = -I/home/john/doe
 <li>B.L. de Groot, A.Amadei, R.M. Scheek, N.A.J. van Nuland and H.J.C. Berendsen; An extended sampling of the configurational space of HPr from E. coli, <em>Proteins: Struct. Funct. Gen.</em> 26: 314&#8211;322 (1996)</li>
 </ul>
 
-<p>运行时程序会提示选择一个或者多个索引组, 它们对应于特征向量, 参考结构, 目标位置等.</p>
+运行时程序会提示选择一个或者多个索引组, 它们对应于特征向量, 参考结构, 目标位置等.
 
-<p><code>-mon</code>: 监测坐标在选定特征向量上的投影</p>
+<code>-mon</code>: 监测坐标在选定特征向量上的投影
 
-<p><code>-linfix</code>: 沿选定特征向量进行固定步数的线性扩张</p>
+<code>-linfix</code>: 沿选定特征向量进行固定步数的线性扩张
 
-<p><code>-linacc</code>: 沿选定特征向量进行可接受线性扩张. (接受期望方向上的步进, 拒绝其他的)</p>
+<code>-linacc</code>: 沿选定特征向量进行可接受线性扩张. (接受期望方向上的步进, 拒绝其他的)
 
-<p><code>-radfix</code>: 沿选定特征向量进行固定步数的径向扩张.</p>
+<code>-radfix</code>: 沿选定特征向量进行固定步数的径向扩张.
 
-<p><code>-radacc</code>: 沿选定特征向量进行可接受径向扩张. (接受期望方向上的步进, 拒绝其他的). <strong>注意</strong>: 默认将使用起始MD结构作为第一次径向扩张循环的起点. 如果指定了<code>-ori</code>选项, 可以读入一个结构文件定义外部起点.</p>
+<code>-radacc</code>: 沿选定特征向量进行可接受径向扩张. (接受期望方向上的步进, 拒绝其他的). <strong>注意</strong>: 默认将使用起始MD结构作为第一次径向扩张循环的起点. 如果指定了<code>-ori</code>选项, 可以读入一个结构文件定义外部起点.
 
-<p><code>-radcon</code>: 沿选定特征向量进行可接受径向收缩, 收缩指向的目标结构由<code>-tar</code>选项指定.</p>
+<code>-radcon</code>: 沿选定特征向量进行可接受径向收缩, 收缩指向的目标结构由<code>-tar</code>选项指定.
 
-<p><strong>注意</strong>: 每个特征向量只能选择一次.</p>
+<strong>注意</strong>: 每个特征向量只能选择一次.
 
-<p><code>-outfrq</code>: 将投影等写入<code>.xvg</code>文件的频率(以步数为单位)</p>
+<code>-outfrq</code>: 将投影等写入<code>.xvg</code>文件的频率(以步数为单位)
 
-<p><code>-slope</code>: 可接受径向扩张的最小斜率. 如果半径的瞬时增长率(以nm/step为单位)小于规定数值, 将开始一个新的扩张循环.</p>
+<code>-slope</code>: 可接受径向扩张的最小斜率. 如果半径的瞬时增长率(以nm/step为单位)小于规定数值, 将开始一个新的扩张循环.
 
-<p><code>-maxedsteps</code>: 在开始一个新循环前, 径向扩张中每个循环的最大步数.</p>
+<code>-maxedsteps</code>: 在开始一个新循环前, 径向扩张中每个循环的最大步数.
 
-<p>并行实现的注意点: 由于ED抽样的&#8220;全局性&#8221;(集约坐标等), 至少在&#8220;蛋白质&#8221;方面, 从实现的角度看ED抽样并不太适合并行. 因为并行ED需要一些额外的通讯, 除非运行性能低于不受约束的MD模拟, 尤其是当进程数目很大和/或当ED组包含大量原子时.</p>
+并行实现的注意点: 由于ED抽样的&#8220;全局性&#8221;(集约坐标等), 至少在&#8220;蛋白质&#8221;方面, 从实现的角度看ED抽样并不太适合并行. 因为并行ED需要一些额外的通讯, 除非运行性能低于不受约束的MD模拟, 尤其是当进程数目很大和/或当ED组包含大量原子时.
 
-<p>同时请注意如果你的ED组包含不止一个蛋白质, 那么<code>.tpr</code>文件必须包含ED组的正确PBC表示. 查看一下参考结构的初始RMSD值, 这个数值在模拟一开始就会输出; 如果此数值远远高于期望值, 某个ED分子可能沿盒向量方向平移了几个单位.</p>
+同时请注意如果你的ED组包含不止一个蛋白质, 那么<code>.tpr</code>文件必须包含ED组的正确PBC表示. 查看一下参考结构的初始RMSD值, 这个数值在模拟一开始就会输出; 如果此数值远远高于期望值, 某个ED分子可能沿盒向量方向平移了几个单位.
 
-<p><code>gmx mdrun</code>程序中所有与ED相关的输出作为时间的函数都写在一个<code>.xvg</code>文件中, 输出的间隔步数由<code>-outfrq</code>指定.</p>
+<code>gmx mdrun</code>程序中所有与ED相关的输出作为时间的函数都写在一个<code>.xvg</code>文件中, 输出的间隔步数由<code>-outfrq</code>指定.
 
-<p><strong>注意</strong>, 如果一开始合并了多个<code>.edi</code>文件, 在一个模拟中你可以(在不同分子上)施加多个ED约束和洪泛势能. 约束的施加顺序按照它们出现在<code>.edi</code>文件中的顺序. 根据<code>.edi</code>输入文件中的指定, 对每个ED数据集, 输出文件中可能包含以下内容:</p>
+<strong>注意</strong>, 如果一开始合并了多个<code>.edi</code>文件, 在一个模拟中你可以(在不同分子上)施加多个ED约束和洪泛势能. 约束的施加顺序按照它们出现在<code>.edi</code>文件中的顺序. 根据<code>.edi</code>输入文件中的指定, 对每个ED数据集, 输出文件中可能包含以下内容:
 
 <ul class="incremental">
 <li>分子叠合到参考结构的RMSD值</li>
 <li>位置在选定特征向量上的投影</li>
 </ul>
 
-<p><strong>洪泛</strong></p>
+<strong>洪泛</strong>
 
-<p>使用<code>-flood</code>选项, 你可以指定使用哪个特征向量计算洪泛势能, 它将导致额外的力, 将结构排除出由协方差矩阵描述的某些区域. 如果你使用了<code>-restrain</code>选项, 势能将反转, 可以将结构保持在特定区域内.</p>
+使用<code>-flood</code>选项, 你可以指定使用哪个特征向量计算洪泛势能, 它将导致额外的力, 将结构排除出由协方差矩阵描述的某些区域. 如果你使用了<code>-restrain</code>选项, 势能将反转, 可以将结构保持在特定区域内.
 
-<p>模拟起始点通常是存储在<code>eigvec.trr</code>文件中的平均结构. 使用<code>-ori</code>选项, 可以把起始点更改为构象空间中的任意一个位置. 使用<code>-tau</code>, <code>-deltaF0</code>和<code>-Eflnull</code>选项, 你可以控制洪泛的行为. Efl为洪泛强度, 根据自适应洪泛的规则进行更新. Tau为自适应洪泛的时间常数, 大的τ值意味着自适应慢(即增长慢). DeltaF0为经过tau皮秒模拟之后想达到的洪泛强度. 如果想使Efl为常数, 可将<code>-tau</code>设置成零.</p>
+模拟起始点通常是存储在<code>eigvec.trr</code>文件中的平均结构. 使用<code>-ori</code>选项, 可以把起始点更改为构象空间中的任意一个位置. 使用<code>-tau</code>, <code>-deltaF0</code>和<code>-Eflnull</code>选项, 你可以控制洪泛的行为. Efl为洪泛强度, 根据自适应洪泛的规则进行更新. Tau为自适应洪泛的时间常数, 大的τ值意味着自适应慢(即增长慢). DeltaF0为经过tau皮秒模拟之后想达到的洪泛强度. 如果想使Efl为常数, 可将<code>-tau</code>设置成零.
 
-<p><code>-alpha</code>为控制洪泛势能宽度的经验参数. 当其值为2时, 对于蛋白质洪泛的大多数标准例子都能给出很好的结果. α基本用于考虑抽样的不完整性. 如果进行更多的抽样, 系综宽度将会增大, 这可以通过α&gt;1来模拟. 对限制, α&amp;#lt;1得到的限制势的宽度更小.</p>
+<code>-alpha</code>为控制洪泛势能宽度的经验参数. 当其值为2时, 对于蛋白质洪泛的大多数标准例子都能给出很好的结果. α基本用于考虑抽样的不完整性. 如果进行更多的抽样, 系综宽度将会增大, 这可以通过α&gt;1来模拟. 对限制, α&amp;#lt;1得到的限制势的宽度更小.
 
-<p>洪泛模拟的重新开始: 如果你想重新开始一个已经崩溃的洪泛模拟, 请在输出文件中找到deltaF和Efl的值, 然后手动地将它们分别放入<code>.edi</code>文件中DELTA_F0和EFL_NULL中.</p>
+洪泛模拟的重新开始: 如果你想重新开始一个已经崩溃的洪泛模拟, 请在输出文件中找到deltaF和Efl的值, 然后手动地将它们分别放入<code>.edi</code>文件中DELTA_F0和EFL_NULL中.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -7645,13 +7645,13 @@ include = -I/home/john/doe
              [-nice ] [-natoms ] [-[no]twin]
 </code></pre>
 
-<p>几乎每个GROMACS程序都需要使用索引组. 所有程序都可以生成默认的索引组. <strong>只有</strong> 需要 <strong>特殊</strong> 索引组的时候, 你才不得不使用<code>gmx make_ndx</code>. 一般情况下, 整个体系会有一个默认组, 蛋白质会有九个默认组, 每个其他的残基会有一个默认组.</p>
+几乎每个GROMACS程序都需要使用索引组. 所有程序都可以生成默认的索引组. <strong>只有</strong> 需要 <strong>特殊</strong> 索引组的时候, 你才不得不使用<code>gmx make_ndx</code>. 一般情况下, 整个体系会有一个默认组, 蛋白质会有九个默认组, 每个其他的残基会有一个默认组.
 
-<p>当没有提供索引文件时, <code>gmx make_ndx</code>也会生成这些默认组. 借助命令中的索引编辑器, 你可以选择原子, 残基或链的名称和数目. 如果提供了运行输入文件, 你也可以选择原子类型. 可以使用NOT, AND或OR等逻辑判断词, 你可以将索引组分成链, 残基会原子. 你也可以随意删除或重命名索引组.</p>
+当没有提供索引文件时, <code>gmx make_ndx</code>也会生成这些默认组. 借助命令中的索引编辑器, 你可以选择原子, 残基或链的名称和数目. 如果提供了运行输入文件, 你也可以选择原子类型. 可以使用NOT, AND或OR等逻辑判断词, 你可以将索引组分成链, 残基会原子. 你也可以随意删除或重命名索引组.
 
-<p>在索引编辑器和索引文件中, 原子编号都是从1开始的.</p>
+在索引编辑器和索引文件中, 原子编号都是从1开始的.
 
-<p>选项<code>-twin</code>可以复写所有索引组, 并对其施加<code>-natoms</code>的偏移. 在设置计算电生理双层膜时, 这个选项很有用.</p>
+选项<code>-twin</code>可以复写所有索引组, 并对其施加<code>-natoms</code>的偏移. 在设置计算电生理双层膜时, 这个选项很有用.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -7705,15 +7705,15 @@ include = -I/home/john/doe
 
 ### 附加说明
 
-<p>GROMACS的索引文件, 即index文件, 扩展名为<code>.ndx</code>, 可使用<code>make_ndx</code>程序生成.</p>
+GROMACS的索引文件, 即index文件, 扩展名为<code>.ndx</code>, 可使用<code>make_ndx</code>程序生成.
 
-<p>索引文件是GROMACS的重要文件, 使用它可以在模拟过程中为所欲为. 举一个简单的例子, 如果想详细了解HIV整合酶切割DNA的反应机理, 使用量子力学方法模拟反应位点的反应过程, 而对其他部位使用一般的分子力学方法进行模拟. 于是我们就面临一个对模拟体系进行分开定义的问题. 在GROMACS中, 我们可以使用索引文件来达到目的. 基本思路是这样的, 在索引文件中, 定义一个独立的组, 这个组包括反应位点附近的所有原子. 在模拟的<code>.mdp</code>文件中, 对这个组定义使用量子力学模拟. 对蛋白进行量子力学模拟时, 一般使用洋葱模型. 所谓洋葱模型, 就是对反应位点使用高水平的方法, 对距离反应位点一定半径范围内的, 使用低水平的方法, 然后其他部分使用分子力学方法. 在这种情况下, 就可以在索引文件中定义高水平方法组, 把需要使用高水平方法的原子放到这个组中; 再定义低水平方法组, 指定使用低水平方法的原子.</p>
+索引文件是GROMACS的重要文件, 使用它可以在模拟过程中为所欲为. 举一个简单的例子, 如果想详细了解HIV整合酶切割DNA的反应机理, 使用量子力学方法模拟反应位点的反应过程, 而对其他部位使用一般的分子力学方法进行模拟. 于是我们就面临一个对模拟体系进行分开定义的问题. 在GROMACS中, 我们可以使用索引文件来达到目的. 基本思路是这样的, 在索引文件中, 定义一个独立的组, 这个组包括反应位点附近的所有原子. 在模拟的<code>.mdp</code>文件中, 对这个组定义使用量子力学模拟. 对蛋白进行量子力学模拟时, 一般使用洋葱模型. 所谓洋葱模型, 就是对反应位点使用高水平的方法, 对距离反应位点一定半径范围内的, 使用低水平的方法, 然后其他部分使用分子力学方法. 在这种情况下, 就可以在索引文件中定义高水平方法组, 把需要使用高水平方法的原子放到这个组中; 再定义低水平方法组, 指定使用低水平方法的原子.
 
-<p>再举一个例子, 比如说在进行SMD(Steered Molecular Dynamics)时, 要对蛋白膜上的一个原子或者残基施加作用力, 那么可以建立一个索引文件, 在该文件中定义一个组, 把要施力的残基或者原子放到该组中. 然后在相应的文件中就可以使用该组了.</p>
+再举一个例子, 比如说在进行SMD(Steered Molecular Dynamics)时, 要对蛋白膜上的一个原子或者残基施加作用力, 那么可以建立一个索引文件, 在该文件中定义一个组, 把要施力的残基或者原子放到该组中. 然后在相应的文件中就可以使用该组了.
 
-<p><code>make_ndx</code>程序可用来选择原子组(要分析的某些特定原子或残基的ID标签)并创建索引文件. GROMACS已经定义了一些默认的组, 对普通分析可能够用了, 但如果你想进行更深入的分析, 如为了在模拟中固定某些特定的组, 或获得某些组的特殊能量信息, 则需要使用<code>make_ndx</code>程序来指定这些组.</p>
+<code>make_ndx</code>程序可用来选择原子组(要分析的某些特定原子或残基的ID标签)并创建索引文件. GROMACS已经定义了一些默认的组, 对普通分析可能够用了, 但如果你想进行更深入的分析, 如为了在模拟中固定某些特定的组, 或获得某些组的特殊能量信息, 则需要使用<code>make_ndx</code>程序来指定这些组.
 
-<p>运行<code>make_ndx</code>后, 可使用<code>r</code>选择残基, <code>a</code>选择原子, <code>name</code>对多组进行改名, 还可以使用<code>|</code>表示或运算, <code>&amp;</code>表示与运算. 下面是几个简单的例子:</p>
+运行<code>make_ndx</code>后, 可使用<code>r</code>选择残基, <code>a</code>选择原子, <code>name</code>对多组进行改名, 还可以使用<code>|</code>表示或运算, <code>&amp;</code>表示与运算. 下面是几个简单的例子:
 
 <ul class="incremental">
 <li><code>r 56</code>: 选择56号残基</li>
@@ -7724,13 +7724,13 @@ include = -I/home/john/doe
 <li><code>r 1-36 &amp; a C N CA</code>: 使用包含<code>&amp;</code>的命令指定只包含骨架原子的残基范围</li>
 </ul>
 
-<p>新建索引组的默认名称(如<code>r_1_36_37</code>)很繁琐, 可以使用<code>name</code>命令进行修改. 如<code>name 15 Terminal</code>可将组<code>15</code>的名称改为<code>Terminal</code>.
-修改后我们可以使用<code>v</code>命令查看名称是否修改成功, 使用<code>q</code>命令保存修改并退出.</p>
+新建索引组的默认名称(如<code>r_1_36_37</code>)很繁琐, 可以使用<code>name</code>命令进行修改. 如<code>name 15 Terminal</code>可将组<code>15</code>的名称改为<code>Terminal</code>.
+修改后我们可以使用<code>v</code>命令查看名称是否修改成功, 使用<code>q</code>命令保存修改并退出.
 
-<p>需要注意的一点就是, 对<code>make_ndx</code>的选择, 处理是由左向右依次执行的, <code>&amp;</code>和<code>|</code>没有优先级别之分.
-如<code>r 1-3 | r 5-9 &amp; CA</code>会先选择1&#8211;3, 5&#8211;9号残基, 再从中选择CA原子.</p>
+需要注意的一点就是, 对<code>make_ndx</code>的选择, 处理是由左向右依次执行的, <code>&amp;</code>和<code>|</code>没有优先级别之分.
+如<code>r 1-3 | r 5-9 &amp; CA</code>会先选择1&#8211;3, 5&#8211;9号残基, 再从中选择CA原子.
 
-<p>下面是使用示例:</p>
+下面是使用示例:
 
 <pre><code>There are:     0      OTHER residues
 There are:   960    PROTEIN residues
@@ -7755,7 +7755,7 @@ nr : group      !   'name' nr name  'splitch' nr   Enter: list groups
 &quot;name&quot;: group       'case': case sensitive          'q': save and quit
 </code></pre>
 
-<p>命令 <code>r 1 - 355</code></p>
+命令 <code>r 1 - 355</code>
 
 <pre><code>Found 5467 atoms with res.nr. in range 1-355
 
@@ -7773,9 +7773,9 @@ nr : group      !   'name' nr name  'splitch' nr   Enter: list groups
  10 r_1-355             :  5467 atoms
 </code></pre>
 
-<p>命令<br/>
+命令<br/>
 <code>name 10 SUB_H</code><br/>
-<code>10 &amp; 2</code></p>
+<code>10 &amp; 2</code>
 
 <pre><code>Copied index group 10 'SUB_H'
 Copied index group 2 'Protein-H'
@@ -7784,7 +7784,7 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
  11 SUB_H_&amp;_Protein-H   :  2783 atoms
 </code></pre>
 
-<p>命令 <code>name 11 SUB_H_HEAVY</code></p>
+命令 <code>name 11 SUB_H_HEAVY</code>
 
 <pre><code>  0 System              : 14571 atoms
   1 Protein             : 14571 atoms
@@ -7801,7 +7801,7 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
  12 SUB_H_BB            :  1065 atoms
 </code></pre>
 
-<p>命令 <code>splitch 1</code></p>
+命令 <code>splitch 1</code>
 
 <pre><code>Found 4 chains
 1:  5467 atoms (1 to 5467)
@@ -7810,7 +7810,7 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
 4:  1821 atoms (12751 to 14571)
 </code></pre>
 
-<p>命令 <code>del 5-13</code></p>
+命令 <code>del 5-13</code>
 
 <pre><code>  0 System              : 14571 atoms
   1 Protein             : 14571 atoms
@@ -7823,12 +7823,12 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
   8 SUB_L_BB            :   375 atoms
 </code></pre>
 
-<p>命令 <code>r 886 905</code></p>
+命令 <code>r 886 905</code>
 
 <pre><code>9 r_886_905           :    40 atoms
 </code></pre>
 
-<p>命令 <code>splitat 9</code></p>
+命令 <code>splitat 9</code>
 
 <pre><code>  0 System              : 14571 atoms
   1 Protein             : 14571 atoms
@@ -7855,10 +7855,10 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
  49 r_886_905_O_13774   :     1 atoms
 </code></pre>
 
-<p>命令<br/>
+命令<br/>
 <code>del 9-31</code><br/>
 <code>del 13 -21</code><br/>
-<code>del 16-17</code></p>
+<code>del 16-17</code>
 
 <pre><code>  0 System              : 14571 atoms
   1 Protein             : 14571 atoms
@@ -7886,7 +7886,7 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
           [-nlevels ]
 </code></pre>
 
-<p><code>gmx mdmat</code>创建残基对之间的最小距离构成的矩阵. 使用<code>-frames</code>选项时, 可以将这些矩阵按顺序存储下来, 用以查看蛋白质三级结构随着时间的变化. 如果不明智地使用选项, 程序可能会生成非常大的输出文件. 默认只输出对整个轨迹进行平均后的距离矩阵. 同时, 也可以输出整个轨迹中残基间不同原子之间的接触数. 输出文件可以利用<code>gmx xpm2ps</code>进行处理以生成PostScript(tm)图.</p>
+<code>gmx mdmat</code>创建残基对之间的最小距离构成的矩阵. 使用<code>-frames</code>选项时, 可以将这些矩阵按顺序存储下来, 用以查看蛋白质三级结构随着时间的变化. 如果不明智地使用选项, 程序可能会生成非常大的输出文件. 默认只输出对整个轨迹进行平均后的距离矩阵. 同时, 也可以输出整个轨迹中残基间不同原子之间的接触数. 输出文件可以利用<code>gmx xpm2ps</code>进行处理以生成PostScript(tm)图.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -8001,65 +8001,65 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
                [-nex ] [-reseed ]
 </code></pre>
 
-<p><code>gmx mdrun</code>是GROMACS的主要计算化学引擎. 很显然, 它执行分子动力学模拟, 但它也可以执行随机动力学, 能量最小化, 测试粒子插入或(重新)计算能量. 它还可以进行简正模式分析. 在这种情况下<code>mdrun</code>可以根据单一的构象计算Hessian矩阵. 对于通常的简正模式类计算, 请确保所提供的结构已经正确地进行过能量最小化. 可以使用<code>gmx nmeig</code>对得到的矩阵进行对角化.</p>
+<code>gmx mdrun</code>是GROMACS的主要计算化学引擎. 很显然, 它执行分子动力学模拟, 但它也可以执行随机动力学, 能量最小化, 测试粒子插入或(重新)计算能量. 它还可以进行简正模式分析. 在这种情况下<code>mdrun</code>可以根据单一的构象计算Hessian矩阵. 对于通常的简正模式类计算, 请确保所提供的结构已经正确地进行过能量最小化. 可以使用<code>gmx nmeig</code>对得到的矩阵进行对角化.
 
-<p><code>mdrun</code>程序读取运行输入文件(<code>-s</code>), 如果需要, 它会将拓扑分发给不同的进程号. <code>mdrun</code>至少会产生四个输出文件. 单个日志文件(<code>-g</code>), 除非使用了<code>-seppot</code>选项, 在这种情况下, 每个进程号都会输出一个日志文件. 轨迹文件(<code>-o</code>), 包含了坐标, 速度和可选的力. 结构文件(<code>-c</code>)包含了最后一步的坐标和速度. 能量文件(<code>-e</code>)含有能量, 温度, 压力等, 这些量大都也会在日志文件中输出. 作为可选项, 坐标也可以被写入到压缩轨迹文件中(<code>-x</code>).</p>
+<code>mdrun</code>程序读取运行输入文件(<code>-s</code>), 如果需要, 它会将拓扑分发给不同的进程号. <code>mdrun</code>至少会产生四个输出文件. 单个日志文件(<code>-g</code>), 除非使用了<code>-seppot</code>选项, 在这种情况下, 每个进程号都会输出一个日志文件. 轨迹文件(<code>-o</code>), 包含了坐标, 速度和可选的力. 结构文件(<code>-c</code>)包含了最后一步的坐标和速度. 能量文件(<code>-e</code>)含有能量, 温度, 压力等, 这些量大都也会在日志文件中输出. 作为可选项, 坐标也可以被写入到压缩轨迹文件中(<code>-x</code>).
 
-<p>只有当进行自由能计算时, 才可以使用选项<code>-dhdl</code>.</p>
+只有当进行自由能计算时, 才可以使用选项<code>-dhdl</code>.
 
-<p>并行运行模拟时, 可以使用两种不同的并行方案: MPI并行和/或OpenMP线程并行. 对使用常规MPI库编译的<code>mdrun</code>, MPI并行使用多个处理器; 对使用GROMACS内置的线程MPI库编译的<code>mdrun</code>, MPI并行则使用多个线程. 使用OpenMP编译的<code>mdrun</code>支持OpenMP线程. 只有Verlet截断方案全面支持OpenMP, 对于(旧的)组方案, 只有PME进程可以使用OpenMP并行. 对上述所有情况, <code>mdrun</code>默认会尝试使用所有可用的硬件资源. 使用常规MPI库时, 只有<code>-ntomp</code>(与Verlet截断方案一起使用)和<code>-ntomp_pme</code>选项可用于控制PME进程中的线程数目. 使用线程MPI时, 还可使用选项<code>-nt</code>设置总线程数, 使用<code>-ntmpi</code>设置线程MPI的线程数. 也可以使用标准环境变量<code>OMP_NUM_THREADS</code>设置<code>mdrun</code>使用的OpenMP线程数. 环境变量<code>GMX_PME_NUM_THREADS</code>可用于指定PME进程使用的线程数.</p>
+并行运行模拟时, 可以使用两种不同的并行方案: MPI并行和/或OpenMP线程并行. 对使用常规MPI库编译的<code>mdrun</code>, MPI并行使用多个处理器; 对使用GROMACS内置的线程MPI库编译的<code>mdrun</code>, MPI并行则使用多个线程. 使用OpenMP编译的<code>mdrun</code>支持OpenMP线程. 只有Verlet截断方案全面支持OpenMP, 对于(旧的)组方案, 只有PME进程可以使用OpenMP并行. 对上述所有情况, <code>mdrun</code>默认会尝试使用所有可用的硬件资源. 使用常规MPI库时, 只有<code>-ntomp</code>(与Verlet截断方案一起使用)和<code>-ntomp_pme</code>选项可用于控制PME进程中的线程数目. 使用线程MPI时, 还可使用选项<code>-nt</code>设置总线程数, 使用<code>-ntmpi</code>设置线程MPI的线程数. 也可以使用标准环境变量<code>OMP_NUM_THREADS</code>设置<code>mdrun</code>使用的OpenMP线程数. 环境变量<code>GMX_PME_NUM_THREADS</code>可用于指定PME进程使用的线程数.
 
-<p>需要注意的是, 在许多情况下MPI+OpenMP混合并行要比单独使用其中的一种慢. 然而, 对高并行化使用这种混合并行通常是有益的, 因为它减少了区域的数目和/或MPI进程的数目. (更少或更多的区域可以改进标度行为, 对独立的PME进程, 使用更少的MPI进程可以降低通信成本.) 在单CPU(<code>-die</code>)上, 单纯的OpenMP并行通常比单纯的MPI并行更快. 由于目前我们还没有检测硬件拓扑的合适方法, 使用线程MPI编译的<code>mdrun</code>只能自动使用单纯的OpenMP并行, 如果你使用的线程数达到4个, 使用英特尔的Nehalem/Westmere处理器时最多可使用12个线程, 使用英特尔的Sandy Bridge或更新的CPU最多可使用16个线程. 否则, 会使用单纯的MPI并行(除非使用GPU, 见下文).</p>
+需要注意的是, 在许多情况下MPI+OpenMP混合并行要比单独使用其中的一种慢. 然而, 对高并行化使用这种混合并行通常是有益的, 因为它减少了区域的数目和/或MPI进程的数目. (更少或更多的区域可以改进标度行为, 对独立的PME进程, 使用更少的MPI进程可以降低通信成本.) 在单CPU(<code>-die</code>)上, 单纯的OpenMP并行通常比单纯的MPI并行更快. 由于目前我们还没有检测硬件拓扑的合适方法, 使用线程MPI编译的<code>mdrun</code>只能自动使用单纯的OpenMP并行, 如果你使用的线程数达到4个, 使用英特尔的Nehalem/Westmere处理器时最多可使用12个线程, 使用英特尔的Sandy Bridge或更新的CPU最多可使用16个线程. 否则, 会使用单纯的MPI并行(除非使用GPU, 见下文).
 
-<p>要使用旧的<code>.tpr</code>文件快速地测试新的Verlet截断方案, 无论使用CPU还是CPU+GPU, 你都可以使用<code>-testverlet</code>选项. 此选项不能用于成品模拟, 因为它会稍微修改势能, 并且还会移除电荷组导致分析困难, 但<code>.tpr</code>文件中仍包含电荷组. 对成品模拟, 强烈建议在<code>.mdp</code>文件中指定<code>cutoff-scheme = verlet</code>.</p>
+要使用旧的<code>.tpr</code>文件快速地测试新的Verlet截断方案, 无论使用CPU还是CPU+GPU, 你都可以使用<code>-testverlet</code>选项. 此选项不能用于成品模拟, 因为它会稍微修改势能, 并且还会移除电荷组导致分析困难, 但<code>.tpr</code>文件中仍包含电荷组. 对成品模拟, 强烈建议在<code>.mdp</code>文件中指定<code>cutoff-scheme = verlet</code>.
 
-<p>使用GPU(仅支持Verlet截断方案)时, GPU数应与粒子-粒子进程数匹配, 即不包括单纯的PME进程. 使用线程MPI时, 除非在命令行中设定, MPI线程数将被自动设置为检测到的GPU数. 要使用可用GPU中的一部分, 或手动提供PP进程的GPU映射, 你可以使用<code>-gpu_id</code>选项. <code>-gpu_id</code>的参数为一串数字(无分隔符), 代表要使用的GPU的设备号. 例如, <code>02</code>指定对每个计算节点上的第一和第二个PP进程分别使用GPU 0和2. 要选择计算集群不同节点上的GPU, 可使用环境变量<code>GMX_GPU_ID</code>. <code>GMX_GPU_ID</code>的格式和<code>-gpu_id</code>相同, 区别在于环境变量在不同的计算节点上可以有不同的值. 每个节点上的多个MPI进程可以共享GPU, 这可以通过多次指定GPU的id来实现, 例如, <code>0011</code>表示在这个节点上四个进程共享两个GPU. 这种方法对单个或多个模拟都起作用, 并适用于任何形式的MPI.</p>
+使用GPU(仅支持Verlet截断方案)时, GPU数应与粒子-粒子进程数匹配, 即不包括单纯的PME进程. 使用线程MPI时, 除非在命令行中设定, MPI线程数将被自动设置为检测到的GPU数. 要使用可用GPU中的一部分, 或手动提供PP进程的GPU映射, 你可以使用<code>-gpu_id</code>选项. <code>-gpu_id</code>的参数为一串数字(无分隔符), 代表要使用的GPU的设备号. 例如, <code>02</code>指定对每个计算节点上的第一和第二个PP进程分别使用GPU 0和2. 要选择计算集群不同节点上的GPU, 可使用环境变量<code>GMX_GPU_ID</code>. <code>GMX_GPU_ID</code>的格式和<code>-gpu_id</code>相同, 区别在于环境变量在不同的计算节点上可以有不同的值. 每个节点上的多个MPI进程可以共享GPU, 这可以通过多次指定GPU的id来实现, 例如, <code>0011</code>表示在这个节点上四个进程共享两个GPU. 这种方法对单个或多个模拟都起作用, 并适用于任何形式的MPI.
 
-<p>使用Verlet截断方案和Verlet缓冲容差设置时, 可以使用<code>-nstlist</code>选项自由地选择配对列表的更新间隔<code>nstlist</code>. <code>mdrun</code>随后会调整配对列表的截断以保持精度, 而不是调整<code>nstlist</code>. 否则, 默认情况下<code>mdrun</code>会尝试增加<code>.mdp</code>文件中<code>nstlist</code>的设定值以提高性能. 对只使用CPU的模拟, <code>nstlist</code>可能增加至20, 对使用GPU的模拟, 可能增加至40. 对中度到高度的并行或快速的GPU, 使用(用户提供)更大的<code>nstlist</code>可以得到更好的性能.</p>
+使用Verlet截断方案和Verlet缓冲容差设置时, 可以使用<code>-nstlist</code>选项自由地选择配对列表的更新间隔<code>nstlist</code>. <code>mdrun</code>随后会调整配对列表的截断以保持精度, 而不是调整<code>nstlist</code>. 否则, 默认情况下<code>mdrun</code>会尝试增加<code>.mdp</code>文件中<code>nstlist</code>的设定值以提高性能. 对只使用CPU的模拟, <code>nstlist</code>可能增加至20, 对使用GPU的模拟, 可能增加至40. 对中度到高度的并行或快速的GPU, 使用(用户提供)更大的<code>nstlist</code>可以得到更好的性能.
 
-<p>当PME计算使用单独的PME进程或GPU时, 两类主要的计算任务, 非键力计算和PME计算, 在不同的计算资源上进行. 如果负载不均衡, 某些资源会有一部分空闲时间. 使用Verlet截断方案时, 负载会自动均衡, 如果PME负载过高的话(但过低时则不会). 这是通过对库仑截断和PME格点间距进行相同的缩放完成的. 在前几百步中程序会尝试各种不同的设置, 然后选择最快的设置用于模拟的其余部分. 这并不影响结果的精确度, 但确实会影响将库仑能分解为粒子和网格的贡献. 可以使用<code>-notunepme</code>选项关闭自动调整.</p>
+当PME计算使用单独的PME进程或GPU时, 两类主要的计算任务, 非键力计算和PME计算, 在不同的计算资源上进行. 如果负载不均衡, 某些资源会有一部分空闲时间. 使用Verlet截断方案时, 负载会自动均衡, 如果PME负载过高的话(但过低时则不会). 这是通过对库仑截断和PME格点间距进行相同的缩放完成的. 在前几百步中程序会尝试各种不同的设置, 然后选择最快的设置用于模拟的其余部分. 这并不影响结果的精确度, 但确实会影响将库仑能分解为粒子和网格的贡献. 可以使用<code>-notunepme</code>选项关闭自动调整.
 
-<p><code>mdrun</code>将线程关联(设定附着)到特定的核, 当<code>mdrun</code>使用了计算节点上的所有(逻辑)核时, 即便没有使用多线程, 通常也会显著地提高性能. 如果排队系统或OpenMP库已经关联了线程, 我们将不再关联, 即使布局可能是次优的. 如果你想使<code>mdrun</code>覆盖一个已经设定的线程关联, 或使用更少的核关联线程, 可以使用<code>-pin on</code>. 随着SMT(同步多线程), 如英特尔超线程的出现, 每个物理核心上可以有多个逻辑核心. 选项<code>-pinstride</code>可以在逻辑核心上设置步幅以关联连续的线程. 如果没有SMT, 1通常是最好的选择. 使用英特尔超线程, 并使用一半或更少的逻辑核心时, 2是最好的选择, 否则就使用1. 默认值0恰恰如此: 它最大限度地减少每个逻辑核心的线程以优化性能. 如果你想在同一物理节点上运行多个<code>mdrun</code>工作, 当使用所有逻辑核心时你应该将<code>-pinstride</code>设置为1. 当在相同的物理节点上运行多个<code>mdrun</code>(或其它)模拟时, 一些模拟需要从非零核心开始关联, 以避免核心过载; 使用<code>-pinoffset</code>你可以设置逻辑核心关联的偏移值.</p>
+<code>mdrun</code>将线程关联(设定附着)到特定的核, 当<code>mdrun</code>使用了计算节点上的所有(逻辑)核时, 即便没有使用多线程, 通常也会显著地提高性能. 如果排队系统或OpenMP库已经关联了线程, 我们将不再关联, 即使布局可能是次优的. 如果你想使<code>mdrun</code>覆盖一个已经设定的线程关联, 或使用更少的核关联线程, 可以使用<code>-pin on</code>. 随着SMT(同步多线程), 如英特尔超线程的出现, 每个物理核心上可以有多个逻辑核心. 选项<code>-pinstride</code>可以在逻辑核心上设置步幅以关联连续的线程. 如果没有SMT, 1通常是最好的选择. 使用英特尔超线程, 并使用一半或更少的逻辑核心时, 2是最好的选择, 否则就使用1. 默认值0恰恰如此: 它最大限度地减少每个逻辑核心的线程以优化性能. 如果你想在同一物理节点上运行多个<code>mdrun</code>工作, 当使用所有逻辑核心时你应该将<code>-pinstride</code>设置为1. 当在相同的物理节点上运行多个<code>mdrun</code>(或其它)模拟时, 一些模拟需要从非零核心开始关联, 以避免核心过载; 使用<code>-pinoffset</code>你可以设置逻辑核心关联的偏移值.
 
-<p>当使用超过1个进程启动<code>mdrun</code>时, 会使用区域分解的并行.</p>
+当使用超过1个进程启动<code>mdrun</code>时, 会使用区域分解的并行.
 
-<p>使用区域分解时, 空间分解可以通过<code>-dd</code>选项设置. 默认情况下<code>mdrun</code>会选择一个好的分解. 只有当体系非常不均匀时, 用户才需要更改此设置. 动态负载平衡由<code>-dlb</code>选项设置, 它可以显著地提升性能, 特别是对于非均相体系. 动态负载均衡的唯一缺点是运行不再具有二进制级别的可重现性, 但在大多数情况下, 这并不重要. 由负载失衡导致的性能损失达到5%或以上时, 默认会自动开启动态负载均衡. 对低并行度计算, 这些是区域分解仅有的重要选项. 对高并行度计算, 下面两节中的选项可能是提升性能的重要选项.</p>
+使用区域分解时, 空间分解可以通过<code>-dd</code>选项设置. 默认情况下<code>mdrun</code>会选择一个好的分解. 只有当体系非常不均匀时, 用户才需要更改此设置. 动态负载平衡由<code>-dlb</code>选项设置, 它可以显著地提升性能, 特别是对于非均相体系. 动态负载均衡的唯一缺点是运行不再具有二进制级别的可重现性, 但在大多数情况下, 这并不重要. 由负载失衡导致的性能损失达到5%或以上时, 默认会自动开启动态负载均衡. 对低并行度计算, 这些是区域分解仅有的重要选项. 对高并行度计算, 下面两节中的选项可能是提升性能的重要选项.
 
-<p>当PME与区域分解一起使用时, 可以分配独立的进程只进行PME网格计算; 大约从12个进程开始, 这样计算效率更高, 当使用OpenMP并行时, 需要的线程数可能更少. PME线程数可由选项<code>-npme</code>设定, 但不能超过总线程数的一半. 默认情况下, 当总线程数超过16时, <code>mdrun</code>会猜测一个PME线程数. 使用GPU时, 不会自动选择使用单独的PME线程, 因为最佳设置在很大程度上取决于硬件的详细信息. 在任何情况下, 你都可能通过优化<code>-npme</code>提高性能. 关于此选项的性能统计数据会写到日志文件的结束处. 为了在高并行度下获得良好的负载均衡, PME格点的X和Y尺寸应该能被PME线程数整除(即便不是这样, 模拟也可以正常运行).</p>
+当PME与区域分解一起使用时, 可以分配独立的进程只进行PME网格计算; 大约从12个进程开始, 这样计算效率更高, 当使用OpenMP并行时, 需要的线程数可能更少. PME线程数可由选项<code>-npme</code>设定, 但不能超过总线程数的一半. 默认情况下, 当总线程数超过16时, <code>mdrun</code>会猜测一个PME线程数. 使用GPU时, 不会自动选择使用单独的PME线程, 因为最佳设置在很大程度上取决于硬件的详细信息. 在任何情况下, 你都可能通过优化<code>-npme</code>提高性能. 关于此选项的性能统计数据会写到日志文件的结束处. 为了在高并行度下获得良好的负载均衡, PME格点的X和Y尺寸应该能被PME线程数整除(即便不是这样, 模拟也可以正常运行).
 
-<p>本节列出了能够影响区域分解的所有选项.</p>
+本节列出了能够影响区域分解的所有选项.
 
-<p>选项<code>-rdd</code>可用于设置计算电荷组之间的键合相互作用时所需要的最大距离. 对于非键截断距离以下的二体键合相互作用, 其通讯总是与非键通讯一起进行. 只有当含有丢失的键合相互作用时, 超过非键截断的原子才进行通讯; 这意味着额外的花销是很小的, 而且几乎与<code>-rdd</code>的值无关. 使用动态负载均衡时, <code>-rdd</code>选项同时也是区域分解单元晶胞尺寸的下限. 默认情况下, <code>mdrun</code>会根据初始的坐标确定<code>-rdd</code>, 所选值基于相互作用范围和通讯成本之间的平衡.</p>
+选项<code>-rdd</code>可用于设置计算电荷组之间的键合相互作用时所需要的最大距离. 对于非键截断距离以下的二体键合相互作用, 其通讯总是与非键通讯一起进行. 只有当含有丢失的键合相互作用时, 超过非键截断的原子才进行通讯; 这意味着额外的花销是很小的, 而且几乎与<code>-rdd</code>的值无关. 使用动态负载均衡时, <code>-rdd</code>选项同时也是区域分解单元晶胞尺寸的下限. 默认情况下, <code>mdrun</code>会根据初始的坐标确定<code>-rdd</code>, 所选值基于相互作用范围和通讯成本之间的平衡.
 
-<p>当电荷组间的键合相互作用超过了键合截断距离时, <code>mdrun</code>会终止运行, 并给出一个错误信息. 对不使用排除的配对相互作用和表格键, 可以使用<code>-noddcheck</code>选项关闭此检查.</p>
+当电荷组间的键合相互作用超过了键合截断距离时, <code>mdrun</code>会终止运行, 并给出一个错误信息. 对不使用排除的配对相互作用和表格键, 可以使用<code>-noddcheck</code>选项关闭此检查.
 
-<p>当存在约束时, 选项<code>-rcon</code>也会影响晶胞的大小限制. 由NC约束连接的原子, 其中NC为LINCS的阶数加1, 不应超出最小的晶胞尺寸. 如果发生了这种情况, 程序会给出错误信息, 用户应更改分解或减小LINCS阶数并增加LINCS的迭代次数. 默认情况下<code>mdrun</code>会以保守的方式估计P-LINCS所需要的最小晶胞尺寸. 对高并行度的计算, 使用选项<code>-rcon</code>来设置P-LINCS所需要的距离, 可能会有帮助.</p>
+当存在约束时, 选项<code>-rcon</code>也会影响晶胞的大小限制. 由NC约束连接的原子, 其中NC为LINCS的阶数加1, 不应超出最小的晶胞尺寸. 如果发生了这种情况, 程序会给出错误信息, 用户应更改分解或减小LINCS阶数并增加LINCS的迭代次数. 默认情况下<code>mdrun</code>会以保守的方式估计P-LINCS所需要的最小晶胞尺寸. 对高并行度的计算, 使用选项<code>-rcon</code>来设置P-LINCS所需要的距离, 可能会有帮助.
 
-<p>使用动态负载均衡时, <code>-dds</code>选项设置晶胞x, y和/或z方向缩放的最小允许比例. <code>mdrun</code>会确保晶胞至少缩放此比例. 这个选项用于自动空间分解(当不使用<code>-dd</code>时)以及确定网格脉冲的数量, 进而设置晶胞的最小允许尺寸. 在某些情况下, 可能需要调整<code>-dds</code>的值以考虑体系高或低的空间不均匀性.</p>
+使用动态负载均衡时, <code>-dds</code>选项设置晶胞x, y和/或z方向缩放的最小允许比例. <code>mdrun</code>会确保晶胞至少缩放此比例. 这个选项用于自动空间分解(当不使用<code>-dd</code>时)以及确定网格脉冲的数量, 进而设置晶胞的最小允许尺寸. 在某些情况下, 可能需要调整<code>-dds</code>的值以考虑体系高或低的空间不均匀性.
 
-<p>选项<code>-gcom</code>可用于决定每n步只进行一次全局通讯. 当全局通讯步成为瓶颈的时候, 对高并行度的模拟此选项可以提高性能. 对全局控温器和/或控压器, 其温度和/或压力也会每<code>-gcom</code>步数更新一次. 默认情况下此选项的值被设为<code>nstcalcenergy</code>和<code>nstlist</code>中的较小值.</p>
+选项<code>-gcom</code>可用于决定每n步只进行一次全局通讯. 当全局通讯步成为瓶颈的时候, 对高并行度的模拟此选项可以提高性能. 对全局控温器和/或控压器, 其温度和/或压力也会每<code>-gcom</code>步数更新一次. 默认情况下此选项的值被设为<code>nstcalcenergy</code>和<code>nstlist</code>中的较小值.
 
-<p>使用<code>-rerun</code>选项, 可以(重新)计算一个输入轨迹的的力和能量. 会针对每一帧进行近邻搜索, 除非<code>nstlist</code>被设置为零(见<code>.mdp</code>文件).</p>
+使用<code>-rerun</code>选项, 可以(重新)计算一个输入轨迹的的力和能量. 会针对每一帧进行近邻搜索, 除非<code>nstlist</code>被设置为零(见<code>.mdp</code>文件).
 
-<p>ED(主成分动力学)采样和/或额外的洪泛势可使用<code>-ei</code>选项启用, 后面指定一个<code>.edi</code>文件. <code>.edi</code>文件可以使用<code>make_edi</code>工具创建, 或通过WHAT IF程序essdyn菜单中的选项来创建. <code>mdrun</code>会产生一个<code>.xvg</code>输出文件, 里面包含了位置, 速度, 力在选定的特征向量上的投影.</p>
+ED(主成分动力学)采样和/或额外的洪泛势可使用<code>-ei</code>选项启用, 后面指定一个<code>.edi</code>文件. <code>.edi</code>文件可以使用<code>make_edi</code>工具创建, 或通过WHAT IF程序essdyn菜单中的选项来创建. <code>mdrun</code>会产生一个<code>.xvg</code>输出文件, 里面包含了位置, 速度, 力在选定的特征向量上的投影.
 
-<p>当在<code>.mdp</code>文件中指定了用户自定义的势函数时, 可使用<code>-table</code>选项将式化的势函数表格传递给<code>mdrun</code>. 该表格文件从当前目录或<code>GMXLIB</code>目录中读取. <code>GMXLIB</code>目录中有许多预格式化的表格, 如使用普通库仑势的6&#8211;8, 6&#8211;9, 6&#8211;10, 6&#8211;11, 6&#8211;12 Lennard-Jones势. 当存在对相互作用时, 可使用<code>-tablep</code>选项读入对相互作用函数的单独表格.</p>
+当在<code>.mdp</code>文件中指定了用户自定义的势函数时, 可使用<code>-table</code>选项将式化的势函数表格传递给<code>mdrun</code>. 该表格文件从当前目录或<code>GMXLIB</code>目录中读取. <code>GMXLIB</code>目录中有许多预格式化的表格, 如使用普通库仑势的6&#8211;8, 6&#8211;9, 6&#8211;10, 6&#8211;11, 6&#8211;12 Lennard-Jones势. 当存在对相互作用时, 可使用<code>-tablep</code>选项读入对相互作用函数的单独表格.
 
-<p>当拓扑中存在表格键函数时, 可使用<code>-tableb</code>选项读入相互作用函数. 对每个不同的表格相互作用类型, 表格文件的名称以不同方式修饰: 文件扩展名之前会追加下划线, 后面跟着一个代表键的<code>b</code>, 代表键角的<code>a</code>或代表二面角的<code>d</code>, 最后是相互作用类型的表格编号.</p>
+当拓扑中存在表格键函数时, 可使用<code>-tableb</code>选项读入相互作用函数. 对每个不同的表格相互作用类型, 表格文件的名称以不同方式修饰: 文件扩展名之前会追加下划线, 后面跟着一个代表键的<code>b</code>, 代表键角的<code>a</code>或代表二面角的<code>d</code>, 最后是相互作用类型的表格编号.
 
-<p>当<code>.mdp</code>文件中指定了牵引时, 选项<code>-px</code>和<code>-pf</code>可用于输出牵引COM的坐标和力.</p>
+当<code>.mdp</code>文件中指定了牵引时, 选项<code>-px</code>和<code>-pf</code>可用于输出牵引COM的坐标和力.
 
-<p>使用<code>-multi</code>或<code>-multidir</code>选项, 可以并行方式模拟多个体系, 输入文件/目录的数目等于体系的数目. <code>-multidir</code>选项获取一个目录列表(每个体系一个), 并在其中的每一个目录中运行, 运行时使用的输入/输出文件名, 如由<code>-s</code>选项指定的, 是相对于这些目录的. 使用<code>-multi</code>选项, 体系编号会追加到运行输入文件与每个输出文件的名称中, 例如<code>topol.tpr</code>会变为<code>topol0.tpr</code>, <code>topol1.tpr</code>等. 每个体系的进程数为总进程数除以体系的数目. 这个选项的一个应用是NMR精修: 当存在距离或取向限制时, 可以对所有体系进行系统平均.</p>
+使用<code>-multi</code>或<code>-multidir</code>选项, 可以并行方式模拟多个体系, 输入文件/目录的数目等于体系的数目. <code>-multidir</code>选项获取一个目录列表(每个体系一个), 并在其中的每一个目录中运行, 运行时使用的输入/输出文件名, 如由<code>-s</code>选项指定的, 是相对于这些目录的. 使用<code>-multi</code>选项, 体系编号会追加到运行输入文件与每个输出文件的名称中, 例如<code>topol.tpr</code>会变为<code>topol0.tpr</code>, <code>topol1.tpr</code>等. 每个体系的进程数为总进程数除以体系的数目. 这个选项的一个应用是NMR精修: 当存在距离或取向限制时, 可以对所有体系进行系统平均.
 
-<p>使用<code>-replex</code>选项, 每经过给定的步数, 会尝试进行一次副本交换. 副本的数目由<code>-multi</code>或<code>-multidir</code>选项设置, 如上所述. 所有运行输入文件都应使用不同的耦合温度, 文件的顺序并不重要. 随机数种子由<code>-reseed</code>设置. 每次交换后会进行速度缩放和近邻搜索.</p>
+使用<code>-replex</code>选项, 每经过给定的步数, 会尝试进行一次副本交换. 副本的数目由<code>-multi</code>或<code>-multidir</code>选项设置, 如上所述. 所有运行输入文件都应使用不同的耦合温度, 文件的顺序并不重要. 随机数种子由<code>-reseed</code>设置. 每次交换后会进行速度缩放和近邻搜索.
 
-<p>最后, 当给出合适的选项时, 可以测试一些试验性的算法. 目前正在考察的是: 极化.</p>
+最后, 当给出合适的选项时, 可以测试一些试验性的算法. 目前正在考察的是: 极化.
 
-<p>选项<code>-membed</code>的功能与原先的<code>g_membed</code>相同, 即将蛋白质嵌入到膜中. 数据文件应包含传递给<code>g_membed</code>的选项. <code>-mn</code>和<code>-mp</code>也会应用到.</p>
+选项<code>-membed</code>的功能与原先的<code>g_membed</code>相同, 即将蛋白质嵌入到膜中. 数据文件应包含传递给<code>g_membed</code>的选项. <code>-mn</code>和<code>-mp</code>也会应用到.
 
-<p>如果你怀疑模拟是由于原子受力过大而崩溃的, 选项<code>-pforce</code>可能对你有用. 使用此选项, 当原子的受力超过一定值时, 其坐标和力会被打印到<code>stderr</code>.</p>
+如果你怀疑模拟是由于原子受力过大而崩溃的, 选项<code>-pforce</code>可能对你有用. 使用此选项, 当原子的受力超过一定值时, 其坐标和力会被打印到<code>stderr</code>.
 
-<p>包含体系完整状态的检查点会被定期(选项<code>-cpt</code>)地写入文件<code>-cpo</code>, 除非选项<code>-cpt</code>设置为&#8211;1. 先前的检查点会备份到<code>state_prev.cpt</code>以确保最近的体系状态始终可用, 即使在写入检查点时模拟被终止. 使用<code>-cpnum</code>选项会保存所有的检查点文件并追加步数. 通过从由选项<code>-cpi</code>指定的文件中读入全部状态, 模拟可以继续进行. 该选项的智能之处在于, 如果没有找到检查点文件, GROMACS就假定这是一个常规运行, 并从<code>.tpr</code>文件的第一步开始. 默认情况下, 输出将被追加到现有的输出文件中. 检查点文件中包含了所有输出文件的校验码, 这样你永远不会丢失数据, 即使一些输出文件被修改, 破坏或删除. <code>-cpi</code>有三种情景:</p>
+包含体系完整状态的检查点会被定期(选项<code>-cpt</code>)地写入文件<code>-cpo</code>, 除非选项<code>-cpt</code>设置为&#8211;1. 先前的检查点会备份到<code>state_prev.cpt</code>以确保最近的体系状态始终可用, 即使在写入检查点时模拟被终止. 使用<code>-cpnum</code>选项会保存所有的检查点文件并追加步数. 通过从由选项<code>-cpi</code>指定的文件中读入全部状态, 模拟可以继续进行. 该选项的智能之处在于, 如果没有找到检查点文件, GROMACS就假定这是一个常规运行, 并从<code>.tpr</code>文件的第一步开始. 默认情况下, 输出将被追加到现有的输出文件中. 检查点文件中包含了所有输出文件的校验码, 这样你永远不会丢失数据, 即使一些输出文件被修改, 破坏或删除. <code>-cpi</code>有三种情景:
 
 <ul class="incremental">
 <li>不存在名称匹配的文件: 写入新的输出文件</li>
@@ -8067,17 +8067,17 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
 <li>其他情况下, 不会修改任何文件, 并产生一个致命错误</li>
 </ul>
 
-<p>使用<code>-noappend</code>选项, 会打开新的输出文件, 并将模拟部分编号添加到所有输出文件的名称中. 需要注意的是, 在所有情况下检查点文件本身都不会被重命名, 并会被覆盖, 除非它的名称与<code>-cpo</code>选项不匹配.</p>
+使用<code>-noappend</code>选项, 会打开新的输出文件, 并将模拟部分编号添加到所有输出文件的名称中. 需要注意的是, 在所有情况下检查点文件本身都不会被重命名, 并会被覆盖, 除非它的名称与<code>-cpo</code>选项不匹配.
 
-<p>使用检查点时, 输出会追加到先前的输出文件中, 除非使用了<code>-noappend</code>选项或不存在任何先前的输出文件(除检查点文件外). 要追加的文件的完整性是通过验证检查点文件中存储的校验码实现的. 这保证了追加文件时不会造成混淆或损坏. 当只有部分先前的输出文件存在时, 会导致致命错误, 并且不会修改旧的输出文件, 也不会打开新的输出文件. 追加得到的结果与单独运行得到的结果相同, 文件内容是二进制相同的, 除非你使用了不同的进程数或动态负载均衡或FFT库使用了计时优化.</p>
+使用检查点时, 输出会追加到先前的输出文件中, 除非使用了<code>-noappend</code>选项或不存在任何先前的输出文件(除检查点文件外). 要追加的文件的完整性是通过验证检查点文件中存储的校验码实现的. 这保证了追加文件时不会造成混淆或损坏. 当只有部分先前的输出文件存在时, 会导致致命错误, 并且不会修改旧的输出文件, 也不会打开新的输出文件. 追加得到的结果与单独运行得到的结果相同, 文件内容是二进制相同的, 除非你使用了不同的进程数或动态负载均衡或FFT库使用了计时优化.
 
-<p>使用选项<code>-maxh</code>时, 当运行时间超过<code>-maxh</code>*0.99小时后, 模拟会终止, 并在第一个近邻搜索步输出检查点文件.</p>
+使用选项<code>-maxh</code>时, 当运行时间超过<code>-maxh</code>*0.99小时后, 模拟会终止, 并在第一个近邻搜索步输出检查点文件.
 
-<p>当<code>mdrun</code>接收到TERM信号后, 它会将<code>nsteps</code>设置为比当前步数多一的值. 当<code>mdrun</code>接收到INT信号后(例如, 按下CTRL+C), 会在下一近邻搜索步后停止(下一步的<code>nstlist = 0</code>). 在这两种情况下, 所有的常规输出都将被写入到文件中. 当使用MPI运行<code>mdrun</code>时, 只要将信号发送到<code>mdrun</code>的一个进程就足够了, 此信号不应该被发送到<code>mpirun</code>或<code>mdrun</code>进程, 因为它们是其他进程的父进程.</p>
+当<code>mdrun</code>接收到TERM信号后, 它会将<code>nsteps</code>设置为比当前步数多一的值. 当<code>mdrun</code>接收到INT信号后(例如, 按下CTRL+C), 会在下一近邻搜索步后停止(下一步的<code>nstlist = 0</code>). 在这两种情况下, 所有的常规输出都将被写入到文件中. 当使用MPI运行<code>mdrun</code>时, 只要将信号发送到<code>mdrun</code>的一个进程就足够了, 此信号不应该被发送到<code>mpirun</code>或<code>mdrun</code>进程, 因为它们是其他进程的父进程.
 
-<p>交互式分子动力学(IMD)可以通过至少使用三个IMD开关中的一个来激活: <code>-imdterm</code>开关允许从分子查看器(如VMD)终止模拟; 使用<code>-imdwait</code>, 当没有IMD客户端连接时, <code>mdrun</code>会暂停; 可以使用<code>-imdpull</code>打开IMD的远程操控. <code>mdrun</code>监听的端口可以使用<code>-imdport</code>来更改. 如果使用IMD操控, 由<code>-if</code>指向的文件中包含了原子索引和力.</p>
+交互式分子动力学(IMD)可以通过至少使用三个IMD开关中的一个来激活: <code>-imdterm</code>开关允许从分子查看器(如VMD)终止模拟; 使用<code>-imdwait</code>, 当没有IMD客户端连接时, <code>mdrun</code>会暂停; 可以使用<code>-imdpull</code>打开IMD的远程操控. <code>mdrun</code>监听的端口可以使用<code>-imdport</code>来更改. 如果使用IMD操控, 由<code>-if</code>指向的文件中包含了原子索引和力.
 
-<p>当使用MPI启动<code>mdrun</code>时, 默认情况下, 不可改变它的优先级.</p>
+当使用MPI启动<code>mdrun</code>时, 默认情况下, 不可改变它的优先级.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -8507,11 +8507,11 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
             [-[no]printresname]
 </code></pre>
 
-<p><code>gmx mindist</code>用于计算一个组与其他组之间的距离. 程序会将(两组之间任意原子对的)最小距离和给定距离内的接触数输出到两个独立的文件. 使用<code>-group</code>选项时, 如果另一组中的一个原子与第一组的多个原子相接触, 接触数只计为1次而不是多次. 使用<code>-or</code>选项时, 程序会确定到第一组中每个残基的最小距离, 并给出它与残基编号的函数关系图.</p>
+<code>gmx mindist</code>用于计算一个组与其他组之间的距离. 程序会将(两组之间任意原子对的)最小距离和给定距离内的接触数输出到两个独立的文件. 使用<code>-group</code>选项时, 如果另一组中的一个原子与第一组的多个原子相接触, 接触数只计为1次而不是多次. 使用<code>-or</code>选项时, 程序会确定到第一组中每个残基的最小距离, 并给出它与残基编号的函数关系图.
 
-<p>使用<code>-pi</code>选项时, 会给出一个组与其周期映象的最小距离. 这可以用于检验蛋白质在模拟中是否可以感受到它的周期映象. 每个方向只考虑一次平移, 共26次平移. 程序也会给出组间的最大距离以及三个盒矢量的长度.</p>
+使用<code>-pi</code>选项时, 会给出一个组与其周期映象的最小距离. 这可以用于检验蛋白质在模拟中是否可以感受到它的周期映象. 每个方向只考虑一次平移, 共26次平移. 程序也会给出组间的最大距离以及三个盒矢量的长度.
 
-<p><code>gmx distance</code>也可用于计算距离.</p>
+<code>gmx distance</code>也可用于计算距离.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -8669,7 +8669,7 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
               [-type ] [-[no]hyd] [-hq ]
 </code></pre>
 
-<p><code>gmx mk_angndx</code>命令用于创建索引文件, 以计算角度分布等. 它需要使用一个运行输入文件(<code>.tpx</code>)来获得键角, 二面角等的信息.</p>
+<code>gmx mk_angndx</code>命令用于创建索引文件, 以计算角度分布等. 它需要使用一个运行输入文件(<code>.tpx</code>)来获得键角, 二面角等的信息.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -8728,11 +8728,11 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
           [-last ] [-[no]fit]
 </code></pre>
 
-<p><code>gmx morph</code>对构象进行线性内插以产生中间体构象. 当然这些构象完全是不现实的, 但你可以试着进行证明. 程序的输出形式是通用的轨迹. 中间体的数目由<code>-ninterm</code>选项进行控制. <code>-first</code>和<code>-last</code>选项用于控制插值方式: 0对应于输入结构1, 1对应于输入结构2. 如果指定的<code>-first</code> &lt; 0或<code>-last</code> &gt; 1, 会根据输入结构x_1到x_2的途径进行外推. 一般来说, 对总共N个中间体, 中间体i的坐标x(i)为:</p>
+<code>gmx morph</code>对构象进行线性内插以产生中间体构象. 当然这些构象完全是不现实的, 但你可以试着进行证明. 程序的输出形式是通用的轨迹. 中间体的数目由<code>-ninterm</code>选项进行控制. <code>-first</code>和<code>-last</code>选项用于控制插值方式: 0对应于输入结构1, 1对应于输入结构2. 如果指定的<code>-first</code> &lt; 0或<code>-last</code> &gt; 1, 会根据输入结构x_1到x_2的途径进行外推. 一般来说, 对总共N个中间体, 中间体i的坐标x(i)为:
 
-<p><code>x(i) = x_1 + (first+(i/(N-1))*(last-first))*(x_2-x_1)</code></p>
+<code>x(i) = x_1 + (first+(i/(N-1))*(last-first))*(x_2-x_1)</code>
 
-<p>最后, 如果指定了<code>-or</code>选项, 可以计算相对于两个输入结构的RMSD. 在这种情况下, 可能需要读取索引文件, 用于选择计算RMS的组.</p>
+最后, 如果指定了<code>-or</code>选项, 可以计算相对于两个输入结构的RMSD. 在这种情况下, 可能需要读取索引文件, 用于选择计算RMS的组.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -8826,19 +8826,19 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
         [-endfit ]
 </code></pre>
 
-<p><code>gmx msd</code>根据一系列初始位置来计算原子的均方位移(MSD, mean square displacement). 这提供了一个利用爱因斯坦关系式计算扩散常数的简易方法. 计算MSD时, 参考点之间的时间可利用<code>-trestart</code>选项设置. 将从<code>-beginfit</code>到<code>-endfit</code>之间的MSD(t)使用最小二乘法拟合为直线(D*t+c), 就可以得到扩散常数(注意, t为到参考点的时间, 而不是模拟时间). 程序会给出扩散常数误差的估计值, 计算时将拟合区间分为两部分, 分别拟合得到扩散系数, 这两个扩散系数的插值就是误差的估计值.</p>
+<code>gmx msd</code>根据一系列初始位置来计算原子的均方位移(MSD, mean square displacement). 这提供了一个利用爱因斯坦关系式计算扩散常数的简易方法. 计算MSD时, 参考点之间的时间可利用<code>-trestart</code>选项设置. 将从<code>-beginfit</code>到<code>-endfit</code>之间的MSD(t)使用最小二乘法拟合为直线(D*t+c), 就可以得到扩散常数(注意, t为到参考点的时间, 而不是模拟时间). 程序会给出扩散常数误差的估计值, 计算时将拟合区间分为两部分, 分别拟合得到扩散系数, 这两个扩散系数的插值就是误差的估计值.
 
-<p>有三个相互排斥的选项来确定不同类型的均方位移: <code>-type</code>, <code>-lateral</code>和<code>-ten</code>. 选项<code>-ten</code>对每组输出完整的MSD张量, 输出的顺序是: trace xx yy zz yx zx zy.</p>
+有三个相互排斥的选项来确定不同类型的均方位移: <code>-type</code>, <code>-lateral</code>和<code>-ten</code>. 选项<code>-ten</code>对每组输出完整的MSD张量, 输出的顺序是: trace xx yy zz yx zx zy.
 
-<p>如果设置了<code>-mol</code>选项, <code>gmx msd</code>计算单个分子的MSD(会保持跨过周期性边界的分子完整): 对每一单个分子, 会计算其质心的扩散常数. 所选的索引组会被划分为分子.</p>
+如果设置了<code>-mol</code>选项, <code>gmx msd</code>计算单个分子的MSD(会保持跨过周期性边界的分子完整): 对每一单个分子, 会计算其质心的扩散常数. 所选的索引组会被划分为分子.
 
-<p>默认计算MSD的方法是使用质量加权平均, 可使用<code>-nomw</code>取消.</p>
+默认计算MSD的方法是使用质量加权平均, 可使用<code>-nomw</code>取消.
 
-<p>使用<code>-rmcomm</code>选项, 可以移除指定组的质心运行. 对于GROMACS输出的轨迹, 通常不需要此选项, 因为<code>gmx mdrun</code>通常已经移除了质心运动. 当你使用此选项时, 请确保轨迹文件中保存了整个体系.</p>
+使用<code>-rmcomm</code>选项, 可以移除指定组的质心运行. 对于GROMACS输出的轨迹, 通常不需要此选项, 因为<code>gmx mdrun</code>通常已经移除了质心运动. 当你使用此选项时, 请确保轨迹文件中保存了整个体系.
 
-<p>扩散系数由MSD的线性回归确定, 不同于D正常的输出, 时间是根据参考点的数目进行加权的, 即, 短的时间权重较高. 此外, 当<code>-beginfit=-1</code>时, 拟合从10%处开始, 当<code>-endfit=-1</code>时, 拟合结束于90%处. 使用此选项也可以得到精确的误差估计, 它基于单个分子之间的统计. 注意, 只有当MSD在<code>-beginfit</code>到<code>-endfit</code>之间完全呈线性时, 所得的扩散常数和误差估计才准确.</p>
+扩散系数由MSD的线性回归确定, 不同于D正常的输出, 时间是根据参考点的数目进行加权的, 即, 短的时间权重较高. 此外, 当<code>-beginfit=-1</code>时, 拟合从10%处开始, 当<code>-endfit=-1</code>时, 拟合结束于90%处. 使用此选项也可以得到精确的误差估计, 它基于单个分子之间的统计. 注意, 只有当MSD在<code>-beginfit</code>到<code>-endfit</code>之间完全呈线性时, 所得的扩散常数和误差估计才准确.
 
-<p>使用<code>-pdb</code>选项可输出一个<code>.pdb</code>文件, 其中包含<code>-tpdb</code>时刻体系的坐标, B因子的值为分子扩散系数的平方根. 此选项暗含<code>-mol</code>选项.</p>
+使用<code>-pdb</code>选项可输出一个<code>.pdb</code>文件, 其中包含<code>-tpdb</code>时刻体系的坐标, B因子的值为分子扩散系数的平方根. 此选项暗含<code>-mol</code>选项.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -8981,16 +8981,16 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
           [-maxspec ] [-T ] [-[no]constr] [-width ]
 </code></pre>
 
-<p><code>gmx nmeig</code>用于计算(Hessian)矩阵的特征向量/特征值, 矩阵可由<code>gmx mdrun</code>计算. 特征向量会被写入一个轨迹文件(<code>-v</code>), 其中的第一个结构对应t=0时的结构. 特征向量作为帧写入文件, 其序号作为时间戳. 特征向量可利用<code>gmx anaeig</code>进行分析. 使用<code>gmx nmens</code>可以根据特征向量生成结构的系综. 当使用质量加权时, 输出之前产生的特征向量会缩放为普通的直角坐标. 在这种情况下, 对标准的直角坐标形式, 它们将不再精确地正交, 但在质量加权时应该正交.</p>
+<code>gmx nmeig</code>用于计算(Hessian)矩阵的特征向量/特征值, 矩阵可由<code>gmx mdrun</code>计算. 特征向量会被写入一个轨迹文件(<code>-v</code>), 其中的第一个结构对应t=0时的结构. 特征向量作为帧写入文件, 其序号作为时间戳. 特征向量可利用<code>gmx anaeig</code>进行分析. 使用<code>gmx nmens</code>可以根据特征向量生成结构的系综. 当使用质量加权时, 输出之前产生的特征向量会缩放为普通的直角坐标. 在这种情况下, 对标准的直角坐标形式, 它们将不再精确地正交, 但在质量加权时应该正交.
 
-<p>通过<code>-qcorr</code>选项提供一个额外的参数文件, 此程序也可用于计算热容和焓的量子校正. 详细情况可以参考GROMACS手册的第一章. 结果包括在给定温度下减去简谐自由度. 总的校正值会显示在终端上. 得到校正结果的推荐方式如下:</p>
+通过<code>-qcorr</code>选项提供一个额外的参数文件, 此程序也可用于计算热容和焓的量子校正. 详细情况可以参考GROMACS手册的第一章. 结果包括在给定温度下减去简谐自由度. 总的校正值会显示在终端上. 得到校正结果的推荐方式如下:
 
 <pre><code>gmx nmeig -s topol.tpr -f nm.mtx -first 7 -last 10000 -T 300 -qc [-constr]
 </code></pre>
 
-<p>如果在模拟中 <strong>对所有共价键</strong> 使用了键约束, 应该使用<code>-constr</code>选项. 否则, 需要自己分析<code>quant_corr.xvg</code>文件.</p>
+如果在模拟中 <strong>对所有共价键</strong> 使用了键约束, 应该使用<code>-constr</code>选项. 否则, 需要自己分析<code>quant_corr.xvg</code>文件.
 
-<p>为了更加灵活, 计算量子校正时, 程序也可以考虑虚拟位点. 当选择<code>-constr</code>和<code>-qc</code>选项时, 会自动设置<code>-begin</code>和<code>-end</code>选项. 再次, 如果你认为自己知道怎样做更好, 请检查输出文件<code>eigenfreq.xvg</code>.</p>
+为了更加灵活, 计算量子校正时, 程序也可以考虑虚拟位点. 当选择<code>-constr</code>和<code>-qc</code>选项时, 会自动设置<code>-begin</code>和<code>-end</code>选项. 再次, 如果你认为自己知道怎样做更好, 请检查输出文件<code>eigenfreq.xvg</code>.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -9104,9 +9104,9 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
           [-last ]
 </code></pre>
 
-<p><code>gmx nmens</code>用于生成一个平均结构周围的系综, 系综处于一组简正模式(特征向量)定义的子空间中. 特征向量被假定是质量加权的. 沿每个特征向量的位置随机地取自方差为kT/特征值的高斯分布.</p>
+<code>gmx nmens</code>用于生成一个平均结构周围的系综, 系综处于一组简正模式(特征向量)定义的子空间中. 特征向量被假定是质量加权的. 沿每个特征向量的位置随机地取自方差为kT/特征值的高斯分布.
 
-<p>默认情况下, 特征向量将从7开始, 因为前六个简正模式对应于平动和转动自由度.</p>
+默认情况下, 特征向量将从7开始, 因为前六个简正模式对应于平动和转动自由度.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -9200,7 +9200,7 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
            [-nframes ]
 </code></pre>
 
-<p><code>gmx nmtraj</code>根据特征向量产生虚拟的轨迹, 对应于围绕平均结构的简谐直角坐标振荡. 通常应使用质量加权的特征向量, 但你也可以使用非加权的特征向量来生成正交运动. 输出帧为一个覆盖整个周期的轨迹文件, 并且第一帧为平均结构. 如果你将轨迹输出(或转换)为PDB格式, 你可以直接在PyMol软件中观看, 还可以渲染生成逼真的动画. 假定能量均分到所有模式上, 运动振幅可以由特征值和预设温度计算. 为了在PyMol中清晰地显示运动, 你可以通过设定不现实的非常高的温度值来放大振幅. 然而, 要注意对大的振幅, 线性直角坐标位移与质量加权二者都可以导致严重的结构变形, 这只是直角简正模式模型的局限性. 默认选择的特征向量为7, 因为前六个简正模式对应于平动和转动自由度.</p>
+<code>gmx nmtraj</code>根据特征向量产生虚拟的轨迹, 对应于围绕平均结构的简谐直角坐标振荡. 通常应使用质量加权的特征向量, 但你也可以使用非加权的特征向量来生成正交运动. 输出帧为一个覆盖整个周期的轨迹文件, 并且第一帧为平均结构. 如果你将轨迹输出(或转换)为PDB格式, 你可以直接在PyMol软件中观看, 还可以渲染生成逼真的动画. 假定能量均分到所有模式上, 运动振幅可以由特征值和预设温度计算. 为了在PyMol中清晰地显示运动, 你可以通过设定不现实的非常高的温度值来放大振幅. 然而, 要注意对大的振幅, 线性直角坐标位移与质量加权二者都可以导致严重的结构变形, 这只是直角简正模式模型的局限性. 默认选择的特征向量为7, 因为前六个简正模式对应于平动和转动自由度.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -9277,11 +9277,11 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
           [-[no]unsat] [-[no]permolecule] [-[no]radial] [-[no]calcdist]
 </code></pre>
 
-<p><code>gmx orde</code>用于计算C末端每个原子的序参量. 对原子i, 会使用连接i&#8211;1和i+1的向量与轴线. 索引文件中应只包含用于计算的组, 沿相应酰基链的等价碳原子应处于单独的组中. 索引文件不应包含通用组(如System, Protein), 以避免产生混乱(但这与四面体序参量无关, 它只适用于水).</p>
+<code>gmx orde</code>用于计算C末端每个原子的序参量. 对原子i, 会使用连接i&#8211;1和i+1的向量与轴线. 索引文件中应只包含用于计算的组, 沿相应酰基链的等价碳原子应处于单独的组中. 索引文件不应包含通用组(如System, Protein), 以避免产生混乱(但这与四面体序参量无关, 它只适用于水).
 
-<p><code>gmx orde</code>可以给出序张量的所有对角线元素, 还可以计算氘代的序参量Scd(默认). 如果使用了<code>-szonly</code>选项, 程序只会给出序张量的一个分量(由<code>-d</code>选项指定), 并计算每个切片的序参量. 如果不使用<code>-szonly</code>选项, 程序会给出序参量的所有对角线元素以及氘代的序参量.</p>
+<code>gmx orde</code>可以给出序张量的所有对角线元素, 还可以计算氘代的序参量Scd(默认). 如果使用了<code>-szonly</code>选项, 程序只会给出序张量的一个分量(由<code>-d</code>选项指定), 并计算每个切片的序参量. 如果不使用<code>-szonly</code>选项, 程序会给出序参量的所有对角线元素以及氘代的序参量.
 
-<p>可以确定一个原子周围的四面体序参量, 并计算键角和距离的序参量. 更多细节请参见 P.-L. Chau and A.J. Hardwick, <em>Mol. Phys.</em>, 93, (1998), 511&#8211;518.</p>
+可以确定一个原子周围的四面体序参量, 并计算键角和距离的序参量. 更多细节请参见 P.-L. Chau and A.J. Hardwick, <em>Mol. Phys.</em>, 93, (1998), 511&#8211;518.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -9449,29 +9449,29 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
             [-[no]chargegrp] [-[no]cmap] [-[no]renum] [-[no]rtpres]
 </code></pre>
 
-<p><code>gmx pdb2gmx</code>读取一个<code>.pdb</code>(或<code>.gro</code>)文件和一些数据库文件, 为分子添加氢原子, 生成GROMACS(GROMOS)格式或可选的<code>.pdb</code>格式的坐标文件, 并生成一个GROMACS格式的拓扑文件. 对这些文件进行后续处理即可生成运行模拟需要的运行输入文件.</p>
+<code>gmx pdb2gmx</code>读取一个<code>.pdb</code>(或<code>.gro</code>)文件和一些数据库文件, 为分子添加氢原子, 生成GROMACS(GROMOS)格式或可选的<code>.pdb</code>格式的坐标文件, 并生成一个GROMACS格式的拓扑文件. 对这些文件进行后续处理即可生成运行模拟需要的运行输入文件.
 
-<p><code>gmx pdb2gmx</code>搜索力场时, 会在当前工作目录和GROMACS库目录下的<code>&lt;forcefield&gt;.ff</code>子目录中搜寻<code>forcefiled.itp</code>文件, 库目录根据可执行文件的路径确定或由环境变量<code>GMXLIB</code>指定. 默认情况下, 当程序找到所有可用的<code>forcefield.itp</code>文件后, 会提示你选择其中的一个力场. 但你也可以在命令行中使用<code>-ff</code>选项指定列表中某一力场的简短名称. 在这种情况下, <code>gmx pdb2gmx</code>程序只会搜寻对应的<code>&lt;forcefield&gt;.ff</code>目录.</p>
+<code>gmx pdb2gmx</code>搜索力场时, 会在当前工作目录和GROMACS库目录下的<code>&lt;forcefield&gt;.ff</code>子目录中搜寻<code>forcefiled.itp</code>文件, 库目录根据可执行文件的路径确定或由环境变量<code>GMXLIB</code>指定. 默认情况下, 当程序找到所有可用的<code>forcefield.itp</code>文件后, 会提示你选择其中的一个力场. 但你也可以在命令行中使用<code>-ff</code>选项指定列表中某一力场的简短名称. 在这种情况下, <code>gmx pdb2gmx</code>程序只会搜寻对应的<code>&lt;forcefield&gt;.ff</code>目录.
 
-<p>当选择了一种力场后, 程序仅会读取对应力场目录下的所有文件. 如果要修改或添加一个残基类型, 你可以把整个力场目录复制到你的当前工作目录. 如果想增加一个新的蛋白质残基类型, 你需要修改库目录下的<code>residuetype.dat</code>文件, 或将整个库目录复制到本地的一个目录中, 修改复制后的<code>residuetype.dat</code>文件, 并将环境变量<code>GMXLIB</code>设为新的目录. 想了解GROMASC文件类型的更多信息, 请参考手册的第五章.</p>
+当选择了一种力场后, 程序仅会读取对应力场目录下的所有文件. 如果要修改或添加一个残基类型, 你可以把整个力场目录复制到你的当前工作目录. 如果想增加一个新的蛋白质残基类型, 你需要修改库目录下的<code>residuetype.dat</code>文件, 或将整个库目录复制到本地的一个目录中, 修改复制后的<code>residuetype.dat</code>文件, 并将环境变量<code>GMXLIB</code>设为新的目录. 想了解GROMASC文件类型的更多信息, 请参考手册的第五章.
 
-<p>注意, <code>.pdb</code>文件只是一种文件类型, 不一定非得包含蛋白质结构. 只要GROMACS的数据库支持, 任何类型的分子都可以使用<code>gmx pdb2gmx</code>进行转换. 如果数据库不支持, 你可以自己添加.</p>
+注意, <code>.pdb</code>文件只是一种文件类型, 不一定非得包含蛋白质结构. 只要GROMACS的数据库支持, 任何类型的分子都可以使用<code>gmx pdb2gmx</code>进行转换. 如果数据库不支持, 你可以自己添加.
 
-<p>这个程序本身也不是万能的, 它需要读取一系列的数据库文件, 这样才能在残基之间加上特殊的化学键(如Cys-Cys, Heme-His等等). 如果你觉得有必要, 这些都可以手动完成. 当指定了一些选项后, 程序可以提示用户选择蛋白质中的LYS, ASP, GLU, CYS或HIS残基的质子化状态. 对于Lys来说, 可以选择中性(即NZ上有两个质子), 也可以选择质子化的(3个质子, 默认). 对于Asp和Glu可以选择非质子化的(默认)或质子化的. 对于His, 质子可以位于ND1或NE2或前两者之上. 默认情况下, 这些选择会自动完成. 对于His, 是根据最优的氢键构象来进行选择的. 氢键是根据简单的几何准则来定义的, 由分子构型确定. 对要判断的三个原子, 即氢供体, 氢原子, 氢受体, 若氢-供体-受体三者之间的角度小于最大角度值, 并且供体-受体原子之间的距离小于最大距离值, 则认为三个原子之间存在氢键. 最大氢键角度和最大氢键距离分别由<code>-angle</code>和<code>-dist</code>选项指定.</p>
+这个程序本身也不是万能的, 它需要读取一系列的数据库文件, 这样才能在残基之间加上特殊的化学键(如Cys-Cys, Heme-His等等). 如果你觉得有必要, 这些都可以手动完成. 当指定了一些选项后, 程序可以提示用户选择蛋白质中的LYS, ASP, GLU, CYS或HIS残基的质子化状态. 对于Lys来说, 可以选择中性(即NZ上有两个质子), 也可以选择质子化的(3个质子, 默认). 对于Asp和Glu可以选择非质子化的(默认)或质子化的. 对于His, 质子可以位于ND1或NE2或前两者之上. 默认情况下, 这些选择会自动完成. 对于His, 是根据最优的氢键构象来进行选择的. 氢键是根据简单的几何准则来定义的, 由分子构型确定. 对要判断的三个原子, 即氢供体, 氢原子, 氢受体, 若氢-供体-受体三者之间的角度小于最大角度值, 并且供体-受体原子之间的距离小于最大距离值, 则认为三个原子之间存在氢键. 最大氢键角度和最大氢键距离分别由<code>-angle</code>和<code>-dist</code>选项指定.
 
-<p>如果使用了<code>-ter</code>选项, 蛋白质N端和C端的质子化状态可以交互式地选择. 默认情况下蛋白质的两端是离子化的(即NH3+和COO-). 对于只有一种残基的蛋白质链, 有些力场可以把它设定为两性分子形式, 但对于多肽链, <strong>不</strong> 应该使用这些选项. AMBER力场对于蛋白质两端的残基有着自己的独特形式, 与<code>-ter</code>选项不兼容. 如果要使用AMBER力场, 你需要在N或C端残基对应的名称前分别加上<code>N</code>或<code>C</code>, 并保证坐标文件的格式相同. 作为替代方法, 你也可以使用专门的末端残基的名称(如ACE, NME).</p>
+如果使用了<code>-ter</code>选项, 蛋白质N端和C端的质子化状态可以交互式地选择. 默认情况下蛋白质的两端是离子化的(即NH3+和COO-). 对于只有一种残基的蛋白质链, 有些力场可以把它设定为两性分子形式, 但对于多肽链, <strong>不</strong> 应该使用这些选项. AMBER力场对于蛋白质两端的残基有着自己的独特形式, 与<code>-ter</code>选项不兼容. 如果要使用AMBER力场, 你需要在N或C端残基对应的名称前分别加上<code>N</code>或<code>C</code>, 并保证坐标文件的格式相同. 作为替代方法, 你也可以使用专门的末端残基的名称(如ACE, NME).
 
-<p>处理PDB文件时, 把不同的链分开并不是一件简单的事, 因为用户自己生成的PDB文件中链的组织方式不同, 使用的标记也不同, 有时你确实需要在PDB里面合并由TER标记隔开的两个部分, 比如你需要使用二硫键或距离限制将两条蛋白链连接起来, 或者你的蛋白质上吸附有HEMD基团. 在这种情况下, 多条链需要包含在同一个<code>[ moleculetype ]</code>定义中. 为了处理这个问题, <code>gmx pdb2gmx</code>可以使用两个独立的选项. 首先, <code>-chainsep</code>选项允许你选择何时开始一个新的化学链, 何时为链添加末端. 这可以根据PDB文件中存在的TER记录, 或链序号的改变, 或前两个条件中的一个或两个进行. 你也可以完全交互式地进行选择. 另外一个选项是<code>-merge</code>, 它控制添加(或不添加)所有化学末端后, 如何将多条链合并成一条链. 也可以关闭这个选项(不合并), 也可以让所有不含水分子的链都合并到一个分子中, 或交互式的选择.</p>
+处理PDB文件时, 把不同的链分开并不是一件简单的事, 因为用户自己生成的PDB文件中链的组织方式不同, 使用的标记也不同, 有时你确实需要在PDB里面合并由TER标记隔开的两个部分, 比如你需要使用二硫键或距离限制将两条蛋白链连接起来, 或者你的蛋白质上吸附有HEMD基团. 在这种情况下, 多条链需要包含在同一个<code>[ moleculetype ]</code>定义中. 为了处理这个问题, <code>gmx pdb2gmx</code>可以使用两个独立的选项. 首先, <code>-chainsep</code>选项允许你选择何时开始一个新的化学链, 何时为链添加末端. 这可以根据PDB文件中存在的TER记录, 或链序号的改变, 或前两个条件中的一个或两个进行. 你也可以完全交互式地进行选择. 另外一个选项是<code>-merge</code>, 它控制添加(或不添加)所有化学末端后, 如何将多条链合并成一条链. 也可以关闭这个选项(不合并), 也可以让所有不含水分子的链都合并到一个分子中, 或交互式的选择.
 
-<p><code>gmx pdb2gmx</code>还会检查<code>.pdb</code>文件中的原子占有率, 如果一个原子的占有率不是1, 说明它在结构中的位置还没有很好的确定, 这时<code>pdb2gmx</code>会给出警告信息. 若一个<code>.pdb</code>文件不是来自X射线晶体衍射确定的结构, 可能所有的占有率都是0. 不管如何, 当使用<code>pdb2gmx</code>时, 你必须先验证输入PDB文件的正确性(读PDB文件作者的原始文章!).</p>
+<code>gmx pdb2gmx</code>还会检查<code>.pdb</code>文件中的原子占有率, 如果一个原子的占有率不是1, 说明它在结构中的位置还没有很好的确定, 这时<code>pdb2gmx</code>会给出警告信息. 若一个<code>.pdb</code>文件不是来自X射线晶体衍射确定的结构, 可能所有的占有率都是0. 不管如何, 当使用<code>pdb2gmx</code>时, 你必须先验证输入PDB文件的正确性(读PDB文件作者的原始文章!).
 
-<p>处理时, 文件中的原子会使用GROMACS约定进行记录. 如果指定了<code>-n</code>选项, 程序会生成一个索引文件, 里面包含了以相同方式记录的一个原子组. 这样你就可以用将GROMOS轨迹和坐标文件转换为GROMOS. 需要注意的是, 有一个限制, 因为记录是在去除输入文件中的氢原子之后, 添加新的氢原子之前生成的, 所以你不应该再使用<code>-ignh</code>选项.</p>
+处理时, 文件中的原子会使用GROMACS约定进行记录. 如果指定了<code>-n</code>选项, 程序会生成一个索引文件, 里面包含了以相同方式记录的一个原子组. 这样你就可以用将GROMOS轨迹和坐标文件转换为GROMOS. 需要注意的是, 有一个限制, 因为记录是在去除输入文件中的氢原子之后, 添加新的氢原子之前生成的, 所以你不应该再使用<code>-ignh</code>选项.
 
-<p><code>.gro</code>和<code>.g96</code>文件类型不支持识别链的序号, 所以如果你要转换一个含有多条链的<code>.pdb</code>文件, 最好使用<code>-o</code>选项将结果输出为<code>.pdb</code>格式的文件.</p>
+<code>.gro</code>和<code>.g96</code>文件类型不支持识别链的序号, 所以如果你要转换一个含有多条链的<code>.pdb</code>文件, 最好使用<code>-o</code>选项将结果输出为<code>.pdb</code>格式的文件.
 
-<p><code>-vsite</code>选项可以去除氢原子运动和快速的不当二面角运动. 通过将氢原子转换为虚拟位点并固定键角, 即固定它们相对于临近原子的位置, 可以去除键角运动以及面外运动. 此外, 标准氨基酸中芳香环上的所有原子(即PHE, TRP, TYR和HIS)都可以转换为虚拟位点, 从而去除这些环中的快速不当二面角运动. <strong>注意</strong>, 在这种情况下, 所有其他氢原子也会被转换为虚拟位点. 所有被转换为虚拟位点的原子的质量会增加到重原子上.</p>
+<code>-vsite</code>选项可以去除氢原子运动和快速的不当二面角运动. 通过将氢原子转换为虚拟位点并固定键角, 即固定它们相对于临近原子的位置, 可以去除键角运动以及面外运动. 此外, 标准氨基酸中芳香环上的所有原子(即PHE, TRP, TYR和HIS)都可以转换为虚拟位点, 从而去除这些环中的快速不当二面角运动. <strong>注意</strong>, 在这种情况下, 所有其他氢原子也会被转换为虚拟位点. 所有被转换为虚拟位点的原子的质量会增加到重原子上.
 
-<p>另外, 你也可以指定<code>-heavyh</code>选项, 这样氢原子的质量会增加为原来的4倍, 从而可以减慢二面角的运动. 这种方法也可以用于水分子的氢原子, 以减慢水分子的转动. 应当从键合(重)原子的质量中减去氢原子增加的质量, 以维持体系的总质量不变.</p>
+另外, 你也可以指定<code>-heavyh</code>选项, 这样氢原子的质量会增加为原来的4倍, 从而可以减慢二面角的运动. 这种方法也可以用于水分子的氢原子, 以减慢水分子的转动. 应当从键合(重)原子的质量中减去氢原子增加的质量, 以维持体系的总质量不变.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -9673,7 +9673,7 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
               [-seed ] [-[no]v]
 </code></pre>
 
-<p>如果使用sPME算法, <code>gmx pme_error</code>可用于估计静电力的误差. <code>-tune</code>选项可确定划分参数, 以使得误差在实空间和倒易空间两部分之间均匀分布. 源于粒子自相互作用的那部分误差不易计算. 但是一个较好的近似方法是仅仅使用一部分粒子来计算此项, 这可使用<code>-self</code>选项完成.</p>
+如果使用sPME算法, <code>gmx pme_error</code>可用于估计静电力的误差. <code>-tune</code>选项可确定划分参数, 以使得误差在实空间和倒易空间两部分之间均匀分布. 源于粒子自相互作用的那部分误差不易计算. 但是一个较好的近似方法是仅仅使用一部分粒子来计算此项, 这可使用<code>-self</code>选项完成.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -9748,11 +9748,11 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
              [-[no]w] [-xvg ] [-[no]mw] [-[no]pc]
 </code></pre>
 
-<p><code>gmx polystat</code>用于计算聚合物的静态性质与时间的函数关系, 并输出其平均值.</p>
+<code>gmx polystat</code>用于计算聚合物的静态性质与时间的函数关系, 并输出其平均值.
 
-<p>默认情况下, 它会计算聚合物端到端的平均距离与回旋半径. 运行时, 程序需要一个索引组并将其拆分为分子, 然后使用索引组中每个分子的第一个原子和最后一个原子来确定端到端的距离. 程序会输出总的回旋半径, 以及平均回旋张量的三个主分量. <code>-v</code>选项用于输出本征向量. <code>-pc</code>选项用于输出每个回旋张量的平均本征值. <code>-i</code>选项用于输出内部距离的均方值.</p>
+默认情况下, 它会计算聚合物端到端的平均距离与回旋半径. 运行时, 程序需要一个索引组并将其拆分为分子, 然后使用索引组中每个分子的第一个原子和最后一个原子来确定端到端的距离. 程序会输出总的回旋半径, 以及平均回旋张量的三个主分量. <code>-v</code>选项用于输出本征向量. <code>-pc</code>选项用于输出每个回旋张量的平均本征值. <code>-i</code>选项用于输出内部距离的均方值.
 
-<p><code>-p</code>选项用于计算持续长度. 所选索引组中应包含在聚合物主链上连续键合的原子. 持续长度根据索引间距为偶数的键之间的角度的余弦值确定, 不使用奇数间距的键, 因为直聚合物的骨架通常全是反式, 因此只能每两个键对齐一次. 持续长度定义为平均余弦值达到1/e时键的数目, 根据log(<cos>)的线性内插确定.</p>
+<code>-p</code>选项用于计算持续长度. 所选索引组中应包含在聚合物主链上连续键合的原子. 持续长度根据索引间距为偶数的键之间的角度的余弦值确定, 不使用奇数间距的键, 因为直聚合物的骨架通常全是反式, 因此只能每两个键对齐一次. 持续长度定义为平均余弦值达到1/e时键的数目, 根据log(<cos>)的线性内插确定.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -9858,8 +9858,6 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
 </tr>
 </table>
 
-
-
 ## gmx potential: 计算盒子内的静电势(翻译: 陈珂)
 
 <pre><code>gmx potential [-f [&lt;.xtc/.trr/...&gt;]] [-n [&lt;.ndx&gt;]] [-s [&lt;.tpr/.tpb/...&gt;]]
@@ -9869,8 +9867,8 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
               [-[no]spherical] [-ng ] [-[no]correct]
 </code></pre>
 
-<p><code>gmx potential</code>用于计算盒子内的静电势. 计算方法是, 首先对每个切片内的电荷进行加和, 再对这个电荷分布积分二次.
-计算时不考虑周期性边界条件. 电势参考点取为盒子左边的值. 程序也可以计算球坐标中以r为自变量的静电势, 这是通过计算球形切片的电荷分布并积分二次完成的. <code>epsilon_r</code>的值取为1, 但在许多情况下取2更加合适.</p>
+<code>gmx potential</code>用于计算盒子内的静电势. 计算方法是, 首先对每个切片内的电荷进行加和, 再对这个电荷分布积分二次.
+计算时不考虑周期性边界条件. 电势参考点取为盒子左边的值. 程序也可以计算球坐标中以r为自变量的静电势, 这是通过计算球形切片的电荷分布并积分二次完成的. <code>epsilon_r</code>的值取为1, 但在许多情况下取2更加合适.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -10004,7 +10002,7 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
               [-[no]w] [-xvg ] [-[no]foo]
 </code></pre>
 
-<p><code>gmx principal</code>用于计算一组原子的三个惯性主轴. 注意, 老版本的GROMACS以一种奇怪的转置方式输出数据. 对GROMACS&#8211;5.0, 输出文件<code>paxis1.dat</code>中包含了每一帧第一(主)轴的x/y/z分量, 同样, <code>paxis2.dat</code>中包含中间轴的x/y/z分量, <code>paxis3.dat</code>中包含最小轴的x/y/z分量.</p>
+<code>gmx principal</code>用于计算一组原子的三个惯性主轴. 注意, 老版本的GROMACS以一种奇怪的转置方式输出数据. 对GROMACS&#8211;5.0, 输出文件<code>paxis1.dat</code>中包含了每一帧第一(主)轴的x/y/z分量, 同样, <code>paxis2.dat</code>中包含中间轴的x/y/z分量, <code>paxis3.dat</code>中包含最小轴的x/y/z分量.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -10112,11 +10110,11 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
               [-dt ]
 </code></pre>
 
-<p><code>gmx protonate</code>读取构象并根据<code>oplsaa.ff/aminoacids.hdb</code>文件中的定义添加所有丢失氢原子. 如果仅仅指定<code>-s</code>选项, 那么构象将会被质子化, 如果也指定了<code>-f</code>选项, 那么程序会从文件中读取构象, 可以是单个构象或者轨迹.</p>
+<code>gmx protonate</code>读取构象并根据<code>oplsaa.ff/aminoacids.hdb</code>文件中的定义添加所有丢失氢原子. 如果仅仅指定<code>-s</code>选项, 那么构象将会被质子化, 如果也指定了<code>-f</code>选项, 那么程序会从文件中读取构象, 可以是单个构象或者轨迹.
 
-<p>如果提供了一个<code>.pdb</code>文件, 那么残基名称可能与GROMACS的命名规则不一致. 在这种情况下, 这些残基很可能不会被正确地质子化.</p>
+如果提供了一个<code>.pdb</code>文件, 那么残基名称可能与GROMACS的命名规则不一致. 在这种情况下, 这些残基很可能不会被正确地质子化.
 
-<p>如果指定了索引文件, 请注意原子数目应当与 <strong>质子化</strong> 状态相对应.</p>
+如果指定了索引文件, 请注意原子数目应当与 <strong>质子化</strong> 状态相对应.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -10192,7 +10190,7 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
          [-xvg ]
 </code></pre>
 
-<p><code>gmx rama</code>可以从你的拓扑文件中选择出φ/ψ(α-碳与酰胺平面交角)二面角的组合, 并且计算它们随时间变化的函数. 使用简单的Unix工具如grep你就可以选出特定残基的数据.</p>
+<code>gmx rama</code>可以从你的拓扑文件中选择出φ/ψ(α-碳与酰胺平面交角)二面角的组合, 并且计算它们随时间变化的函数. 使用简单的Unix工具如grep你就可以选出特定残基的数据.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -10261,9 +10259,9 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
 
 ### 补充说明
 
-<p>拉氏图(Ramachandran图)是通过统计蛋白质结构残基的φ/ψ二面角绘制的, 集中分布在几个角度范围内的区域. 物质都具有自发朝能量最低方向变化的特点, 自然界的蛋白也是, 所以拉氏标准分布图中, 统计分布密集的区域, 对应于蛋白能量低, 稳定的构象, 在这些区域中, 残基侧链彼此间斥力小. 模拟得到的结果如果绝大多数落在这些范围中, 也可以说明具有这样的特征. 但分布另一方面也和残基类型有关, 侧链越小所受的斥力制约越小, 在拉氏图中分布范围越广.</p>
+拉氏图(Ramachandran图)是通过统计蛋白质结构残基的φ/ψ二面角绘制的, 集中分布在几个角度范围内的区域. 物质都具有自发朝能量最低方向变化的特点, 自然界的蛋白也是, 所以拉氏标准分布图中, 统计分布密集的区域, 对应于蛋白能量低, 稳定的构象, 在这些区域中, 残基侧链彼此间斥力小. 模拟得到的结果如果绝大多数落在这些范围中, 也可以说明具有这样的特征. 但分布另一方面也和残基类型有关, 侧链越小所受的斥力制约越小, 在拉氏图中分布范围越广.
 
-<p>一些可视化软件可以直接给出拉氏图. 在VMD中, 使用<code>VMD Main</code> | <code>Extensions</code> | <code>Analysis</code> | <code>Ramachandran Plot</code>即可得到类似下面的拉氏图.</p>
+一些可视化软件可以直接给出拉氏图. 在VMD中, 使用<code>VMD Main</code> | <code>Extensions</code> | <code>Analysis</code> | <code>Ramachandran Plot</code>即可得到类似下面的拉氏图.
 
 <figure>
 <img src="/GMX/gmx_rama.png" alt="" />
@@ -10278,15 +10276,15 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
         [-[no]xy] [-cut ] [-ng ] [-fade ]
 </code></pre>
 
-<p>流体的结构可以通过中子散射或者X射线散射进行研究. 描述流体结构的最常用方法是径向分布函数. 但是, 通过散射实验获得径向分布函数并不容易.</p>
+流体的结构可以通过中子散射或者X射线散射进行研究. 描述流体结构的最常用方法是径向分布函数. 但是, 通过散射实验获得径向分布函数并不容易.
 
-<p><code>gmx rdf</code>可利用几种不同的方法来计算径向分布函数. 通常的方法是计算一个(组)粒子周围的径向分布函数, 其他方法包括计算一组粒子质心周围的径向分布函数(<code>-com</code>), 或到最近一组粒子的径向分布函数(<code>-surf</code>). 所有这些方法都可以利用<code>-xy</code>选项计算围绕与z轴平行的轴的RDF. 使用选项<code>-surf</code>时, 不能使用归一化.</p>
+<code>gmx rdf</code>可利用几种不同的方法来计算径向分布函数. 通常的方法是计算一个(组)粒子周围的径向分布函数, 其他方法包括计算一组粒子质心周围的径向分布函数(<code>-com</code>), 或到最近一组粒子的径向分布函数(<code>-surf</code>). 所有这些方法都可以利用<code>-xy</code>选项计算围绕与z轴平行的轴的RDF. 使用选项<code>-surf</code>时, 不能使用归一化.
 
-<p>选项<code>-rdf</code>用来设置要计算RDF的类型. 默认为原子或粒子, 但也可以选择分子或残基的质心或几何中心. 无论哪种情况, 都只会考虑索引组中的原子. 对于分子和/或质心选项, 需要输入文件. 除COM(质心)或COG(几何中心)外, 其他的加权方法目前只能通过提供具有不同质量的输入文件来实现. 参数<code>-com</code>与<code>-surf</code>也可以与<code>-rdf</code>选项一同使用.</p>
+选项<code>-rdf</code>用来设置要计算RDF的类型. 默认为原子或粒子, 但也可以选择分子或残基的质心或几何中心. 无论哪种情况, 都只会考虑索引组中的原子. 对于分子和/或质心选项, 需要输入文件. 除COM(质心)或COG(几何中心)外, 其他的加权方法目前只能通过提供具有不同质量的输入文件来实现. 参数<code>-com</code>与<code>-surf</code>也可以与<code>-rdf</code>选项一同使用.
 
-<p>如果已经提供了一个输入文件(<code>-s</code>), 并且<code>-rdf</code>设置为<code>atom</code>, 那么在计算RDF的时候, 会考虑到输入文件中定义的排除. 选项<code>-cut</code>是另外一种可以避免RDF图中出现分子内峰的方法, 但最好还是将输入文件中的排除数设置得高一些. 比如, 对于苯的拓扑, 将nrexcl设置为5就可以全部消除分子内距离对RDF的贡献. 注意, 在计算时会使用已选组中的所有原子, 还包括那些没有Lennard-Jones相互作用的原子.</p>
+如果已经提供了一个输入文件(<code>-s</code>), 并且<code>-rdf</code>设置为<code>atom</code>, 那么在计算RDF的时候, 会考虑到输入文件中定义的排除. 选项<code>-cut</code>是另外一种可以避免RDF图中出现分子内峰的方法, 但最好还是将输入文件中的排除数设置得高一些. 比如, 对于苯的拓扑, 将nrexcl设置为5就可以全部消除分子内距离对RDF的贡献. 注意, 在计算时会使用已选组中的所有原子, 还包括那些没有Lennard-Jones相互作用的原子.
 
-<p>选项<code>-cn</code>生成RDF累积数, 也就是在r距离范围内的平均粒子数.</p>
+选项<code>-cn</code>生成RDF累积数, 也就是在r距离范围内的平均粒子数.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -10433,25 +10431,25 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
         [-nlevels ] [-ng ]
 </code></pre>
 
-<p><code>gmx rms</code>通过计算均方根偏差(RMSD, root mean square deviation), 尺寸无关的ρ相似性参数(<code>rho</code>)或标度ρ参数(<code>rhosc</code>)来比较两个结构. 请参考Maiorov &amp; Crippen, <em>Proteins</em> <strong>22</strong>, 273 (1995). 可利用<code>-what</code>选项来选择计算那个参数.</p>
+<code>gmx rms</code>通过计算均方根偏差(RMSD, root mean square deviation), 尺寸无关的ρ相似性参数(<code>rho</code>)或标度ρ参数(<code>rhosc</code>)来比较两个结构. 请参考Maiorov &amp; Crippen, <em>Proteins</em> <strong>22</strong>, 273 (1995). 可利用<code>-what</code>选项来选择计算那个参数.
 
-<p>程序会将轨迹(<code>-f</code>)中的每个结构与参考结构进行比较. 参考结构取自结构文件(<code>-s</code>).</p>
+程序会将轨迹(<code>-f</code>)中的每个结构与参考结构进行比较. 参考结构取自结构文件(<code>-s</code>).
 
-<p>使用<code>-mir</code>选项, 还会与参考结构的镜像进行比较. 这可以作为一个很有用的参考&#8217;显著&#8217;值. 详见Maiorov &amp; Crippen, <em>Proteins</em> <strong>22</strong>, 273 (1995).</p>
+使用<code>-mir</code>选项, 还会与参考结构的镜像进行比较. 这可以作为一个很有用的参考&#8217;显著&#8217;值. 详见Maiorov &amp; Crippen, <em>Proteins</em> <strong>22</strong>, 273 (1995).
 
-<p>选项<code>-prev</code>会对当前帧的结构与前面指定帧中的结构进行比较.</p>
+选项<code>-prev</code>会对当前帧的结构与前面指定帧中的结构进行比较.
 
-<p>选项<code>-m</code>将生成一个<code>.xpm</code>格式的矩阵, 其值为轨迹中所有结构彼此之间的比较值. 这个矩阵文件可以使用如<code>xv</code>之类的程序进查看, 也可以使用<code>gmx xpm2ps</code>将其转换为postscript格式.</p>
+选项<code>-m</code>将生成一个<code>.xpm</code>格式的矩阵, 其值为轨迹中所有结构彼此之间的比较值. 这个矩阵文件可以使用如<code>xv</code>之类的程序进查看, 也可以使用<code>gmx xpm2ps</code>将其转换为postscript格式.
 
-<p>选项<code>-fit</code>控制结构彼此之间的最小二乘叠合: 完全叠合(旋转和平移), 仅平移, 或不叠合.</p>
+选项<code>-fit</code>控制结构彼此之间的最小二乘叠合: 完全叠合(旋转和平移), 仅平移, 或不叠合.
 
-<p>选项<code>-mw</code>控制是否使用质量加权. 如果你选择了这个选项(默认), 并提供一个有效的<code>.tpr</code>文件, 程序会读取<code>.tpr</code>文件中的质量, 否则将会从<code>GMXLIB</code>目录下的<code>atommass.dat</code>文件中获取质量. 对于蛋白质这还可以, 但对于别的分子来说就未必了. 对未知的原子, 会分配默认的质量12.011 amu(碳原子). 你可以通过打开<code>-debug</code>选项并检查<code>log</code>文件来判断是否这样.</p>
+选项<code>-mw</code>控制是否使用质量加权. 如果你选择了这个选项(默认), 并提供一个有效的<code>.tpr</code>文件, 程序会读取<code>.tpr</code>文件中的质量, 否则将会从<code>GMXLIB</code>目录下的<code>atommass.dat</code>文件中获取质量. 对于蛋白质这还可以, 但对于别的分子来说就未必了. 对未知的原子, 会分配默认的质量12.011 amu(碳原子). 你可以通过打开<code>-debug</code>选项并检查<code>log</code>文件来判断是否这样.
 
-<p>使用<code>-f2</code>选项, 程序会从第二个轨迹文件中读取&#8217;其他结构&#8217;, 并生成两个轨迹之间的比较矩阵.</p>
+使用<code>-f2</code>选项, 程序会从第二个轨迹文件中读取&#8217;其他结构&#8217;, 并生成两个轨迹之间的比较矩阵.
 
-<p>选项<code>-bin</code>会对比较矩阵进行二进制转储.</p>
+选项<code>-bin</code>会对比较矩阵进行二进制转储.
 
-<p>选项<code>-bm</code>会产生平均键角偏差的矩阵, 类似<code>-m</code>选项. 比较时只会考虑比较组中原子之间的键.</p>
+选项<code>-bm</code>会产生平均键角偏差的矩阵, 类似<code>-m</code>选项. 比较时只会考虑比较组中原子之间的键.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -10651,14 +10649,14 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
             [-max ] [-[no]sumh] [-[no]pbc]
 </code></pre>
 
-<p><code>gmx rmsdist</code>用于计算原子距离的根均方偏差(RMSD, root mean square deviation). 该程序的优势在于计算时不需要叠合, 而<code>gmx rms</code>计算标准RMSD时则需要叠合. 参考结构取自结构文件, t时刻的RMSD定义为参考结构与t时刻结构原子对之间距离差值的RMS.</p>
+<code>gmx rmsdist</code>用于计算原子距离的根均方偏差(RMSD, root mean square deviation). 该程序的优势在于计算时不需要叠合, 而<code>gmx rms</code>计算标准RMSD时则需要叠合. 参考结构取自结构文件, t时刻的RMSD定义为参考结构与t时刻结构原子对之间距离差值的RMS.
 
-<p><code>gmx rmsdist</code>也可用于生成RMS距离的矩阵, 使用平均距离标度的RMS距离矩阵, 平均距离矩阵, NMR平均距离矩阵(1/r<sup>3和1/r</sup>6平均). 最终, 程序可以生成一个原子对的列表, 其中包含所有1/r<sup>3和1/r</sup>6平均距离小于最大距离(<code>-max</code>指定, 默认为0.6)的原子对. 默认情况下, 平均是对等价氢原子(以*[123]命名的所有氢原子三联对)进行的. 此外, 还可以提供其他等价原子的列表(<code>-equiv</code>), 列表中每行包含一组等价原子, 使用残基序号, 残基名称, 原子名字指定, 如:</p>
+<code>gmx rmsdist</code>也可用于生成RMS距离的矩阵, 使用平均距离标度的RMS距离矩阵, 平均距离矩阵, NMR平均距离矩阵(1/r<sup>3和1/r</sup>6平均). 最终, 程序可以生成一个原子对的列表, 其中包含所有1/r<sup>3和1/r</sup>6平均距离小于最大距离(<code>-max</code>指定, 默认为0.6)的原子对. 默认情况下, 平均是对等价氢原子(以*[123]命名的所有氢原子三联对)进行的. 此外, 还可以提供其他等价原子的列表(<code>-equiv</code>), 列表中每行包含一组等价原子, 使用残基序号, 残基名称, 原子名字指定, 如:
 
 <pre><code>HB* 3 SER HB1 3 SER HB2
 </code></pre>
 
-<p>残基名称和原子名称必须与结构文件中的精确匹配, 包括大小写. 程序没有规定如何指定非连续的原子.</p>
+残基名称和原子名称必须与结构文件中的精确匹配, 包括大小写. 程序没有规定如何指定非连续的原子.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -10802,17 +10800,17 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
          [-[no]res] [-[no]aniso] [-[no]fit]
 </code></pre>
 
-<p><code>gmx rmsf</code>计算轨迹(使用<code>-f</code>提供)中原子位置的根均方涨落(RMSF, root mean square fluctuation, 即标准偏差), 计算前可以先将构型与参考帧(使用<code>-s</code>提供)的构型进行叠合(并非必须).</p>
+<code>gmx rmsf</code>计算轨迹(使用<code>-f</code>提供)中原子位置的根均方涨落(RMSF, root mean square fluctuation, 即标准偏差), 计算前可以先将构型与参考帧(使用<code>-s</code>提供)的构型进行叠合(并非必须).
 
-<p>使用选项<code>-oq</code>时会将RMSF值转换为B因子值, 并将其与坐标一起写入<code>.pdb</code>文件中, 其中坐标来自结构文件, 或是由<code>-q</code>指定的<code>.pdb</code>文件. 选项<code>-ox</code>会将B因子与平均坐标写入文件中.</p>
+使用选项<code>-oq</code>时会将RMSF值转换为B因子值, 并将其与坐标一起写入<code>.pdb</code>文件中, 其中坐标来自结构文件, 或是由<code>-q</code>指定的<code>.pdb</code>文件. 选项<code>-ox</code>会将B因子与平均坐标写入文件中.
 
-<p>使用选项<code>-od</code>时会计算相对于参考结构的根均方偏差.</p>
+使用选项<code>-od</code>时会计算相对于参考结构的根均方偏差.
 
-<p>使用选项<code>-aniso</code>时, <code>gmx rmsf</code>将会计算各项异性温度因子, 还会输出平均坐标和含有ANISOU记录的<code>.pdb</code>文件(对应于<code>-oq</code>或<code>-ox</code>选项). 注意, U值与取向有关, 因此在与实验数据对比之前请确认已经与实验坐标进行了叠合.</p>
+使用选项<code>-aniso</code>时, <code>gmx rmsf</code>将会计算各项异性温度因子, 还会输出平均坐标和含有ANISOU记录的<code>.pdb</code>文件(对应于<code>-oq</code>或<code>-ox</code>选项). 注意, U值与取向有关, 因此在与实验数据对比之前请确认已经与实验坐标进行了叠合.
 
-<p>当传递给程序一个<code>.pdb</code>文件, 并且设置了<code>-aniso</code>选项时, 如果<code>.pdb</code>文件中含有任何各向异性温度因子, 将会创建Uij的相关图.</p>
+当传递给程序一个<code>.pdb</code>文件, 并且设置了<code>-aniso</code>选项时, 如果<code>.pdb</code>文件中含有任何各向异性温度因子, 将会创建Uij的相关图.
 
-<p>使用选项<code>-dir</code>时会对平均MSF(3x3)矩阵进行对角化. 这可用于显示原子在哪个方向上涨落最大, 哪个方向上涨落最小.</p>
+使用选项<code>-dir</code>时会对平均MSF(3x3)矩阵进行对角化. 这可用于显示原子在哪个方向上涨落最大, 哪个方向上涨落最小.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -10945,13 +10943,13 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
            [-endfit ]
 </code></pre>
 
-<p><code>gmx rotacf</code>用于计算分子的旋转相关函数. 必须在索引文件中给出原子三联对(i,j,k), 它们定义了ij和jk两个向量. 旋转ACF根据向量n = ij x jk, 即两个向量叉积的自相关函数计算得到. 由于三个原子可张成一个平面, 因此三个原子的顺序并不重要. 作为可选, 通过使用<code>-d</code>选项, 并在索引文件中指定原子对(i,j), 你可以计算线性分子的旋转相关函数.</p>
+<code>gmx rotacf</code>用于计算分子的旋转相关函数. 必须在索引文件中给出原子三联对(i,j,k), 它们定义了ij和jk两个向量. 旋转ACF根据向量n = ij x jk, 即两个向量叉积的自相关函数计算得到. 由于三个原子可张成一个平面, 因此三个原子的顺序并不重要. 作为可选, 通过使用<code>-d</code>选项, 并在索引文件中指定原子对(i,j), 你可以计算线性分子的旋转相关函数.
 
-<p>示例:</p>
+示例:
 
-<p><code>gmx rotacf -P 1 -nparm 2 -fft -n index -o rotacf-x-P1 -fa expfit-x-P1 -beginfit 2.5 -endfit 20.0</code></p>
+<code>gmx rotacf -P 1 -nparm 2 -fft -n index -o rotacf-x-P1 -fa expfit-x-P1 -beginfit 2.5 -endfit 20.0</code>
 
-<p>上面的命令将利用索引文件中定义的向量间的夹角的一阶勒让德多项式计算旋转相关函数, 并根据2.5 ps到20.0 ps的数据, 将相关函数拟合为双参数指数形式.</p>
+上面的命令将利用索引文件中定义的向量间的夹角的一阶勒让德多项式计算旋转相关函数, 并根据2.5 ps到20.0 ps的数据, 将相关函数拟合为双参数指数形式.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -11072,13 +11070,13 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
            [-[no]mw]
 </code></pre>
 
-<p><code>gmx rotmat</code>用于输出将一个构象最小二乘叠合到参考构象所需要的旋转矩阵, 参考构象由<code>-s</code>选项提供. 叠合前会移除平动自由度. 输出为三个向量, 给出了 参考构象x, y和z方向的新的方向, 例如, (zx,zy,zz)为轨迹帧中参考z轴的取向.</p>
+<code>gmx rotmat</code>用于输出将一个构象最小二乘叠合到参考构象所需要的旋转矩阵, 参考构象由<code>-s</code>选项提供. 叠合前会移除平动自由度. 输出为三个向量, 给出了 参考构象x, y和z方向的新的方向, 例如, (zx,zy,zz)为轨迹帧中参考z轴的取向.
 
-<p>此工具对于某些情况可能有用, 例如, 确定界面处分子的取向, 可能在轨迹中, 由<code>gmx trjconv -fit rotxy+transxy</code>移除在x-y平面内的旋转.</p>
+此工具对于某些情况可能有用, 例如, 确定界面处分子的取向, 可能在轨迹中, 由<code>gmx trjconv -fit rotxy+transxy</code>移除在x-y平面内的旋转.
 
-<p><code>-ref</code>选项可用于确定叠合的参考结构, 而不是使用来自<code>-s</code>的结构. 程序会使用到所有其他结构的RMSD总和最小的结构作为参考结构. 由于此过程的计算代价与帧数的平方根成正比, 使用<code>-skip</code>选项可能有帮助. 程序可以进行完全叠合或只进行x-y平面内的叠合.</p>
+<code>-ref</code>选项可用于确定叠合的参考结构, 而不是使用来自<code>-s</code>的结构. 程序会使用到所有其他结构的RMSD总和最小的结构作为参考结构. 由于此过程的计算代价与帧数的平方根成正比, 使用<code>-skip</code>选项可能有帮助. 程序可以进行完全叠合或只进行x-y平面内的叠合.
 
-<p>使用选项<code>-fitxy</code>时, 在确定旋转矩阵前会先在x-y平面进行叠合.</p>
+使用选项<code>-fitxy</code>时, 在确定旋转矩阵前会先在x-y平面进行叠合.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -11177,9 +11175,9 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
            [-b ] [-e ] [-dt ] [-t ] [-[no]sep]
 </code></pre>
 
-<p><code>gmx saltbr</code>用于计算带电组所有组合之间的距离随时间的变化, 这些组可以不同的方式进行组合. 可给出一个最小距离(也即截断距离), 计算时不会考虑距离从未小于此值的组.</p>
+<code>gmx saltbr</code>用于计算带电组所有组合之间的距离随时间的变化, 这些组可以不同的方式进行组合. 可给出一个最小距离(也即截断距离), 计算时不会考虑距离从未小于此值的组.
 
-<p>程序会输出一些具有固定名称的文件: <code>min-min.xvg</code>, <code>plus-min.xvg</code>和<code>plus-plus.xvg</code>. 如果使用了<code>-sep</code>选项, 还会输出单个离子对的文件. 在这种情况下, 文件名格式为<code>sb-(Resname)(Resnr)-(Atomnr)</code>. 这种文件的个数 <strong>非常多</strong>.</p>
+程序会输出一些具有固定名称的文件: <code>min-min.xvg</code>, <code>plus-min.xvg</code>和<code>plus-plus.xvg</code>. 如果使用了<code>-sep</code>选项, 还会输出单个离子对的文件. 在这种情况下, 文件名格式为<code>sb-(Resname)(Resnr)-(Atomnr)</code>. 这种文件的个数 <strong>非常多</strong>.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -11250,9 +11248,9 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
          [-qstep ] [-seed ]
 </code></pre>
 
-<p><code>gmx sans</code>利用Debye公式计算SANS光谱(Small Angle Neutron Scattering, 小角度中子衍射). 目前, 使用时需要提供拓扑文件(因为需要指定每个原子的元素).</p>
+<code>gmx sans</code>利用Debye公式计算SANS光谱(Small Angle Neutron Scattering, 小角度中子衍射). 目前, 使用时需要提供拓扑文件(因为需要指定每个原子的元素).
 
-<p>参数:</p>
+参数:
 
 <ul class="incremental">
 <li><code>-pr</code>: 计算轨迹平均的归一化g(r)函数</li>
@@ -11264,9 +11262,9 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
 <li><code>-qstep</code>: q值的间距</li>
 </ul>
 
-<p>注意: 当使用Debye直接方法时, 计算代价以1/2 * N * (N - 1)增长, 其中N为要研究的原子数目.</p>
+注意: 当使用Debye直接方法时, 计算代价以1/2 * N * (N - 1)增长, 其中N为要研究的原子数目.
 
-<p>警告: 如果指定了<code>sq</code>或<code>pr</code>选项, 这个工具会产生大量的文件! 可达总帧数的两倍大!</p>
+警告: 如果指定了<code>sq</code>或<code>pr</code>选项, 这个工具会产生大量的文件! 可达总帧数的两倍大!
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -11408,13 +11406,13 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
          [-dgs ] [-surface ] [-output ]
 </code></pre>
 
-<p><code>gmx sasa</code>用于计算溶剂可及表面积, 所用的算法可参考Eisenhaber F, Lijnzaad P, Argos P, Sander C, Scharf M, <em>J. Comput. Chem.</em> 16, 273&#8211;284 (1995). 使用<code>-q</code>选项时, 还会将产生Connolly表面输出到.pdb文件中, 其中节点以原子表示, 连接最近节点的边作为CONECT记录. <code>-odg</code>选项用于估计溶剂化自由能, 估计时根据每单位暴露表面积每原子的溶剂化能进行计算.</p>
+<code>gmx sasa</code>用于计算溶剂可及表面积, 所用的算法可参考Eisenhaber F, Lijnzaad P, Argos P, Sander C, Scharf M, <em>J. Comput. Chem.</em> 16, 273&#8211;284 (1995). 使用<code>-q</code>选项时, 还会将产生Connolly表面输出到.pdb文件中, 其中节点以原子表示, 连接最近节点的边作为CONECT记录. <code>-odg</code>选项用于估计溶剂化自由能, 估计时根据每单位暴露表面积每原子的溶剂化能进行计算.
 
-<p>此程序需要使用<code>-surface</code>选项来指定进行表面积计算的组. 体系内所有的非溶剂原子都包括在内, 并始终计算该组的表面积. 作为可选, <code>-output</code>可用于指定额外的选择, 它应该是整个计算组的一部分. 这些组的溶剂可及表面积会从整个表面积中抽取出来.</p>
+此程序需要使用<code>-surface</code>选项来指定进行表面积计算的组. 体系内所有的非溶剂原子都包括在内, 并始终计算该组的表面积. 作为可选, <code>-output</code>可用于指定额外的选择, 它应该是整个计算组的一部分. 这些组的溶剂可及表面积会从整个表面积中抽取出来.
 
-<p>可使用<code>-or</code>和<code>-oa</code>选项来计算整个轨迹中每个残基和每个原子表面积的的平均值与标准偏差.</p>
+可使用<code>-or</code>和<code>-oa</code>选项来计算整个轨迹中每个残基和每个原子表面积的的平均值与标准偏差.
 
-<p>使用<code>-tv</code>选项可以计算分子的总体积和密度. 请注意在这种情况下正常的探针半径是否适合, 或者你是否要使用其他值, 如0. 请记住体积和密度的计算结果是非常粗糙的. 例如, 在冰Ih中, 可以很容易地将水分子放于孔道中, 这样得到的体积或过小, 而表面积和密度都过大.</p>
+使用<code>-tv</code>选项可以计算分子的总体积和密度. 请注意在这种情况下正常的探针半径是否适合, 或者你是否要使用其他值, 如0. 请记住体积和密度的计算结果是非常粗糙的. 例如, 在冰Ih中, 可以很容易地将水分子放于孔道中, 这样得到的体积或过小, 而表面积和密度都过大.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -11564,9 +11562,9 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
 
 ### 附加说明
 
-<p>溶剂可及表面积是描述蛋白质疏水性的重要参数, 氨基酸残基的疏水性是影响蛋白质折叠的重要物理作用.</p>
+溶剂可及表面积是描述蛋白质疏水性的重要参数, 氨基酸残基的疏水性是影响蛋白质折叠的重要物理作用.
 
-<p>输出文件<code>area.xvg</code>中有四列, 分别代表: 总表面积, 极性表面积, 非极性表面积, 溶剂化自由能. 最后一项是根据原子所属类型来定义的.</p>
+输出文件<code>area.xvg</code>中有四列, 分别代表: 总表面积, 极性表面积, 非极性表面积, 溶剂化自由能. 最后一项是根据原子所属类型来定义的.
 
 ## gmx saxs: 计算小角X射线散射谱(翻译: 李继存)
 
@@ -11576,7 +11574,7 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
          [-endq ] [-energy ]
 </code></pre>
 
-<p><code>gmx saxs</code>用于计算给定索引组的SAXS结构因子. 计算基于Cromer方法, 需要拓扑文件和轨迹文件.</p>
+<code>gmx saxs</code>用于计算给定索引组的SAXS结构因子. 计算基于Cromer方法, 需要拓扑文件和轨迹文件.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -11681,27 +11679,27 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
            [-pdbatoms ] [-[no]cumlt]
 </code></pre>
 
-<p><code>gmx select</code>输出与动态选区相关的基本数据. 它可以用于一些简单分析, 它的输出也可以与其他程序和/或外部分析程序的输出组合起来, 用以计算更复杂的数据. 输出选项可以任意组合, 但需要注意<code>-om</code>仅对第一个选区进行操作. 还需要注意, 如果没有提供输出选项, 则不会有任何输出.</p>
+<code>gmx select</code>输出与动态选区相关的基本数据. 它可以用于一些简单分析, 它的输出也可以与其他程序和/或外部分析程序的输出组合起来, 用以计算更复杂的数据. 输出选项可以任意组合, 但需要注意<code>-om</code>仅对第一个选区进行操作. 还需要注意, 如果没有提供输出选项, 则不会有任何输出.
 
-<p>使用<code>-os</code>时, 会逐帧计算每个选区中的位置(position)数目. 使用<code>-norm</code>时, 输出值会介于0和1之间, 代表相对于最大位置数的比例(例如, 对于选区<code>resname RA and x &lt; 5</code>, 最大位置数就是RA残基内的原子数). 使用<code>-cfnorm</code>时, (<code>-os</code>的)输出值则会除以选区覆盖(全局位置数的)比例. <code>-norm</code>和<code>-cfnorm</code>可以互相独立地指定.</p>
+使用<code>-os</code>时, 会逐帧计算每个选区中的位置(position)数目. 使用<code>-norm</code>时, 输出值会介于0和1之间, 代表相对于最大位置数的比例(例如, 对于选区<code>resname RA and x &lt; 5</code>, 最大位置数就是RA残基内的原子数). 使用<code>-cfnorm</code>时, (<code>-os</code>的)输出值则会除以选区覆盖(全局位置数的)比例. <code>-norm</code>和<code>-cfnorm</code>可以互相独立地指定.
 
-<p>使用<code>-oc</code>时, 以时间函数的形式输出每个选区的覆盖比例.</p>
+使用<code>-oc</code>时, 以时间函数的形式输出每个选区的覆盖比例.
 
-<p>使用<code>-oi</code>时, 以时间函数的形式输出选中的原子/残基/分子. 输出中, 第一列是帧时间, 第二列是位置数, 后续列是原子/残基/分子编号. 如果指定的选区数大于1, 则第二组的位置数紧邻第一组的最后一个数字输出, 并以此类推.</p>
+使用<code>-oi</code>时, 以时间函数的形式输出选中的原子/残基/分子. 输出中, 第一列是帧时间, 第二列是位置数, 后续列是原子/残基/分子编号. 如果指定的选区数大于1, 则第二组的位置数紧邻第一组的最后一个数字输出, 并以此类推.
 
-<p>使用<code>-on</code>时, 会将选中的原子输出为索引文件, 此文件与<code>make_ndx</code>和分析工具兼容. 每个选区会输出为一个选区组, 对于动态选区, 每帧都会输出一个组.</p>
+使用<code>-on</code>时, 会将选中的原子输出为索引文件, 此文件与<code>make_ndx</code>和分析工具兼容. 每个选区会输出为一个选区组, 对于动态选区, 每帧都会输出一个组.
 
-<p>要得到残基编号, 可以使用<code>-resnr</code>控制<code>-oi</code>的输出: <code>number</code>(默认)会按照残基在输入文件中的编号输出, 而<code>index</code>则会按残基在输入文件中出现的顺序, 从1开始, 赋予残基唯一的编号并输出. 前者更加直观, 但如果输入中含有多个同一编号的残基, 得到的输出就没那么有用了.</p>
+要得到残基编号, 可以使用<code>-resnr</code>控制<code>-oi</code>的输出: <code>number</code>(默认)会按照残基在输入文件中的编号输出, 而<code>index</code>则会按残基在输入文件中出现的顺序, 从1开始, 赋予残基唯一的编号并输出. 前者更加直观, 但如果输入中含有多个同一编号的残基, 得到的输出就没那么有用了.
 
-<p>使用<code>-om</code>时, 以时间函数的形式, 针对第一选区输出一套掩码(mask). 输出中的每一行对应一帧, 为每一个可能被选中的原子/残基/分子赋予0或1的值. 1表示该原子/残基/分子在当前帧中被选中, 0表示未选中.</p>
+使用<code>-om</code>时, 以时间函数的形式, 针对第一选区输出一套掩码(mask). 输出中的每一行对应一帧, 为每一个可能被选中的原子/残基/分子赋予0或1的值. 1表示该原子/残基/分子在当前帧中被选中, 0表示未选中.
 
-<p>使用<code>-of</code>时, 输出每个位置的占据比例(即该位置被选中的帧所占的比例).</p>
+使用<code>-of</code>时, 输出每个位置的占据比例(即该位置被选中的帧所占的比例).
 
-<p>使用<code>-ofpdb</code>时, 输出一个PDB文件, 其中占有率列的值是选区中每个原子的占据分数. PDB文件中的坐标则是输入拓扑中的值. <code>-pdbatoms</code>可以用来控制哪些原子会出现在输出的PDB文件中: 使用<code>all</code>时, 所有原子都会出现; 使用<code>maxsel</code>时, 所有可能被选区选中的原子都会出现; 使用<code>selected</code>时, 只有在至少一帧中被选中的原子才会出现.</p>
+使用<code>-ofpdb</code>时, 输出一个PDB文件, 其中占有率列的值是选区中每个原子的占据分数. PDB文件中的坐标则是输入拓扑中的值. <code>-pdbatoms</code>可以用来控制哪些原子会出现在输出的PDB文件中: 使用<code>all</code>时, 所有原子都会出现; 使用<code>maxsel</code>时, 所有可能被选区选中的原子都会出现; 使用<code>selected</code>时, 只有在至少一帧中被选中的原子才会出现.
 
-<p>使用<code>-olt</code>时, 生成一个直方图, 显示了被选中位置数与某位置持续被选中时间的函数关系. <code>-cumlt</code>可以用来控制是否在直方图中包含较长间隔的子间隔.</p>
+使用<code>-olt</code>时, 生成一个直方图, 显示了被选中位置数与某位置持续被选中时间的函数关系. <code>-cumlt</code>可以用来控制是否在直方图中包含较长间隔的子间隔.
 
-<p><code>-om</code>, <code>-of</code>和<code>-olt</code>只有在处理动态选区时才有意义.</p>
+<code>-om</code>, <code>-of</code>和<code>-olt</code>只有在处理动态选区时才有意义.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -11873,13 +11871,13 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
          [-emin ] [-emax ] [-nlevels ]
 </code></pre>
 
-<p><code>gmx sham</code>用于计算多维的自由能, 焓和熵. <code>gmx sham</code>会读取一个或多个<code>.xvg</code>文件并分析数据集. <code>gmx sham</code>的基本功能是利用玻尔兹曼反转多维直方图方法(<code>-lp</code>选项)计算Gibbs自由能形貌图(<code>-ls</code>选项), 但也可用于计算焓(<code>-lsh</code>选项)和熵(<code>-lss</code>选项)的形貌图. 程序可以给出用户提供的任意量的直方图. 输入文件中的一行可能以时间开头(参看选项<code>-time</code>), 后面跟着任意多个y值. 当使用&amp;隔开时(<code>-n</code>选项), 可以读入多个数据集, 在这种情况下每行只会读取一个y值. 所有以#和@开头的行都会被忽略.</p>
+<code>gmx sham</code>用于计算多维的自由能, 焓和熵. <code>gmx sham</code>会读取一个或多个<code>.xvg</code>文件并分析数据集. <code>gmx sham</code>的基本功能是利用玻尔兹曼反转多维直方图方法(<code>-lp</code>选项)计算Gibbs自由能形貌图(<code>-ls</code>选项), 但也可用于计算焓(<code>-lsh</code>选项)和熵(<code>-lss</code>选项)的形貌图. 程序可以给出用户提供的任意量的直方图. 输入文件中的一行可能以时间开头(参看选项<code>-time</code>), 后面跟着任意多个y值. 当使用&amp;隔开时(<code>-n</code>选项), 可以读入多个数据集, 在这种情况下每行只会读取一个y值. 所有以#和@开头的行都会被忽略.
 
-<p>当系综并非玻尔兹曼系综, 但又需要使用自由能进行偏置时, 可使用<code>-ge</code>选项提供一个自由能文件. 对由<code>-f</code>选项指定的输入文件中, 每个(多维)数据点需要一个自由能值.</p>
+当系综并非玻尔兹曼系综, 但又需要使用自由能进行偏置时, 可使用<code>-ge</code>选项提供一个自由能文件. 对由<code>-f</code>选项指定的输入文件中, 每个(多维)数据点需要一个自由能值.
 
-<p>可利用<code>-ene</code>选项提供一个能量文件. 在使用Kumar等人提出的单直方图分析方法时, 这些能量可用作权重函数. 如果提供了温度(处于文件中的第二列), 会应用实验的加权方案. 此外, 这些值还会用于计算焓和熵.</p>
+可利用<code>-ene</code>选项提供一个能量文件. 在使用Kumar等人提出的单直方图分析方法时, 这些能量可用作权重函数. 如果提供了温度(处于文件中的第二列), 会应用实验的加权方案. 此外, 这些值还会用于计算焓和熵.
 
-<p>可使用选项<code>-dim</code>给出距离的维度. 当距离为2维或3维时, 由两个粒子所采样的圆周或表面会随着距离的增加而增加. 依据想要展示的量, 可以选择是否修正直方图和自由能的体积效应. 对2维或3维, 概率可分别利用r或r<sup>2</sup>进行归一化. 可使用&#8211;1值来指示两个向量间以度为单位的夹角: 应用角度的正弦进行归一化. <strong>注意</strong>, 对两个向量间的夹角, 内积或余弦是很自然的量, 因为它可以产生相同体积的分格.</p>
+可使用选项<code>-dim</code>给出距离的维度. 当距离为2维或3维时, 由两个粒子所采样的圆周或表面会随着距离的增加而增加. 依据想要展示的量, 可以选择是否修正直方图和自由能的体积效应. 对2维或3维, 概率可分别利用r或r<sup>2</sup>进行归一化. 可使用&#8211;1值来指示两个向量间以度为单位的夹角: 应用角度的正弦进行归一化. <strong>注意</strong>, 对两个向量间的夹角, 内积或余弦是很自然的量, 因为它可以产生相同体积的分格.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -12082,7 +12080,7 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
            [-B ] [-C ] [-qi ] [-qj ] [-sigfac ]
 </code></pre>
 
-<p><code>gmx sigeps</code>是一个简单的工具, 可以将C6/C12或C6/Cn组合转换成σ和ε, 或者反过来. 它也可以在文件中绘制出势能. 此外, 它还能把一个Buckingham势近似地转成一个Lennard-Jones势.</p>
+<code>gmx sigeps</code>是一个简单的工具, 可以将C6/C12或C6/Cn组合转换成σ和ε, 或者反过来. 它也可以在文件中绘制出势能. 此外, 它还能把一个Buckingham势近似地转成一个Lennard-Jones势.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -12185,20 +12183,20 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
             [-maxsol ] [-[no]vel]
 </code></pre>
 
-<p><code>gmx solvate</code>能够完成以下两项任务:</p>
+<code>gmx solvate</code>能够完成以下两项任务:
 
 <ol class="incremental">
 <li>创建一个充满溶剂的盒子. 可以通过指定<code>-cs</code>和<code>-box</code>选项来完成. 对具有盒子信息但不含原子的结构文件则可以通过指定<code>-cs</code>和<code>-cp</code>来实现.</li>
 <li>将溶质分子, 如蛋白质进行溶剂化, 使其处于溶剂分子的包围之中. <code>-cp</code>和<code>-cs</code>分别用于指定溶质和溶剂. 不设定<code>-box</code>时, 会使用溶质坐标文件(<code>-cp</code>)中的盒子信息. 如果你希望将溶质置于盒子的中心, 可以使用<code>gmx editconf</code>命令, 它有非常多的选项用于改变盒子的规格和使分子居中. 对某一位置, 若溶质分子中任意原子与溶剂分子中任意原子之间的距离小于这两个原子的范德华半径之和, 则会将溶剂分子从盒子中移除. 程序会读取数据文件(<code>vdwradii.dat</code>)中的范德华半径, 并根据<code>-scale</code>选项的设置进行缩放. 若不能在数据文件中找到所需的半径值, 相应的原子将通过<code>-radius</code>来设定(未缩放)距离.</li>
 </ol>
 
-<p>默认使用的溶剂是简单点电荷水模型(SPC, Simple Point Charge Water), 坐标文件为<code>$GMXLIB/spc216.gro</code>. 这些坐标同样可以用于其他的三点水模型, 因为通过短时间的平衡就可以去除这些模型之间的差异. 程序也支持其余的溶剂分子和混合溶剂. 对溶剂类型的唯一限制是一个溶剂分子只包含一种残基. 程序会使用坐标文件中的残基信息, 因此这些信息应保持一定程度的一致性. 实际使用中, 这就意味着坐标文件中两个连续的溶剂分子应该具有不同的残基编号. 溶质盒子是根据坐标文件中的坐标进行堆积构建而成, 这意味着这些坐标应该在周期性边界条件下进行平衡, 以确保分子在堆积界面上具有良好的排列. <code>-maxsol</code>选项可以设置加入的最大溶剂分子数, 程序只添加前<code>-maxsol</code>个溶剂分子而忽略其余的. 这样在盒子中形成了一部分真空, 这在后面可能会引起一些问题. 请明智地选择最大分子数和盒子体积.</p>
+默认使用的溶剂是简单点电荷水模型(SPC, Simple Point Charge Water), 坐标文件为<code>$GMXLIB/spc216.gro</code>. 这些坐标同样可以用于其他的三点水模型, 因为通过短时间的平衡就可以去除这些模型之间的差异. 程序也支持其余的溶剂分子和混合溶剂. 对溶剂类型的唯一限制是一个溶剂分子只包含一种残基. 程序会使用坐标文件中的残基信息, 因此这些信息应保持一定程度的一致性. 实际使用中, 这就意味着坐标文件中两个连续的溶剂分子应该具有不同的残基编号. 溶质盒子是根据坐标文件中的坐标进行堆积构建而成, 这意味着这些坐标应该在周期性边界条件下进行平衡, 以确保分子在堆积界面上具有良好的排列. <code>-maxsol</code>选项可以设置加入的最大溶剂分子数, 程序只添加前<code>-maxsol</code>个溶剂分子而忽略其余的. 这样在盒子中形成了一部分真空, 这在后面可能会引起一些问题. 请明智地选择最大分子数和盒子体积.
 
-<p>该程序还可以旋转溶质分子, 使其最长的分子轴与盒子边缘对齐. 这样可以减少所需要的溶剂分子. 值得注意的是这只适用于短时间的模拟, 如500 ps内溶液中的α-螺旋多肽可以旋转90度. 因此, 通常来说选用接近立方体的盒子会好一些.</p>
+该程序还可以旋转溶质分子, 使其最长的分子轴与盒子边缘对齐. 这样可以减少所需要的溶剂分子. 值得注意的是这只适用于短时间的模拟, 如500 ps内溶液中的α-螺旋多肽可以旋转90度. 因此, 通常来说选用接近立方体的盒子会好一些.
 
-<p><code>-shell</code>的设定值大于零时, 将会在溶质周围放置指定厚度(nm)的水层. 提示: 最好先将蛋白质分子置于盒子中央(使用<code>gmx editconf</code>).</p>
+<code>-shell</code>的设定值大于零时, 将会在溶质周围放置指定厚度(nm)的水层. 提示: 最好先将蛋白质分子置于盒子中央(使用<code>gmx editconf</code>).
 
-<p>最后, <code>gmx solvate</code>命令还可以去除拓扑文件中说明已添加的溶剂分子数的行, 并在坐标文件中添加包含溶剂分子总数的新行.</p>
+最后, <code>gmx solvate</code>命令还可以去除拓扑文件中说明已添加的溶剂分子数的行, 并在坐标文件中添加包含溶剂分子总数的新行.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -12284,7 +12282,7 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
 
 ### 附加说明
 
-<p><code>gmx solvate</code>可以为模拟分子添加溶剂环境</p>
+<code>gmx solvate</code>可以为模拟分子添加溶剂环境
 
 <ul class="incremental">
 <li><code>-cp</code>: 带盒子参数的分子坐标文件, 一般是<code>editconf</code>的输出文件</li>
@@ -12293,7 +12291,7 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
 <li><code>-p</code>: 体系拓扑文件, <code>gmx solvate</code>会往里面写入添加水分子的个数. 这个不要忘记, 不然在进行下一步计算时, 会出现坐标文件和拓扑文件中原子数不一致的错误</li>
 </ul>
 
-<p>添加水分子后需要用VMD等软件查看结果, 因为有时产生的构型不尽合理. 若发现某一水分子出现在蛋白结构中, 而此位置本来不希望有水分子存在, 那么可以找出这个水分子的残基标号, 进行删除, 同时减少拓扑文件中水分子的数目.</p>
+添加水分子后需要用VMD等软件查看结果, 因为有时产生的构型不尽合理. 若发现某一水分子出现在蛋白结构中, 而此位置本来不希望有水分子存在, 那么可以找出这个水分子的残基标号, 进行删除, 同时减少拓扑文件中水分子的数目.
 
 ### 使用范例
 
@@ -12315,14 +12313,14 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
             [-rmax ] [-cbin ] [-rbin ] [-[no]pbc]
 </code></pre>
 
-<p><code>gmx sorient</code>用于分析溶质分子周围的溶剂分子的取向. 它可以计算从一个或多个参考位置到每个溶剂分子第一个原子的向量(向量 <span class="math">\(\vec A\)</span>)与另外两个向量之间的角度:</p>
+<code>gmx sorient</code>用于分析溶质分子周围的溶剂分子的取向. 它可以计算从一个或多个参考位置到每个溶剂分子第一个原子的向量(向量 <span class="math">\(\vec A\)</span>)与另外两个向量之间的角度:
 
 <ul class="incremental">
 <li><span class="math">\(\q_1\)</span>: 向量 <span class="math">\(\vec A\)</span> 与从溶剂分子第一个原子到第二和第三个原子中点的向量之间的夹角</li>
 <li><span class="math">\(\q_2\)</span>: 向量 <span class="math">\(\vec A\)</span> 与由三个原子定义的溶剂分子平面的法线之间的夹角, 或者, 当使用<code>-v23</code>选项时, 向量 <span class="math">\(\vec A\)</span> 与从原子2到原子3的向量之间的夹角.</li>
 </ul>
 
-<p>参考位置可以是一组原子或是一组原子的质心. 溶剂原子组中的每个溶剂分子只能包含3个原子. 对每一帧, <code>-o</code>和<code>-no</code>选项只会考虑处于<code>-rmin</code>和<code>-rmax</code>之间的溶剂分子.</p>
+参考位置可以是一组原子或是一组原子的质心. 溶剂原子组中的每个溶剂分子只能包含3个原子. 对每一帧, <code>-o</code>和<code>-no</code>选项只会考虑处于<code>-rmin</code>和<code>-rmax</code>之间的溶剂分子.
 
 <ul class="incremental">
 <li><code>-o</code>: <span class="math">\(r_\text{min}\le r \le r_\text{max}\)</span> 范围内 <span class="math">\(\cos\q_1\)</span> 的分布</li>
@@ -12464,13 +12462,13 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
 
 ### 附加说明
 
-<p>此程序特别适用于计算溶质分子周围水分子的角度分布.</p>
+此程序特别适用于计算溶质分子周围水分子的角度分布.
 
 <figure>
 <img src="/GMX/gmx_sorient.png" alt="" />
 </figure>
 
-<p>设溶质为单原子离子或分子质心Ref, 溶剂为水分子原子1为O, 原子2和3为H, 则 <span class="math">\(\q_1\)</span> 对应Ref至O的向量 <span class="math">\(\vec A=\vec R_\text{Ref}-\vec R_\text{O}\)</span> 与O至两个H连线中点的向量 <span class="math">\({\vec R_\text{OH2}+\vec R_\text{OH3} \over 2}\)</span> 之间的夹角, 后一向量的方向与水分子偶极矩的方向相同. 因此, <span class="math">\(\q_1\)</span> 可视为溶质分子周围水分子偶极矩的取向. <span class="math">\(\q_2\)</span> 对应 <span class="math">\(\vec A\)</span> 与水分子平面法线的夹角. 当使用<code>-v23</code>选项时, 则为 <span class="math">\(\vec A\)</span> 与两个H连线 <span class="math">\(\vec R_\text{H3}-\vec R_\text{H2}\)</span> 之间的夹角.</p>
+设溶质为单原子离子或分子质心Ref, 溶剂为水分子原子1为O, 原子2和3为H, 则 <span class="math">\(\q_1\)</span> 对应Ref至O的向量 <span class="math">\(\vec A=\vec R_\text{Ref}-\vec R_\text{O}\)</span> 与O至两个H连线中点的向量 <span class="math">\({\vec R_\text{OH2}+\vec R_\text{OH3} \over 2}\)</span> 之间的夹角, 后一向量的方向与水分子偶极矩的方向相同. 因此, <span class="math">\(\q_1\)</span> 可视为溶质分子周围水分子偶极矩的取向. <span class="math">\(\q_2\)</span> 对应 <span class="math">\(\vec A\)</span> 与水分子平面法线的夹角. 当使用<code>-v23</code>选项时, 则为 <span class="math">\(\vec A\)</span> 与两个H连线 <span class="math">\(\vec R_\text{H3}-\vec R_\text{H2}\)</span> 之间的夹角.
 
 ## gmx spatial: 计算空间分布函数(翻译: 刘建川)
 
@@ -12479,45 +12477,55 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
             [-[no]pbc] [-[no]div] [-ign ] [-bin ] [-nab ]
 </code></pre>
 
-<p><code>gmx spatial</code>用于计算空间分布函数(SDF, spatial distribution function), 其输出文件为Gaussian98 cube格式, 可用VMD读取. 对含有32,000个原子, 运行了50 ns的轨迹, 计算SDF大约需要30分钟. 其中的大部分时间都消耗在了运行<code>trjconv</code>上, 它需要运行两次, 以便恰当地对体系进行居中, 同时也需要很多空间(会复制三份轨迹文件). 如果选择了正确的叠合, 得到的结果非常漂亮, 而且也包含了很多有用信息. 程序可处理运动范围很广的组中的3&#8211;4原子(如溶液中的自由氨基酸), 也可以选择稳定折叠结构的蛋白质骨架, 计算溶剂分子的的SDF, 得到时间平均的溶剂壳层. 这个程序还可用于计算任意直角坐标的SDF, 只需要忽略前面的<code>gmx trjconv</code>步骤即可.</p>
+<code>gmx spatial</code>用于计算空间分布函数(SDF, spatial distribution function), 其输出文件为Gaussian98 cube格式, 可用VMD读取. 对含有32,000个原子, 运行了50 ns的轨迹, 计算SDF大约需要30分钟. 其中的大部分时间都消耗在了运行<code>trjconv</code>上, 它需要运行两次, 以便恰当地对体系进行居中, 同时也需要很多空间(会复制三份轨迹文件). 如果选择了正确的叠合, 得到的结果非常漂亮, 而且也包含了很多有用信息. 程序可处理运动范围很广的组中的3&#8211;4原子(如溶液中的自由氨基酸), 也可以选择稳定折叠结构的蛋白质骨架, 计算溶剂分子的的SDF, 得到时间平均的溶剂壳层. 这个程序还可用于计算任意直角坐标的SDF, 只需要忽略前面的<code>gmx trjconv</code>步骤即可.
 
-<p>使用:</p>
+使用:
 
-<p>为得到有意义的SDF, 整个轨迹中溶质分子必须在盒子内居中, 并去除其平动和转动. 也就是说, 统计周围分子的SDF时必须基于相对固定的参考坐标系. 为此, 可能需要使用<code>gmx trjconv</code>对轨迹进行多次处理. 此外, 可能还需要定义特殊的分析组, 并使用<code>-n</code>选项传递给<code>gmx trjconv</code>.</p>
+为得到有意义的SDF, 整个轨迹中溶质分子必须在盒子内居中, 并去除其平动和转动. 也就是说, 统计周围分子的SDF时必须基于相对固定的参考坐标系. 为此, 可能需要使用<code>gmx trjconv</code>对轨迹进行多次处理. 此外, 可能还需要定义特殊的分析组, 并使用<code>-n</code>选项传递给<code>gmx trjconv</code>.
 
 <ol class="incremental">
-<li><p>使用<code>gmx make_ndx</code>创建两个组, 一个包含中心分子, 一个包含要统计SDF的原子</p></li>
-<li><p>使中心分子在盒子内居中, 同时所有其他分子处于盒子内</p>
+<li>
+使用<code>gmx make_ndx</code>创建两个组, 一个包含中心分子, 一个包含要统计SDF的原子
+</li>
+<li>
+使中心分子在盒子内居中, 同时所有其他分子处于盒子内
 
-<p><code>gmx trjconv -s topol.tpr -f traj -n index.ndx -o traj~cnt.xtc -pbc mol -ur compact -center</code></p>
+<code>gmx trjconv -s topol.tpr -f traj -n index.ndx -o traj~cnt.xtc -pbc mol -ur compact -center</code>
 
-<p><code>Select group for centering</code>时选择中心分子组, <code>Select group for output</code>时选择System组</p></li>
-<li><p>按中心分子对轨迹进行叠合, 移除中心分子的转动和平动:</p>
+<code>Select group for centering</code>时选择中心分子组, <code>Select group for output</code>时选择System组
+</li>
+<li>
+按中心分子对轨迹进行叠合, 移除中心分子的转动和平动:
 
-<p><code>gmx trjconv -s topol.tpr -f traj~cnt.xtc -n index.ndx -o traj~cnt~fit.xtc -fit rot+trans</code></p>
+<code>gmx trjconv -s topol.tpr -f traj~cnt.xtc -n index.ndx -o traj~cnt~fit.xtc -fit rot+trans</code>
 
-<p><code>Select group for least squares fit</code>时选择中心分子组, <code>Select group for output</code>是选择System组</p></li>
-<li><p>统计分布:</p>
+<code>Select group for least squares fit</code>时选择中心分子组, <code>Select group for output</code>是选择System组
+</li>
+<li>
+统计分布:
 
-<p><code>gmx spatial -f traj~cnt~fit.xtc -n index.ndx</code></p>
+<code>gmx spatial -f traj~cnt~fit.xtc -n index.ndx</code>
 
-<p><code>Select group to generate SDF:</code>时选择要统计SDF的组, <code>Select group to output coords (e.g. solute):</code>时选择中心分子组</p></li>
-<li><p>使用VMD或其他可视化软件载入得到的<code>grid.cube</code>文件, 以等值面模式查看结果</p></li>
+<code>Select group to generate SDF:</code>时选择要统计SDF的组, <code>Select group to output coords (e.g. solute):</code>时选择中心分子组
+</li>
+<li>
+使用VMD或其他可视化软件载入得到的<code>grid.cube</code>文件, 以等值面模式查看结果
+</li>
 </ol>
 
-<p><strong>注意</strong>, 对一些体系, 如胶束体系, 在第1步和第2步之间可能还需要运行<code>gmx trjconv -pbc cluster</code>.</p>
+<strong>注意</strong>, 对一些体系, 如胶束体系, 在第1步和第2步之间可能还需要运行<code>gmx trjconv -pbc cluster</code>.
 
-<p>警告:</p>
+警告:
 
-<p>SDF生成的cube文件包含了具有非零占据的所有格点. 然而, <code>gmx trjconv</code>使用的<code>-fit rot+trans</code>选项意味着你的体系会在空间中旋转和平移(选中的组不会). 因此, 返回值只在所选中心组/坐标周围的一定区域内有意义, 在整个轨迹中, 这些区域与平移/旋转后的体系之间存在重叠. 请你确保能满足这一条件.</p>
+SDF生成的cube文件包含了具有非零占据的所有格点. 然而, <code>gmx trjconv</code>使用的<code>-fit rot+trans</code>选项意味着你的体系会在空间中旋转和平移(选中的组不会). 因此, 返回值只在所选中心组/坐标周围的一定区域内有意义, 在整个轨迹中, 这些区域与平移/旋转后的体系之间存在重叠. 请你确保能满足这一条件.
 
-<p>漏洞:</p>
+漏洞:
 
-<p>当分配的内存不够时, 可能会出现段错误. 通常会检测这一错误, 并在出错前终止程序, 同时给出一条警告消息, 建议使用<code>-nab</code>选项(指定附加分格数). 然而, 程序并不能检测到所有此类事件. 如果你遇到段错误, 请试着增加<code>-nab</code>的值, 并再次运行程序.</p>
+当分配的内存不够时, 可能会出现段错误. 通常会检测这一错误, 并在出错前终止程序, 同时给出一条警告消息, 建议使用<code>-nab</code>选项(指定附加分格数). 然而, 程序并不能检测到所有此类事件. 如果你遇到段错误, 请试着增加<code>-nab</code>的值, 并再次运行程序.
 
-<p>激进选项:</p>
+激进选项:
 
-<p>为减少计算所需的空间和时间, 你可以只输出运行<code>gmx trjconv</code>所需的坐标. 然而, 请确保<code>-nab</code>的设定值足够高, 因为程序会基于初始坐标和<code>-nab</code>选项的值分配cube分格所需要的内存.</p>
+为减少计算所需的空间和时间, 你可以只输出运行<code>gmx trjconv</code>所需的坐标. 然而, 请确保<code>-nab</code>的设定值足够高, 因为程序会基于初始坐标和<code>-nab</code>选项的值分配cube分格所需要的内存.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -12621,7 +12629,7 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
          [-rmax ] [-dip ] [-bw ]
 </code></pre>
 
-<p><code>gmx spol</code>程序用于分析溶质分子周围的偶极, 特别适用于极化水模型. 计算时需要一组参考原子或参考质心(<code>-com</code>选项), 还有一组溶剂原子, 程序会先将溶剂原子组划分为分子, 然后确定每一溶剂分子到参考组原子或其质心的最近距离, 并给出这些距离的累积分布. 对处于<code>-rmin</code>和<code>-rmax</code>之间的每一距离, 确定距离向量与溶剂分子偶极的內积. 对带有净电荷的溶剂分子(离子), 会均匀地将净电荷从每一所选离子的所有原子中会减去. 输出这些偶极分量的平均值. 对极化的处理类似, 并从瞬时偶极中减去平均偶极. 平均偶极的大小由<code>-dip</code>选项指定, 方向由从所选溶剂组的第一个原子到第二和第三个原子连线中点的向量确定.</p>
+<code>gmx spol</code>程序用于分析溶质分子周围的偶极, 特别适用于极化水模型. 计算时需要一组参考原子或参考质心(<code>-com</code>选项), 还有一组溶剂原子, 程序会先将溶剂原子组划分为分子, 然后确定每一溶剂分子到参考组原子或其质心的最近距离, 并给出这些距离的累积分布. 对处于<code>-rmin</code>和<code>-rmax</code>之间的每一距离, 确定距离向量与溶剂分子偶极的內积. 对带有净电荷的溶剂分子(离子), 会均匀地将净电荷从每一所选离子的所有原子中会减去. 输出这些偶极分量的平均值. 对极化的处理类似, 并从瞬时偶极中减去平均偶极. 平均偶极的大小由<code>-dip</code>选项指定, 方向由从所选溶剂组的第一个原子到第二和第三个原子连线中点的向量确定.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -12734,17 +12742,17 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
          [-fitfn ] [-beginfit ] [-endfit ]
 </code></pre>
 
-<p><code>gmx tcaf</code>用于计算横向电流自相关(TCAF, tranverse current autocorrelation), 并可以其来估算剪切粘度η. 详细信息请参考: Palmer, <em>Phys. Rev. E</em> 49 (1994) pp 359&#8211;366.</p>
+<code>gmx tcaf</code>用于计算横向电流自相关(TCAF, tranverse current autocorrelation), 并可以其来估算剪切粘度η. 详细信息请参考: Palmer, <em>Phys. Rev. E</em> 49 (1994) pp 359&#8211;366.
 
-<p>计算横向电流时会使用k矢量(1,0,0)和(2,0,0), 它们同时也处于y方向和z方向, 也会使用(1,1,0)和(1,&#8211;1,0), 它们同时也处于在2个其他平面(这些矢量不是独立的), 还会使用(1,1,1)以及三个其他的盒子体对角线(也是相关的). 对于每一个k矢量, 会使用正弦和余弦以及两个垂直方向上的速度. 这样共有16<em>2</em>2=64个横向电流. 对每个k矢量会计算并拟合一个自相关, 这就得到了16个TCAF. 每个TCAF会拟合为f(t) = exp(-v)(cosh(Wv) + 1/W sinh(Wv)), v = -t/(2τ), W = sqrt(1 - 4τη/ρk<sup>2</sup>), 这样得到16个τ值和η值. 拟合的权重以指数形式exp(-t/w)衰减, 时间常数为w(由<code>-wt</code>指定), 计算TACF与拟合的时间为5*w. η的值应拟合为1 - aη(k)k<sup>2</sup>, 这样就可以根据k=0时的值估计剪切粘度.</p>
+计算横向电流时会使用k矢量(1,0,0)和(2,0,0), 它们同时也处于y方向和z方向, 也会使用(1,1,0)和(1,&#8211;1,0), 它们同时也处于在2个其他平面(这些矢量不是独立的), 还会使用(1,1,1)以及三个其他的盒子体对角线(也是相关的). 对于每一个k矢量, 会使用正弦和余弦以及两个垂直方向上的速度. 这样共有16<em>2</em>2=64个横向电流. 对每个k矢量会计算并拟合一个自相关, 这就得到了16个TCAF. 每个TCAF会拟合为f(t) = exp(-v)(cosh(Wv) + 1/W sinh(Wv)), v = -t/(2τ), W = sqrt(1 - 4τη/ρk<sup>2</sup>), 这样得到16个τ值和η值. 拟合的权重以指数形式exp(-t/w)衰减, 时间常数为w(由<code>-wt</code>指定), 计算TACF与拟合的时间为5*w. η的值应拟合为1 - aη(k)k<sup>2</sup>, 这样就可以根据k=0时的值估计剪切粘度.
 
-<p>当选用立方体盒子时, 可以使用选项<code>-oc</code>, 这样TCAF会对所有长度相同的k矢量进行平均. 这样得到的TCAF更精确. 立方TCAF与拟合都会写入由<code>-oc</code>指定的文件, 立方η估计值也会写入有<code>-ov</code>指定的文件.</p>
+当选用立方体盒子时, 可以使用选项<code>-oc</code>, 这样TCAF会对所有长度相同的k矢量进行平均. 这样得到的TCAF更精确. 立方TCAF与拟合都会写入由<code>-oc</code>指定的文件, 立方η估计值也会写入有<code>-ov</code>指定的文件.
 
-<p>使用选项<code>-mol</code>时, 会根据分子而不是原子来确定横向电流. 在这种情况下, 索引组应包含分子编号而不是原子编号.</p>
+使用选项<code>-mol</code>时, 会根据分子而不是原子来确定横向电流. 在这种情况下, 索引组应包含分子编号而不是原子编号.
 
-<p>为获得无限波长时的粘度, <code>-ov</code>文件中与k依赖的粘度应根据η(k) = η_0 (1 - a k<sup>2</sup>)进行拟合.</p>
+为获得无限波长时的粘度, <code>-ov</code>文件中与k依赖的粘度应根据η(k) = η_0 (1 - a k<sup>2</sup>)进行拟合.
 
-<p><strong>注意</strong>: 请确保坐标与速度的输出频率足够高. 自相关函数初始的非指数部分对于获得好的拟合结果非常重要.</p>
+<strong>注意</strong>: 请确保坐标与速度的输出频率足够高. 自相关函数初始的非指数部分对于获得好的拟合结果非常重要.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -12905,15 +12913,15 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
          [-scale ]
 </code></pre>
 
-<p><code>gmx traj</code>用于输出坐标, 速度, 力和/或盒子. 使用<code>-com</code>选项可计算各个组质心的坐标, 速度和力. 当指定<code>-mol</code>选项时, 索引文件中的数目被视为分子个数, 并对每一分子使用与<code>-com</code>选项相同的过程.</p>
+<code>gmx traj</code>用于输出坐标, 速度, 力和/或盒子. 使用<code>-com</code>选项可计算各个组质心的坐标, 速度和力. 当指定<code>-mol</code>选项时, 索引文件中的数目被视为分子个数, 并对每一分子使用与<code>-com</code>选项相同的过程.
 
-<p>选项<code>-ot</code>输出每个组的温度, 如果轨迹文件中含有速度信息. 计算时没有对约束自由度进行修正! 此选项暗含<code>-com</code>选项.</p>
+选项<code>-ot</code>输出每个组的温度, 如果轨迹文件中含有速度信息. 计算时没有对约束自由度进行修正! 此选项暗含<code>-com</code>选项.
 
-<p>选项-ekt和选项-ekr用来画每一个组的平东和转动动能, 同时在轨迹文件中提供当前的速度信息.</p>
+选项-ekt和选项-ekr用来画每一个组的平东和转动动能, 同时在轨迹文件中提供当前的速度信息.
 
-<p>选项<code>-cv</code>和<code>-cf</code>可将平均速度和平均力作为温度因子输出到一个<code>.pdb</code>文件中, 其中的坐标为平均坐标或<code>-ctime</code>时刻的坐标. 程序会对温度因子进行标度, 使其最大值为10. 标度因子可以通过选项<code>-scale</code>来改变. 为得到某一帧的速度或力, 可以将选项<code>-b</code>和<code>-e</code>都指定为那一帧的时间值. 当对帧进行平均时, 你可能需要使用<code>-nojump</code>选项以得到正确的平均坐标. 如果你选择了这些选项中一个, 还会将每个原子的平均力和平均速度写入一个<code>.xvg</code>文件(由<code>-av</code>和<code>-af</code>选项指定).</p>
+选项<code>-cv</code>和<code>-cf</code>可将平均速度和平均力作为温度因子输出到一个<code>.pdb</code>文件中, 其中的坐标为平均坐标或<code>-ctime</code>时刻的坐标. 程序会对温度因子进行标度, 使其最大值为10. 标度因子可以通过选项<code>-scale</code>来改变. 为得到某一帧的速度或力, 可以将选项<code>-b</code>和<code>-e</code>都指定为那一帧的时间值. 当对帧进行平均时, 你可能需要使用<code>-nojump</code>选项以得到正确的平均坐标. 如果你选择了这些选项中一个, 还会将每个原子的平均力和平均速度写入一个<code>.xvg</code>文件(由<code>-av</code>和<code>-af</code>选项指定).
 
-<p>选项<code>-vd</code>可用于计算速度分布, 即, 输出向量的模. 另外, 同时会给出动能的分布.</p>
+选项<code>-vd</code>可用于计算速度分布, 即, 输出向量的模. 另外, 同时会给出动能的分布.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -13137,17 +13145,17 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
            [-[no]cat]
 </code></pre>
 
-<p><code>gmx trjcat</code>可按顺序将几个输入轨迹文件合并在一起. 当发现同一时刻存在两帧时, 会使用后一文件中的帧. 通过使用<code>-settime</code>, 你可以指定每一轨迹文件的起始时间. 输入文件由命令行得到, 你可能要使用像<code>gmx trjcat -f *.trr -o fixed.trr</code>这样的技巧. 使用<code>-cat</code>选项, 你可以简单地将几个文件粘帖在一起而不会移除具有系统时间戳的帧.</p>
+<code>gmx trjcat</code>可按顺序将几个输入轨迹文件合并在一起. 当发现同一时刻存在两帧时, 会使用后一文件中的帧. 通过使用<code>-settime</code>, 你可以指定每一轨迹文件的起始时间. 输入文件由命令行得到, 你可能要使用像<code>gmx trjcat -f *.trr -o fixed.trr</code>这样的技巧. 使用<code>-cat</code>选项, 你可以简单地将几个文件粘帖在一起而不会移除具有系统时间戳的帧.
 
-<p>当输出文件为输入文件之一时, 需要特别注意一点. 在这种情况下, 那个特定的输入文件会被追加, 这样就不需要存储双倍的数据. 显然, 要追加的文件必须具有最小的起始时间, 因为只能在文件末尾追加.</p>
+当输出文件为输入文件之一时, 需要特别注意一点. 在这种情况下, 那个特定的输入文件会被追加, 这样就不需要存储双倍的数据. 显然, 要追加的文件必须具有最小的起始时间, 因为只能在文件末尾追加.
 
-<p>当给定<code>-demux</code>选项时, 会读入N个轨迹, 并将它们按<code>.xvg</code>文件中指定的顺序写入另一个文件中. <code>.xvg</code>文件的内容类似于:</p>
+当给定<code>-demux</code>选项时, 会读入N个轨迹, 并将它们按<code>.xvg</code>文件中指定的顺序写入另一个文件中. <code>.xvg</code>文件的内容类似于:
 
 <pre><code>0 0 1 2 3 4 5
 2 1 0 2 3 5 4
 </code></pre>
 
-<p>其中, 第一个数字为时间, 接下来的数字为轨迹编号, 对应于第一行数字的帧会写入输出轨迹中. 如果轨迹中帧的数目与<code>.xvg</code>文件中的不匹配, 程序会自行决定如何处理. 请小心.</p>
+其中, 第一个数字为时间, 接下来的数字为轨迹编号, 对应于第一行数字的帧会写入输出轨迹中. 如果轨迹中帧的数目与<code>.xvg</code>文件中的不匹配, 程序会自行决定如何处理. 请小心.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -13265,7 +13273,7 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
             [-[no]conect]
 </code></pre>
 
-<p><code>gmx trjconv</code>可以以多种方式来转换轨迹文件:</p>
+<code>gmx trjconv</code>可以以多种方式来转换轨迹文件:
 
 <ul class="incremental">
 <li>从一种格式转换为另一种格式</li>
@@ -13280,17 +13288,17 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
 <li>选取某个量处于一定范围内的帧, 这个量由<code>.xvg</code>文件给出</li>
 </ul>
 
-<p><code>gmx trjconv</code>更适用于将多个轨迹文件拼合起来.</p>
+<code>gmx trjconv</code>更适用于将多个轨迹文件拼合起来.
 
-<p><code>gmx trjconv</code>支持以下格式的输入和输出文件: <code>.xtc</code>, <code>.trr</code>, <code>.trj</code>, <code>.gro</code>, <code>.g96</code>和<code>.pdb</code>. 文件格式由文件的扩展名决定. 对<code>.xtc</code>, <code>.gro</code>和<code>.pdb</code>输入格式, <code>.xtc</code>和<code>.gro</code>输出文件的精度取决于输入文件; 对其他输入格式, 输出文件的精度由<code>-ndec</code>选项决定. 如果设定了<code>-ndec</code>选项, 输出格式的精度总是取决于<code>-ndec</code>. 所有其他格式的精度都是固定的. <code>.trr</code>和<code>.trj</code>输出格式的精度可以是单精度或双精度, 取决于<code>gmx trjconv</code>程序的精度. 注意, 只有<code>.trr</code>, <code>.trj</code>, <code>.gro</code>和<code>.g96</code>格式的文件支持速度.</p>
+<code>gmx trjconv</code>支持以下格式的输入和输出文件: <code>.xtc</code>, <code>.trr</code>, <code>.trj</code>, <code>.gro</code>, <code>.g96</code>和<code>.pdb</code>. 文件格式由文件的扩展名决定. 对<code>.xtc</code>, <code>.gro</code>和<code>.pdb</code>输入格式, <code>.xtc</code>和<code>.gro</code>输出文件的精度取决于输入文件; 对其他输入格式, 输出文件的精度由<code>-ndec</code>选项决定. 如果设定了<code>-ndec</code>选项, 输出格式的精度总是取决于<code>-ndec</code>. 所有其他格式的精度都是固定的. <code>.trr</code>和<code>.trj</code>输出格式的精度可以是单精度或双精度, 取决于<code>gmx trjconv</code>程序的精度. 注意, 只有<code>.trr</code>, <code>.trj</code>, <code>.gro</code>和<code>.g96</code>格式的文件支持速度.
 
-<p><code>-sep</code>选项可将每一帧写入到单独的<code>.gro</code>, <code>.g96</code>或<code>.pdb</code>文件. 默认情况下, 所有帧都被写入到一个文件中. 拼合了所有帧的<code>.pdb</code>文件可以使用<code>rasmol –nmrpdb</code>来查看.</p>
+<code>-sep</code>选项可将每一帧写入到单独的<code>.gro</code>, <code>.g96</code>或<code>.pdb</code>文件. 默认情况下, 所有帧都被写入到一个文件中. 拼合了所有帧的<code>.pdb</code>文件可以使用<code>rasmol –nmrpdb</code>来查看.
 
-<p>为了节省磁盘空间, 可以选择部分轨迹并将其写入到一个新的轨迹文件中. 例如, 去除蛋白质水溶液轨迹中的水分子. <strong>始终</strong> 要保存原始的轨迹文件! 我们推荐使用可移植的<code>.xtc</code>格式进行分析以节省磁盘空间并得到可移植的文件.</p>
+为了节省磁盘空间, 可以选择部分轨迹并将其写入到一个新的轨迹文件中. 例如, 去除蛋白质水溶液轨迹中的水分子. <strong>始终</strong> 要保存原始的轨迹文件! 我们推荐使用可移植的<code>.xtc</code>格式进行分析以节省磁盘空间并得到可移植的文件.
 
-<p>有两个选项可用于将轨迹叠合到参考结构或进行主成分动力学分析. 第一个选项仅仅将结构简单地叠合到结构文件中的参考结构. 第二个选项是逐步叠合: 第一时间步的结构叠合到结构文件中的参考结构, 后续时间步的结构则叠合到前一步的叠合结构. 与常规的叠合方法不同, 利用这种方式可以产生连续的轨迹, 例如当蛋白质的构象转变很大时.</p>
+有两个选项可用于将轨迹叠合到参考结构或进行主成分动力学分析. 第一个选项仅仅将结构简单地叠合到结构文件中的参考结构. 第二个选项是逐步叠合: 第一时间步的结构叠合到结构文件中的参考结构, 后续时间步的结构则叠合到前一步的叠合结构. 与常规的叠合方法不同, 利用这种方式可以产生连续的轨迹, 例如当蛋白质的构象转变很大时.
 
-<p>选项<code>-pbc</code>用于设置周期性边界条件的处理方式:</p>
+选项<code>-pbc</code>用于设置周期性边界条件的处理方式:
 
 <ul class="incremental">
 <li><code>mol</code>: 将分子的质心置于盒子中, 需要使用<code>-s</code>提供一个运行输入文件</li>
@@ -13302,19 +13310,19 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
 <li><code>whole</code>: 将破碎的分子恢复完整</li>
 </ul>
 
-<p>对<code>-pbc</code>的<code>mol</code>, <code>res</code>和<code>atom</code>选项, <code>-ur</code>选项设置单元晶胞的表示方式. 对于三斜盒子这三个选项会给出不同的结果, 而对于长方盒子, 给出的结构相同. <code>rect</code>是普通的长方体形状, <code>tric</code>是三斜晶胞, <code>compact</code>将所有原子置于离盒子中心距离最近的位置. 这有利于, 例如对截断八面体和菱形十二面体的可视化. 对<code>tric</code>和<code>compact</code>选项的中心是<code>tric</code>(见下文), 除非选项<code>-boxcenter</code>设置了不同的值.</p>
+对<code>-pbc</code>的<code>mol</code>, <code>res</code>和<code>atom</code>选项, <code>-ur</code>选项设置单元晶胞的表示方式. 对于三斜盒子这三个选项会给出不同的结果, 而对于长方盒子, 给出的结构相同. <code>rect</code>是普通的长方体形状, <code>tric</code>是三斜晶胞, <code>compact</code>将所有原子置于离盒子中心距离最近的位置. 这有利于, 例如对截断八面体和菱形十二面体的可视化. 对<code>tric</code>和<code>compact</code>选项的中心是<code>tric</code>(见下文), 除非选项<code>-boxcenter</code>设置了不同的值.
 
-<p>选项<code>-center</code>将体系在盒子内居中, 用户可以选择用于确定几何中心的组. 对<code>-pbc</code>和<code>-center</code>选项, <code>-boxcenter</code>设置盒子的中心位置. 中心的选项为: <code>tric</code>: 盒向量总和的一半, <code>rect</code>: 盒子对角线的一半, <code>zero</code>: 0. 如果居中后你想使所有分子都处于盒子中, 可以使用<code>-center</code>和<code>-pbc mol</code>选项.</p>
+选项<code>-center</code>将体系在盒子内居中, 用户可以选择用于确定几何中心的组. 对<code>-pbc</code>和<code>-center</code>选项, <code>-boxcenter</code>设置盒子的中心位置. 中心的选项为: <code>tric</code>: 盒向量总和的一半, <code>rect</code>: 盒子对角线的一半, <code>zero</code>: 0. 如果居中后你想使所有分子都处于盒子中, 可以使用<code>-center</code>和<code>-pbc mol</code>选项.
 
-<p>选项<code>-box</code>设置新盒子的大小. 此选项只用于主维度, 因此通常只用于长方盒子. 如果你只想修改某些维度, 例如读取轨迹时, 你可以使用&#8211;1使某一维度保持不变. 当仅调用一次<code>gmx trjconv</code>时, 使用<code>-pbc</code>, <code>-fit</code>, <code>-ur</code>和<code>-center</code>选项的组合并不总能精确地达到你的目的. 这种情况下可考虑使用多次调用, 可参考GROMACS网站的一些建议.</p>
+选项<code>-box</code>设置新盒子的大小. 此选项只用于主维度, 因此通常只用于长方盒子. 如果你只想修改某些维度, 例如读取轨迹时, 你可以使用&#8211;1使某一维度保持不变. 当仅调用一次<code>gmx trjconv</code>时, 使用<code>-pbc</code>, <code>-fit</code>, <code>-ur</code>和<code>-center</code>选项的组合并不总能精确地达到你的目的. 这种情况下可考虑使用多次调用, 可参考GROMACS网站的一些建议.
 
-<p>使用<code>-dt</code>选项可以减少输出中的帧数. 此选项依赖于输入轨迹中时间的精确度, 因此, 如果它们不够精确, 可以使用<code>-timestep</code>选项来修改时间(可以同时进行). 为了制作平滑的电影, <code>gmx filter</code>程序可以使用低通频率滤波器来减少帧的数目, 从而减少了高频运动的走样.</p>
+使用<code>-dt</code>选项可以减少输出中的帧数. 此选项依赖于输入轨迹中时间的精确度, 因此, 如果它们不够精确, 可以使用<code>-timestep</code>选项来修改时间(可以同时进行). 为了制作平滑的电影, <code>gmx filter</code>程序可以使用低通频率滤波器来减少帧的数目, 从而减少了高频运动的走样.
 
-<p>使用<code>-trunc</code>选项, <code>gmx trjconv</code>可以就地截断<code>.trj</code>文件, 即不需要复制文件. 当在磁盘I/O过程中运行崩溃时(即磁盘已满), 或者当拼合两个邻近的轨迹但不能重帧时, 此选项很有用.</p>
+使用<code>-trunc</code>选项, <code>gmx trjconv</code>可以就地截断<code>.trj</code>文件, 即不需要复制文件. 当在磁盘I/O过程中运行崩溃时(即磁盘已满), 或者当拼合两个邻近的轨迹但不能重帧时, 此选项很有用.
 
-<p>选项<code>-dump</code>用于从你的轨迹文件中抽取处于或邻近指定时间的帧.</p>
+选项<code>-dump</code>用于从你的轨迹文件中抽取处于或邻近指定时间的帧.
 
-<p>选项<code>-drop</code>读取<code>.xvg</code>文件中的时间和数值. 当设置了选项<code>-dropunder</code>和/或<code>-dropover</code>, 不会输出低于或高于相应选项设定值的帧.</p>
+选项<code>-drop</code>读取<code>.xvg</code>文件中的时间和数值. 当设置了选项<code>-dropunder</code>和/或<code>-dropover</code>, 不会输出低于或高于相应选项设定值的帧.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -13532,30 +13540,30 @@ Merged two groups with AND: 5467 7479 -&gt; 2783
 
 ### 补充说明
 
-<p><code>gmx trjconv</code>可能是最常用的后处理工具, 用来处理坐标, 处理周期性或者手动调整轨迹. 利用它抽取特定的轨迹比较简单, 但使用它处理轨迹的周期性时, 一些选项不容易理解. 下面对其中的一些进行说明.</p>
+<code>gmx trjconv</code>可能是最常用的后处理工具, 用来处理坐标, 处理周期性或者手动调整轨迹. 利用它抽取特定的轨迹比较简单, 但使用它处理轨迹的周期性时, 一些选项不容易理解. 下面对其中的一些进行说明.
 
-<p><code>-pbc mol|res|atom</code>指定以何种方式考虑PBC, 是使分子的质心, 残基的质心, 还是每个原子处于盒子中. 如果使用<code>-pbc atom</code>所有原子都处于盒子之中, 这样边界上的分子看起来破碎了. 如果对破碎后的分子再使用一次<code>-pbc whole</code>, 将分子恢复完整, 其效果与<code>-pbc mol</code>类似.</p>
+<code>-pbc mol|res|atom</code>指定以何种方式考虑PBC, 是使分子的质心, 残基的质心, 还是每个原子处于盒子中. 如果使用<code>-pbc atom</code>所有原子都处于盒子之中, 这样边界上的分子看起来破碎了. 如果对破碎后的分子再使用一次<code>-pbc whole</code>, 将分子恢复完整, 其效果与<code>-pbc mol</code>类似.
 
-<p><code>-pbc nojump</code>可以保证分子的运动是连续的, 就像体系处于真空中一样, 分子连续地向各个方向扩散. 在计算MSD这样的量的时候, 需要这样考虑. 但<code>gmx msd</code>在计算时已经考虑了这点, 所以我们就无须先利用此选项对轨迹进行处理了. 此选项对单个构型没有意义.</p>
+<code>-pbc nojump</code>可以保证分子的运动是连续的, 就像体系处于真空中一样, 分子连续地向各个方向扩散. 在计算MSD这样的量的时候, 需要这样考虑. 但<code>gmx msd</code>在计算时已经考虑了这点, 所以我们就无须先利用此选项对轨迹进行处理了. 此选项对单个构型没有意义.
 
-<p>使用<code>-pbc mol|res|atom</code>选项时, 会使相应的中心处于盒子中, 而盒子的显示方法则使用<code>-ur</code>来控制. 如果使用长方体盒子, <code>-ur</code>的三种选项给出的结果相同, 所以无需考虑此项. 如果使用了三斜盒子, <code>-ur</code>的三种选项给出的结果不同: <code>-ur tric</code>粒子处于三斜盒子中, <code>-ur rect</code>粒子处于长方盒子中, <code>-ur compact</code>粒子处于距盒子中心最近的位置, 近似球形.</p>
+使用<code>-pbc mol|res|atom</code>选项时, 会使相应的中心处于盒子中, 而盒子的显示方法则使用<code>-ur</code>来控制. 如果使用长方体盒子, <code>-ur</code>的三种选项给出的结果相同, 所以无需考虑此项. 如果使用了三斜盒子, <code>-ur</code>的三种选项给出的结果不同: <code>-ur tric</code>粒子处于三斜盒子中, <code>-ur rect</code>粒子处于长方盒子中, <code>-ur compact</code>粒子处于距盒子中心最近的位置, 近似球形.
 
-<p>利用<code>-center</code>选项可使某组原子在盒子内居中, 运行时, 会提示你选择要居中的组. 此选项可以和<code>-pbc mol|res|atom</code>一起使用, 达到使某组原子居中, 同时其他原子都处于盒子内的目的.</p>
+利用<code>-center</code>选项可使某组原子在盒子内居中, 运行时, 会提示你选择要居中的组. 此选项可以和<code>-pbc mol|res|atom</code>一起使用, 达到使某组原子居中, 同时其他原子都处于盒子内的目的.
 
-<p>在使用<code>-ur tric|compact</code>, <code>-pbc mol|res|atom|</code>, <code>-center</code>选项时, 都需要定义盒子的中心. 默认使用的盒子中心处于盒向量的一半处. 但可以使用<code>-boxcenter</code>改变: <code>tric</code>盒向量总和的一半, <code>rect</code>盒子对角线的一半, <code>zero</code>0.</p>
+在使用<code>-ur tric|compact</code>, <code>-pbc mol|res|atom|</code>, <code>-center</code>选项时, 都需要定义盒子的中心. 默认使用的盒子中心处于盒向量的一半处. 但可以使用<code>-boxcenter</code>改变: <code>tric</code>盒向量总和的一半, <code>rect</code>盒子对角线的一半, <code>zero</code>0.
 
-<p>上面的这几个选项可组合使用, 但不能保证一定能满足需要, 有时可能需要使用<code>gmx trjconv</code>多次.</p>
+上面的这几个选项可组合使用, 但不能保证一定能满足需要, 有时可能需要使用<code>gmx trjconv</code>多次.
 
-<p>注意, <code>-pbc</code>和<code>-fit rot</code>两个选项不能一起使用. 否则程序运行错误, 给出如下信息:</p>
+注意, <code>-pbc</code>和<code>-fit rot</code>两个选项不能一起使用. 否则程序运行错误, 给出如下信息:
 
 <pre><code>PBC condition treatment does not work together with rotational fit.
 Please do the PBC condition treatment first and then run trjconv in a second step for the rotational fit.
 First doing the rotational fit and then doing the PBC treatment gives incorrect results!
 </code></pre>
 
-<p>这意味着凡同时涉及周期性和叠合的处理都需要分两次进行, 而且必须先进行周期性处理, 再进行叠合, 否则结果错误.</p>
+这意味着凡同时涉及周期性和叠合的处理都需要分两次进行, 而且必须先进行周期性处理, 再进行叠合, 否则结果错误.
 
-<p><code>-pbc</code>几种处理的效果可参看 <a href="/GMX/GMXpbc.html">gmx trjconv选项测试</a></p>
+<code>-pbc</code>几种处理的效果可参看 <a href="/GMX/GMXpbc.html">gmx trjconv选项测试</a>
 
 ## gmx trjorder: 根据到参考组原子的距离对分子排序(翻译: 李培春)
 
@@ -13565,13 +13573,13 @@ First doing the rotational fit and then doing the PBC treatment gives incorrect 
              [-da ] [-[no]com] [-r ] [-[no]z]
 </code></pre>
 
-<p><code>gmx trjorder</code>可根据到参考组原子的最小距离或z坐标(<code>-z</code>选项)对分子排序. 使用距离进行排序时, 需要指定参考原子组以及分子组. 对轨迹中的每一帧, 所选分子会根据分子中编号为<code>-da</code>的原子与参考组中所有原子之间距离的最小值进行重排序. 通过将<code>-da</code>设定为0, 可使用分子的质心而不是参考原子. 轨迹中的所有原子都会写入输出轨迹.</p>
+<code>gmx trjorder</code>可根据到参考组原子的最小距离或z坐标(<code>-z</code>选项)对分子排序. 使用距离进行排序时, 需要指定参考原子组以及分子组. 对轨迹中的每一帧, 所选分子会根据分子中编号为<code>-da</code>的原子与参考组中所有原子之间距离的最小值进行重排序. 通过将<code>-da</code>设定为0, 可使用分子的质心而不是参考原子. 轨迹中的所有原子都会写入输出轨迹.
 
-<p>对某些分析, <code>gmx trjorder</code>可能会有用, 例如分析离蛋白最近的n个水分子. 在这种情况下, 参考组为蛋白质, 分子组为所有水分子的原子. 当得到了前n个水分子的索引组后, 排序后的轨迹可使用任何GROMACS工具分析最近的n个水分子.</p>
+对某些分析, <code>gmx trjorder</code>可能会有用, 例如分析离蛋白最近的n个水分子. 在这种情况下, 参考组为蛋白质, 分子组为所有水分子的原子. 当得到了前n个水分子的索引组后, 排序后的轨迹可使用任何GROMACS工具分析最近的n个水分子.
 
-<p>如果输出文件为<code>.pdb</code>文件, 到参考目标的距离会存放于B因子字段, 以便用于使用一些可视化程序加色, 如Rasmol</p>
+如果输出文件为<code>.pdb</code>文件, 到参考目标的距离会存放于B因子字段, 以便用于使用一些可视化程序加色, 如Rasmol
 
-<p>使用<code>-nshell</code>选项, 会输出参考组周围一定半径<code>-r</code>壳层内的分子数.</p>
+使用<code>-nshell</code>选项, 会输出参考组周围一定半径<code>-r</code>壳层内的分子数.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -13697,25 +13705,25 @@ First doing the rotational fit and then doing the PBC treatment gives incorrect 
              [-[no]cpnum]
 </code></pre>
 
-<p>对于给定数目<code>-np</code>或<code>-ntmpi</code>的总进程数, <code>gmx tune_pme</code>可以系统地测试不同PME进程数对<code>gmx mdrun</code>运行时间的影响, 并确定哪种设置最快. 通过将负载从Ewald加和的倒易空间部分转移到实空间部分, 它也可以测试是否能提升性能. 测试时, 你只需要将<code>.tpr</code>文件和<code>gmx mdrun</code>的运行选项一起传给<code>gmx tune_pme</code>即可.</p>
+对于给定数目<code>-np</code>或<code>-ntmpi</code>的总进程数, <code>gmx tune_pme</code>可以系统地测试不同PME进程数对<code>gmx mdrun</code>运行时间的影响, 并确定哪种设置最快. 通过将负载从Ewald加和的倒易空间部分转移到实空间部分, 它也可以测试是否能提升性能. 测试时, 你只需要将<code>.tpr</code>文件和<code>gmx mdrun</code>的运行选项一起传给<code>gmx tune_pme</code>即可.
 
-<p>测试使用的可执行文件可以通过环境变量<code>MPIRUN</code>和<code>MDRUN</code>进行设置. 如果这些设置不存在, 默认将使用<code>mpirun</code>和<code>mdrun</code>. 注意, 对某些MPI框架, 你需要提供机器号或者主机名. 也可以通过<code>MPIRUN</code>变量传递这些设置, 例如,</p>
+测试使用的可执行文件可以通过环境变量<code>MPIRUN</code>和<code>MDRUN</code>进行设置. 如果这些设置不存在, 默认将使用<code>mpirun</code>和<code>mdrun</code>. 注意, 对某些MPI框架, 你需要提供机器号或者主机名. 也可以通过<code>MPIRUN</code>变量传递这些设置, 例如,
 
 <pre><code>export MPIRUN=&quot;/usr/local/mpirun -machinefile hosts&quot;
 </code></pre>
 
-<p>在实际的基准测试运行之前, 如果激活了<code>-check</code>选项(默认激活), <code>gmx tune_pme</code>会进行一个快速的检测, 以确定对提供的并行设置<code>mdrun</code>是否如预期的那样运行. 请使用你要传递给<code>gmx mdrun</code>的正常选项去调用<code>gmx tune_pme</code>, 并且增加执行测试的进程数选项<code>-np</code>, 或线程数选项<code>-ntmpi</code>. 你也可以增加<code>-r</code>选项对每个测试重复多次以便得到更好的统计结果.</p>
+在实际的基准测试运行之前, 如果激活了<code>-check</code>选项(默认激活), <code>gmx tune_pme</code>会进行一个快速的检测, 以确定对提供的并行设置<code>mdrun</code>是否如预期的那样运行. 请使用你要传递给<code>gmx mdrun</code>的正常选项去调用<code>gmx tune_pme</code>, 并且增加执行测试的进程数选项<code>-np</code>, 或线程数选项<code>-ntmpi</code>. 你也可以增加<code>-r</code>选项对每个测试重复多次以便得到更好的统计结果.
 
-<p><code>gmx tune_pme</code>能够测试各种实空间/倒空间的工作负载. 使用<code>-ntpr</code>选项, 你可以控制额外输出的<code>.tpr</code>文件的数目, 每个文件分别对应了增大的截断距离和更小的傅里叶格点. 通常, 首次测试(0号)的设置来自输入的<code>.tpr</code>文件; 最后一次测试(<code>ntpr</code>号)使用了由<code>-rmax</code>指定的库伦截断, 同时使用了略小的PME格点. 在最后的测试中, 傅里叶间距会变为原来的<code>rmax</code>/<code>rcoulomb</code>倍. 其余<code>.tpr</code>文件使用了处于这两个极值之间的等间距的库伦布半径(以及傅里叶间距). <strong>注意</strong>, 如果你只想搜寻最佳的PME进程数, 可以将<code>-ntpr</code>设为1. 在这种情况下, 输入文件<code>.tpr</code>将保持不变.</p>
+<code>gmx tune_pme</code>能够测试各种实空间/倒空间的工作负载. 使用<code>-ntpr</code>选项, 你可以控制额外输出的<code>.tpr</code>文件的数目, 每个文件分别对应了增大的截断距离和更小的傅里叶格点. 通常, 首次测试(0号)的设置来自输入的<code>.tpr</code>文件; 最后一次测试(<code>ntpr</code>号)使用了由<code>-rmax</code>指定的库伦截断, 同时使用了略小的PME格点. 在最后的测试中, 傅里叶间距会变为原来的<code>rmax</code>/<code>rcoulomb</code>倍. 其余<code>.tpr</code>文件使用了处于这两个极值之间的等间距的库伦布半径(以及傅里叶间距). <strong>注意</strong>, 如果你只想搜寻最佳的PME进程数, 可以将<code>-ntpr</code>设为1. 在这种情况下, 输入文件<code>.tpr</code>将保持不变.
 
-<p>对于基准测试, 默认的1000个时间步对大多数MD体系应该足够了. 动态负载平衡大约需要100个时间步长来适应本地的负载失衡, 因此默认情况下, 100步之后时间步计数器会被重置. 对于大的体系(&gt;1M个原子)以及高精度测量, 你应该将<code>-resetstep</code>设置为更大的值. 由<code>md.log</code>输出文件中的<code>DD</code>负载失衡项, 你可以知道多少步之后负载已经充分均衡了. 例如, 你可以调用</p>
+对于基准测试, 默认的1000个时间步对大多数MD体系应该足够了. 动态负载平衡大约需要100个时间步长来适应本地的负载失衡, 因此默认情况下, 100步之后时间步计数器会被重置. 对于大的体系(&gt;1M个原子)以及高精度测量, 你应该将<code>-resetstep</code>设置为更大的值. 由<code>md.log</code>输出文件中的<code>DD</code>负载失衡项, 你可以知道多少步之后负载已经充分均衡了. 例如, 你可以调用
 
 <pre><code>gmx tune_pme -np 64 -s protein.tpr -launch
 </code></pre>
 
-<p>调用<code>gmx mdrun</code>命令若干次之后, 详细的性能信息会保存在输出文件<code>perf.out</code>中. <strong>注意</strong>, 在基准测试运行期间, 会产生一些临时文件(选项<code>-b*</code>), 每个测试完成之后它们会被自动删除.</p>
+调用<code>gmx mdrun</code>命令若干次之后, 详细的性能信息会保存在输出文件<code>perf.out</code>中. <strong>注意</strong>, 在基准测试运行期间, 会产生一些临时文件(选项<code>-b*</code>), 每个测试完成之后它们会被自动删除.
 
-<p>如果你想使用最佳参数自动启动模拟, 可以使用命令行选项<code>-launch</code>.</p>
+如果你想使用最佳参数自动启动模拟, 可以使用命令行选项<code>-launch</code>.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -14184,15 +14192,15 @@ First doing the rotational fit and then doing the PBC treatment gives incorrect 
             [-rt ] [-ft ]
 </code></pre>
 
-<p><code>gmx vanhove</code>用于计算Van Hove相关函数G(r,t), 它表示在0时刻处于r_0的粒子在t时刻位于r_0+r处的概率. <code>gmx vanhove</code>是以向量r的长度而不是r来确定G, 因此给出了粒子在时间t内移动距离r的概率. 计算时会移除对周期性边界的跨越, 并会对因各项同性或各项异性压力耦合导致缩放进行校正.</p>
+<code>gmx vanhove</code>用于计算Van Hove相关函数G(r,t), 它表示在0时刻处于r_0的粒子在t时刻位于r_0+r处的概率. <code>gmx vanhove</code>是以向量r的长度而不是r来确定G, 因此给出了粒子在时间t内移动距离r的概率. 计算时会移除对周期性边界的跨越, 并会对因各项同性或各项异性压力耦合导致缩放进行校正.
 
-<p>使用选项<code>-om</code>可输出整个矩阵与t和r的函数关系, 或与sqrt(t)和r的函数关系(选项<code>-sqrt</code>)</p>
+使用选项<code>-om</code>可输出整个矩阵与t和r的函数关系, 或与sqrt(t)和r的函数关系(选项<code>-sqrt</code>)
 
-<p>使用选项<code>-or</code>可输出一个或多个t值的Van Hove函数. 选项<code>-nr</code>用以设置时间数, 选项<code>-fr</code>设置时间之间的间隔. 分格宽度可用选项<code>-rbin</code>设置. 分格数目自动确定.</p>
+使用选项<code>-or</code>可输出一个或多个t值的Van Hove函数. 选项<code>-nr</code>用以设置时间数, 选项<code>-fr</code>设置时间之间的间隔. 分格宽度可用选项<code>-rbin</code>设置. 分格数目自动确定.
 
-<p>使用选项<code>-ot</code>可输出函数到某一距离(选项<code>-rt</code>指定)的积分与时间的函数关系.</p>
+使用选项<code>-ot</code>可输出函数到某一距离(选项<code>-rt</code>指定)的积分与时间的函数关系.
 
-<p>对所有读入的帧, 所选粒子的坐标放于在内存中, 因此程序可能会占用大量内存. 使用选项<code>-om</code>和<code>-ot</code>时程序可能会变得很慢, 这是因为计算标度为帧数与<code>-fm</code>或<code>-ft</code>的乘积. 需要注意的是, 使用<code>-dt</code>选项可以减少内存使用量和计算时间.</p>
+对所有读入的帧, 所选粒子的坐标放于在内存中, 因此程序可能会占用大量内存. 使用选项<code>-om</code>和<code>-ot</code>时程序可能会变得很慢, 这是因为计算标度为帧数与<code>-fm</code>或<code>-ft</code>的乘积. 需要注意的是, 使用<code>-dt</code>选项可以减少内存使用量和计算时间.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -14336,11 +14344,11 @@ First doing the rotational fit and then doing the PBC treatment gives incorrect 
            [-fitfn ] [-beginfit ] [-endfit ]
 </code></pre>
 
-<p><code>gmx velacc</code>用于计算速度自相关函数. 当使用<code>-m</code>选项时, 可以计算动量自相关函数.</p>
+<code>gmx velacc</code>用于计算速度自相关函数. 当使用<code>-m</code>选项时, 可以计算动量自相关函数.
 
-<p>使用<code>-mol</code>选项, 可计算分子的速度自相关函数. 在这种情况下, 索引组应由分子编号组成, 而不是原子编号.</p>
+使用<code>-mol</code>选项, 可计算分子的速度自相关函数. 在这种情况下, 索引组应由分子编号组成, 而不是原子编号.
 
-<p>请确保你的轨迹包含具有速度信息的帧(即, 原始的<code>.mdp</code>文件中应设置了<code>nstvout</code>), 数据采集点之间的时间间隔远远短于自相关的时间尺度.</p>
+请确保你的轨迹包含具有速度信息的帧(即, 原始的<code>.mdp</code>文件中应设置了<code>nstvout</code>), 数据采集点之间的时间间隔远远短于自相关的时间尺度.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -14464,11 +14472,11 @@ First doing the rotational fit and then doing the PBC treatment gives incorrect 
          [-nice ] [-b ] [-e ] [-dt ]
 </code></pre>
 
-<p><code>gmx view</code>是GROMACS的轨迹查看器. 该程序可以读取一个轨迹文件, 运行输入文件和索引文件, 并在标准的X Windows屏幕上绘制分子的三维结构图. 此程序不需要高级的图形工作站, 它甚至可以在单色屏幕下工作.</p>
+<code>gmx view</code>是GROMACS的轨迹查看器. 该程序可以读取一个轨迹文件, 运行输入文件和索引文件, 并在标准的X Windows屏幕上绘制分子的三维结构图. 此程序不需要高级的图形工作站, 它甚至可以在单色屏幕下工作.
 
-<p>此程序已经实现了以下功能: 3D视图, 旋转, 平移和缩放分子, 标记原子, 轨迹动画, 以PostScript格式复制, 在MIT-X(real X)下用户可自定义原子过滤器, 打开窗口和主题, 用户友好的菜单, 去除周期性的选项, 显示计算盒子的选项.</p>
+此程序已经实现了以下功能: 3D视图, 旋转, 平移和缩放分子, 标记原子, 轨迹动画, 以PostScript格式复制, 在MIT-X(real X)下用户可自定义原子过滤器, 打开窗口和主题, 用户友好的菜单, 去除周期性的选项, 显示计算盒子的选项.
 
-<p>可以使用一些更常见的X命令行选项: <code>-bg</code>, <code>-fg</code>更改颜色; <code>-font fontname</code>更改字体.</p>
+可以使用一些更常见的X命令行选项: <code>-bg</code>, <code>-fg</code>更改颜色; <code>-font fontname</code>更改字体.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -14546,14 +14554,19 @@ First doing the rotational fit and then doing the PBC treatment gives incorrect 
          [-bs-tau ] [-bs-seed ] [-histbs-block ] [-[no]vbs]
 </code></pre>
 
-<p><code>gmx wham</code>一个用于实现加权直方图分析方法(WHAM, Weighted Histogram Analysis Method)的分析程序, 用于分析伞形抽样模拟的输出文件以计算平均力势(PMF, potential of mean force).</p>
+<code>gmx wham</code>一个用于实现加权直方图分析方法(WHAM, Weighted Histogram Analysis Method)的分析程序, 用于分析伞形抽样模拟的输出文件以计算平均力势(PMF, potential of mean force).
 
-<p>目前此程序支持三种输入模式:</p>
+目前此程序支持三种输入模式:
 
 <ul class="incremental">
-<li><p>使用选项<code>-it</code>, 用户需要提供一个文件, 其中包含伞形抽样模拟的运行输入文件(<code>.tpr</code>文件)的文件名, <strong>还要</strong> 使用选项<code>-ix</code>提供另一个文件, 其中包含pullx <code>mdrun</code>输出文件的文件名. <code>.tpr</code>文件和pullx文件的顺序必须对应, 即第一个<code>.tpr</code>文件生成了第一个pullx文件, 并以此类推.</p></li>
-<li><p>除用户使用选项<code>-if</code>提供牵引力输出文件名称(<code>pullf.xvg</code>)以外, 与前述输入模式相同. 伞形势中的位置由牵引力计算得到. 无法用于表格形式的伞形势.</p></li>
-<li><p>使用选项<code>-ip</code>, 用户需提供(gzip压缩的)<code>.pdo</code>文件的文件名, 即GROMACS 3.3的伞形输出文件. 如果你使用某些特殊的反应坐标, 你也可以生成自己的<code>.pdo</code>文件并使用<code>-ip</code>选项将其提供给<code>gmx wham</code>. <code>.pdo</code>文件的文件头必须类似于以下形式:</p>
+<li>
+使用选项<code>-it</code>, 用户需要提供一个文件, 其中包含伞形抽样模拟的运行输入文件(<code>.tpr</code>文件)的文件名, <strong>还要</strong> 使用选项<code>-ix</code>提供另一个文件, 其中包含pullx <code>mdrun</code>输出文件的文件名. <code>.tpr</code>文件和pullx文件的顺序必须对应, 即第一个<code>.tpr</code>文件生成了第一个pullx文件, 并以此类推.
+</li>
+<li>
+除用户使用选项<code>-if</code>提供牵引力输出文件名称(<code>pullf.xvg</code>)以外, 与前述输入模式相同. 伞形势中的位置由牵引力计算得到. 无法用于表格形式的伞形势.
+</li>
+<li>
+使用选项<code>-ip</code>, 用户需提供(gzip压缩的)<code>.pdo</code>文件的文件名, 即GROMACS 3.3的伞形输出文件. 如果你使用某些特殊的反应坐标, 你也可以生成自己的<code>.pdo</code>文件并使用<code>-ip</code>选项将其提供给<code>gmx wham</code>. <code>.pdo</code>文件的文件头必须类似于以下形式:
 
 <pre><code># UMBRELLA 3.0
 # Component selection: 0 0 1
@@ -14566,70 +14579,70 @@ First doing the rotational fit and then doing the PBC treatment gives incorrect 
 </code></pre></li>
 </ul>
 
-<p>牵引组(pull group)的个数, 伞形势位置(umbrella position), 力常数(force constant)和名称(当然)都可以不同. 文件头以下, 需要为每个牵引组提供一个时间列和一个数据列(即相对于伞形势中心的位移). 目前每个<code>.pdo</code>文件最多可以包含四个牵引组.</p>
+牵引组(pull group)的个数, 伞形势位置(umbrella position), 力常数(force constant)和名称(当然)都可以不同. 文件头以下, 需要为每个牵引组提供一个时间列和一个数据列(即相对于伞形势中心的位移). 目前每个<code>.pdo</code>文件最多可以包含四个牵引组.
 
-<p>默认情况下, 在WHAM中会使用所有pullx/pullf文件中找到的所有牵引组. 如果只使用其中的某些牵引组, 用户可以提供一个牵引组选择文件(使用选项<code>-is</code>). 选择文件必须为<code>tpr-files.dat</code>中的每个<code>.tpr</code>文件提供一行说明, 内容必须为相应于<code>.tpr</code>文件中每个牵引组的一位数字(0或1). 在这里1表示该牵引组会在WHAM中使用, 0表示忽略. 例如, 如果你有3个<code>.tpr</code>文件, 每个包含4个牵引组, 但只使用牵引组1和2, 则<code>groupsel.dat</code>文件内容如下:</p>
+默认情况下, 在WHAM中会使用所有pullx/pullf文件中找到的所有牵引组. 如果只使用其中的某些牵引组, 用户可以提供一个牵引组选择文件(使用选项<code>-is</code>). 选择文件必须为<code>tpr-files.dat</code>中的每个<code>.tpr</code>文件提供一行说明, 内容必须为相应于<code>.tpr</code>文件中每个牵引组的一位数字(0或1). 在这里1表示该牵引组会在WHAM中使用, 0表示忽略. 例如, 如果你有3个<code>.tpr</code>文件, 每个包含4个牵引组, 但只使用牵引组1和2, 则<code>groupsel.dat</code>文件内容如下:
 
 <pre><code>1 1 0 0
 1 1 0 0
 1 1 0 0
 </code></pre>
 
-<p>默认情况下, 输出文件有:</p>
+默认情况下, 输出文件有:
 
-<p><code>-o</code>: PMF输出文件</p>
+<code>-o</code>: PMF输出文件
 
-<p><code>-hist</code>: 直方图输出文件</p>
+<code>-hist</code>: 直方图输出文件
 
-<p>请注意, 始终要检查直方图是否充分重叠.</p>
+请注意, 始终要检查直方图是否充分重叠.
 
-<p>程序假定伞形势为简谐势, 力常数从<code>.tpr</code>或<code>.pdo</code>文件中读取. 如果使用了非简谐的伞形力, 可以用<code>-tab</code>提供一个表格式的势能函数.</p>
+程序假定伞形势为简谐势, 力常数从<code>.tpr</code>或<code>.pdo</code>文件中读取. 如果使用了非简谐的伞形力, 可以用<code>-tab</code>提供一个表格式的势能函数.
 
-<p><strong>WHAM选项</strong></p>
+<strong>WHAM选项</strong>
 
-<p><code>-bins</code>: 分析中使用的分格数</p>
+<code>-bins</code>: 分析中使用的分格数
 
-<p><code>-temp</code>: 模拟温度</p>
+<code>-temp</code>: 模拟温度
 
-<p><code>-tol</code>: 剖面(概率)的变化小于所给容差时停止迭代</p>
+<code>-tol</code>: 剖面(概率)的变化小于所给容差时停止迭代
 
-<p><code>-auto</code>: 自动决定边界</p>
+<code>-auto</code>: 自动决定边界
 
-<p><code>-min</code>, <code>-max</code>: 剖面的边界</p>
+<code>-min</code>, <code>-max</code>: 剖面的边界
 
-<p>可以使用选项<code>-b</code>, <code>-e</code>和<code>-dt</code>筛选用于计算剖面的数据点. 调整<code>-b</code>以保证每个伞形窗口都达到充分平衡.</p>
+可以使用选项<code>-b</code>, <code>-e</code>和<code>-dt</code>筛选用于计算剖面的数据点. 调整<code>-b</code>以保证每个伞形窗口都达到充分平衡.
 
-<p>使用选项<code>-log</code>时(默认), 会以能量单位输出剖面, 否则(使用<code>-nolog</code>选项)会输出概率. 可以使用选项<code>-unit</code>指定单位. 以能量单位输出时, 第一分格中的能量定义为零. 如果你希望其他位置自由能为零, 可以设置<code>-zprof0</code>(在使用自展法时很有用, 见下文).</p>
+使用选项<code>-log</code>时(默认), 会以能量单位输出剖面, 否则(使用<code>-nolog</code>选项)会输出概率. 可以使用选项<code>-unit</code>指定单位. 以能量单位输出时, 第一分格中的能量定义为零. 如果你希望其他位置自由能为零, 可以设置<code>-zprof0</code>(在使用自展法时很有用, 见下文).
 
-<p>对于环形或周期性的反应坐标(二面角, 无渗透梯度的通道PMF), 选项<code>-cycl</code>很有用. <code>gmx wham</code>会利用体系的周期性, 生成一个周期性的PMF. 反应坐标的第一个和最后一个分格会被假定为相邻.</p>
+对于环形或周期性的反应坐标(二面角, 无渗透梯度的通道PMF), 选项<code>-cycl</code>很有用. <code>gmx wham</code>会利用体系的周期性, 生成一个周期性的PMF. 反应坐标的第一个和最后一个分格会被假定为相邻.
 
-<p>使用选项<code>-sym</code>时, 在输出前会使剖面关于z=0对称, 在某些情况下, 如用于膜体系时很有用.</p>
+使用选项<code>-sym</code>时, 在输出前会使剖面关于z=0对称, 在某些情况下, 如用于膜体系时很有用.
 
-<p><strong>自相关</strong></p>
+<strong>自相关</strong>
 
-<p>使用<code>-ac</code>选项时, <code>gmx wham</code>会估计每个伞形窗口的积分自相关时间(IACT, integrated autocorrelation time)τ, 并使用1/[1+2*τ/dt]作为各个窗口的权重. IACT会写入由选项<code>-oiact</code>指定的文件中. 在冗长(verbose)输出模式下, 所有自相关函数(ACF, autocorrelation functions)都会写入<code>hist_autocorr.xvg</code>文件. 由于在采样不足的情况下可能会严重低估IACT, 利用<code>-acsig</code>选项, 用户可使用高斯函数沿反应坐标对IACT进行平滑(高斯函数的σ由<code>-acsig</code>提供, 见<code>iact.xvg</code>中的输出). 注意, 程序使用简单的积分方法估计IACT, 且只考虑大于0.05的ACF. 如果你想使用更复杂(但可能不那么稳健)的方法, 比如拟合到双指数函数, 来计算IACT, 你可以使用<code>gmx analyze</code>来计算IACT, 并通过<code>iact-in.dat</code>文件(选项<code>-iiact</code>)将其提供给<code>gmx wham</code>. 在这个文件中每个输入文件(<code>.pdo</code>或pullx/f文件)对应一行, 各输入文件的每个牵引组对应一列.</p>
+使用<code>-ac</code>选项时, <code>gmx wham</code>会估计每个伞形窗口的积分自相关时间(IACT, integrated autocorrelation time)τ, 并使用1/[1+2*τ/dt]作为各个窗口的权重. IACT会写入由选项<code>-oiact</code>指定的文件中. 在冗长(verbose)输出模式下, 所有自相关函数(ACF, autocorrelation functions)都会写入<code>hist_autocorr.xvg</code>文件. 由于在采样不足的情况下可能会严重低估IACT, 利用<code>-acsig</code>选项, 用户可使用高斯函数沿反应坐标对IACT进行平滑(高斯函数的σ由<code>-acsig</code>提供, 见<code>iact.xvg</code>中的输出). 注意, 程序使用简单的积分方法估计IACT, 且只考虑大于0.05的ACF. 如果你想使用更复杂(但可能不那么稳健)的方法, 比如拟合到双指数函数, 来计算IACT, 你可以使用<code>gmx analyze</code>来计算IACT, 并通过<code>iact-in.dat</code>文件(选项<code>-iiact</code>)将其提供给<code>gmx wham</code>. 在这个文件中每个输入文件(<code>.pdo</code>或pullx/f文件)对应一行, 各输入文件的每个牵引组对应一列.
 
-<p><strong>误差分析</strong></p>
+<strong>误差分析</strong>
 
-<p>可以使用自展分析(bootstrap analysis)来估计统计误差. 请小心使用, 否则实质上可能会低估统计误差. 自展技术的更多背景知识和例子可以在Hub, de Groot and Van der Spoel, JCTC (2010) 6: 3713&#8211;3720中找到.</p>
+可以使用自展分析(bootstrap analysis)来估计统计误差. 请小心使用, 否则实质上可能会低估统计误差. 自展技术的更多背景知识和例子可以在Hub, de Groot and Van der Spoel, JCTC (2010) 6: 3713&#8211;3720中找到.
 
-<p><code>-nBootstrap</code>定义自展的个数(比如使用100). 本程序支持四种自展方法, 通过<code>-bs-method</code>进行选择.</p>
+<code>-nBootstrap</code>定义自展的个数(比如使用100). 本程序支持四种自展方法, 通过<code>-bs-method</code>进行选择.
 
-<p>(1) <code>b-hist</code> 默认方法: 将完整的直方图视为独立的数据点, 给直方图赋予随机权重来实现自展(&#8220;贝叶斯自展&#8221;). 注意, 沿反应坐标轴上的每个点都必须被多个独立直方图所覆盖(比如10个直方图), 否则会低估统计误差.</p>
+(1) <code>b-hist</code> 默认方法: 将完整的直方图视为独立的数据点, 给直方图赋予随机权重来实现自展(&#8220;贝叶斯自展&#8221;). 注意, 沿反应坐标轴上的每个点都必须被多个独立直方图所覆盖(比如10个直方图), 否则会低估统计误差.
 
-<p>(2) <code>hist</code>: 将完整的直方图视为独立的数据点. 对每个自展, 从给定的N个直方图中随机选取N个直方图(允许重复, 即, 放回抽样). 为避免沿反应坐标轴上无数据的空隙, 可以定义直方图块(<code>-histbs-block</code>). 在那种情况下, 会将给定的直方图划分为块, 只有各块内部的直方图才会混合. 注意, 每块内的直方图必须能代表所有可能出现的直方图, 否则会低估统计误差.</p>
+(2) <code>hist</code>: 将完整的直方图视为独立的数据点. 对每个自展, 从给定的N个直方图中随机选取N个直方图(允许重复, 即, 放回抽样). 为避免沿反应坐标轴上无数据的空隙, 可以定义直方图块(<code>-histbs-block</code>). 在那种情况下, 会将给定的直方图划分为块, 只有各块内部的直方图才会混合. 注意, 每块内的直方图必须能代表所有可能出现的直方图, 否则会低估统计误差.
 
-<p>(3) <code>traj</code>: 用给定的直方图产生新的随机轨迹, 这样产生的数据点遵从给定直方图的分布, 并具有适当的自相关. 每个窗口的自相关时间(ACT)必须是已知的, 所以要使用<code>-ac</code>选项或者利用<code>-iiact</code>手动提供ACT. 如果所有窗口的ACT都相同(并且已知), 你也可以用<code>-bs-tau</code>提供ACT. 注意, 在采样不足的情况下, 即如果各个直方图在各自的位置不能代表整个相空间, 此方法可能严重低估误差.</p>
+(3) <code>traj</code>: 用给定的直方图产生新的随机轨迹, 这样产生的数据点遵从给定直方图的分布, 并具有适当的自相关. 每个窗口的自相关时间(ACT)必须是已知的, 所以要使用<code>-ac</code>选项或者利用<code>-iiact</code>手动提供ACT. 如果所有窗口的ACT都相同(并且已知), 你也可以用<code>-bs-tau</code>提供ACT. 注意, 在采样不足的情况下, 即如果各个直方图在各自的位置不能代表整个相空间, 此方法可能严重低估误差.
 
-<p>(4) <code>traj-gauss</code>: 与<code>traj</code>方法相同, 但轨迹不是根据伞形直方图自展得到, 而是从均值和宽度与伞形直方图相同的高斯函数得到. 此方法给出的误差估计类似于<code>traj</code>方法.</p>
+(4) <code>traj-gauss</code>: 与<code>traj</code>方法相同, 但轨迹不是根据伞形直方图自展得到, 而是从均值和宽度与伞形直方图相同的高斯函数得到. 此方法给出的误差估计类似于<code>traj</code>方法.
 
-<p>自展法的输出:</p>
+自展法的输出:
 
-<p><code>-bsres</code>: 平均剖面和标准偏差</p>
+<code>-bsres</code>: 平均剖面和标准偏差
 
-<p><code>-bsprof</code>: 所有自展剖面</p>
+<code>-bsprof</code>: 所有自展剖面
 
-<p>使用<code>-vbs</code>选项(冗长自展)会输出每个自展使用的直方图, 并且, 使用<code>traj</code>自展方法时, 还会输出直方图的累积分布函数.</p>
+使用<code>-vbs</code>选项(冗长自展)会输出每个自展使用的直方图, 并且, 使用<code>traj</code>自展方法时, 还会输出直方图的累积分布函数.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -14866,7 +14879,7 @@ First doing the rotational fit and then doing the PBC treatment gives incorrect 
           [-rot0 ] [-T ] [-[no]nn]
 </code></pre>
 
-<p><code>gmx wheel</code>用于绘制指定序列的螺旋轮示意图. 输入序列来自于<code>.dat</code>文件, 其中的第一行为残基的总数目, 接下来的每一行包含一个残基名称.</p>
+<code>gmx wheel</code>用于绘制指定序列的螺旋轮示意图. 输入序列来自于<code>.dat</code>文件, 其中的第一行为残基的总数目, 接下来的每一行包含一个残基名称.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -14930,16 +14943,16 @@ First doing the rotational fit and then doing the PBC treatment gives incorrect 
           [-[no]param] [-[no]round] [-kb ] [-kt ] [-kp ]
 </code></pre>
 
-<p><code>gmx x2top</code>可以根据坐标文件生成原始的拓扑文件. 当根据原子名称和键的数目定义杂化状态时, 程序会假定所有的氢原子都出现在构型中. 这个程序也可以生成<code>.rtp</code>文件中的条目, 你可以将它们添加到力场目录下的<code>.rtp</code>数据库中.</p>
+<code>gmx x2top</code>可以根据坐标文件生成原始的拓扑文件. 当根据原子名称和键的数目定义杂化状态时, 程序会假定所有的氢原子都出现在构型中. 这个程序也可以生成<code>.rtp</code>文件中的条目, 你可以将它们添加到力场目录下的<code>.rtp</code>数据库中.
 
-<p>当设置了<code>-param</code>选项的时候, 所有相互作用的平衡距离, 键角和力常数都会写入拓扑中的相应位置. 平衡距离和键角由输入坐标得到, 力常数根据命令行选项设定. 目前支持的力场主要有以下几类:</p>
+当设置了<code>-param</code>选项的时候, 所有相互作用的平衡距离, 键角和力常数都会写入拓扑中的相应位置. 平衡距离和键角由输入坐标得到, 力常数根据命令行选项设定. 目前支持的力场主要有以下几类:
 
 <ul class="incremental">
 <li>G53a5: GROMOS96 53a5力场(官方发布)</li>
 <li>oplsaa: OPLS-AA/L 全原子力场(2001氨基酸二面角版本)</li>
 </ul>
 
-<p>使用<code>gmx x2top</code>时需要一个对应的<code>.n2t</code>文件, 它位于力场库目录下, 名称为<code>atomname2type.n2t</code>. 该文件的格式在手册的第五章有详细介绍. 默认情况下, 力场的选择是交互式的, 但可以使用<code>-ff</code>选项在命令行中指定上面力场的简短名称. 在这种情况下, <code>gmx x2top</code>会到指定的力场目录下查找对应的文件.</p>
+使用<code>gmx x2top</code>时需要一个对应的<code>.n2t</code>文件, 它位于力场库目录下, 名称为<code>atomname2type.n2t</code>. 该文件的格式在手册的第五章有详细介绍. 默认情况下, 力场的选择是交互式的, 但可以使用<code>-ff</code>选项在命令行中指定上面力场的简短名称. 在这种情况下, <code>gmx x2top</code>会到指定的力场目录下查找对应的文件.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -15067,7 +15080,7 @@ First doing the rotational fit and then doing the PBC treatment gives incorrect 
 
 ### 附加说明
 
-<p>理论上只要能在对应的力场中找到构型中的各个原子类型, 那么<code>gmx x2top</code>可以支持所有GROMACS的力场. 当然输出的原始拓扑文件需要进行很多修改, 因此在使用此工具需要对拓扑文件足够熟悉.</p>
+理论上只要能在对应的力场中找到构型中的各个原子类型, 那么<code>gmx x2top</code>可以支持所有GROMACS的力场. 当然输出的原始拓扑文件需要进行很多修改, 因此在使用此工具需要对拓扑文件足够熟悉.
 
 ## gmx xpm2ps: 将XPM(XPixelMap)矩阵转换为postscript或XPM(翻译: 黄丽红)
 
@@ -15079,19 +15092,19 @@ First doing the rotational fit and then doing the PBC treatment gives incorrect 
            [-legoffset ] [-combine ] [-cmin ] [-cmax ]
 </code></pre>
 
-<p><code>gmx xpm2ps</code>能够将XPM(XPixelMap)矩阵文件转换为漂亮的颜色映射图. 只要提供了正确的矩阵格式, 还可以显示标签和坐标轴. 矩阵数据可以通过一些程序得到, 如<code>gmx do_dssp</code>, <code>gmx rms</code>或<code>gmx mdmat</code>.</p>
+<code>gmx xpm2ps</code>能够将XPM(XPixelMap)矩阵文件转换为漂亮的颜色映射图. 只要提供了正确的矩阵格式, 还可以显示标签和坐标轴. 矩阵数据可以通过一些程序得到, 如<code>gmx do_dssp</code>, <code>gmx rms</code>或<code>gmx mdmat</code>.
 
-<p>可以选择性的使用<code>-di</code>选项提供<code>.m2p</code>文件, 里面包含了设定的参数, 并提供了合理的默认值. Y轴的默认设置与X轴相同. 字体名称的默认等级为: 标题字体 -&gt; 图例字体; 标题字体 -&gt; (x字体 -&gt; y字体 -&gt; y刻度字体) -&gt; x刻度字体, 例如, 设置标题字体相当于设置了所有字体, 设置x轴字体相对于设置了y轴字体, y刻度字体和x刻度字体.</p>
+可以选择性的使用<code>-di</code>选项提供<code>.m2p</code>文件, 里面包含了设定的参数, 并提供了合理的默认值. Y轴的默认设置与X轴相同. 字体名称的默认等级为: 标题字体 -&gt; 图例字体; 标题字体 -&gt; (x字体 -&gt; y字体 -&gt; y刻度字体) -&gt; x刻度字体, 例如, 设置标题字体相当于设置了所有字体, 设置x轴字体相对于设置了y轴字体, y刻度字体和x刻度字体.
 
-<p>未提供<code>.m2p</code>文件时, 可以通过命令行选项设定多数设置. 其中最重要的选项是<code>-size</code>, 它以postscript的单位设定了整个矩阵的大小. 此选项也可以使用<code>-bx</code>和<code>-by</code>选项(以及<code>.m2p</code>文件中的相应参数)覆盖, 它们设定了单个矩阵元素的大小.</p>
+未提供<code>.m2p</code>文件时, 可以通过命令行选项设定多数设置. 其中最重要的选项是<code>-size</code>, 它以postscript的单位设定了整个矩阵的大小. 此选项也可以使用<code>-bx</code>和<code>-by</code>选项(以及<code>.m2p</code>文件中的相应参数)覆盖, 它们设定了单个矩阵元素的大小.
 
-<p>使用<code>-f2</code>选项可以提供第二个矩阵文件. 程序会同时读取两个矩阵文件, 并绘制出第一个矩阵(<code>-f</code>)的左上半部分与第二个矩阵(<code>-f2</code>)的右下半部分. 对角部分的值来自由<code>-diag</code>选项选择的矩阵文件. 将选项<code>-diag</code>设置为<code>none</code>可以不显示对角线上的值. 在这种情况下, 会生成一个新的颜色映射图, 其中红和蓝的渐变色分别代表负值和正值. 如果两个矩阵的颜色代码和图例标签完全相同, 那么只会显示一个图例说明, 否则会显示两个分开的图例说明. 使用<code>-combine</code>选项可以选择另外的操作, 以将矩阵进行组合. 输出值的范围会自动设置为组合矩阵的实际范围, 但可以使用<code>-cmin</code>和<code>-cmax</code>选项来覆盖所用的范围.</p>
+使用<code>-f2</code>选项可以提供第二个矩阵文件. 程序会同时读取两个矩阵文件, 并绘制出第一个矩阵(<code>-f</code>)的左上半部分与第二个矩阵(<code>-f2</code>)的右下半部分. 对角部分的值来自由<code>-diag</code>选项选择的矩阵文件. 将选项<code>-diag</code>设置为<code>none</code>可以不显示对角线上的值. 在这种情况下, 会生成一个新的颜色映射图, 其中红和蓝的渐变色分别代表负值和正值. 如果两个矩阵的颜色代码和图例标签完全相同, 那么只会显示一个图例说明, 否则会显示两个分开的图例说明. 使用<code>-combine</code>选项可以选择另外的操作, 以将矩阵进行组合. 输出值的范围会自动设置为组合矩阵的实际范围, 但可以使用<code>-cmin</code>和<code>-cmax</code>选项来覆盖所用的范围.
 
-<p><code>-title</code>可设置为<code>none</code>以忽略标题, 或设置为<code>ylabel</code>以便在Y轴标签位置显示标题(平行于Y轴).</p>
+<code>-title</code>可设置为<code>none</code>以忽略标题, 或设置为<code>ylabel</code>以便在Y轴标签位置显示标题(平行于Y轴).
 
-<p>使用<code>-rainbow</code>选项可以将暗色的灰度矩阵变成更吸引人的彩色图片.</p>
+使用<code>-rainbow</code>选项可以将暗色的灰度矩阵变成更吸引人的彩色图片.
 
-<p>使用<code>-xpm</code>选项可以将溶合或彩虹映射的矩阵输出到XPixelMap文件.</p>
+使用<code>-xpm</code>选项可以将溶合或彩虹映射的矩阵输出到XPixelMap文件.
 
 <table><caption>输入/输出文件选项</caption>
 <tr>
@@ -15238,7 +15251,7 @@ First doing the rotational fit and then doing the PBC treatment gives incorrect 
 
 ### 附加说明
 
-<p>The m2p file format contains input options for the xpm2ps program. All of these options are very easy to comprehend when you look at the PosScript(tm) output from xpm2ps.</p>
+The m2p file format contains input options for the xpm2ps program. All of these options are very easy to comprehend when you look at the PosScript(tm) output from xpm2ps.
 
 <pre><code>; Command line options of xpm2ps override the parameters in this file
 black&amp;white              = no           ; Obsolete
