@@ -1,6 +1,6 @@
 ---
  layout: post
- title: GROMACS教程：创建周期性体系的拓扑文件: 以石墨烯为例
+ title: GROMACS教程：创建周期性体系的拓扑文件：以石墨烯为例
  categories:
  - 科
  tags:

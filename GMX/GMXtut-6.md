@@ -1,6 +1,6 @@
 ---
  layout: post
- title: GROMACS教程：自由能计算: 水中的甲烷
+ title: GROMACS教程：自由能计算：水中的甲烷
  categories:
  - 科
  tags:

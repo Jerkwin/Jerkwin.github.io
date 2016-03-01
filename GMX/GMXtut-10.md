@@ -1,6 +1,6 @@
 ---
  layout: post
- title: GROMACS教程：GROMACS模拟空间非均相体系(板块结构)的并行性能: 区域分解与PME节点设置
+ title: GROMACS教程：GROMACS模拟空间非均相体系(板块结构)的并行性能：区域分解与PME节点设置
  categories:
  - 科
  tags:
