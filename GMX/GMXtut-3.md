@@ -42,7 +42,7 @@
 
 <p>创建一个用于伞形采样模拟的分子拓扑所用的方法与其他模拟一样. 首先获得待研究分子结构的坐标文件, 然后使用<code>gmx pdb2gmx</code>生成拓扑. 一些体系需要特别考虑(例如蛋白质-配体复合物, 膜蛋白等等). 对于蛋白-配体体系, 请查阅这个<a href="http://jerkwin.github.io/9999/10/31/GROMACS%E4%B8%AD%E6%96%87%E6%95%99%E7%A8%8B/#TOC1.7.6">教程</a>, 对于膜蛋白, 我推荐参考这个<a href="http://jerkwin.github.io/9999/10/31/GROMACS%E4%B8%AD%E6%96%87%E6%95%99%E7%A8%8B/#TOC1.7.3">教程</a>. 伞形采样的原则可以很容易地拓展到这些体系, 虽然在本教程中我们仅考虑蛋白质分子.</p>
 
-<p>在本教程中我们所考虑的体系为单个多肽从Aβ<sub>42</sub>原丝纤维生长端的分离, 它基于我们最近发表的一篇<a href="http://pubs.acs.org/doi/abs/10.1021/jp9110794">论文</a>, 用于模拟所用的野生型Aβ<sub>42</sub>原丝纤维的结构文件可以在<a href="GMXtut-3_input.pdb">这里</a>下载, 其中每条链的N末端已进行了乙酰化. 原始的PDB登记代码为<a href="http://www.rcsb.org/pdb/explore/explore.do?structureId=2BEG">2BEG</a>.</p>
+<p>在本教程中我们所考虑的体系为单个多肽从Aβ<sub>42</sub>原丝纤维生长端的分离, 它基于我们最近发表的一篇<a href="http://pubs.acs.org/doi/abs/10.1021/jp9110794">论文</a>, 用于模拟所用的野生型Aβ<sub>42</sub>原丝纤维的结构文件可以在<a href="/GMX/GMXtut-3_input.pdb">这里</a>下载, 其中每条链的N末端已进行了乙酰化. 原始的PDB登记代码为<a href="http://www.rcsb.org/pdb/explore/explore.do?structureId=2BEG">2BEG</a>.</p>
 
 <p>使用<code>gmx pdb2gmx</code>处理结构:</p>
 
@@ -87,7 +87,7 @@
 <pre><code>gmx solvate -cp newbox.gro -cs spc216.gro -o solv.gro -p topol.top
 </code></pre>
 
-<p>然后, 我们使用<code>gmx genion</code>, 并利用这个<a href="GMXtut-3_ions.mdp">.mdp文件</a>添加离子. 我们将会在100 mM(mmol/L)的NaCl溶液中运行模拟, 并添加相应的离子以中和抗衡离子:</p>
+<p>然后, 我们使用<code>gmx genion</code>, 并利用这个<a href="/GMX/GMXtut-3_ions.mdp">.mdp文件</a>添加离子. 我们将会在100 mM(mmol/L)的NaCl溶液中运行模拟, 并添加相应的离子以中和抗衡离子:</p>
 
 <pre><code>gmx grompp -f ions.mdp -c solv.gro -p topol.top -o ions.tpr
 gmx genion -s ions.tpr -o solv_ions.gro -p topol.top -pname NA -nname CL -neutral -conc 0.1
@@ -95,7 +95,7 @@ gmx genion -s ions.tpr -o solv_ions.gro -p topol.top -pname NA -nname CL -neutra
 
 ## 第四步: 能量最小化与平衡
 
-<p>能量最小化和平衡步骤与其他任何水中的蛋白质体系一样. 这里, 我们将采用最陡下降法进行最小化, 然后再进行NPT平衡. 你可以在<a href="GMXtut-3_minim.mdp">这里</a>下载用于最小化的.mdp文件, 用于NPT平衡的.mdp文件可以在<a href="GMXtut-3_npt.mdp">这里</a>下载.</p>
+<p>能量最小化和平衡步骤与其他任何水中的蛋白质体系一样. 这里, 我们将采用最陡下降法进行最小化, 然后再进行NPT平衡. 你可以在<a href="/GMX/GMXtut-3_minim.mdp">这里</a>下载用于最小化的.mdp文件, 用于NPT平衡的.mdp文件可以在<a href="/GMX/GMXtut-3_npt.mdp">这里</a>下载.</p>
 
 <p>启动<code>grompp</code>和<code>mdrun</code>, 像通常一样:</p>
 
@@ -122,7 +122,7 @@ gmx mdrun -deffnm npt
 
 <p>对本教程的例子, 反应坐标为Z轴. 为产生这些构型, 我们必须牵引多肽A, 使其远离原丝纤维. 我们将运行500 ps的牵引MD, 每1 ps保存一张快照. 这一设置是基于试错法(trial-and-error)得到的, 可得到合理的构型分布. 对于其他体系, 保存构型的频率可能需要更高或者更低, 只要足够就好. 关键是沿反应坐标获得足够的构型, 以使伞形采样窗口的间距正常, 窗口间距以多肽A和B的质心距离表示, 其中B为参考组.</p>
 
-<p>牵引过程的.mdp文件可在<a href="GMXtut-3_md_pull.mdp">这里</a>下载. 其中所用牵引选项的简明解释如下:</p>
+<p>牵引过程的.mdp文件可在<a href="/GMX/GMXtut-3_md_pull.mdp">这里</a>下载. 其中所用牵引选项的简明解释如下:</p>
 
 <pre><code>; Pull code
 pull                 = yes
@@ -189,7 +189,7 @@ gmx mdrun -s pull.tpr
 <pre><code>gmx trjconv -s pull.tpr -f traj.xtc -o conf.gro -sep
 </code></pre>
 
-<p>这会生成一系列坐标文件(<code>conf0.gro</code>, <code>conf1.gro</code>, 等等), 对应于连续牵引模拟中保存的每一构型. 为了对生成的所有构型(501个!)反复地调用<code>gmx distance</code>命令(计算质心距离), 我写了一个简单的Perl脚本来完成这个工作. 它会自动生成包含距离信息的<code>summary_distances.dat</code>文件. 你可以从<a href="GMXtut-3_distances.pl">这里</a>下载这个脚本.</p>
+<p>这会生成一系列坐标文件(<code>conf0.gro</code>, <code>conf1.gro</code>, 等等), 对应于连续牵引模拟中保存的每一构型. 为了对生成的所有构型(501个!)反复地调用<code>gmx distance</code>命令(计算质心距离), 我写了一个简单的Perl脚本来完成这个工作. 它会自动生成包含距离信息的<code>summary_distances.dat</code>文件. 你可以从<a href="/GMX/GMXtut-3_distances.pl">这里</a>下载这个脚本.</p>
 
 <pre><code>perl distances.pl
 </code></pre>
@@ -207,7 +207,7 @@ gmx mdrun -s pull.tpr
 
 <p>在这个例子中, 我们将沿Z轴以大约0.2 nm的间距进行采样, 质心距离从0.5 nm变化到5.0 nm. 下面的示例命令可能正确也可能不正确(因为构型编号可能会有差别), 但可以作为一个例子告诉大家如何对独立的坐标文件运行<code>gmx grompp</code>, 以产生全部23个输入文件(也请注意, 当间距为0.2 nm时, 大约4.5 nm的距离需要23个窗口. 在我们的<a href="http://pubs.acs.org/doi/abs/10.1021/jp9110794">原始工作</a>中, 使用了31个非对称窗口).</p>
 
-<p>确定了采样窗口的初始构型之后, 我们现在可以准备伞形采样模拟了. 我们需要产生许多输入文件以运行每个需要的模拟. 例如, 我们已经沿反应坐标确定了23个构型, 这意味着我们要生成23个不同的输入文件并进行23次独立的模拟. 在每个窗口中, 利用这个<a href="GMXtut-3_npt_umbrella.mdp">.mdp文件</a>运行一个简单的NPT平衡模拟作为开始.</p>
+<p>确定了采样窗口的初始构型之后, 我们现在可以准备伞形采样模拟了. 我们需要产生许多输入文件以运行每个需要的模拟. 例如, 我们已经沿反应坐标确定了23个构型, 这意味着我们要生成23个不同的输入文件并进行23次独立的模拟. 在每个窗口中, 利用这个<a href="/GMX/GMXtut-3_npt_umbrella.mdp">.mdp文件</a>运行一个简单的NPT平衡模拟作为开始.</p>
 
 <p>首先使用<code>gmx grompp</code>:</p>
 
@@ -223,7 +223,7 @@ gmx grompp -f npt_umbrella.mdp -c conf450.gro -p topol.top -n index.ndx -o npt22
 gmx mdrun -deffnm npt22
 </code></pre>
 
-<p>为启动伞形抽样, 还需要对每一个已平衡的构型调用<code>grompp</code>处理此<a href="GMXtut-3_md_umbrella.mdp">.mdp文件</a>. 许多牵引参数与SMD过程中的相同, 除了<code>pull_rate1</code>以外, 它被设置为0. 我们不需要沿反应坐标移动构型, 而是将它限制在构型空间中定义好的窗口内. 设置<code>pull_start = yes</code>意味着初始的质心距离为参考距离, 我们不必对每个构型单独定义一个参考(<code>pull_init1</code>).</p>
+<p>为启动伞形抽样, 还需要对每一个已平衡的构型调用<code>grompp</code>处理此<a href="/GMX/GMXtut-3_md_umbrella.mdp">.mdp文件</a>. 许多牵引参数与SMD过程中的相同, 除了<code>pull_rate1</code>以外, 它被设置为0. 我们不需要沿反应坐标移动构型, 而是将它限制在构型空间中定义好的窗口内. 设置<code>pull_start = yes</code>意味着初始的质心距离为参考距离, 我们不必对每个构型单独定义一个参考(<code>pull_init1</code>).</p>
 
 <pre><code>gmx grompp -f md_umbrella.mdp -c conf0.gro -p topol.top -n index.ndx -o umbrella0.tpr
 ...
@@ -235,7 +235,7 @@ gmx grompp -f md_umbrella.mdp -c conf450.gro -p topol.top -n index.ndx -o umbrel
 <pre><code>gmx mdrun -deffnm umbrella0 -pf pull-umbrella0.xvg -px pullx-umbrella0.xvg
 </code></pre>
 
-<p>Mike Harms提供了一个Python脚本, 可自动完成这一过程, 抽取坐标文件, 并设置<code>grompp</code>和<code>mdrun</code>命令. 你可以在<a href="GMXtut-3_setup-umbrella-script.zip">这里</a>下载他的脚本以及一些必要信息. 如果关于此脚本或其使用有什么反馈, 可以<a href="http://www.hotmail.com/secure/start?action=compose&amp;to=harmsm@gmail.com&amp;subject=Umbrella%20sampling%20tutorial%20script">联系Mike</a>. 谢谢Mike的贡献!</p>
+<p>Mike Harms提供了一个Python脚本, 可自动完成这一过程, 抽取坐标文件, 并设置<code>grompp</code>和<code>mdrun</code>命令. 你可以在<a href="/GMX/GMXtut-3_setup-umbrella-script.zip">这里</a>下载他的脚本以及一些必要信息. 如果关于此脚本或其使用有什么反馈, 可以<a href="http://www.hotmail.com/secure/start?action=compose&amp;to=harmsm@gmail.com&amp;subject=Umbrella%20sampling%20tutorial%20script">联系Mike</a>. 谢谢Mike的贡献!</p>
 
 ## 第七步: 数据分析
 

@@ -44,7 +44,7 @@
 
 ## 第二步: 考察拓扑
 
-<p>下载待研究体系的<a href="GMXtut-6_methane_water.gro">坐标文件</a>与<a href="GMXtut-6_topol.top">拓扑文件</a>, 这些文件是David Mobley教程的一部分, 也是前面提到的论文中Michael Shirts使用的原始文件(稍加修改以兼容GROMACS的最近版本).</p>
+<p>下载待研究体系的<a href="/GMX/GMXtut-6_methane_water.gro">坐标文件</a>与<a href="/GMX/GMXtut-6_topol.top">拓扑文件</a>, 这些文件是David Mobley教程的一部分, 也是前面提到的论文中Michael Shirts使用的原始文件(稍加修改以兼容GROMACS的最近版本).</p>
 
 <p>体系包含一个单独的甲烷分子(坐标文件中的名称为<code>ALAB</code>, 作为甘氨酸的β碳原子), 处于596个TIP3P水分子的盒子中. 查看拓扑文件, 会发现如下内容:</p>
 
@@ -126,16 +126,16 @@ SOL               596
 <p>本教程不同步骤(仅用于 <span class="math">\(\l\)</span> =0)使用的.mdp文件见以下链接:</p>
 
 <ul>
-<li><a href="GMXtut-6_em_steep.mdp">最速下降能量最小化</a></li>
-<li><a href="GMXtut-6_em_l-bfgs.mdp">L-BFGS能量最小化</a></li>
-<li><a href="GMXtut-6_nvt.mdp">NVT平衡</a></li>
-<li><a href="GMXtut-6_npt.mdp">NPT平衡</a></li>
-<li><a href="GMXtut-6_md.mdp">成品MD</a></li>
+<li><a href="/GMX/GMXtut-6_em_steep.mdp">最速下降能量最小化</a></li>
+<li><a href="/GMX/GMXtut-6_em_l-bfgs.mdp">L-BFGS能量最小化</a></li>
+<li><a href="/GMX/GMXtut-6_nvt.mdp">NVT平衡</a></li>
+<li><a href="/GMX/GMXtut-6_npt.mdp">NPT平衡</a></li>
+<li><a href="/GMX/GMXtut-6_md.mdp">成品MD</a></li>
 </ul>
 
-<p>我也准备了两个Perl脚本, <a href="GMXtut-6_write_mdp.pl">write_mdp.pl</a>和<a href="GMXtut-6_write_sh.pl">write_sh.pl</a>, 你可以使用它们快速地创建运行模拟需要的所有输入文件.</p>
+<p>我也准备了两个Perl脚本, <a href="/GMX/GMXtut-6_write_mdp.pl">write_mdp.pl</a>和<a href="/GMX/GMXtut-6_write_sh.pl">write_sh.pl</a>, 你可以使用它们快速地创建运行模拟需要的所有输入文件.</p>
 
-<p>你也可以下载一个shell脚本<a href="GMXtut-6_job.sh">job.sh</a>, 根据我给出的工作流程运行模拟作业.</p>
+<p>你也可以下载一个shell脚本<a href="/GMX/GMXtut-6_job.sh">job.sh</a>, 根据我给出的工作流程运行模拟作业.</p>
 
 <p>如果你执行</p>
 

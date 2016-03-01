@@ -51,7 +51,7 @@
 
 ## 第二步: 构建拓扑
 
-<p>与一般的GROMACS工作流程不同, 在这个教程中我们不需要使用<code>pdb2gmx</code>来获得拓扑文件. 我们将借助简单的文本编辑器完全手动地来构建拓扑文件. 本教程中我们将选用OPLS-AA力场, 你可以点击<a href="GMXtut-7_topol.top">这里</a>下载拓扑文件. 在这一步中, 我们将研究拓扑文件的内容, 以解释构建方式背后的逻辑. 相关的单个CO<sub>2</sub>分子的坐标文件可以在<a href="GMXtut-7_co2.pdb">这里</a>下载.</p>
+<p>与一般的GROMACS工作流程不同, 在这个教程中我们不需要使用<code>pdb2gmx</code>来获得拓扑文件. 我们将借助简单的文本编辑器完全手动地来构建拓扑文件. 本教程中我们将选用OPLS-AA力场, 你可以点击<a href="/GMX/GMXtut-7_topol.top">这里</a>下载拓扑文件. 在这一步中, 我们将研究拓扑文件的内容, 以解释构建方式背后的逻辑. 相关的单个CO<sub>2</sub>分子的坐标文件可以在<a href="/GMX/GMXtut-7_co2.pdb">这里</a>下载.</p>
 
 <p>首先, 我们来考虑分子中的质量分布. 两个质心用于描述CO<sub>2</sub>分子的全部质量. 从拓扑文件中, 我们可以看出应如何计算分子总质量, 以使得它可以重新分配到两个质心.</p>
 
@@ -114,7 +114,7 @@
 
 <p>我们这样做是因为, 如果我们只模拟一个分子, 体系的自由度为零, 模拟将以0 K进行, 分子不会运动. 那样的话对展示我们创建的模型的可行性不是很有效. 当然也没有必要加入太多分子, 这只是一个简单的演示. 所以我们使用了一个很小的测试体系. 现在, 需要更新<code>topol.top</code>文件中的 <code>[ molecules ]</code>段以反映体系中共有10个CO<sub>2</sub>分子.</p>
 
-<p>进行能量最小化, 使用的mdp文件可在<a href="GMXtut-7_minim.mdp">此处</a>下载.</p>
+<p>进行能量最小化, 使用的mdp文件可在<a href="/GMX/GMXtut-7_minim.mdp">此处</a>下载.</p>
 
 <pre><code>gmx grompp -f minim.mdp -c box.pdb -p topol.top -o min.tpr
 gmx mdrun -nt 1 -v -deffnm min
@@ -122,7 +122,7 @@ gmx mdrun -nt 1 -v -deffnm min
 
 <p>由于体系特别小(50个原子), 因此mdp文件尽量从简, 也没有使用更多的处理器.</p>
 
-<p>现在对体系进行一个短时间的动力学模拟, 使用的mdp文件可在<a href="GMXtut-7_md.mdp">此处</a>下载.</p>
+<p>现在对体系进行一个短时间的动力学模拟, 使用的mdp文件可在<a href="/GMX/GMXtut-7_md.mdp">此处</a>下载.</p>
 
 <pre><code>gmx gormpp -f md.mdp -c min .gro -p topol.top -o md.tpr
 gmx mdrun -nt 1 -v -deffnm md

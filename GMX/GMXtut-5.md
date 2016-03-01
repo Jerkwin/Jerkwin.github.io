@@ -32,7 +32,7 @@
 
 <p>一旦下载了结构文件, 你可以使用一些可视化程序, 如VMD, Chimera, PyMOL等, 来查看蛋白质的结构. 查看过分子之后, 你就要将其中的结晶水, PO4, BME去掉. 注意, 这个过程并不总是合适的(例如, 对结合位点的水分子就不适用). 对本教程的目的而言, 我们不需要结晶水或其他配体, 而只关心名称为<code>JZ4</code>的配体.</p>
 
-<p>如果你需要一个已经处理好的.pdb文件来检查自己的处理结果, 可以从<a href="GMXtut-5_3HTB_clean.pdb">这里</a>下载. 我们现在面临的问题是, GROMACS提供的任何力场都不能识别JZ4配体. 因此, 如果你试图直接用<code>gmx pdb2gmx</code>处理JZ4的.pdb文件, 将会出现致命错误. 只有当构建单元的条目出现在相应力场的.rtp文件中时, <code>gmx pdb2gmx</code>才能自动组装其拓扑. 但对于JZ4配体不是这种情况, 所以我们将分两步来准备体系的拓扑:</p>
+<p>如果你需要一个已经处理好的.pdb文件来检查自己的处理结果, 可以从<a href="/GMX/GMXtut-5_3HTB_clean.pdb">这里</a>下载. 我们现在面临的问题是, GROMACS提供的任何力场都不能识别JZ4配体. 因此, 如果你试图直接用<code>gmx pdb2gmx</code>处理JZ4的.pdb文件, 将会出现致命错误. 只有当构建单元的条目出现在相应力场的.rtp文件中时, <code>gmx pdb2gmx</code>才能自动组装其拓扑. 但对于JZ4配体不是这种情况, 所以我们将分两步来准备体系的拓扑:</p>
 
 <ol>
 <li>使用<code>gmx pdb2gmx</code>准备蛋白质的拓扑</li>
@@ -279,7 +279,7 @@ JZ4                 1
 
 <p>现在我们有了一个已经溶剂化的体系, 其中包含一个带电的蛋白质. <code>gmx pdb2gmx</code>的输出提示我们, 蛋白质的净电荷为+6 e(根据蛋白质的氨基酸组分计算所得). 如果你忽略了<code>gmx pdb2gmx</code>输出的这一信息, 可查看<code>topol.top</code>文件中<code>[ atoms ]</code>部分的最后一行, 其(部分)内容应为<code>qtot 6</code>. 由于生命体系中不存在净电荷, 我们必须在体系中添加离子.</p>
 
-<p>使用<code>gmx grompp</code>整合.tpr文件, 可利用任何.mdp文件. 我使用了运行能量最小化的.mdp文件, 因为它只需要最少的参数, 因此最容易维护. 例如, 你可以使用这个<a href="GMXtut-5_em.mdp">.mdp文件</a>.</p>
+<p>使用<code>gmx grompp</code>整合.tpr文件, 可利用任何.mdp文件. 我使用了运行能量最小化的.mdp文件, 因为它只需要最少的参数, 因此最容易维护. 例如, 你可以使用这个<a href="/GMX/GMXtut-5_em.mdp">.mdp文件</a>.</p>
 
 <pre><code>gmx grompp -f em.mdp -c solv.gro -p topol.top -o ions.tpr
 </code></pre>
@@ -318,7 +318,7 @@ CL                  6
 
 ## 第五步: 能量最小化
 
-<p>现在体系已经整合起来了, 我们可以使用<code>gmx grompp</code>并利用这个<a href="GMXtut-5_em_real.mdp">输入参数文件</a>来创建一个二进制输出文件:</p>
+<p>现在体系已经整合起来了, 我们可以使用<code>gmx grompp</code>并利用这个<a href="/GMX/GMXtut-5_em_real.mdp">输入参数文件</a>来创建一个二进制输出文件:</p>
 
 <pre><code>gmx grompp -f em_real.mdp -c solv_ions.gro -p topol.top -o em.tpr
 </code></pre>
@@ -457,7 +457,7 @@ Norm of force     =  5.1248310e+01
 
 <p>现在我们可以设置<code>tc_grps = Protein_JZ4 Water_and_ions</code>来达到我们需要的<code>Protein Non-Protein</code>的效果了.</p>
 
-<p>使用这个<a href="GMXtut-5_nvt.mdp">.mdp文件</a>进行NVT平衡:</p>
+<p>使用这个<a href="/GMX/GMXtut-5_nvt.mdp">.mdp文件</a>进行NVT平衡:</p>
 
 <pre><code>gmx grompp -f nvt.mdp -c em.gro -p topol.top -n index.ndx -o nvt.tpr
 
@@ -466,7 +466,7 @@ gmx mdrun -deffnm nvt
 
 ## 第七步: NPT平衡
 
-<p>完成NVT平衡后, 使用这个<a href="GMXtut-5_npt.mdp">.mdp文件</a>进行NPT平衡:</p>
+<p>完成NVT平衡后, 使用这个<a href="/GMX/GMXtut-5_npt.mdp">.mdp文件</a>进行NPT平衡:</p>
 
 <pre><code>gmx grompp -f npt.mdp -c nvt.gro -t nvt.cpt -p topol.top -n index.ndx -o npt.tpr
 
@@ -475,7 +475,7 @@ gmx mdrun -deffnm npt
 
 ## 第八步: 成品MD
 
-<p>完成前面两个阶段的平衡后, 体系已经在需要的温度和压力下平衡好了, 现在我们可以放开位置限制运行成品模拟收集数据了. 这个过程和我们以前见到的一样, 我们将使用检查点文件(在这种情况下它保留了压力耦合信息)运行<code>gmx grompp</code>. 我们将运行1 ns的MD模拟, 所用的.mdp可以在<a href="GMXtut-5_md.mdp">这里</a>下载.</p>
+<p>完成前面两个阶段的平衡后, 体系已经在需要的温度和压力下平衡好了, 现在我们可以放开位置限制运行成品模拟收集数据了. 这个过程和我们以前见到的一样, 我们将使用检查点文件(在这种情况下它保留了压力耦合信息)运行<code>gmx grompp</code>. 我们将运行1 ns的MD模拟, 所用的.mdp可以在<a href="/GMX/GMXtut-5_md.mdp">这里</a>下载.</p>
 
 <pre><code>gmx grompp -f md.mdp -c npt.gro -t npt.cpt -p topol.top -n index.ndx -o md_0_1.tpr
 

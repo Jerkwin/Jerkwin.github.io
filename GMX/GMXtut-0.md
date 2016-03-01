@@ -1,6 +1,6 @@
 ---
  layout: post
- title: GROMACS教程：漏斗网蜘蛛毒素肽的溶剂化研究: Amber99SB-ILDN力场
+ title: GROMACS教程：漏斗网蜘蛛毒素肽的溶剂化研究：Amber99SB-ILDN力场
  categories:
  - 科
  tags:
@@ -60,7 +60,7 @@ Sequential assignment and structure determination of spider toxin omega-Aga-IVB.
 
 ### 第一步: 获取并处理pdb文件
 
-<p>从<a href="http://www.rcsb.org/pdb/">Protein Data Bank</a>下载小肽的pdb文件<code>1OMB.PDB</code>(或点击<a href="1OMB.pdb">这里</a>). 在Linux下你可使用如下命令:</p>
+<p>从<a href="http://www.rcsb.org/pdb/">Protein Data Bank</a>下载小肽的pdb文件<code>1OMB.PDB</code>(或点击<a href="/GMX/1OMB.pdb">这里</a>). 在Linux下你可使用如下命令:</p>
 
 <p><code>wget http://www.rcsb.org/pdb/files/1OMB.pdb</code></p>
 
@@ -94,7 +94,7 @@ Sequential assignment and structure determination of spider toxin omega-Aga-IVB.
 
 <p>使用文本编辑器检查得到的<code>fws.pdb</code>文件, 保证<code>HEADER</code>和<code>COMPND</code>行具有名称(实际上, 任何名称都可以), 删除DeepView添加到文件末尾的以<code>SPDBV</code>开头的行.</p>
 
-<p>处理后的<code>fws.pdb</code>文件见<a href="fws.pdb">这里</a>. 和原先的<code>1OMB.PDB</code>文件相比, 可以看到<code>fws.pdb</code>文件中已经不含氢原子, 删除了<code>SEQRES</code>, <code>SHEET</code>, <code>SSBOND</code>, <code>CONECT</code>信息, 并且添加了<code>OXT</code>原子.</p>
+<p>处理后的<code>fws.pdb</code>文件见<a href="/GMX/fws.pdb">这里</a>. 和原先的<code>1OMB.PDB</code>文件相比, 可以看到<code>fws.pdb</code>文件中已经不含氢原子, 删除了<code>SEQRES</code>, <code>SHEET</code>, <code>SSBOND</code>, <code>CONECT</code>信息, 并且添加了<code>OXT</code>原子.</p>
 
 <p><strong>说明</strong>: 无论何时将一个文本文件从Windows系统复制到unix系统, 一定要转换成unix文本文件. 像MS Word这类Windows编辑器会在文件中加入控制符, 这可能会使unix程序产生错误. 你可以用<code>to_unix</code>命令(如<code>to_unix filename filename</code>将<code>filename</code>文件转换成unix文本文件. 在RedHat Linux中, 还可以使用<code>dos2unix</code>命令.)</p>
 

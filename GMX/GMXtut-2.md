@@ -31,7 +31,7 @@
 
 <p>我们要研究的蛋白质为KALP模型多肽, 以KALP<sub>15</sub>表示, 其序列为Ac-GKK(LA)<sub>4</sub>LKKA-NH<sub>2</sub>. 这里给出的流程基于Kandasamy和Larson在研究憎水误匹配时构建的体系. 原始参考文献可在<a href="http://dx.doi.org/10.1529/biophysj.105.073395">这里</a>下载.</p>
 
-<p>多肽是使用<a href="http://ambermd.org/#AmberTools">AmberTools</a>的xLeap模块创建的, 创建时使用了α螺旋的理想骨架结构(φ=&#8211;60°, ψ=&#8211;40°). 使用<code>gmx editconf -princ</code>命令使.pdb文件中的蛋白质沿z轴取向, 然后再将蛋白绕y轴旋转. 注意, 在GROMACS&#8211;3.3.x中, <code>-princ</code>选项默认情况下使结构的长轴(对我们的情况, 为螺旋轴)沿z轴取向. 但此选项在GROMACS&#8211;4.0.4中变为长轴沿x轴进行取向. 如果你想跳过多肽的构建过程, 可在<a href="GMXtut-2_KALP-15_princ.pdb">这里</a>下载已经正确取向的结构.</p>
+<p>多肽是使用<a href="http://ambermd.org/#AmberTools">AmberTools</a>的xLeap模块创建的, 创建时使用了α螺旋的理想骨架结构(φ=&#8211;60°, ψ=&#8211;40°). 使用<code>gmx editconf -princ</code>命令使.pdb文件中的蛋白质沿z轴取向, 然后再将蛋白绕y轴旋转. 注意, 在GROMACS&#8211;3.3.x中, <code>-princ</code>选项默认情况下使结构的长轴(对我们的情况, 为螺旋轴)沿z轴取向. 但此选项在GROMACS&#8211;4.0.4中变为长轴沿x轴进行取向. 如果你想跳过多肽的构建过程, 可在<a href="/GMX/GMXtut-2_KALP-15_princ.pdb">这里</a>下载已经正确取向的结构.</p>
 
 <p>使用下面的命令运行<code>gmx pdb2gmx</code>:</p>
 
@@ -150,7 +150,7 @@ LC2    6    14.0270      0.000     A  5.94700e-03 1.79000e-05 ;CH2, OPLS
 
 <p>我们已经使用<code>gmx editconf</code>对KALP多肽进行了排列. 双脂层处于xy平面内, 其法向沿z轴. 使用<code>gmx editconf</code>将<code>dppc128.pdb</code>转换为.gro格式, 并移除初始的周期性. 后面一步使用<code>gmx trjconv</code>很容易完成, 其步骤为:</p>
 
-<p>(1) 使用<code>gmx grompp</code>对仅含有DPPC的体系生成.tpr文件. 你可以使用任何有效的.mdp文件, 相应于纯DPPC的拓扑文件. 这里是一个<a href="GMXtut-2_minim.mdp">示例.mdp文件</a>, 以及一个<a href="GMXtut-2_topol_dppc.top">拓扑文件</a>. 注意拓扑文件非常简单, 仅包含了<code>dppc.itp</code>和<code>spc.itp</code>, 用以读入DPPC和水的参数. 就这么简单! 运行<code>gmx grompp</code>:</p>
+<p>(1) 使用<code>gmx grompp</code>对仅含有DPPC的体系生成.tpr文件. 你可以使用任何有效的.mdp文件, 相应于纯DPPC的拓扑文件. 这里是一个<a href="/GMX/GMXtut-2_minim.mdp">示例.mdp文件</a>, 以及一个<a href="/GMX/GMXtut-2_topol_dppc.top">拓扑文件</a>. 注意拓扑文件非常简单, 仅包含了<code>dppc.itp</code>和<code>spc.itp</code>, 用以读入DPPC和水的参数. 就这么简单! 运行<code>gmx grompp</code>:</p>
 
 <pre><code>gmx grompp -f minim.mdp -c dppc128.gro -p topol_dppc.top -o em.tpr
 </code></pre>
@@ -178,7 +178,7 @@ LC2    6    14.0270      0.000     A  5.94700e-03 1.79000e-05 ;CH2, OPLS
 
 ### 2. 在蛋白四周堆积脂分子
 
-<p>目前我发现, 围绕嵌入蛋白质堆积脂分子的最简单方法是InflateGRO方法(<a href="http://dx.doi.org/10.1016/j.ymeth.2006.08.006">参考文献</a>), 你可以在<a href="GMXtut-2_inflategro.txt">这里</a>下载脚本. <strong>请注意</strong>, 我发布的代码是我自己保存的InflateGRO原始版本的副本, 而 <strong>不是</strong> 来自作者的InflateGRO2. 下载上面链接中的文件, 将其重命名为<code>inflategro.pl</code>再继续. 首先, 整合蛋白质和双脂层的结构文件:</p>
+<p>目前我发现, 围绕嵌入蛋白质堆积脂分子的最简单方法是InflateGRO方法(<a href="http://dx.doi.org/10.1016/j.ymeth.2006.08.006">参考文献</a>), 你可以在<a href="/GMX/GMXtut-2_inflategro.txt">这里</a>下载脚本. <strong>请注意</strong>, 我发布的代码是我自己保存的InflateGRO原始版本的副本, 而 <strong>不是</strong> 来自作者的InflateGRO2. 下载上面链接中的文件, 将其重命名为<code>inflategro.pl</code>再继续. 首先, 整合蛋白质和双脂层的结构文件:</p>
 
 <pre><code>cat KALP_newbox.gro dppc128_whole.gro &gt; system.gro
 </code></pre>
@@ -241,7 +241,7 @@ LC2    6    14.0270      0.000     A  5.94700e-03 1.79000e-05 ;CH2, OPLS
 
 ## 第四步: 添加离子
 
-<p>现在我们已经对溶剂进行了溶剂化, 是时候添加用于中和的抗衡离子了. 在这一步, 继续构建体系的过程几乎与<a href="http://jerkwin.github.io/9999/10/31/GROMACS%E4%B8%AD%E6%96%87%E6%95%99%E7%A8%8B/#TOC1.7.2">溶菌酶教程</a>中的完全相同, 使用的.mdp文件可以在<a href="GMXtut-2_ions.mdp">这里</a>下载</p>
+<p>现在我们已经对溶剂进行了溶剂化, 是时候添加用于中和的抗衡离子了. 在这一步, 继续构建体系的过程几乎与<a href="http://jerkwin.github.io/9999/10/31/GROMACS%E4%B8%AD%E6%96%87%E6%95%99%E7%A8%8B/#TOC1.7.2">溶菌酶教程</a>中的完全相同, 使用的.mdp文件可以在<a href="/GMX/GMXtut-2_ions.mdp">这里</a>下载</p>
 
 <pre><code>gmx grompp -f ions.mdp -c system_solv.gro -p topol.top -o ions.tpr
 </code></pre>
@@ -259,7 +259,7 @@ LC2    6    14.0270      0.000     A  5.94700e-03 1.79000e-05 ;CH2, OPLS
 
 ## 第五步: 能量最小化
 
-<p>这一步与任何其他模拟类似. 利用<a href="GMXtut-2_minim.mdp">这个</a>输入参数文件, 使用<code>gmx grompp</code>整合二进制输入:</p>
+<p>这一步与任何其他模拟类似. 利用<a href="/GMX/GMXtut-2_minim.mdp">这个</a>输入参数文件, 使用<code>gmx grompp</code>整合二进制输入:</p>
 
 <pre><code>gmx grompp -f minim.mdp -c system_solv_ions.gro -p topol.top -o em.tpr
 </code></pre>
@@ -299,7 +299,7 @@ LC2    6    14.0270      0.000     A  5.94700e-03 1.79000e-05 ;CH2, OPLS
 
 <p>提示时输入<code>1|13</code>来合并<code>Protein</code>和<code>DPPC</code>组. 这个组将用于移除质心运动(马上就会进行说明).</p>
 
-<p>再次启动NVT(使用<a href="GMXtut-2_nvt.mdp">这个</a>.mdp文件), 像EM步一样调用<code>gmx grompp</code>和<code>gmx mdrun</code></p>
+<p>再次启动NVT(使用<a href="/GMX/GMXtut-2_nvt.mdp">这个</a>.mdp文件), 像EM步一样调用<code>gmx grompp</code>和<code>gmx mdrun</code></p>
 
 <pre><code>gmx grompp -f nvt.mdp -c em.gro -p topol.top -n index.ndx -o nvt.tpr
 
@@ -378,7 +378,7 @@ gmx mdrun -deffnm nvt
 
 ## 第七步: NPT平衡
 
-<p>现在温度已经稳定了, 我们必须对压力进行平衡. 膜蛋白体系的NPT平衡阶段通常长于简单的蛋白质水溶液, 这还是由于体系的非均匀性. 这里, 我们将构建一个1 ns的NPT平衡, 你可以在<a href="GMXtut-2_npt.mdp">这里</a>下载使用的.mdp文件.</p>
+<p>现在温度已经稳定了, 我们必须对压力进行平衡. 膜蛋白体系的NPT平衡阶段通常长于简单的蛋白质水溶液, 这还是由于体系的非均匀性. 这里, 我们将构建一个1 ns的NPT平衡, 你可以在<a href="/GMX/GMXtut-2_npt.mdp">这里</a>下载使用的.mdp文件.</p>
 
 <p>这个.mdp文件中有几项更改值得指出:</p>
 
@@ -402,7 +402,7 @@ gmx mdrun -deffnm nvt
 
 ## 第八步: 成品MD
 
-<p>完成了两个阶段的平衡后, 体系已经在需要的温度和压力下平衡好了, 我们现在可以放开位置限制并运行成品MD收集数据了. 这个过程和我们以前见到的非常类似. 我们将运行1 ns的MD模拟, 相应的.mdp文件你可以在<a href="GMXtut-2_md.mdp">这里</a>下载.</p>
+<p>完成了两个阶段的平衡后, 体系已经在需要的温度和压力下平衡好了, 我们现在可以放开位置限制并运行成品MD收集数据了. 这个过程和我们以前见到的非常类似. 我们将运行1 ns的MD模拟, 相应的.mdp文件你可以在<a href="/GMX/GMXtut-2_md.mdp">这里</a>下载.</p>
 
 <pre><code>gmx grompp -f md.mdp -c npt.gro -t npt.cpt -p topol.top -n index.ndx -o md_0_1.tpr
 </code></pre>
