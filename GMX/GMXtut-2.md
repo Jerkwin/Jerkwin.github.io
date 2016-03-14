@@ -56,7 +56,7 @@
 <li><code>lipid.itp</code> - Berger脂分子参数</li>
 </ul>
 
-<p>那<code>lipid.itp</code>到底是什么, 我们如何使用它呢? 想想这个类比: 蛋白质的<code>gromos53a6.ff/forcefield.itp</code>相当于脂分子的<code>lipid.itp</code>. 基本上, <code>lipid.itp</code>包含了许多类脂分子的所有原子类型, 非键参数和键合参数, 与蛋白质<code>forcefield.itp</code>, <code>ffnonbonded.itp</code>和<code>ffbonded.itp</code>文件的功能类似. 也就是说, 我们可以在自己的拓扑中简单地使用<code>#include &quot;lipid.itp&quot;</code>, 因为它与<code>forcefield.itp</code>处于同等的水平(优先级).</p>
+<p>那<code>lipid.itp</code>到底是什么, 我们如何使用它呢? 想想这个类比: 蛋白质的<code>gromos53a6.ff/forcefield.itp</code>相当于脂分子的<code>lipid.itp</code>. 基本上, <code>lipid.itp</code>包含了许多类脂分子的所有原子类型, 非键参数和键合参数, 与蛋白质<code>forcefield.itp</code>, <code>ffnonbonded.itp</code>和<code>ffbonded.itp</code>文件的功能类似. 也就是说, 我们不可以在自己的拓扑中简单地使用<code>#include &quot;lipid.itp&quot;</code>, 因为它与<code>forcefield.itp</code>处于同等的水平(优先级).</p>
 
 <p>要使用<code>lipid.itp</code>中的参数, 我们必须修改已经预打包好的<code>gromos53a6.ff/forcefield.itp</code>文件. 在你的工作目录中创建一个新的目录<code>gromos53a6_lipid.ff</code>, 并从<code>gromos53a6.ff</code>目录中复制以下文件到这个目录:</p>
 
