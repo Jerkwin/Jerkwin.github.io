@@ -4,7 +4,7 @@ layout: page
 ---
 
 {% capture tagString %}{% for tag in site.tags %}{{ tag[0] }}{% unless forloop.last %},{% endunless %}{% endfor %}{% endcapture %}
-{% assign tags = tagString | split:',' | sort: 'downcase' %}
+{% assign tags = tagString | downcase | split:',' | sort %}
 
 <span> {{ tags }} </span>
 <div>
