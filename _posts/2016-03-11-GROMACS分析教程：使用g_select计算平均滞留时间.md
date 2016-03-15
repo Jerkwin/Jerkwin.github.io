@@ -67,7 +67,6 @@
 
 我们只要对`mask.dat`进行分析处理就可以计算平均滞留时间了. 这可以使用下面的bash脚本完成
 
-<div style="overflow:auto">
 <table class="highlighttable"><tr><td><div class="linenodiv" style="background-color: #f0f0f0; padding-right: 10px"><pre style="line-height: 125%"> 1
  2
  3
@@ -139,7 +138,6 @@ awk -v <span style="color: #B8860B">file</span><span style="color: #666666">=</s
 <span style="color: #BB4444">&#39;</span> <span style="color: #B8860B">$f</span>trs &gt;<span style="color: #B8860B">$ff</span>rq
 </pre></div>
 </td></tr></table>
-</div>
 
 得到的平均滞留时间为0.807243 ps. 当然, 实际情况中你需要运行更长的模拟来确认得到的数据是否收敛. 水分子滞留时间的分布图如下
 
@@ -147,7 +145,6 @@ awk -v <span style="color: #B8860B">file</span><span style="color: #666666">=</s
 
 对更大的体系, 更长的模拟时间, 上面的简单脚本可能执行时间很长. 这主要是因为在第一步中对`mask.dat`进行行列互换时, 如果文件太大就要花费很长的时间. 一种更高效些的方法是使用中间文件, 方法如下
 
-<div style="overflow:auto">
 <table class="highlighttable"><tr><td><div class="linenodiv" style="background-color: #f0f0f0; padding-right: 10px"><pre style="line-height: 125%"> 1
  2
  3
@@ -189,13 +186,11 @@ awk -v <span style="color: #B8860B">file</span><span style="color: #666666">=</s
 <span style="color: #BB4444">&#39;</span> <span style="color: #B8860B">$f</span>ile
 </pre></div>
 </td></tr></table>
-</div>
 
 更高效的方法, 就只能换用其他编译型语言或MatLab等软件了.
 
 我们可以利用`trjconv`程序并借助`selFrm.ndx`文件获取每一时刻所选原子的坐标, 只需要根据对每一帧指定不同的索引组即可. 获取前100帧的示例代码如下
 
-<div style="overflow:auto">
 <table class="highlighttable"><tr><td><div class="linenodiv" style="background-color: #f0f0f0; padding-right: 10px"><pre style="line-height: 125%"> 1
  2
  3
@@ -217,7 +212,6 @@ awk -v <span style="color: #B8860B">file</span><span style="color: #666666">=</s
 <span style="color: #AA22FF; font-weight: bold">done</span>
 </pre></div>
 </td></tr></table>
-</div>
 
 当然这种每次处理一帧的方法运行起来很慢, 但可惜的是GROMACS的分析工具中并没有提供解决方案, 如果需要更快地抽取出构型, 那就只能自己写代码了. 此外, 这样直接得到的构型由于PBC的原因可能看起来不连续, 为此, 你可能需要先使用`trjconv`对轨迹进行居中, PBC处理, 然后再使用上面的方法获取坐标.
 
