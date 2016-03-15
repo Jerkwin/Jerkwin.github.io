@@ -5,7 +5,7 @@ layout: page
 
 <div>
 {% for cat in site.categories %}
-<a class=tagbox href="#{{ cat[0] }}" rel="{{ cat[1].size }}">{{ cat[0] }}<span>{{ cat[1].size }}</span></a>
+<a class="tagbox" href="#{{ cat[0] }}" rel="{{ cat[1].size }}">{{ cat[0] }}<span>{{ cat[1].size }}</span></a>
 {% endfor %}
 </div>
 
