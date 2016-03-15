@@ -5,7 +5,7 @@ layout: page
 
 <div>
 {% for tag in site.tags %}
-<a href="#{{ tag[0] }}" rel="{{ tag[1].size }}">{{ tag[0] }}</a><sup style="color:#07e">{{ tag[1].size }}</sup>&nbsp;&nbsp;&nbsp;
+<a class=tagbox href="#{{ tag[0] }}" rel="{{ tag[1].size }}">{{ tag[0] }}<span>{{ tag[1].size }}</span></a>
 {% endfor %}
 </div>
 <hr>
