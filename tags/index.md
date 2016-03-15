@@ -9,8 +9,8 @@ layout: page
 <div>
   {% for tag in tags %}
   {% assign number = site.tags[tag].size %}
-  {% assign slug = tag | downcase | replace: ' ', '_' %}
-<a class="tagbox" href="#{{ slug }}" rel="{{ number }}">{{ tag | downcase }}<span>{{ number }}</span></a>
+  {% assign slug = tag | replace: ' ', '_' %}
+<a class="tagbox" href="#{{ slug }}" rel="{{ number }}">{{ tag }}<span>{{ number }}</span></a>
   {% endfor %}
 </div>
 
