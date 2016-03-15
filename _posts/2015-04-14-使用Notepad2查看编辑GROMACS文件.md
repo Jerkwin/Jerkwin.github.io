@@ -4,7 +4,7 @@
  categories:
  - 科
  tags:
- - GMX
+ - gmx
 ---
 
 ## 2015-04-14 20:52:38

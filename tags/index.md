@@ -3,13 +3,12 @@ title: 标签
 layout: page
 ---
 
-{% capture tagString %}{% for tag in site.tags %}{{ tag[0] }}{% unless forloop.last %},{% endunless %}{% endfor %}{% endcapture %}
+{% capture tagString %}{% for tag in site.tags %}{{ tag[0] }}{{','}}{% endfor %}{% endcapture %}
 {% assign tags = tagString | downcase | split:',' | sort %}
 
-<span> {{ tags }} </span>
 <div>
-  {% for tag in tags %}
-  {% assign number = site.tags[tag].size %}
+{% for tag in tags %}
+{% assign number = site.tags[tag].size %}
 <a class="tagbox" href="#{{ tag }}" rel="{{ number }}">{{ tag }}<span>{{ number }}</span></a>
   {% endfor %}
 </div>
