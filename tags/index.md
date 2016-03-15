@@ -6,12 +6,11 @@ layout: page
 {% capture tagString %}{% for tag in site.tags %}{{ tag[0] }}{% unless forloop.last %}|{% endunless %}{% endfor %}{% endcapture %}
 {% assign tags = tagString | split: '|' | sort: 'downcase' %}
 
-<div id="cloud">
+<div>
   {% for tag in tags %}
   {% assign number = site.tags[tag].size %}
   {% assign slug = tag | downcase | replace: ' ', '_' %}
-    <a href="#tag-{{ slug }}">{{ tag | downcase }}</a>
-<a class="tagbox" href="#tag-{{ slug }}" rel="{{ number }}">{{ slug }}<span>{{ number }}</span></a>
+<a class="tagbox" href="#{{ slug }}" rel="{{ number }}">{{ tag | downcase }}<span>{{ number }}</span></a>
   {% endfor %}
 </div>
 
