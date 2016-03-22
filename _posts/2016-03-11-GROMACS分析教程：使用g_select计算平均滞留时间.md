@@ -233,7 +233,7 @@ END<span style="color: #666666">{</span>
 
 ----
 
-<h1>程刚: 基于Gromacs和Matlab计算平均滞留时间</h1>
+<h1>程刚: 基于GROMACS和MatLab计算平均滞留时间</h1>
 
 ## 一、计算原理
 
