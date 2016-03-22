@@ -72,7 +72,7 @@ Mol1.handle = null;Mol1.timeout = 15;Mol1.specs.crystals_unitCellLineWidth = 1.5
 
 我们只要对`mask.dat`进行分析处理就可以计算平均滞留时间了. 这可以使用下面的bash脚本完成
 
-<table class="highlighttable"><th colspan=2>bash</th><tr><td><div class="linenodiv" style="background-color: #f0f0f0; padding-right: 10px"><pre style="line-height: 125%"> 1
+<table class="highlighttable"><th colspan="2">bash</th><tr><td><div class="linenodiv" style="background-color: #f0f0f0; padding-right: 10px"><pre style="line-height: 125%"> 1
  2
  3
  4
@@ -150,7 +150,7 @@ END<span style="color: #666666">{</span> print <span style="color: #BB4444">&quo
 
 对更大的体系, 更长的模拟时间, 上面的简单脚本可能执行时间很长. 这主要是因为在第一步中对`mask.dat`进行行列互换时, 如果文件太大就要花费很长的时间. 一种更高效些的方法是使用中间文件, 方法如下
 
-<table class="highlighttable"><th colspan=2>bash</th><tr><td><div class="linenodiv" style="background-color: #f0f0f0; padding-right: 10px"><pre style="line-height: 125%"> 1
+<table class="highlighttable"><th colspan="2">bash</th><tr><td><div class="linenodiv" style="background-color: #f0f0f0; padding-right: 10px"><pre style="line-height: 125%"> 1
  2
  3
  4
@@ -196,7 +196,7 @@ END<span style="color: #666666">{</span>
 
 我们可以利用`trjconv`程序并借助`selFrm.ndx`文件获取每一时刻所选原子的坐标, 只需要根据对每一帧指定不同的索引组即可. 获取前100帧的示例代码如下
 
-<table class="highlighttable"><th colspan=2>bash</th><tr><td><div class="linenodiv" style="background-color: #f0f0f0; padding-right: 10px"><pre style="line-height: 125%"> 1
+<table class="highlighttable"><th colspan="2">bash</th><tr><td><div class="linenodiv" style="background-color: #f0f0f0; padding-right: 10px"><pre style="line-height: 125%"> 1
  2
  3
  4
@@ -256,7 +256,7 @@ END<span style="color: #666666">{</span>
 
 __李继存 注__: 此代码效率较低, 数据量太大时可能出现问题, 请优化使用.
 
-<table class="highlighttable"><th colspan=2>matlab</th><tr><td><div class="linenodiv" style="background-color: #f0f0f0; padding-right: 10px"><pre style="line-height: 125%"> 1
+<table class="highlighttable"><th colspan="2">matlab</th><tr><td><div class="linenodiv" style="background-color: #f0f0f0; padding-right: 10px"><pre style="line-height: 125%"> 1
  2
  3
  4
