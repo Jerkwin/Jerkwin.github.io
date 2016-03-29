@@ -8,15 +8,15 @@
  chem: true
 ---
 
-## 2015-12-08 22:16:10
-
+- 2015-12-08 22:16:10 初稿
+- 2016-03-28 20:18:18 补注: 不同版本ACPYPE生成的二面角函数类型
 - 下载本文用到的[文件](/Prog/GAFF.zip)
 
 使用AMBER的GAFF力场处理有机小分子有很大的优势, 可惜的是GROMACS没有自带GAFF力场, 所以需要组合使用各种软件组合来实现. 这里我们使用的是AmberTools和ACPYPE.
 
 要想使用AmberTools和ACPYPE创建小分子的GAFF力场, 需要先安装这两个工具. 但Windows下AmberTools的安装并不容易. 在这里我提供一个已经编译好的AmberTools+ACPYPE, 它来自Chimera中所带的amber14, 并增加了我自己编译好的RESP程序与ACPYPE程序, 因为Chimera中并没有包含这两个程序. 具体的整合过程请参看[Windows下的AmberTools+RESP+ACPYPE](http://jerkwin.github.io/2015/12/06/Windows%E4%B8%8B%E7%9A%84AmberTools+RESP+ACPYPE/).
 
-点击[这里](/Prog/amber14.zip)下载AmberTools+ACPYPE, 下载后解压到某一目录(路径中不要包含中文字符), 然后新建环境变量`AMBERHOME`并将其设置为amber14的路径即可. 
+点击[这里](/Prog/amber14.zip)下载AmberTools+ACPYPE, 下载后解压到某一目录(路径中不要包含中文字符), 然后新建环境变量`AMBERHOME`并将其设置为amber14的路径即可.
 
 ![](/pic/GMX_amberhome.png)
 
@@ -50,9 +50,12 @@ __注意, Gaussian以及GaussView的安装路径中不能含有中文, 输入输
 
 下面就是我们构建出来的分子结构
 
-<figure><script>var Mol=new ChemDoodle.MovieCanvas3D('Mol-1', 650,400);Mol.specs.set3DRepresentation('Ball and Stick');Mol.specs.projectionPerspective_3D = false;Mol.specs.backgroundColor='black';Mol.specs.crystals_unitCellLineWidth = 1.5;Mol.specs.proteins_ribbonCartoonize = true;
-Mol.addFrame([ChemDoodle.readXYZ(' 30\nLig\nC 0.09543850 4.17975179 -3.80964600\nC 0.80175777 5.38903340 -3.80884681\nC 0.51304983 6.37432406 -2.85249130\nC -0.45856117 6.13391634 -1.87580461\nC -1.18031438 4.93159413 -1.88905531\nC -0.90248285 3.95453152 -2.85472308\nH 1.56233451 5.56314689 -4.54229097\nC 1.19956438 7.59276989 -2.90325955\nH -1.94182292 4.75784609 -1.15991385\nH -1.45081509 3.03717093 -2.86078559\nC -0.30345881 8.46335809 -1.24485519\nH -1.73198058 7.12735889 -0.66279753\nCl 0.46333814 2.94533594 -5.00948909\nN -0.74589355 7.12382213 -0.83061474\nO 0.90932293 8.65634024 -1.98723376\nO -0.99787825 9.46470538 -0.92486787\nC 2.46836230 7.66604935 -3.77522994\nC 2.06538526 7.12862117 -1.71684839\nC 2.73839284 6.76831182 -0.79496623\nC 3.60919766 6.31065294 0.39227777\nC 2.95652452 5.50506598 1.52982428\nC 3.98331757 4.83175242 0.58972154\nH 4.30131921 7.08604394 0.65490131\nH 1.93420679 5.20229877 1.46988859\nH 3.23306015 5.67204191 2.55152136\nH 4.96924771 4.59499298 0.93250673\nH 3.67048802 4.12555972 -0.14844314\nF 2.17575489 7.26575804 -5.03005425\nF 3.42083779 6.86041395 -3.25669940\nF 2.92230775 8.93762961 -3.80142482\n')],[]);
-Mol.loadMolecule(Mol.frames[0].mols[0]);Mol.startAnimation();</script><br><figurecaption>Fig.1</figurecaption></figure>
+<figure><script>var Mol1=new ChemDoodle.MovieCanvas3D('Mol-1',650,400);Mol1.specs.shapes_color = '#fff';Mol1.specs.backgroundColor = 'black';Mol1.specs.set3DRepresentation('Ball and Stick');Mol1.specs.projectionPerspective_3D = false;Mol1.specs.proteins_ribbonCartoonize = true;
+/*Mol1.timeout = 15;
+//Mol1.specs.atoms_resolution_3D = 15;
+//Mol1.specs.bonds_resolution_3D = 15;
+//Mol1.specs.crystals_unitCellLineWidth = 1.5;*/
+Mol1.addFrame([ChemDoodle.readXYZ('30\nLig\nC 0.09543850 4.17975179 -3.80964600\nC 0.80175777 5.38903340 -3.80884681\nC 0.51304983 6.37432406 -2.85249130\nC -0.45856117 6.13391634 -1.87580461\nC -1.18031438 4.93159413 -1.88905531\nC -0.90248285 3.95453152 -2.85472308\nH 1.56233451 5.56314689 -4.54229097\nC 1.19956438 7.59276989 -2.90325955\nH -1.94182292 4.75784609 -1.15991385\nH -1.45081509 3.03717093 -2.86078559\nC -0.30345881 8.46335809 -1.24485519\nH -1.73198058 7.12735889 -0.66279753\nCl 0.46333814 2.94533594 -5.00948909\nN -0.74589355 7.12382213 -0.83061474\nO 0.90932293 8.65634024 -1.98723376\nO -0.99787825 9.46470538 -0.92486787\nC 2.46836230 7.66604935 -3.77522994\nC 2.06538526 7.12862117 -1.71684839\nC 2.73839284 6.76831182 -0.79496623\nC 3.60919766 6.31065294 0.39227777\nC 2.95652452 5.50506598 1.52982428\nC 3.98331757 4.83175242 0.58972154\nH 4.30131921 7.08604394 0.65490131\nH 1.93420679 5.20229877 1.46988859\nH 3.23306015 5.67204191 2.55152136\nH 4.96924771 4.59499298 0.93250673\nH 3.67048802 4.12555972 -0.14844314\nF 2.17575489 7.26575804 -5.03005425\nF 3.42083779 6.86041395 -3.25669940\nF 2.92230775 8.93762961 -3.80142482\n')],[]);Mol1.loadMolecule(Mol1.frames[0].mols[0]);Mol1.startAnimation();function setProj1(yesPers){Mol1.specs.projectionPerspective_3D = yesPers;Mol1.setupScene();Mol1.repaint()}function setModel1(model){Mol1.specs.set3DRepresentation(model);Mol1.setupScene();Mol1.repaint()}function setSpeed1(){Mol1.timeout=500-document.getElementById("spd1").value;Mol1.loadMolecule(Mol1.frames[0].mols[0]);Mol1.startAnimation()}</script><br><span class="meta">视图: <input type="radio" name="group2" onclick="setProj1(true)">投影<input type="radio" name="group2" onclick="setProj1(false)" checked="">正交&nbsp;&nbsp;&nbsp;&nbsp;速度: <input type="range" id="spd1" min="1" max="500" onchange="setSpeed1()"/><br>模型: <input type="radio" name="model" onclick="setModel1(&#39;Ball and Stick&#39;)" checked="">球棍<input type="radio" name="model" onclick="setModel1(&#39;van der Waals Spheres&#39;)">范德华球<input type="radio" name="model" onclick="setModel1(&#39;Stick&#39;)">棍状<input type="radio" name="model" onclick="setModel1(&#39;Wireframe&#39;)">线框<input type="radio" name="model" onclick="setModel1(&#39;Line&#39;)">线型<input type="checkbox" onclick="Mol1.specs.atoms_displayLabels_3D=this.checked;Mol1.repaint()">名称<br>左键: 转动&nbsp;&nbsp; 滚轮: 缩放&nbsp;&nbsp; 双击: 开关自动旋转&nbsp;&nbsp; Alt+左键: 移动</span><br><figurecaption>Fig.1</figurecaption></figure>
 
 ## 2. 使用Gaussian进一步优化分子构型并计算静电势
 
@@ -128,13 +131,21 @@ __注意, Gaussian输入文件中的空行非常重要, 要严格按图上的格
 
 编写一个`leap.in`文本文件, 内容如下:
 
-	source leaprc.ff14SB
-	source leaprc.gaff
-	loadamberparams Lig.frcmod
-	lig=loadmol2 Lig.mol2
-	check lig
-	saveamberparm lig Lig.prmtop Lig.inpcrd
-	quit
+<table class="highlighttable"><th colspan="2">bash</th><tr><td><div class="linenodiv" style="background-color: #f0f0f0; padding-right: 10px"><pre style="line-height: 125%">1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #AA22FF">source</span> leaprc.ff14SB
+<span style="color: #AA22FF">source</span> leaprc.gaff
+loadamberparams Lig.frcmod
+<span style="color: #B8860B">lig</span><span style="color: #666666">=</span>loadmol2 Lig.mol2
+check lig
+saveamberparm lig Lig.prmtop Lig.inpcrd
+quit
+</pre></div>
+</td></tr></table>
 
 然后运行`sleap`命令
 
@@ -155,6 +166,10 @@ __注意, Gaussian输入文件中的空行非常重要, 要严格按图上的格
 如果想将.top文件进行处理生成.itp文件，以便在蛋白质的拓扑文件中包含, 可以除去表头, 改动原子类型, 再除去后面的附加信息.
 
 实际上, 上面的3, 4, 5, 6这几个步骤可以使用`ACPYPE`一步完成, 但在Windows下由于路径的原因很容易出问题. 像上面这样分开做的话, 一步一步完成的话, 出错了容易定位具体的出错步骤. 如果你对这个过程很熟悉了, 可以将这些流程写在一个脚本中自动执行, 或是研究一下如何使用acpype一步执行成功.
+
+## 【2016-03-28 补注】
+
+Google上搜索`acpype code`, 主要有两个版本供下载: [GitHub版](https://github.com/t-/acpype)和[SF版](http://svn.code.sf.net/p/ccpn/code/branches/stable/ccpn/python/acpype/). 前者是个旧版本, 与后者的主要区别在于生成的拓扑文件中二面角的默认函数类型. 旧版本生成的拓扑文件中, 二面角的默认函数类型为`3`或`1`, 但可通过`-r`选项改变. 而新版本中, 二面角的默认函数类型为`9`或`4`, 可通过`-z`选项改变. 由于GAFF力场中二面角的函数类型为`9`或`4`, ([文档说明](http://ambermd.org/antechamber/gaff.html)), 所以建议使用新版本的ACPYPE. 我提供的压缩包中包含的是新版本. 有关新版本的说明可参考[这里](http://permalink.gmane.org/gmane.science.biology.gromacs.user/80745).
 
 __参考资料__
 
