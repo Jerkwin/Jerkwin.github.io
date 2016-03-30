@@ -43,7 +43,7 @@
 选择`GROMOS96 53A6`参数集, 对N末端选择`None`, C末端选择`COO-`. 在`topol_Protein_chain_B.itp`文件的末尾加上下面几行:
 
 	#ifdef POSRES_B
-	#include &quot;posre_Protein_chain_B.itp&quot;
+	#include "posre_Protein_chain_B.itp"
 	#endif
 
 在之后的牵引模拟中, 我们会用链B作为固定参考, 因此需要特别限制此链的位置, 而不限定其他.
@@ -201,7 +201,7 @@ GROMACS计算距离时, 会同时考虑周期性. 这意味着, 如果你有一�
 
 	gmx mdrun -deffnm umbrella0 -pf pull-umbrella0.xvg -px pullx-umbrella0.xvg
 
-Mike Harms提供了一个Python脚本, 可自动完成这一过程, 抽取坐标文件, 并设置`grompp`和`mdrun`命令. 你可以在[这里](/GMX/GMXtut-3_setup-umbrella-script.zip)下载他的脚本以及一些必要信息. 如果关于此脚本或其使用有什么反馈, 可以[联系Mike](http://www.hotmail.com/secure/start?action=compose&amp;to=harmsm@gmail.com&amp;subject=Umbrella%20sampling%20tutorial%20script). 谢谢Mike的贡献!
+Mike Harms提供了一个Python脚本, 可自动完成这一过程, 抽取坐标文件, 并设置`grompp`和`mdrun`命令. 你可以在[这里](/GMX/GMXtut-3_setup-umbrella-script.zip)下载他的脚本以及一些必要信息. 如果关于此脚本或其使用有什么反馈, 可以[联系Mike](mailto:harmsm@gmail.com?subject=Umbrella sampling tutorial script). 谢谢Mike的贡献!
 
 ## 第七步: 数据分析
 
@@ -220,7 +220,7 @@ gmx wham -it tpr-files.dat -if pullf-files.dat -o -hist -unit kCal
 
 ![](/GMX/GMXtut-3_PMF_WT_31windows.jpg)
 
-请注意, 你得到的结果可能有所不同, 因为本教程中建议的间距与我之前的原始研究中实际用于生成上图数据所用的间距不同, 并且, 更重要的是, 我论文中的数据是对原丝纤维结构进行100 ns非限制MD平衡后得到的, 其结构实际上与本教程中的有很大不同. 曲线的整体形状应该是类似的, 如果你遵循论文中的流程, $\D G$ 的值(PMF曲线平台区与曲线能量最小点之间的差)应接近&#8211;50.5 kcal/mol(如上图所示). 如果你遵循本教程中的流程, 得到的值大约为-37 kcal/mol.
+请注意, 你得到的结果可能有所不同, 因为本教程中建议的间距与我之前的原始研究中实际用于生成上图数据所用的间距不同, 并且, 更重要的是, 我论文中的数据是对原丝纤维结构进行100 ns非限制MD平衡后得到的, 其结构实际上与本教程中的有很大不同. 曲线的整体形状应该是类似的, 如果你遵循论文中的流程, $\D G$ 的值(PMF曲线平台区与曲线能量最小点之间的差)应接近-50.5 kcal/mol(如上图所示). 如果你遵循本教程中的流程, 得到的值大约为-37 kcal/mol.
 
 `gmx wham`命令的另一个输出文件为`histo.xvg`, 其中包含了伞形采样窗口中各个构型的直方图, 这些直方图决定了每个窗口与临近窗口之间是否有足够的重叠. 对于本教程所用的模拟, 得到的图可能类似下面这样:
 
@@ -232,6 +232,6 @@ gmx wham -it tpr-files.dat -if pullf-files.dat -o -hist -unit kCal
 
 希望你已经成功地完成了一次伞形采样模拟: 沿反应坐标产生一系列构型, 运行偏离模拟, 并获得PMF. 本教程中提供的.mdp文件只是作为一个示例, 并不能简单地用于所有体系. 请根据文献以及GROMACS手册对这些文件进行调整, 以便提高计算的效率与精确度.
 
-如果你对改进这个教程有些建议, 如果你发现了错误, 或者你觉得有些地方不够清楚, 请给我发邮件`jalemkul@vt.edu`, 不要客气. 请注意: 这不是邀请你因为GROMACS的问题而给我发邮件. 我并不是作为一个私人家教或个人客服在为自己打广告. 那是[GROMACS用户邮件列表](http://lists.gromacs.org/mailman/listinfo/gmx-users)的事. 我可能会在那里帮助你, 但那只是作为对整个社区的服务, 而不只针对最终用户.
+如果你对改进这个教程有些建议, 如果你发现了错误, 或者你觉得有些地方不够清楚, 请给我发邮件<jalemkul@vt.edu>, 不要客气. 请注意: 这不是邀请你因为GROMACS的问题而给我发邮件. 我并不是作为一个私人家教或个人客服在为自己打广告. 那是[GROMACS用户邮件列表](http://lists.gromacs.org/mailman/listinfo/gmx-users)的事. 我可能会在那里帮助你, 但那只是作为对整个社区的服务, 而不只针对最终用户.
 
 祝你模拟愉快!
