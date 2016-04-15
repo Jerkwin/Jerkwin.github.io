@@ -29,6 +29,8 @@
 
 	我试过两种方案，一种是以一个表活剂作为中心分子建一个group，以中心分子头基附近的水建一个group，用这两个group计算SDF；另一种是以所有表活剂作为中心分子建一个group，以体系中所有水建一个group，用这两个group计算SDF。最后结果都差不多。
 
+	最终选中心分子为COO, SDF的原子为体系中所有的水
+
 2. 使中心分子在盒子内居中, 同时所有其他分子处于盒子内
 
 		gmx_mpi trjconv -s md0.tpr -f md0.trr -n sdf.ndx -o md0_cnt.xtc -center -ur compact -pbc mol
@@ -46,6 +48,8 @@
 		gmx_mpi spatial -s md0.tpr -f md0_cnt_fit.xtc -n sdf.ndx -nab 80 -b 15000 -e 18000
 
 	`Select group to generate SDF`时选择要统计SDF的组, `Select group to output coords (e.g. solute)`时选择中心分子组
+
+__注意__: 使用`gmx spatial`计算空间分布函数时, 在模拟过程中要尽量多输出些轨迹（约5000帧，根据结果可自行调节输出的帧数）, 这样得到的SDF才可能光滑.
 
 ## 第二：使用VMD载入`grid.cube`文件, 以等值面模式查看结果
 
@@ -77,3 +81,17 @@
 
 8. 在`Graphics`中选择`Colors`, 在`Catagories`中选`displays`，`Name`中选择`backgroud`，指定背景的颜色。也可在`display`菜单下的`backgroud`指定背景为梯度颜色。
 9. 选择喜爱的方法`render`.
+
+## 补充: 使用gopenmol作等值面图
+
+1. 将`grid.cube`文件转化成`grid.plt`文件
+
+	操作: 菜单栏`run | {gCube2plt/g94cub2pl (cube)}`, 浏览输入文件`grid.cube`, 指定输出文件, 命名为`grid.plt`. 然后点击最下面的`Apply`. 这样就转化成`plt`格式的文件了, 与此同时还生成了一个`grid.crd`文件, 这个`crd`文件作为结构文件.
+
+2. 读入上一步的`grid.crd`文件: `File | Import | Coords`
+
+3. 选择`Plot|Contour`, 然后`import`, 最后根据需要调节`contour levels value`及颜色, 并且可通过`detail`调节曲面的光滑度.
+
+最终结果
+
+![](/pic/SDF_COO.png)
