@@ -10070,7 +10070,7 @@ ED(主成分动力学)采样和/或额外的洪泛势可使用`-ei`选项启用,
 
 一些可视化软件可以直接给出拉氏图. 在VMD中, 使用`VMD Main`->`Extensions`->`Analysis`->`Ramachandran Plot`即可得到类似下面的拉氏图.
 
-![](gmx_rama.png)
+![](/GMX/gmx_rama.png)
 
 ## gmx rdf: 计算径向分布函数(翻译: 严立京)
 
@@ -12234,7 +12234,7 @@ ED(主成分动力学)采样和/或额外的洪泛势可使用`-ei`选项启用,
 
 此程序特别适用于计算溶质分子周围水分子的角度分布.
 
-![](gmx_sorient.png)
+![](/GMX/gmx_sorient.png)
 
 设溶质为单原子离子或分子质心Ref, 溶剂为水分子原子1为O, 原子2和3为H, 则 $\q_1$ 对应Ref至O的向量 $\vec A=\vec R_\text{Ref}-\vec R_\text{O}$ 与O至两个H连线中点的向量 ${\vec R_\text{OH2}+\vec R_\text{OH3} \over 2}$ 之间的夹角, 后一向量的方向与水分子偶极矩的方向相同. 因此, $\q_1$ 可视为溶质分子周围水分子偶极矩的取向. $\q_2$ 对应 $\vec A$ 与水分子平面法线的夹角. 当使用`-v23`选项时, 则为 $\vec A$ 与两个H连线 $\vec R_\text{H3}-\vec R_\text{H2}$ 之间的夹角.
 
