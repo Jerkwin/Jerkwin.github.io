@@ -2,8 +2,6 @@
 layout: default
 ---
 
-{{ content }}
-
 <ul class="listing">
 {% for post in paginator.posts %}
   {% capture y %}{{post.date | date:"%Y"}}{% endcapture %}
