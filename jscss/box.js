@@ -3,13 +3,16 @@ var bszCaller,bszTag;!function(){var c,d,e,a=!1,b=[];ready=function(c){return a|
 
 idx=40
 url='https://api.github.com/repos/jerkwin/jerkwin.github.io/issues/'+Math.floor(Math.random()*idx+1)+'?per_page=100'
-getJSON(url, function(data){document.getElementById('qut').innerHTML=data.title})
+getJSON(url, function(data){
+qut=data;if(data.title) qut=data.title
+document.getElementById('qut').innerHTML=qut})
 function getJSON(url, callback) {
 	var xhr = new window.XMLHttpRequest();
 	xhr.open("get", url, true);
 	xhr.setRequestHeader("Accept", "application/json, text/javascript, */*; q=0.01");
 	xhr.onreadystatechange = function() {
-		if (xhr.readyState==4 && xhr.status==200) callback(JSON.parse(xhr.responseText));
+		if (xhr.readyState==4 && xhr.status==200) callback(JSON.parse(xhr.responseText))
+		else callback('Think like a man of action, act like a man of thought. 如行动者那般思考，如思考者那般行动。——Henri Bergson 亨利·柏格森')
 	}
-	xhr.send();
+	xhr.send()
 }
