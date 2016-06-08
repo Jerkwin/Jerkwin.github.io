@@ -1,0 +1,62 @@
+<div id="dbLayout">
+
+<h2>The Protein-Folding Problem, 50 Years On</h2>
+<h2>蛋白质折叠问题50年的历程</h2>
+</div>
+
+<script>
+	var $=function(id){return document.getElementById(id)}
+	var arr = $('dbLayout').innerHTML.split(/[\n|\r\n]+/), len=arr.length
+	var str = '<table align="left" border="0" cellspacing="0" cellpadding="0" width=100% style="font:1em/1.5 Helvetica,Arial,\'Microsoft YaHei\',sans-serif;">';
+	for(var i=1; i<len-1; i+=2) {
+		if(arr[i].indexOf("<img")>=0) {
+			str += '<tr><td align=center valign=top width=100% colspan="2">'+arr[i]+'</td>'
+			i--
+		} else
+			str += '<tr><td align=left valign=top width=60%>'+arr[i]+'</td>'
+					+  '<td align=left valign=top width=40%>'+arr[i+1]+'</td></tr>';
+	}
+	str += '</table>';
+	$('dbLayout').innerHTML = str;
+</script>
+<!-- used for en cn two div
+var enText=document.getElementById("en").innerHTML;
+var cnText=document.getElementById("cn").innerHTML;
+document.getElementById("Lay").innerHTML = dbLayout(enText, cnText);
+
+function dbLayout(enText, cnText) {
+	var enArr = enText.split(/[\n|\r\n]{1,}/),
+		cnArr = cnText.split(/[\n|\r\n]{1,}/)
+
+	var minSize = enArr.length,
+		maxSize = cnArr.length-1;
+	if (enArr.length > cnArr.length) {
+		minSize = cnArr.length;
+		maxSize = enArr.length-1;
+	}
+
+	var str = '<table align="left" border="0" cellspacing="0" cellpadding="0" width=100%>';
+	for(var i=1; i<minSize; i++) {
+		str += '<tr><td id=etext'+i+' align=left valign=top width=49%>'
+				+ enArr[i] + '</td>';
+		str += '<td id=ctext'+i+' align=left valign=top width=49%>'
+				+ cnArr[i] + '</td></tr>';
+	}
+
+	if (minSize == enArr.length) {
+		for (var i=minSize; i<maxSize; i++) {
+			str += '<tr><td id=etext'+i+' align=left valign=top width=49%>&nbsp;</td>';
+			str += '<td id=ctext'+i+' align=left valign=top width=49%>'
+					+ cnArr[i] + '</td></tr>';
+		}
+	} else {
+		for (var i=minSize; i<maxSize; i++) {
+			str += '<tr><td id=etext'+i+' align=left valign=top width=49%>'
+					+ enArr[i] + '</td>';
+			str += '<td id=ctext'+i+' align=left valign=top width=49%>&nbsp;</td></tr>';
+		}
+	}
+
+	str += '</table>';
+	return str;
+}-->
