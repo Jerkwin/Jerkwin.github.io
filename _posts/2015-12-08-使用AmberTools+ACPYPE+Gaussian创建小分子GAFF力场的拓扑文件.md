@@ -176,4 +176,3 @@ __参考资料__
 - [AMBER:小分子处理](http://platinhom.github.io/2015/11/12/AMBER-Ligand/)
 - [GMX中如何实现小分子的GAFF立场](http://bioms.org/forum.php?mod=viewthread&tid=52&highlight=GAFF)
 - [自动计算ESP和RESP电荷(AMBER and G09)](http://platinhom.github.io/2015/09/17/AutoCalcRESP/)
-- [GROMACS处理蛋白-配体体系](http://emuch.net/bbs/viewthread.php?tid=6783663&fpage=1) [pdf](/Prog/在GROMACS中使用GAFF力场处理配体并建立任务.pdf)
