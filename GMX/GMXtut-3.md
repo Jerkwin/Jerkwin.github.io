@@ -108,8 +108,8 @@ GROMACS计算距离时, 会同时考虑周期性. 这意味着, 如果你有一�
 	pull                 = yes
 	pull_ngroups         = 2
 	pull_ncoords         = 1
-	pull_group1_name     = Chain_B
-	pull_group2_name     = Chain_A
+	pull_group1_name     = Chain_A
+	pull_group2_name     = Chain_B
 	pull_coord1_type     = umbrella   ; 简谐偏离力 harmonic biasing force
 	pull_coord1_geometry = distance   ; 简单的距离增加 simple distance increase
 	pull_coord1_groups   = 1 2
