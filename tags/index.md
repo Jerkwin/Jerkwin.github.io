@@ -15,7 +15,7 @@ title: 标签
 
 <div>
 {% for tag in site.tags %}
-<a class="tagbox" href="#{{ tag[0] }}" rel="{{ tags[1].size }}">{{ tag[0] }}<span>{{ tags[1].size }}</span></a>
+<a class="tagbox" href="#{{ tag[0] }}" rel="{{ tag[1].size }}">{{ tag[0] }}<span>{{ tag[1].size }}</span></a>
 {% endfor %}
 </div>
 
