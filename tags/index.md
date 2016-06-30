@@ -3,6 +3,9 @@ title: 标签
 layout: page
 ---
 
+{% capture tagString %}{% for tag in site.tags %}{{ tag[0] }}{{','}}{% endfor %}{% endcapture %}
+{% assign tags = tagString | downcase | split:',' | sort %}
+
 <div>
 {% for tag in site.tags %}
 {% assign number = site.tags[tag].size %}
