@@ -1,6 +1,6 @@
 ---
+layout: default
 title: 标签
-layout: page
 ---
 
 {% capture tagString %}{% for tag in site.tags %}{{ tag[0] }}{{','}}{% endfor %}{% endcapture %}
@@ -25,3 +25,4 @@ layout: page
 {% endfor %}
 {% endfor %}
 </ul>
+
