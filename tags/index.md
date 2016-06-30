@@ -7,7 +7,7 @@ title: 标签
 {% assign tags = tagString | downcase | split:',' | sort %}
 
 <div>
-{% for tag in site.tags %}
+{% for tag in tags %}
 {% assign number = site.tags[tag].size %}
 <a class="tagbox" href="#{{ tag }}" rel="{{ number }}">{{ tag }}<span>{{ number }}</span></a>
 {% endfor %}
