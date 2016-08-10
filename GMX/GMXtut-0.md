@@ -84,8 +84,8 @@ Biochemistry 32 pp. 13123 (__1993__)
 但是, 我们下载的pdb文件中缺少C端的结束氧原子, 需要在C端结束处添加氧原子类型`OXT`. 操作步骤如下:
 
 - 在DeepView中打开`1OMB.pdb`(或在unix shell中键入`spdbv 1OMB.pdb`)
-- 菜单`Build` | `Add C-terminal Oxygen (OXT)`, DeepView会删除氢原子并添加缺失的氧原子.
-- 菜单`File` | `Save` | `Current Layer`将文件保存为`fws.pdb`.
+- 菜单`Build`->`Add C-terminal Oxygen (OXT)`, DeepView会删除氢原子并添加缺失的氧原子.
+- 菜单`File`->`Save`->`Current Layer`将文件保存为`fws.pdb`.
 
 使用文本编辑器检查得到的`fws.pdb`文件, 保证`HEADER`和`COMPND`行具有名称(实际上, 任何名称都可以), 删除DeepView添加到文件末尾的以`SPDBV`开头的行.
 
@@ -617,7 +617,7 @@ energygrps      <span style="color: #666666">=</span> System
 
 nstlist         <span style="color: #666666">=</span> <span style="color: #666666">1</span>
 ns_type         <span style="color: #666666">=</span> grid
-coulombtype     <span style="color: #666666">=</span> PME         ns
+coulombtype     <span style="color: #666666">=</span> PME
 rlist           <span style="color: #666666">=</span> <span style="color: #666666">1.0</span>
 rcoulomb        <span style="color: #666666">=</span> <span style="color: #666666">1.0</span>
 rvdw            <span style="color: #666666">=</span> <span style="color: #666666">1.0</span>
@@ -1205,16 +1205,16 @@ gmx-5.x: `gmx ngmx -f npt-nopr.trr -s npt-nopr.tpr`
 当查看器启动后, 将看到一个多选项的对话框. 选择标`protein`的多选框, 点击`OK`.
 选择`protein`可以只显示蛋白质分子, 而隐藏盒子中的水分子.
 
-![ngmx的初始启动对话框](GMXtut-0_ngmx-1.png)
+![ngmx的初始启动对话框](/GMX/GMXtut-0_ngmx-1.png)
 
-![ngmx查看蛋白质结构](GMXtut-0_ngmx-2.png)
+![ngmx查看蛋白质结构](/GMX/GMXtut-0_ngmx-2.png)
 
 用`X-Rotate`上下旋转盒子(鼠标左键向上, 右键向下), 用`Y-Rotate`左右旋转盒子(左键向左, 右键向右).
 最下面的`Scale`可用来放大或缩小视图(左键放大, 右键缩小).
 
-要查看体系中的其它组, 点击`Display` | `Filter`, 会出现初始对话框, 供选择另外的索引组(如backbone)
+要查看体系中的其它组, 点击`Display`->`Filter`, 会出现初始对话框, 供选择另外的索引组(如backbone)
 
-要查看模拟轨迹动画, 点击`Display` | `Animate`. 动画播放控制在窗口的底部.
+要查看模拟轨迹动画, 点击`Display`->`Animate`. 动画播放控制在窗口的底部.
 点击中间的箭头按钮逐帧观看, 点向前的双箭头观看整个轨迹动画, 点暂停按钮停止动画. 点向左的双箭头按钮重置动画.
 
 不幸的是, `File`菜单下的`save as pdb`还不能用. 因此, 查看并保存`*.pdb`文件最好的方法是用[VMD](http://www.ks.uiuc.edu/Research/vmd/), 它学术免费, 在unix和Windows下都可以运行.
@@ -1305,7 +1305,7 @@ gmx-5.x: `gmx confrms -f1 1OMB.pdb -f2 npt-nopr.gro -o fit.pdb`
 
 运行命令后会提示选择一个组, 两次都选择`4 (Backbone)`. 程序会对两个结构进行最小二乘拟合, 计算其RMSD值, 并输出结构文件(`fit.pdb`), 其中包含了叠合后的两个结构.
 
-![叠合后的结构, 红色为初始结构, 青色为模拟完成后的结构.](GMXtut-0_fit.png)
+![叠合后的结构, 红色为初始结构, 青色为模拟完成后的结构.](/GMX/GMXtut-0_fit.png)
 
 __说明__: 也可以使用`editconf`将两个结构转换为PDB文件, 然后都加载到PyMOL中, 使用`align`命令进行叠合.
 
@@ -1367,7 +1367,7 @@ gmx-5.x: `gmx rmsf -s npt-nopr.tpr -f npt-nopr.xtc -o fws-rmsf.xvg -ox fws-avg.p
 
 提示时选择`1 Protein`, 回车.
 
-将得到的`bfactors.pdb`载入PyMOL, 依次点击`Hide` | `everything`, `Show` | `cartoon`, `Color` | `spectrum` | `b-factors`, 或利用下面的PyMOL脚本处理得到的文件`fws-bfac.pdb`:
+将得到的`bfactors.pdb`载入PyMOL, 依次点击`Hide`->`everything`, `Show`->`cartoon`, `Color`->`spectrum`->`b-factors`, 或利用下面的PyMOL脚本处理得到的文件`fws-bfac.pdb`:
 
 	pymol bfactors.pdb
 	hide everything
@@ -1387,7 +1387,7 @@ gmx-5.x: `gmx rmsf -s npt-nopr.tpr -f npt-nopr.xtc -o fws-rmsf.xvg -ox fws-avg.p
 	ray 1200,1200
 	png bfac.png, dpi=300
 
-![温度因子填色结构图, 蓝色为冷区域, 绿色为中等区域, 红色为热区域.](GMXtut-0_Bfac.png)
+![温度因子填色结构图, 蓝色为冷区域, 绿色为中等区域, 红色为热区域.](/GMX/GMXtut-0_Bfac.png)
 
 ### 7. `g_gyrate`计算回旋半径
 
@@ -1433,7 +1433,7 @@ gmx-5.x: `gmx xpm2ps -f fws-ss.xpm -o fws-ss.eps`
 
 `convert fws_ss.eps fws_ss.png`
 
-![二级结构图](GMXtut-0_2ndStructure.png)
+![二级结构图](/GMX/GMXtut-0_2ndStructure.png)
 
 上面的dssp图中, y轴为残基编号, x轴为模拟时间(ps). 我们从中可以看到3个红色区域, 代表3个beta片层. 中间的较短区是最不稳定的, 这和前面温度因子的计算结果相符.
 
@@ -1449,7 +1449,7 @@ gmx-5.x: `gmx hbond -s npt-nopr.tpr -f npt-nopr.xtc -num fws_hnum.xvg`
 
 GROAMCS中氢键的默认判断标准如下
 
-![判断氢键的几何条件](GMXtut-0_hbond.png)
+![判断氢键的几何条件](/GMX/GMXtut-0_hbond.png)
 
 $$\alg
 r &\le 0.35 \text{nm} \\
