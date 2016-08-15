@@ -4,7 +4,7 @@
  categories:
  - 科
  tags:
-- gmx
+ - gmx
 ---
 
 * toc
