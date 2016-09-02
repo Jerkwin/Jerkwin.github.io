@@ -12,6 +12,7 @@
 
 <ul class="incremental">
 <li>本教程的翻译参考了yongma2008和Youngchsh网友的译文, 特此说明.</li>
+<li>2016-09-02 11:36:18 感谢 陈孙妮 修订翻译舛误之处.</li>
 </ul>
 
 ### 概述
@@ -758,7 +759,7 @@ GROMACS内置的<code>rms</code>模块可用于计算RMSD, 使用下面的命令
 
 <p><code>gmx rms -s md_0_1.tpr -f md_0_1_noPBC.xtc -o rmsd.xvg -tu ns</code></p>
 
-<p>计算最小二乘拟合RMSD和组RMSD时, 都选择<code>4(&quot;Backbone&quot;)</code>. <code>-tu</code>选项设定输出结果的时间单位为ns, 即便轨迹文件以ps为单位输出. 这是为了使输出文件更加清晰(尤其当模拟时间很长时, 100 ns比起1e+05 ps更美观). 输出显示了平衡体系相对于能量最小化结构的RMSD:</p>
+<p>计算最小二乘拟合RMSD和组RMSD时, 都选择<code>4(&quot;Backbone&quot;)</code>. <code>-tu</code>选项设定输出结果的时间单位为ns, 即便轨迹文件以ps为单位输出. 这是为了使输出文件更加清晰(尤其当模拟时间很长时, 100 ns比起1e+05 ps更美观). 输出显示了MD模拟前后溶菌酶结构的RMSD:</p>
 
 <figure>
 <img src="/GMX/GMXtut-1_rmsd_0_1.jpg" alt="MD构型相对与初始构型的RMSD" />

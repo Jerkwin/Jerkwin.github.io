@@ -17,6 +17,7 @@
 	[4.6版本](http://www.researchgate.net/publictopics.PublicPostFileLoader.html?id=511b5be2e24a468401000000&key=9fcfd511b5be1dd8af)
 - 参考译文: 梁(leunglm@hotmail.com)
 - 2016-08-10 15:39:10 增加gmx-5.x版本命令, 由 汪洋 测试提供
+- 2016-09-02 11:36:18 感谢 陈孙妮 修订翻译舛误之处.
 
 ## 概述
 
@@ -1308,6 +1309,43 @@ gmx-5.x: `gmx confrms -f1 1OMB.pdb -f2 npt-nopr.gro -o fit.pdb`
 ![叠合后的结构, 红色为初始结构, 青色为模拟完成后的结构.](/GMX/GMXtut-0_fit.png)
 
 __说明__: 也可以使用`editconf`将两个结构转换为PDB文件, 然后都加载到PyMOL中, 使用`align`命令进行叠合.
+
+【陈孙妮 补充说明】命令`gmx confrms -f1 1OMB.pdb -f2 npt-nopr.gro -o fit.pdb`得不到预期结果, 即`fit.pdb`中只有model1. 应对`npt-nopr.gro`进行处理, 去掉溶剂及离子, 则`fit.pdb`可以出现model1及model2.
+
+测试结果如下(`npt-nopr-h.gro`是值去掉水及溶剂的`npt-nopr.gro`)
+
+<table id='tab-1'><caption></caption>
+<tr>
+  <th rowspan="1" colspan="1" style="text-align:center;">测试</th>
+  <th rowspan="1" colspan="1" style="text-align:center;">f1</th>
+  <th rowspan="1" colspan="1" style="text-align:center;">f2</th>
+  <th rowspan="1" colspan="1" style="text-align:center;">fit.pdb结果</th>
+</tr>
+<tr>
+  <td rowspan="1" colspan="1" style="text-align:center;">1</td>
+  <td rowspan="1" colspan="1" style="text-align:center;">1omb.pdb</td>
+  <td rowspan="1" colspan="1" style="text-align:center;">npt-nopr.gro</td>
+  <td rowspan="1" colspan="1" style="text-align:center;">没有合并</td>
+</tr>
+<tr>
+  <td rowspan="1" colspan="1" style="text-align:center;">2</td>
+  <td rowspan="1" colspan="1" style="text-align:center;">fws.gro</td>
+  <td rowspan="1" colspan="1" style="text-align:center;">npt-nopr-h.gro</td>
+  <td rowspan="1" colspan="1" style="text-align:center;">跟图一样, 有二级结构, 但是是以两帧的形式存在，而不是并起来的</td>
+</tr>
+<tr>
+  <td rowspan="1" colspan="1" style="text-align:center;">3</td>
+  <td rowspan="1" colspan="1" style="text-align:center;">1omb.pdb</td>
+  <td rowspan="1" colspan="1" style="text-align:center;">npt-nopr-h.gro</td>
+  <td rowspan="1" colspan="1" style="text-align:center;">跟图不一样, 无二级结构, 以两帧的形式存在, 而不是并起来的</td>
+</tr>
+<tr>
+  <td rowspan="1" colspan="1" style="text-align:center;">4</td>
+  <td rowspan="1" colspan="1" style="text-align:center;">fws.pdb</td>
+  <td rowspan="1" colspan="1" style="text-align:center;">npt-nopr-h.gro</td>
+  <td rowspan="1" colspan="1" style="text-align:center;">跟图不一样, 无二级结构, 以两帧的形式存在, 而不是并起来的</td>
+</tr>
+</table>
 
 ### 4. `g_covar`计算平均结构
 
