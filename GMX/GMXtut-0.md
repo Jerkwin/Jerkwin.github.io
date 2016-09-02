@@ -1306,7 +1306,7 @@ gmx-5.x: `gmx confrms -f1 1OMB.pdb -f2 npt-nopr.gro -o fit.pdb`
 
 运行命令后会提示选择一个组, 两次都选择`4 (Backbone)`. 程序会对两个结构进行最小二乘拟合, 计算其RMSD值, 并输出结构文件(`fit.pdb`), 其中包含了叠合后的两个结构.
 
-![叠合后的结构, 红色为初始结构, 青色为模拟完成后的结构.](/GMX/GMXtut-0_fit.png)
+![叠合后的结构, 红色为初始结构, 青色为模拟完成后的结构.](/GMX/GMXtut-0_Fit.png)
 
 __说明__: 也可以使用`editconf`将两个结构转换为PDB文件, 然后都加载到PyMOL中, 使用`align`命令进行叠合.
 
@@ -1425,7 +1425,7 @@ gmx-5.x: `gmx rmsf -s npt-nopr.tpr -f npt-nopr.xtc -o fws-rmsf.xvg -ox fws-avg.p
 	ray 1200,1200
 	png bfac.png, dpi=300
 
-![温度因子填色结构图, 蓝色为冷区域, 绿色为中等区域, 红色为热区域.](/GMX/GMXtut-0_Bfac.png)
+![温度因子填色结构图, 蓝色为冷区域, 绿色为中等区域, 红色为热区域.](/GMX/GMXtut-0_bfac.png)
 
 ### 7. `g_gyrate`计算回旋半径
 
