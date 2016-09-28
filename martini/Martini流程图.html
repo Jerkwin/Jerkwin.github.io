@@ -1,0 +1,471 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<h2>Martini流程图</h2>
+
+<div id="DIA" style="height: 930px; position: relative; width: 650px; z-index: 1;">
+
+<script type="text/javascript">
+  ciao      = "False"; /* ciao */
+  prot      = "False"; /* prot */
+  elec_prot = "False"; /* elec (from prot) */
+  norm      = "False"; /* norm (from elec) */
+  polw      = "False"; /* polw (from elec) */
+  lipi      = "False"; /* lipi */
+  smpl      = "False"; /* smpl */
+  glyc      = "False"; /* glyc */
+  insa_smpl = "False"; /* insa (from smpl) */
+  insa_glyc = "False"; /* insa (from glyc) */
+  othr      = "False"; /* othr */
+  nope_othr = "False"; /* nope (from othr) */
+  nope_glyc = "Null";  /* nope (from glyc) */
+  elec_lipi = "False"; /* elec (from lipi) */
+  elec_othr = "False"; /* elec (from othr) */
+  mrtz_polw = "False"; /* mrtz (from polw) */
+  mrtz_norm = "False"; /* mrtz (from norm) */
+  sphn      = "False"; /* sphn */
+  insa_sphn = "False"; /* insa (from sphn) */
+  nope_sphn = "Null";  /* nope (from sphn) */
+  lndn      = "False"; /* lndn */
+
+  function show(id) {
+   document.getElementById(id).style.opacity = "1.0";
+   document.getElementById(id).style.filter = "opacity=100"; // for stupid IE
+   document.getElementById(id).style.pointerEvents = "auto";
+  }
+
+  function hide(id) {
+   document.getElementById(id).style.opacity = "0.0";
+   document.getElementById(id).style.filter = "opacity=0"; // for stupid IE
+   document.getElementById(id).style.pointerEvents = "none";
+  }
+
+  function show_box() {
+   // boxes
+   if (ciao      == "True") { show("DIAciao"); }
+   if (prot      == "True") { show("DIAprot"); }
+   if (elec_prot == "True" || elec_lipi == "True" || elec_othr == "True") { show("DIAelec"); }
+   if (norm      == "True") { show("DIAnorm"); }
+   if (polw      == "True") { show("DIApolw"); }
+   if (lipi      == "True") { show("DIAlipi"); }
+   if (smpl      == "True") { show("DIAsmpl"); }
+   if (glyc      == "True") { show("DIAglyc"); }
+   if (insa_smpl == "True" || insa_glyc == "True" || insa_sphn == "True") { show("DIAinsa"); }
+   if (othr      == "True") { show("DIAothr"); }
+   if (nope_othr == "True" || (nope_glyc == "True" && nope_sphn == "True")) { show("DIAnope"); }
+   if (mrtz_polw == "True") { show("DIAmrtz"); }
+   if (mrtz_norm == "True") { show("DIAmrtz"); }
+   if (sphn      == "True") { show("DIAsphn"); }
+   if (lndn      == "True") { show("DIAlndn"); }
+   // references
+   if (elec_prot == "True") { show("DIAref1"); }
+   if (polw      == "True") { show("DIAref2"); }
+   if (smpl      == "True") { show("DIAref3"); }
+   if (glyc      == "True") { show("DIAref4"); }
+   if (sphn      == "True") { show("DIAref5"); }
+   if (lndn      == "True") { show("DIAref6"); }
+  }
+
+  function hide_box() {
+   // boxes
+   if (ciao      == "False") { hide("DIAciao"); }
+   if (prot      == "False") { hide("DIAprot"); }
+   if (elec_prot == "False" && elec_lipi == "False" && elec_othr == "False") { hide("DIAelec"); }
+   if (norm      == "False") { hide("DIAnorm"); }
+   if (polw      == "False") { hide("DIApolw"); }
+   if (lipi      == "False") { hide("DIAlipi"); }
+   if (smpl      == "False") { hide("DIAsmpl"); }
+   if (glyc      == "False") { hide("DIAglyc"); }
+   if (insa_smpl == "False" && insa_glyc == "False") { hide("DIAinsa"); }
+   if (othr      == "False") { hide("DIAothr"); }
+   if (nope_othr == "False" && (nope_glyc == "Null" || nope_glyc == "False" || nope_sphn == "Null" || nope_sphn == "False")) { hide("DIAnope"); }
+   if (mrtz_polw == "False" && mrtz_norm == "False") { hide("DIAmrtz"); }
+   if (sphn      == "False") { hide("DIAsphn"); }
+   if (lndn      == "False") { hide("DIAlndn"); }
+   // references
+   if (elec_prot == "False") { hide("DIAref1"); }
+   if (polw      == "False") { hide("DIAref2"); }
+   if (smpl      == "False") { hide("DIAref3"); }
+   if (glyc      == "False") { hide("DIAref4"); }
+   if (sphn      == "False") { hide("DIAref5"); }
+   if (lndn      == "False") { hide("DIAref6"); }
+  }
+
+  function show_path(idArray) {
+   for (i = 0; i < idArray.length; i++) {
+    if (idArray[i] == "DIApath01") { ciao      = "True"; show("DIApath01"); }
+    if (idArray[i] == "DIApath02") { prot      = "True"; show("DIApath02"); }
+    if (idArray[i] == "DIApath03") { elec_prot = "True"; show("DIApath03"); }
+    if (idArray[i] == "DIApath04") { polw      = "True"; show("DIApath04"); }
+    if (idArray[i] == "DIApath05") { norm      = "True"; show("DIApath05"); }
+    if (idArray[i] == "DIApath06") { lipi      = "True"; show("DIApath06"); }
+    if (idArray[i] == "DIApath07") { smpl      = "True"; show("DIApath07"); }
+    if (idArray[i] == "DIApath08") { glyc      = "True"; show("DIApath08"); }
+    if (idArray[i] == "DIApath09") { insa_smpl = "True"; show("DIApath09"); }
+    if (idArray[i] == "DIApath10") { insa_glyc = "True"; show("DIApath10"); }
+    if (idArray[i] == "DIApath11") { othr      = "True"; show("DIApath11"); }
+    if (idArray[i] == "DIApath12") { nope_othr = "True"; show("DIApath12"); }
+    if (idArray[i] == "DIApath14") { elec_lipi = "True"; show("DIApath14"); }
+    if (idArray[i] == "DIApath15") { elec_othr = "True"; show("DIApath15"); }
+    if (idArray[i] == "DIApath18") { sphn      = "True"; show("DIApath18"); }
+    if (idArray[i] == "DIApath19") { insa_sphn = "True"; show("DIApath19"); }
+    if (idArray[i] == "DIApath20") { lndn      = "True"; show("DIApath20"); }
+   }
+   if (nope_glyc == "True" && nope_sphn == "True") { show("DIApath13"); }
+   if (elec_prot == "True" && norm      == "True") { mrtz_norm = "True"; show("DIApath16"); }
+   if (elec_prot == "True" && polw      == "True") { mrtz_polw = "True"; show("DIApath17"); }
+   hide_box();
+   show_box();
+  }
+
+  function hide_path(idArray) {
+   for (i = 0; i < idArray.length; i++) {
+    if (idArray[i] == "DIApath01") { ciao      = "False"; hide("DIApath01"); }
+    if (idArray[i] == "DIApath02") { prot      = "False"; hide("DIApath02"); }
+    if (idArray[i] == "DIApath03") { elec_prot = "False"; hide("DIApath03"); }
+    if (idArray[i] == "DIApath04") { polw      = "False"; hide("DIApath04"); }
+    if (idArray[i] == "DIApath05") { norm      = "False"; hide("DIApath05"); }
+    if (idArray[i] == "DIApath06") { lipi      = "False"; hide("DIApath06"); }
+    if (idArray[i] == "DIApath07") { smpl      = "False"; hide("DIApath07"); }
+    if (idArray[i] == "DIApath08") { glyc      = "False"; hide("DIApath08"); }
+    if (idArray[i] == "DIApath09") { insa_smpl = "False"; hide("DIApath09"); }
+    if (idArray[i] == "DIApath10") { insa_glyc = "False"; hide("DIApath10"); }
+    if (idArray[i] == "DIApath11") { othr      = "False"; hide("DIApath11"); }
+    if (idArray[i] == "DIApath12") { nope_othr = "False"; hide("DIApath12"); }
+    if (idArray[i] == "DIApath14") { elec_lipi = "False"; hide("DIApath14"); }
+    if (idArray[i] == "DIApath15") { elec_othr = "False"; hide("DIApath15"); }
+    if (idArray[i] == "DIApath18") { sphn      = "False"; hide("DIApath18"); }
+    if (idArray[i] == "DIApath19") { insa_sphn = "False"; hide("DIApath19"); }
+    if (idArray[i] == "DIApath20") { lndn      = "False"; hide("DIApath20"); }
+   }
+   if (nope_glyc == "False" || nope_sphn == "False") { hide("DIApath13"); }
+   if (elec_prot == "False" || norm      == "False") { mrtz_norm = "False"; hide("DIApath16"); }
+   if (elec_prot == "False" || polw      == "False") { mrtz_polw = "False"; hide("DIApath17"); }
+   hide_box();
+   show_box();
+  }
+
+  function debug() {
+   ciao      = "True"; show("DIApath01");
+   prot      = "True"; show("DIApath02");
+   elec_prot = "True"; show("DIApath03");
+   polw      = "True"; show("DIApath04");
+   norm      = "True"; show("DIApath05");
+   lipi      = "True"; show("DIApath06");
+   smpl      = "True"; show("DIApath07");
+   glyc      = "True"; show("DIApath08");
+   insa_smpl = "True"; show("DIApath09");
+   insa_glyc = "True"; show("DIApath10");
+   othr      = "True"; show("DIApath11");
+   nope_othr = "True"; show("DIApath12");
+   nope_glyc = "True"; nope_sphn = "True"; show("DIApath13");
+   elec_lipi = "True"; show("DIApath14");
+   elec_othr = "True"; show("DIApath15");
+   mrtz_norm = "True"; show("DIApath16");
+   mrtz_polw = "True"; show("DIApath17");
+   sphn      = "True"; show("DIApath18");
+   insa_sphn = "True"; show("DIApath19");
+   lndn      = "True"; show("DIApath20");
+   hide_box();
+   show_box();
+  }
+ </script>
+
+ <style>
+  /* general */
+  #DIA, table { border: 1px solid #ffffff; color: #555555; font: 14px/140% 'Trebuchet MS', Tahoma, Verdana, Helvetica; }
+  hr { background-color: #555555; border: 0px; color: #555555; height: 1px; margin: 5px; }
+  /* links */
+  .DIAartut, .DIAatut:visited { text-decoration: none; }
+  .DIAaref, .DIAaref:visited { text-decoration: none; }
+  .DIAlink, .DIAlink:visited { text-decoration: none; }
+  /* boxes and references */
+  .DIAmainbox { height: 100px; margin-bottom: 20px; opacity: 0.0; pointer-events: none; position: absolute; text-align: center; vertical-align: middle; width: 214px; filter: alpha(opacity=0); }
+  .DIAmainsmallbox { height: 100px; margin-bottom: 20px; opacity: 0.0; pointer-events: none; position: absolute; text-align: center; vertical-align: middle; width: 114px; filter: alpha(opacity=0); }
+  .DIAbox { background-color: white; border: 1px solid #555555; border-radius: 5px; padding: 5px; text-align: center; vertical-align: middle; width: 200px; }
+  .DIAsmallbox { background-color: white; border: 1px solid #555555; border-radius: 5px; padding: 5px; text-align: center; vertical-align: middle; width: 100px; }
+  .DIAchoices { cursor: pointer; color: blue; text-decoration: underline; }
+  .DIArefbox { opacity: 0.1; position: absolute; filter: alpha(opacity=10); }
+  .DIAreference { background-color: lightblue; border-radius: 5px; color: #095197; font-size: 12px; opacity: 0.75; padding: 5px; }
+  /* arrows */
+  .DIAarrow-down { border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 15px solid lightblue; height: 0px; opacity: 0.75; position: absolute; width: 0px; }
+  .DIAarrow-down-white { border-left: 18px solid transparent; border-right: 18px solid transparent; height: 0px; opacity: 0.75; position: absolute; width: 0px; }
+  .DIAarrow-left { border-bottom: 15px solid transparent; border-top: 15px solid transparent; border-left: 15px solid lightblue; height: 0px; opacity: 0.75; position: absolute; width: 0px; }
+  .DIAarrow-right { border-bottom: 15px solid transparent; border-top: 15px solid transparent; border-right: 15px solid lightblue; height: 0px; opacity: 0.75; position: absolute; width: 0px; }
+  .DIAarrow-up { border-bottom: 15px solid lightblue; border-left: 15px solid transparent; border-right: 15px solid transparent; height: 0px; margin: -15px; opacity: 0.75; position: absolute; width: 0px; }
+  /* boxes */
+  #DIAmart { left:  10px; top:  10px; }
+  #DIAprot { left:  10px; top: 130px; }
+  #DIAlipi { left:   0px; top: 450px; }
+  #DIAothr { left:   0px; top: 600px; }
+  #DIAnope { left: 240px; top: 810px; }
+  #DIAciao { left: 250px; top:   0px; }
+  #DIAelec { left: 320px; top: 140px; }
+  #DIAnorm { left: 200px; top: 240px; }
+  #DIApolw { left: 438px; top: 255px; }
+  #DIAmrtz { left: 310px; top: 340px; }
+  #DIAsmpl { left: 240px; top: 460px; }
+  #DIAglyc { left: 500px; top: 470px; }
+  #DIAinsa { left: 320px; top: 570px; }
+  #DIAsphn { left: 320px; top: 695px; }
+  #DIAlndn { left: 420px; top:   5px; }
+  /* references */
+  #DIAref1 { left: 240px; top:  76px; }
+  #DIAref2 { left: 465px; top: 210px; }
+  #DIAref3 { left: 185px; top: 414px; }
+  #DIAref4 { left: 500px; top: 425px; }
+  #DIAref5 { left: 420px; top: 650px; }
+  #DIAref6 { left: 500px; top:  88px; }
+  /* background image */
+  .DIApaths { height: 930px; position: absolute; width: 650px; }
+  #DIApath01 { background-image: url("/martini/path01.png"); }
+  #DIApath02 { background-image: url("/martini/path02.png"); }
+  #DIApath03 { background-image: url("/martini/path03.png"); }
+  #DIApath04 { background-image: url("/martini/path04.png"); }
+  #DIApath05 { background-image: url("/martini/path05.png"); }
+  #DIApath06 { background-image: url("/martini/path06.png"); }
+  #DIApath07 { background-image: url("/martini/path07.png"); }
+  #DIApath08 { background-image: url("/martini/path08.png"); }
+  #DIApath09 { background-image: url("/martini/path09.png"); }
+  #DIApath10 { background-image: url("/martini/path10.png"); }
+  #DIApath11 { background-image: url("/martini/path11.png"); }
+  #DIApath12 { background-image: url("/martini/path12.png"); }
+  #DIApath13 { background-image: url("/martini/path13.png"); }
+  #DIApath14 { background-image: url("/martini/path14.png"); }
+  #DIApath15 { background-image: url("/martini/path15.png"); }
+  #DIApath16 { background-image: url("/martini/path16.png"); }
+  #DIApath17 { background-image: url("/martini/path17.png"); }
+  #DIApath18 { background-image: url("/martini/path18.png"); }
+  #DIApath19 { background-image: url("/martini/path19.png"); }
+  #DIApath20 { background-image: url("/martini/path20.png"); }
+ </style>
+
+ <div class="DIApaths" id="DIApath01" style="opacity: 0.0; filter: alpha(opacity=10);"></div> <!-- ciao -->
+ <div class="DIApaths" id="DIApath02" style="opacity: 0.0; filter: alpha(opacity=10);"></div> <!-- prot -->
+ <div class="DIApaths" id="DIApath03" style="opacity: 0.0; filter: alpha(opacity=10);"></div> <!-- elec -->
+ <div class="DIApaths" id="DIApath04" style="opacity: 0.0; filter: alpha(opacity=10);"></div> <!-- polw (from elec) -->
+ <div class="DIApaths" id="DIApath05" style="opacity: 0.0; filter: alpha(opacity=10);"></div> <!-- norm (from elec) -->
+ <div class="DIApaths" id="DIApath06" style="opacity: 0.0; filter: alpha(opacity=10);"></div> <!-- lipi -->
+ <div class="DIApaths" id="DIApath07" style="opacity: 0.0; filter: alpha(opacity=10);"></div> <!-- smpl -->
+ <div class="DIApaths" id="DIApath08" style="opacity: 0.0; filter: alpha(opacity=10);"></div> <!-- glyc -->
+ <div class="DIApaths" id="DIApath09" style="opacity: 0.0; filter: alpha(opacity=10);"></div> <!-- insa (from smpl) -->
+ <div class="DIApaths" id="DIApath10" style="opacity: 0.0; filter: alpha(opacity=10);"></div> <!-- insa (from glyc) -->
+ <div class="DIApaths" id="DIApath11" style="opacity: 0.0; filter: alpha(opacity=10);"></div> <!-- othr -->
+ <div class="DIApaths" id="DIApath12" style="opacity: 0.0; filter: alpha(opacity=10);"></div> <!-- nope (from othr) -->
+ <div class="DIApaths" id="DIApath13" style="opacity: 0.0; filter: alpha(opacity=10);"></div> <!-- nope (from glyc) -->
+ <div class="DIApaths" id="DIApath14" style="opacity: 0.0; filter: alpha(opacity=10);"></div> <!-- elec (from lipi) -->
+ <div class="DIApaths" id="DIApath15" style="opacity: 0.0; filter: alpha(opacity=10);"></div> <!-- elec (from othr) -->
+ <div class="DIApaths" id="DIApath16" style="opacity: 0.0; filter: alpha(opacity=10);"></div> <!-- norm -->
+ <div class="DIApaths" id="DIApath17" style="opacity: 0.0; filter: alpha(opacity=10);"></div> <!-- polw -->
+ <div class="DIApaths" id="DIApath18" style="opacity: 0.0; filter: alpha(opacity=10);"></div> <!-- sphn -->
+ <div class="DIApaths" id="DIApath19" style="opacity: 0.0; filter: alpha(opacity=10);"></div> <!-- insa (from sphn) -->
+ <div class="DIApaths" id="DIApath20" style="opacity: 0.0; filter: alpha(opacity=10);"></div> <!-- lndn -->
+
+ <!-- MAIN DIVISIONS -->
+
+ <!--
+  Do you want a Martini?
+  YES
+   SHOW prot
+   HIDE ciao
+  NO
+   SHOW ciao
+   HIDE prot lipi othr nope ciao elec norm polw mrtz smpl glyc insa ref1 ref2 ref3 ref4
+ -->
+ <div class="DIAmainbox" id="DIAmart" style="opacity: 1.0; pointer-events: auto; filter: alpha(opacity=100);">
+  <div class="DIAbox" style="background-color: #eeeeee;">你有一个(生物)分子体系<br><br>想使用粗粒化方法进行模拟?</div>
+  <span class="DIAchoices" onclick="show_path(['DIApath02', 'DIApath06', 'DIApath11']); hide_path(['DIApath01']);">是</span>
+  &nbsp;&nbsp;|&nbsp;&nbsp;
+  <span class="DIAchoices" onclick="show_path(['DIApath01']); if (nope_glyc == 'True') nope_glyc = 'False'; if (nope_sphn == 'True') nope_sphn = 'False'; hide_path(['DIApath02', 'DIApath03', 'DIApath04', 'DIApath05', 'DIApath06', 'DIApath07', 'DIApath08', 'DIApath09', 'DIApath10', 'DIApath11', 'DIApath12', 'DIApath13', 'DIApath14', 'DIApath15', 'DIApath16', 'DIApath17', 'DIApath18', 'DIApath19', 'DIApath20']);">否</span>
+<!--
+  &nbsp;&nbsp;|&nbsp;&nbsp;
+  <span class="DIAchoices" onclick="debug();">debug</span>
+-->
+ </div>
+
+ <!--
+  Protein
+  YES
+   SHOW lipi elec ref1
+   HIDE
+  NO
+   SHOW lipi
+   HIDE elec norm polw mrtz ref1 ref2
+ -->
+ <div style="opacity: 0; pointer-events: none;" class="DIAmainbox" id="DIAprot">
+  <div class="DIAbox">你的体系中是否含有<br>蛋白质/多肽?</div>
+  <span class="DIAchoices" onclick="show_path(['DIApath03', 'DIApath20']);">是</span>
+  &nbsp;&nbsp;|&nbsp;&nbsp;
+  <span class="DIAchoices" onclick="hide_path(['DIApath03', 'DIApath04', 'DIApath05', 'DIApath20']);">否</span>
+ </div>
+
+ <!--
+  Lipids
+  YES
+   SHOW othr smpl ref3
+   HIDE
+  NO
+   SHOW othr
+   HIDE smpl glyc insa nope ref3 ref4
+ -->
+ <div style="opacity: 0; pointer-events: none;" class="DIAmainbox" id="DIAlipi">
+  <div class="DIAbox">你的体系中是否含有脂质<br>(可能还有胆固醇)?</div>
+  <span class="DIAchoices" onclick="show_path(['DIApath07', 'DIApath14']);">是</span>
+  &nbsp;&nbsp;|&nbsp;&nbsp;
+  <span class="DIAchoices" onclick="hide_path(['DIApath04', 'DIApath05', 'DIApath07', 'DIApath08', 'DIApath09', 'DIApath10', 'DIApath13', 'DIApath14', 'DIApath18', 'DIApath19']);">否</span>
+ </div>
+
+ <!--
+  Other molecules
+  SHOW nope
+  HIDE
+ -->
+ <div class="DIAmainbox" id="DIAothr" style="width: 234px; opacity: 0; pointer-events: none;">
+  <div class="DIAbox" style="width: 220px;">
+   你的体系中是否含有:
+   <hr>
+   <table style="border: 1px solid rgb(255, 255, 255);">
+    <tbody><tr><td style="border: 1px solid rgb(255, 255, 255); text-align: right; width: 60px;">糖Sugars</td><td style="border: 1px solid rgb(255, 255, 255); width: 10px;">:</td><td style="border: 1px solid rgb(255, 255, 255); text-align: left; width: 145px;"><a class="DIAlink" href="http://pubs.acs.org/doi/abs/10.1021/ct900313w" target="_blank">Lopez <i>et al.</i> (2009)</a></td></tr>
+    <tr><td style="border: 1px solid rgb(255, 255, 255); text-align: right; width: 60px;">聚合物Polymers</td><td style="border: 1px solid rgb(255, 255, 255); width: 10px;">:</td><td style="border: 1px solid rgb(255, 255, 255); text-align: left; width: 145px;"><a class="DIAlink" href="http://pubs.acs.org/doi/abs/10.1021/jp9058966" target="_blank">Lee <i>et al.</i> (2009)</a></td></tr>
+    <tr><td style="border: 1px solid rgb(255, 255, 255); text-align: right; width: 60px;">DNA</td><td style="border: 1px solid rgb(255, 255, 255); width: 10px;">:</td><td style="border: 1px solid rgb(255, 255, 255); text-align: left; width: 145px;"><a class="DIAlink" href="http://pubs.acs.org/doi/abs/10.1021/acs.jctc.5b00286" target="_blank">Uusitalo <i>et al.<i> (2015)</i></i></a></td></tr>
+    <tr><td colspan="3" style="border: 1px solid rgb(255, 255, 255); text-align: center;"><a class="DIAlink" href="http://md.chem.rug.nl/cgmartini/index.php/force-field-parameters" target="_blank">...</a></td></tr>
+   </tbody></table>
+   <hr>
+   检查 <a class="DIAlink" href="http://md.chem.rug.nl/cgmartini/index.php/force-field-parameters" target="_blank">此页面</a> 获取更多已参数化<br>化合物的列表.
+  </div>
+  <span class="DIAchoices" onclick="show_path(['DIApath15']);">是</span>
+  &nbsp;&nbsp;|&nbsp;&nbsp;
+  <span class="DIAchoices" onclick="hide_path(['DIApath04', 'DIApath05', 'DIApath15']);">不</span>
+  &nbsp;&nbsp;|&nbsp;&nbsp;
+  <span class="DIAchoices" onclick="show_path(['DIApath12']);">... 否 其他!</span>
+ </div>
+
+ <!-- Too bad -->
+ <div class="DIAmainbox" id="DIAnope" style="width: 314px; opacity: 0; pointer-events: none;">
+  <div class="DIAbox" style="background-color: #eeeeee; width: 305px;">没有这些分子的Martini.<br>参考<a class="DIAlink" href="http://md.chem.rug.nl/cgmartini/index.php/faq/topologies" target="_blank">recipe in the FAQ</a>或<a class="DIAlink" href="http://md.chem.rug.nl/cgmartini/index.php/parametrzining-new-molecule" target="_blank">此教程</a>看看如何创建参数.</div>
+  <span class="DIAchoices" onclick="if (nope_glyc == 'True') nope_glyc = 'False'; if (nope_sphn == 'True') nope_sphn = 'False'; hide_path(['DIApath12']);">呀, 该做的都做了</span>
+ </div>
+
+ <!-- SUBDIVISIONS -->
+
+ <!-- Bye -->
+ <div style="opacity: 0; pointer-events: none;" class="DIAmainbox" id="DIAciao">
+  <div class="DIAsmallbox" style="background-color: #eeeeee; position: absolute; top: 20px;">无法提供帮助<br>再会!</div>
+ </div>
+
+ <!--
+  Protein: elastic network
+ -->
+ <div style="opacity: 0; pointer-events: none;" class="DIAmainbox" id="DIAlndn">
+  <div class="DIAbox" style="background-color: lightgreen; border: 0px;">你可能需要对<br>蛋白质的二级结构<br>进行约束.</div>
+ </div>
+
+ <!--
+  Protein: electrostatics
+  YES
+   SHOW polw mrtz ref2
+   HIDE norm
+  NO
+   SHOW norm mrtz
+   HIDE polw ref2
+ -->
+ <div style="opacity: 0; pointer-events: none;" class="DIAmainbox" id="DIAelec">
+  <div class="DIAbox">静电相互作用<br>可能很重要?</div>
+  <span class="DIAchoices" onclick="show_path(['DIApath04']); hide_path(['DIApath05']);">是</span>
+  &nbsp;&nbsp;|&nbsp;&nbsp;
+  <span class="DIAchoices" onclick="show_path(['DIApath05']); hide_path(['DIApath04']);">否</span>
+ </div>
+ <!-- Protein: regular water -->
+ <div style="opacity: 0; pointer-events: none;" class="DIAmainbox" id="DIAnorm">
+  <div class="DIAbox">使用正常的Martini水模型以及<br><a class="DIAlink" href="http://md.chem.rug.nl/cgmartini/index.php/force-field-parameters/particle-definitions" target="_blank">forcefields labelled 2.0, 2.1 or 2.2</a>.</div>
+ </div>
+ <!-- Protein: polarizable water -->
+ <div style="opacity: 0; pointer-events: none;" class="DIAmainbox" id="DIApolw">
+  <div class="DIAbox">使用极化水模型以及<br><a class="DIAlink" href="http://md.chem.rug.nl/cgmartini/index.php/force-field-parameters/particle-definitions" target="_blank">forcefields labelled 2.P or 2.2P</a>.</div>
+ </div>
+ <!-- Protein: martinize.py -->
+ <div class="DIAmainbox" id="DIAmrtz" style="width: 274px; opacity: 0; pointer-events: none;">
+  <div class="DIAbox" style="background-color: lightgreen; border: 0px; width: 260px;">你可以使用<a class="DIAlink" href="http://md.chem.rug.nl/cgmartini/index.php/tools/204-martinize" target="_blank">martinize.py</a>脚本<br>来创建蛋白质的拓扑.</div>
+  顺利完成.
+ </div>
+
+ <!--
+  Lipids: simple lipids
+  YES
+   SHOW insa
+   HIDE glyc nope ref4
+  NO
+   SHOW glyc ref4
+   HIDE insa
+ -->
+ <div style="opacity: 0; pointer-events: none;" class="DIAmainbox" id="DIAsmpl">
+  <div class="DIAbox">体系中<i>只</i>含有简单的脂质<br>(如DPPC, DOPE, POPC, 等.), 或胆固醇?</div>
+  <span class="DIAchoices" onclick="if (nope_glyc == 'True') nope_glyc = 'False'; if (nope_sphn == 'True') nope_sphn = 'False'; show_path(['DIApath09']); hide_path(['DIApath08', 'DIApath10', 'DIApath18', 'DIApath19']);">是</span>
+  &nbsp;&nbsp;|&nbsp;&nbsp;
+  <span class="DIAchoices" onclick="show_path(['DIApath08', 'DIApath18']); hide_path(['DIApath09', 'DIApath10']);">否</span>
+ </div>
+ <!--
+  Lipids: glycolipids
+  YES
+   SHOW insa
+   HIDE nope
+  NO
+   SHOW nope
+   HIDE insa
+ -->
+ <div style="opacity: 0; pointer-events: none;" class="DIAmainsmallbox" id="DIAglyc">
+  <div class="DIAsmallbox">体系中含有<br>糖脂类glycolipids?</div>
+  <span class="DIAchoices" onclick="if (nope_glyc == 'True') nope_glyc = 'False'; show_path(['DIApath10']); hide_path([]);">是</span>
+  &nbsp;&nbsp;|&nbsp;&nbsp;
+  <span class="DIAchoices" onclick="nope_glyc = 'True'; show_path([]); hide_path(['DIApath10']);">否</span>
+ </div>
+ <!--
+  Lipids: sphingolipids
+  YES
+   SHOW insa
+   HIDE nope
+  NO
+   SHOW nope
+   HIDE insa
+ -->
+ <div style="opacity: 0; pointer-events: none;" class="DIAmainbox" id="DIAsphn">
+  <div class="DIAbox">体系中含有<br>鞘脂类sphingolipids?</div>
+  <span class="DIAchoices" onclick="if (nope_sphn == 'True') nope_sphn = 'False'; show_path(['DIApath19']); hide_path([]);">是</span>
+  &nbsp;&nbsp;|&nbsp;&nbsp;
+  <span class="DIAchoices" onclick="nope_sphn = 'True'; show_path([]); hide_path(['DIApath19']);">否</span>
+ </div>
+ <!-- Lipids: insane.py -->
+ <div style="opacity: 0; pointer-events: none;" class="DIAmainbox" id="DIAinsa">
+  <div class="DIAbox" style="background-color: lightgreen; border: 0px;">你可以使用<a class="DIAlink" href="http://md.chem.rug.nl/cgmartini/index.php/insane" target="_blank">insane.py</a> 脚本<br>来构建体系.</div>
+  很简单, 对不对?
+ </div>
+
+ <!-- REFERENCES -->
+
+ <div style="opacity: 0; pointer-events: none;" class="DIArefbox" id="DIAref1">
+  <div class="DIAreference">参考 <a class="DIAaref" href="http://pubs.acs.org/doi/abs/10.1021/ct700324x" target="_blank">Monticelli <i>et al.</i> (2008)</a><br>以及 <a class="DIAaref" href="http://pubs.acs.org.proxy-ub.rug.nl/doi/abs/10.1021/ct300646g" target="_blank">de Jong <i>et al.</i> (2013)</a></div>
+  <div class="DIAarrow-down" style="right: 25px;"></div>
+ </div>
+ <div style="opacity: 0; pointer-events: none;" class="DIArefbox" id="DIAref2">
+  <div class="DIAreference">参考 <a class="DIAaref" href="http://www.ploscompbiol.org/article/info:doi/10.1371/journal.pcbi.1000810" target="_blank">Yesylevskyy <i>et al.</i> (2010)</a></div>
+  <div class="DIAarrow-down" style="left: 25px;"></div>
+ </div>
+ <div style="opacity: 0; pointer-events: none;" class="DIArefbox" id="DIAref3">
+  <div class="DIAreference">参考 <a class="DIAaref" href="http://pubs.acs.org/doi/abs/10.1021/jp071097f" target="_blank">Marrink <i>et al.</i> (2007)</a></div>
+  <div class="DIAarrow-down" style="right: 25px;"></div>
+ </div>
+ <div style="opacity: 0; pointer-events: none;" class="DIArefbox" id="DIAref4">
+  <div class="DIAreference">参考 <a class="DIAaref" href="http://pubs.acs.org/doi/abs/10.1021/ct3009655" target="_blank">Lopez <i>et al.</i> (2013)</a></div>
+  <div class="DIAarrow-down" style="left: 25px;"></div>
+ </div>
+ <div style="opacity: 0; pointer-events: none;" class="DIArefbox" id="DIAref5">
+  <div class="DIAreference">参考 <a class="DIAaref" href="http://md.chem.rug.nl/" target="_blank">Lopez <i>et al.</i> (in preparation)</a></div>
+  <div class="DIAarrow-down-white" style="left: 22px;"></div>
+  <div class="DIAarrow-down" style="left: 25px;"></div>
+ </div>
+ <div style="opacity: 0; pointer-events: none;" class="DIArefbox" id="DIAref6">
+  <div class="DIAarrow-up" style="left: 25px;"></div>
+  <div class="DIAreference">参考 <a class="DIAaref" href="http://pubs.acs.org/doi/abs/10.1021/ct9002114" target="_blank">Periole <i>et al.</i> (2009)</a></div>
+ </div>
+
+ <script type="text/javascript">hide_box();</script>
+</div>
