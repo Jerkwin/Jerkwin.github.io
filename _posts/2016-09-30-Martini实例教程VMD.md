@@ -10,8 +10,6 @@
 
 - 发布: 2016-09-30 15:21:46; 翻译: 王河洛; 校对: 李继存
 
-## 使用VMD可视化Martini体系
-
 VMD是一个分子可视化程序, 它采用三维图形技术以及内置脚本来对生物大分子体系进行展示, 动画制作和分析. VMD官方网站 <http://www.ks.uiuc.edu/Research/vmd/>.
 
 在本模块中, 我们会介绍一些与粗粒化体系可视化相关的VMD命令. 此外, 我们还向读者提供一些有助于CG体系可视化的Tcl脚本. 这些脚本及其说明文档可从Martini网页的链接中下载 <http://md.chem.rug.nl/cgmartini/index.php/tools2/visualization>
