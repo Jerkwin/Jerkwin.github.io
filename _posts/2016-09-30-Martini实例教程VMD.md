@@ -1,6 +1,6 @@
 ---
  layout: post
- title: Martini粗粒化力场使用手册：4　实例教程
+ title: Martini粗粒化力场使用手册：4　实例教程　VMD
  categories:
  - 科
  tags:
