@@ -77,7 +77,7 @@ VMD的"表现理念": 为展示和分析任意一组原子, 分子, 或蛋白质
 
 我们来看个例子:
 
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%">cg_helix <span style="color: #666666">{{5</span> 48<span style="color: #666666">}</span> <span style="color: #666666">{120</span> 146<span style="color: #666666">}}</span> -hlxmethod <span style="color: #BB4444">&quot;cylinder&quot;</span> -hlxcolor <span style="color: #BB4444">&quot;red&quot;</span> -hlxrad 2.5
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%">cg_helix <span style="color: #666666">{ {5</span> 48<span style="color: #666666">}</span> <span style="color: #666666">{120</span> 146<span style="color: #666666">} }</span> -hlxmethod <span style="color: #BB4444">&quot;cylinder&quot;</span> -hlxcolor <span style="color: #BB4444">&quot;red&quot;</span> -hlxrad 2.5
 </pre></div>
 
 这个命令将以0.25 nm半径的红色圆柱展示两个螺旋结构, 它们分别对应于蛋白质中序号为5到48, 120到146的残基. 如果需要了解脚本的所有选项及其默认值, 可以查看其帮助文档或网页. 命令选项中`list of terminig`(端基列表)的定义方式有两种: i) 自己提供列表(如上例所示), ii) 读取或解析由`do_dssp`程序生成的文件. 对第二个方式, 你不需要提供任何端基, 但命令行中的`list of termini`选项依然需要输入一个空列表`{}`以让程序运行.
