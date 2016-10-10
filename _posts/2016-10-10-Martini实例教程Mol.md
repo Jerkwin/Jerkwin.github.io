@@ -8,9 +8,9 @@
  - martini
 ---
 
-## 基于已知片段对新分子进行参数化
-
 - 发布: 2016-10-10 11:47:32; 翻译: 付彦凯; 校对: 李继存
+
+## 基于已知片段对新分子进行参数化
 
 在本教程中, 我们将讨论如何为一个含有已知片段, 但尚未被描述过的新分子构建Martini拓扑. 随后我们将对该Martini模型进行自组装模拟以评估其行为, 但不会进行模型的精细化. 如果你觉得有必要对其进行精细化, 请参见本教程第二部分(不过它是基于另一个分子来说明的), 或者参照[脂质](http://md.chem.rug.nl/index.php/tutorials-general-introduction/bilayers)和[聚合物](http://md.chem.rug.nl/index.php/tutorials-general-introduction/martini-tutorials-polymers)教程中类似的精细化步骤.
 
@@ -36,7 +36,7 @@
 
 你需要给GDAL写一个拓扑文件, 可以自己从头开始写, 也可以在其他分子拓扑文件的基础上进行改造, GCER分子的拓扑文件就是一个很好的选择. GCER自身只是连接到脂酰基的头基的名字, 如果去检索Martini力场官网提供的脂分子的拓扑文件, 我们会发现一个名为[DPGS](http://md.chem.rug.nl/index.php/force-field-parameters/351-lipid.html?dir=Glycosphingolipids&lipid=DPGS)的带有两条脂肪链尾巴的糖脂分子. 接下来我们将以DPGS的拓扑文件为模板, 其`.itp`文件部分内容如下:
 
-<table class="highlighttable"><th colspan="2" style="text-align:left">awk</th><tr><td><div class="linenodiv" style="background-color: #f0f0f0; padding-right: 10px"><pre style="line-height: 125%"> 1
+<table class="highlighttable"><th colspan="2" style="text-align:left">DPGS.itp</th><tr><td><div class="linenodiv" style="background-color: #f0f0f0; padding-right: 10px"><pre style="line-height: 125%"> 1
  2
  3
  4
