@@ -161,7 +161,7 @@ g_angle -f mapped.xtc -n bonded.ndx -ov angles.xvg -type angle -all
 
 ### 6) 创建粗粒化模拟
 
-从`mapped.xtc`文件中提取出一帧, 使用与全原子模拟相同的溶剂(粗粒化的)癸烷重新溶剂化. 创建一个`.top`文件(里面应包含Martini力场的`.itp`文件, 新创建的粗粒化分子的`.itp`文件, 并添加正确的分子和溶剂个数). 创建一个Martini力场适用的`.mdp`文件, 可参考官网上的示例. 在正式开始粗粒化模拟之前, 最好先进行能量最小化, 然后用小的时间步长(如5 fs)跑几千步, 让分子弛豫一下. 除此之外, 你还需要[`.itp`]文件(http://md.chem.rug.nl/images/stories/tutorial/parametrization/martini_v2.0.itp), [.itp文件](http://md.chem.rug.nl/images/stories/tutorial/parametrization/martini_v2.0_solvents.itp)以及[.itp文件](http://md.chem.rug.nl/images/stories/tutorial/parametrization/martini_toluene.itp). 最好新建一个文件夹来运行粗粒化模拟.
+从`mapped.xtc`文件中提取出一帧, 使用与全原子模拟相同的溶剂(粗粒化的)癸烷重新溶剂化. 创建一个`.top`文件(里面应包含Martini力场的`.itp`文件, 新创建的粗粒化分子的`.itp`文件, 并添加正确的分子和溶剂个数). 创建一个Martini力场适用的`.mdp`文件, 可参考官网上的示例. 在正式开始粗粒化模拟之前, 最好先进行能量最小化, 然后用小的时间步长(如5 fs)跑几千步, 让分子弛豫一下. 除此之外, 你还需要[`.itp`文件](http://md.chem.rug.nl/images/stories/tutorial/parametrization/martini_v2.0.itp), [`.itp`文件](http://md.chem.rug.nl/images/stories/tutorial/parametrization/martini_v2.0_solvents.itp)以及[`.itp`文件](http://md.chem.rug.nl/images/stories/tutorial/parametrization/martini_toluene.itp). 最好新建一个文件夹来运行粗粒化模拟.
 
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%">grompp -f em.mdp -c martini.gro -p martini.top -o em
 mdrun -v -deffnm em
