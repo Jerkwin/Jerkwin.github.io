@@ -36,39 +36,22 @@
 
 你需要给GDAL写一个拓扑文件, 可以自己从头开始写, 也可以在其他分子拓扑文件的基础上进行改造, GCER分子的拓扑文件就是一个很好的选择. GCER自身只是连接到脂酰基的头基的名字, 如果去检索Martini力场官网提供的脂分子的拓扑文件, 我们会发现一个名为[DPGS](http://md.chem.rug.nl/index.php/force-field-parameters/351-lipid.html?dir=Glycosphingolipids&lipid=DPGS)的带有两条脂肪链尾巴的糖脂分子. 接下来我们将以DPGS的拓扑文件为模板, 其`.itp`文件部分内容如下:
 
-<table class="highlighttable"><th colspan="2" style="text-align:left">DPGS.itp</th><tr><td><div class="linenodiv" style="background-color: #f0f0f0; padding-right: 10px"><pre style="line-height: 125%"> 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10
-11
-12
-13
-14
-15
-16</pre></div></td><td class="code"><div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%">[ moleculetype ]
-DPGS               <span style="color: #666666">1</span>
-[ atoms ]
- <span style="color: #666666">1</span>          P4    <span style="color: #666666">1</span>    DPGS     C1     <span style="color: #666666">1</span>         <span style="color: #666666">0</span>        <span style="color: #666666">72.0000</span>
- <span style="color: #666666">2</span>          P1    <span style="color: #666666">1</span>    DPGS     C2     <span style="color: #666666">2</span>         <span style="color: #666666">0</span>        <span style="color: #666666">72.0000</span>
- <span style="color: #666666">3</span>          P1    <span style="color: #666666">1</span>    DPGS     C3     <span style="color: #666666">3</span>         <span style="color: #666666">0</span>        <span style="color: #666666">72.0000</span>
- <span style="color: #666666">4</span>          P1    <span style="color: #666666">1</span>    DPGS    AM1     <span style="color: #666666">4</span>         <span style="color: #666666">0</span>        <span style="color: #666666">72.0000</span>
- <span style="color: #666666">5</span>          P5    <span style="color: #666666">1</span>    DPGS    AM2     <span style="color: #666666">5</span>         <span style="color: #666666">0</span>        <span style="color: #666666">72.0000</span>
- <span style="color: #666666">6</span>          C3    <span style="color: #666666">1</span>    DPGS    D1A     <span style="color: #666666">6</span>         <span style="color: #666666">0</span>        <span style="color: #666666">72.0000</span> ; corrected (C3 instead of C1), oct <span style="color: #666666">2013</span>
- <span style="color: #666666">7</span>          C1    <span style="color: #666666">1</span>    DPGS    C2A     <span style="color: #666666">7</span>         <span style="color: #666666">0</span>        <span style="color: #666666">72.0000</span>
- <span style="color: #666666">8</span>          C1    <span style="color: #666666">1</span>    DPGS    C3A     <span style="color: #666666">8</span>         <span style="color: #666666">0</span>        <span style="color: #666666">72.0000</span>
- <span style="color: #666666">9</span>          C1    <span style="color: #666666">1</span>    DPGS    C4A     <span style="color: #666666">9</span>         <span style="color: #666666">0</span>        <span style="color: #666666">72.0000</span>
-<span style="color: #666666">10</span>          C1    <span style="color: #666666">1</span>    DPGS    C1B    <span style="color: #666666">10</span>         <span style="color: #666666">0</span>        <span style="color: #666666">72.0000</span>
-<span style="color: #666666">11</span>          C1    <span style="color: #666666">1</span>    DPGS    C2B    <span style="color: #666666">11</span>         <span style="color: #666666">0</span>        <span style="color: #666666">72.0000</span>
-<span style="color: #666666">12</span>          C1    <span style="color: #666666">1</span>    DPGS    C3B    <span style="color: #666666">12</span>         <span style="color: #666666">0</span>        <span style="color: #666666">72.0000</span>
-<span style="color: #666666">13</span>          C1    <span style="color: #666666">1</span>    DPGS    C4B    <span style="color: #666666">13</span>         <span style="color: #666666">0</span>        <span style="color: #666666">72.0000</span>
-</pre></div>
-</td></tr></table>
+	[ moleculetype ]
+	DPGS               1
+	[ atoms ]
+	 1          P4    1    DPGS     C1     1         0        72.0000
+	 2          P1    1    DPGS     C2     2         0        72.0000
+	 3          P1    1    DPGS     C3     3         0        72.0000
+	 4          P1    1    DPGS    AM1     4         0        72.0000
+	 5          P5    1    DPGS    AM2     5         0        72.0000
+	 6          C3    1    DPGS    D1A     6         0        72.0000 ; corrected (C3 instead of C1), oct 2013
+	 7          C1    1    DPGS    C2A     7         0        72.0000
+	 8          C1    1    DPGS    C3A     8         0        72.0000
+	 9          C1    1    DPGS    C4A     9         0        72.0000
+	10          C1    1    DPGS    C1B    10         0        72.0000
+	11          C1    1    DPGS    C2B    11         0        72.0000
+	12          C1    1    DPGS    C3B    12         0        72.0000
+	13          C1    1    DPGS    C4B    13         0        72.0000
 
 根据 1) 其他脂类分子的一般映射规则 2) DPGS分子`.itp`文件中的成键规则 3) 图2所展示信息, 不难猜测, DPGS分子`.itp`文件中, 1-3号珠子代表葡萄糖环, 4号珠子代表甘油部分, 5号珠子代表酰胺基团, 其他珠子代表脂肪链尾端. 如果据此编写GDAL分子的`.itp`文件, 5号珠子应该和3号珠子相连, 而不是与DPGS中一样, 和4号珠子相连, 然后脂肪链尾端(10-13号珠子) 应该与5号珠子相连. 由于GDAL是十二烷连接臂(连接臂占用12/4=3个珠子), 原来的13号珠子应该修改为羧酸末端. 按照上述方式对原DPGS分子的`.itp`文件进行修改, 我们会发现, 除了13号珠子外, 其他珠子的设定均不用改动. 根据2007年发表的Martini力场论文, 13号珠子应该从`C1`改为`P3`类型(论文中`P3`代表乙酸). 综上所述, GDAL分子`.itp`文件编写过程如下:
 
@@ -132,7 +115,7 @@ mdrun -v -deffnm gromos
 
 再去看看你在步骤2)中绘制的映射图, 确定这些珠子之间的成键关系(键, 约束, 键角, 正常和异常二面角). 键长/键角等信息可以从步骤3)中得到的粗粒化轨迹文件(`mapped.xtc`)中提取. 你可以再制作一个名为`bonded.ndx`的索引文件, `[bonds]`下两个珠子一行, `[angles]`下三个珠子一行, `[dihedrals]`下四个珠子一行. 使用`g_bond`来获取键长信息, `g_angle`来获取键角和二面角信息.
 
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%">g_bond -f mapped.xtc -n <span style="color: #666666">[</span>bonded.ndx<span style="color: #666666">](</span>http://md.chem.rug.nl/images/stories/tutorial/parametrization/bonded.ndx<span style="color: #666666">)</span> -noaver -d
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%">g_bond -f mapped.xtc -n bonded.ndx -noaver -d
 g_angle -f mapped.xtc -n bonded.ndx -ov angles.xvg -type angle -all
 </pre></div>
 
