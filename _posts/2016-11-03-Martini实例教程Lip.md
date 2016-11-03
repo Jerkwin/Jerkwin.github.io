@@ -57,7 +57,7 @@ Martini粗粒化模型一开始就是为脂质开发的[1, 2]. Martini方法的�
 
 或者使用VMD. 开始和最后的结构应该与图1类似. 同时, 仔细查看Martini的参数文件, 特别是相互作用和珠子类型. PC与PE的头基, 饱和与不饱和的尾端之间有那些区别?
 
-![](/martini/lipid-1.png)
+![](http://jerkwin.github.io/martini/lipid-1.png)
 
 图1 DSPC双分子层的形成. A) 随机分布于水分子中的64个DSPC脂质分子. B) 30 ns模拟后, DSPC脂质分子已经聚合在一起形成了双分子层.
 
@@ -137,7 +137,7 @@ $P_2 = {1 \over 2} (3 <\cos^2 \q> -1)$
 
 这将为体系生成一个初始构型`dppc-dupc-chol-insane.gro`(图2A), 并提供`.top`文件的初始信息. 下一步, 修改`.top`文件使其包含正确的Martini拓扑. 然后, 对构型进行能量最小化并运行一个短时间(10 ns)的平衡模拟, 方法类似之前脂质分子自组装的模拟类似. 注意, 因为这次模拟包含了很多组分, 你必须(利用`make_ndx`)创建一个索引文件, 并将所有脂质分子, 所有溶剂分子分别放在不同的组中以对应`.mdp`文件中指定的组. 因为所有的脂质分子和溶剂都置于格点上(图2A), 所以即使能量最小化之后, 它们仍然可能处于能量不利的状态. 由于体系中的相互作用力很大, 所以在使用Martini脂质时间步长(30-40 fs)进行成品模拟之前, 使用小的时间步长(1-10 fs)进行平衡模拟很有必要. 由`insane.py`给出的初始格点顺序会在几ns的时间内得到松弛(图2B), 我们建议先使用Berendsen压力耦合算法进行5-30 ns的模拟以弛豫膜的面积, 然后使用Parrinello-Rahman压力耦合方法进行成品模拟. 这个复合膜在295 K会发生相分离, 但需要几微妙的时间(图2C).
 
-![](/martini/lipid-2.png)
+![](http://jerkwin.github.io/martini/lipid-2.png)
 
 图2 DPPC-DUPC-CHOL双层膜的形成. A) 使用`insane.py`构建DPPC-DUPC-CHOL比例为4:3:3的膜. B) 经过20 ns的模拟之后, 格点结构消失, 膜的面积达到平衡. C) 295 K时, 复合膜相分离成为Ld和Lo, 这个相变过程需要几微秒, 图中显示了在6微秒之后的俯视图. 图中DPPC用红色, DUPC用蓝色, 胆固醇用红色来表示.
 
@@ -159,7 +159,7 @@ $P_2 = {1 \over 2} (3 <\cos^2 \q> -1)$
 
 我们建议你采用[CHARMM-GUI](http://www.charmm-gui.org/?doc=input/mvesicle)来构建囊泡. 根据[这里](http://www.cgmartini.nl/index.php/tutorials-general-introduction/others#Martini-Maker)的教程学习如何使用CHARMM-GUI, 平衡好你的囊泡后继续按照上面的教程进行即可.
 
-![](/martini/lipid-3.png)
+![](http://jerkwin.github.io/martini/lipid-3.png)
 
 图3 DPPC-DUPC-CHOL组成的囊泡, 球形到圆环形的改变过程. A) 初始体系, B) 20 ns模拟之后的构型, 注意到囊泡平的一侧表示了Lo相(DPPC/CHOL). 插图表示整个系统, 大图表示切面图.
 
