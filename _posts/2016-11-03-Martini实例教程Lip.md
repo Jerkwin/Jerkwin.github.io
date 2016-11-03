@@ -1,6 +1,6 @@
 ---
  layout: post
- title:  Martini实例教程：脂质
+ title: Martini实例教程：脂质
  categories:
  - 科
  tags:
