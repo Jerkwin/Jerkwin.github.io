@@ -1,0 +1,2812 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<style>
+html,body{
+  margin: 0; padding: 0;
+  font: 1.2em/1.5 Helvetica, Arial, "Microsoft YaHei", sans-serif;
+}
+
+.tab-wrapper{
+  position: relative;
+  height:3em;
+  background-color: #33344a;
+}
+
+.tab-wrapper .tab-radio{
+  display: none;
+}
+
+.tab-handler{
+  position: relative;
+  z-index: 2;
+  display: block;
+  float: left;
+  height: 2em;
+  padding: 0 2em;
+  color: #717181;
+  font-size: 1.5em;
+  line-height:2em;
+  transition: .3s;
+  transform: scale(.9);
+}
+
+.tab-radio:checked + .tab-handler{
+  color: #fff;
+  background-color: #e74c3c;
+  transform: scale(1);
+}
+.tab-radio:checked + .tab-handler + .tab-content{
+  visibility: visible;
+  opacity: 1;
+  transform: scale(1);
+}
+
+.tab-wrapper .tab-content{
+  visibility: hidden;
+  position: absolute;
+  top: 2.5em;
+  left: 2em;
+  width: 95%;
+  padding: 2em auto;
+  margin: 2em
+
+  color: #999;
+  font-size: 1.2em;
+  line-height: 1.8em;
+  background-color: #fff;
+  opacity: 0;
+  transition: transform .5s, opacity .7s;
+  transform: translateY(20px);
+}
+
+input[type="box"] {
+	font: bold 1.2em Consolas;
+	background: #F5F5F5;
+	border: 2px solid;
+	border-color: #CCC #EEE #EEE #CCC;
+}
+
+input[type="box"]:focus { background: #BBB; }
+
+table {display: none;}
+table { border-collapse: collapse; }
+table tr { border-top: 2px solid #ccc; }
+table tr:nth-child(2n) { background-color: #f8f8f8; }
+table tr td { border: 1px solid #ccc; padding: 0.5em; font-size: 1.2em;}
+table tr td :first-child { margin-top: 0; }
+table tr td :last-child { margin-bottom: 0; }
+table tr th {
+   font-weight: bold;
+   border: 2px solid #aaa;
+   padding: 1em 2em; }
+</style>
+
+<div class="tab-wrapper">
+
+	<!--input type="radio" name="tab-radio" class="tab-radio" id="tab-radio-1">
+	<label for="tab-radio-1" class="tab-handler">计算器</label-->
+
+	<input type="radio" name="tab-radio" class="tab-radio" id="tab-radio-2" checked>
+	<label for="tab-radio-2" class="tab-handler tab-handler-2">单位换算</label>
+	<div class="tab-content">
+		<input type="radio" onClick="setUnit(this.id)" name="unit" id="Len">长度&nbsp;&nbsp;
+		<input type="radio" onClick="setUnit(this.id)" name="unit" id="Mas">质量&nbsp;&nbsp;
+		<input type="radio" onClick="setUnit(this.id)" name="unit" id="Tim">时间&nbsp;&nbsp;
+		<input type="radio" onClick="setUnit(this.id)" name="unit" id="Eng">能量&nbsp;&nbsp;
+		<input type="radio" onClick="setUnit(this.id)" name="unit" id="Frc">力  &nbsp;&nbsp;<br>
+		<input type="radio" onClick="setUnit(this.id)" name="unit" id="Prs">压强&nbsp;&nbsp;
+		<input type="radio" onClick="setUnit(this.id)" name="unit" id="Con">浓度&nbsp;&nbsp;
+		<input type="radio" onClick="setUnit(this.id)" name="unit" id="Rho">密度&nbsp;&nbsp;
+		<input type="radio" onClick="setUnit(this.id)" name="unit" id="VDW">VDW参数<br>
+		所用换算系数来源于CODATA-2014, 具体数值见【理化常数】
+
+		<table id="TabLen">
+		<tr><td>
+			<input type="box" name="Length" onInput="setVal(this.name,this.id)" id="L_m"> 米(m)<br>
+			<input type="box" name="Length" onInput="setVal(this.name,this.id)" id="L_km"> 千米(km)<br>
+			<input type="box" name="Length" onInput="setVal(this.name,this.id)" id="L_cm"> 厘米(cm)<br>
+			<input type="box" name="Length" onInput="setVal(this.name,this.id)" id="L_mm"> 毫米(mm)<br>
+		</td></tr>
+		<tr><td>
+			<input type="box" name="Length" onInput="setVal(this.name,this.id)" id="L_um"> 微米(&mu;m)<br>
+			<input type="box" name="Length" onInput="setVal(this.name,this.id)" id="L_nm"> 纳米(nm)<br>
+			<input type="box" name="Length" onInput="setVal(this.name,this.id)" id="L_pm"> 皮米(pm)<br>
+			<input type="box" name="Length" onInput="setVal(this.name,this.id)" id="L_fm"> 飞米(fm)<br>
+		</td></tr>
+		<tr><td>
+			<input type="box" name="Length" onInput="setVal(this.name,this.id)" id="L_bhr"> 玻尔(Bohr)<br>
+			<input type="box" name="Length" onInput="setVal(this.name,this.id)" id="L_ang"> 埃(&#197;)<br>
+		</td></tr>
+		<tr><td>
+			<input type="box" name="Length" onInput="setVal(this.name,this.id)" id="L_pnt"> 点(point)<br>
+			<input type="box" name="Length" onInput="setVal(this.name,this.id)" id="L_inch"> 英寸(inch)<br>
+			<input type="box" name="Length" onInput="setVal(this.name,this.id)" id="L_foot"> 英尺(foot)<br>
+			<input type="box" name="Length" onInput="setVal(this.name,this.id)" id="L_yard"> 码(yard)<br>
+			<input type="box" name="Length" onInput="setVal(this.name,this.id)" id="L_mile"> 英里(mile)<br>
+		</td></tr>
+		</table>
+
+		<table id="TabMas">
+		<tr><td>
+			<input type="box" name="Mass" onInput="setVal(this.name,this.id)" id="M_kg"> 千克(kg)<br>
+			<input type="box" name="Mass" onInput="setVal(this.name,this.id)" id="M_g"> 克(g)<br>
+			<input type="box" name="Mass" onInput="setVal(this.name,this.id)" id="M_mg"> 毫克(mg)<br>
+			<input type="box" name="Mass" onInput="setVal(this.name,this.id)" id="M_ug"> 微克(&mu;g)<br>
+		</td></tr>
+		<tr><td>
+			<input type="box" name="Mass" onInput="setVal(this.name,this.id)" id="M_amu"> 原子质量(amu/Dalton)<br>
+			<input type="box" name="Mass" onInput="setVal(this.name,this.id)" id="M_emas"> 电子质量(emas)<br>
+			<input type="box" name="Mass" onInput="setVal(this.name,this.id)" id="M_pmas"> 质子质量(epro)<br>
+		</td></tr>
+		<tr><td>
+			<input type="box" name="Mass" onInput="setVal(this.name,this.id)" id="M_eV"> 电子伏(eV)<br>
+			<input type="box" name="Mass" onInput="setVal(this.name,this.id)" id="M_MeV"> 兆电子伏(MeV)<br>
+			<input type="box" name="Mass" onInput="setVal(this.name,this.id)" id="M_GeV"> 吉电子伏(GeV)<br>
+			<input type="box" name="Mass" onInput="setVal(this.name,this.id)" id="M_TeV"> 太电子伏(TeV)<br>
+		</td></tr>
+		<tr><td>
+			<input type="box" name="Mass" onInput="setVal(this.name,this.id)" id="M_ton"> 吨(ton)<br>
+			<input type="box" name="Mass" onInput="setVal(this.name,this.id)" id="M_pd"> 磅(pound)<br>
+			<input type="box" name="Mass" onInput="setVal(this.name,this.id)" id="M_car"> 克拉(carat宝石)<br>
+			<input type="box" name="Mass" onInput="setVal(this.name,this.id)" id="M_onc"> 盎司(ounce)<br>
+		</td></tr>
+		</table>
+
+		<table id="TabTim">
+		<tr><td>
+			<input type="box" name="Time" onInput="setVal(this.name,this.id)" id="T_s"> 秒(s)<br>
+			<input type="box" name="Time" onInput="setVal(this.name,this.id)" id="T_min"> 分(min)<br>
+			<input type="box" name="Time" onInput="setVal(this.name,this.id)" id="T_h"> 时(h)<br>
+			<input type="box" name="Time" onInput="setVal(this.name,this.id)" id="T_d"> 日(d)<br>
+		</td></tr>
+
+		<tr><td>
+			<input type="box" name="Time" onInput="setVal(this.name,this.id)" id="T_ms"> 毫秒(ms)<br>
+			<input type="box" name="Time" onInput="setVal(this.name,this.id)" id="T_us"> 微秒(&mu;s)<br>
+			<input type="box" name="Time" onInput="setVal(this.name,this.id)" id="T_ns"> 纳秒(ns)<br>
+			<input type="box" name="Time" onInput="setVal(this.name,this.id)" id="T_ps"> 皮秒(ps)<br>
+			<input type="box" name="Time" onInput="setVal(this.name,this.id)" id="T_fs"> 飞秒(fs)<br>
+			<input type="box" name="Time" onInput="setVal(this.name,this.id)" id="T_as"> 阿秒(as)<br>
+			<input type="box" name="Time" onInput="setVal(this.name,this.id)" id="T_au"> 原子时间单位(au)<br>
+		</td></tr>
+		<tr><td>
+			<input type="box" name="Time" onInput="setVal(this.name,this.id)" id="T_m"> 月(m, 30 d)<br>
+			<input type="box" name="Time" onInput="setVal(this.name,this.id)" id="T_a"> 年(a, 365 d)<br>
+			<input type="box" name="Time" onInput="setVal(this.name,this.id)" id="T_am"> 平均月<br>
+			<input type="box" name="Time" onInput="setVal(this.name,this.id)" id="T_aa"> 平均年<br>
+		</td></tr>
+		</table>
+
+		<table id="TabEng" style="display:block">
+		<tr><td>
+			<input type="box" name="Energy" onInput="setVal(this.name, this.id)" id="J"> 焦耳(J)<br>
+			<input type="box" name="Energy" onInput="setVal(this.name, this.id)" id="cal"> 卡(cal)<br>
+			<input type="box" name="Energy" onInput="setVal(this.name, this.id)" id="erg"> 尔格(erg)<br>
+		</td></tr>
+		<tr><td>
+			<input type="box" name="Energy" onInput="setVal(this.name, this.id)" id="kJ_mol"> 千焦/摩尔(kJ/mol)<br>
+			<input type="box" name="Energy" onInput="setVal(this.name, this.id)" id="kcal_mol"> 千卡/摩尔(kcal/mol)<br>
+		</td></tr>
+		<tr><td>
+			<input type="box" name="Energy" onInput="setVal(this.name, this.id)" id="Hatr"> 哈垂(Hartree)<br>
+			<input type="box" name="Energy" onInput="setVal(this.name, this.id)" id="Emd"> MD常用单位(amu-&#197;<sup>2</sup>/fs<sup>2</sup>)<br>
+		</td></tr>
+		<tr><td>
+			<input type="box" name="Energy" onInput="setVal(this.name, this.id)" id="K"> 热力学温度(K)<br>
+		</td></tr>
+		<tr><td>
+			<input type="box" name="Energy" onInput="setVal(this.name, this.id)" id="kg"> 质量(kg)<br>
+			<input type="box" name="Energy" onInput="setVal(this.name, this.id)" id="amu"> 原子质量(amu)<br>
+		</td></tr>
+		<tr><td>
+			<input type="box" name="Energy" onInput="setVal(this.name, this.id)" id="invm"> 波数(m<sup>-1</sup>)<br>
+			<input type="box" name="Energy" onInput="setVal(this.name, this.id)" id="invcm"> 厘米波数(cm<sup>-1</sup>)<br>
+		</td></tr>
+		<tr><td>
+			<input type="box" name="Energy" onInput="setVal(this.name, this.id)" id="Eum"> 微米(&mu;m)<br>
+			<input type="box" name="Energy" onInput="setVal(this.name, this.id)" id="Enm"> 纳米(nm)<br>
+			<input type="box" name="Energy" onInput="setVal(this.name, this.id)" id="Eang"> 埃(&#197;)<br>
+		</td></tr>
+		<tr><td>
+			<input type="box" name="Energy" onInput="setVal(this.name, this.id)" id="eV"> 电子伏(eV)<br>
+			<input type="box" name="Energy" onInput="setVal(this.name, this.id)" id="MeV"> 兆电子伏(MeV)<br>
+			<input type="box" name="Energy" onInput="setVal(this.name, this.id)" id="GeV"> 吉电子伏(GeV)<br>
+			<input type="box" name="Energy" onInput="setVal(this.name, this.id)" id="TeV"> 太电子伏(TeV)<br>
+			<input type="box" name="Energy" onInput="setVal(this.name, this.id)" id="PeV"> 拍电子伏(PeV)<br>
+		</td></tr>
+		<tr><td>
+			<input type="box" name="Energy" onInput="setVal(this.name, this.id)" id="Hz"> 赫兹(Hz)<br>
+			<input type="box" name="Energy" onInput="setVal(this.name, this.id)" id="MHz"> 兆赫兹(MHz)<br>
+			<input type="box" name="Energy" onInput="setVal(this.name, this.id)" id="GHz"> 吉赫兹(GHz)<br>
+			<input type="box" name="Energy" onInput="setVal(this.name, this.id)" id="THz"> 太赫兹(THz)<br>
+			<input type="box" name="Energy" onInput="setVal(this.name, this.id)" id="PHz"> 拍赫兹(PHz)<br>
+		</td></tr>
+		</table>
+
+		<table id="TabFrc">
+		<tr><td>
+			<input type="box" name="Force" onInput="setVal(this.name,this.id)" id="F_N"> 牛顿(N)<br>
+			<input type="box" name="Force" onInput="setVal(this.name,this.id)" id="F_dyn"> 达因(dyn)<br>
+			<input type="box" name="Force" onInput="setVal(this.name,this.id)" id="F_mN"> 毫牛(mN)<br>
+			<input type="box" name="Force" onInput="setVal(this.name,this.id)" id="F_uN"> 微牛(&mu;N)<br>
+			<input type="box" name="Force" onInput="setVal(this.name,this.id)" id="F_nN"> 纳牛(nN)<br>
+			<input type="box" name="Force" onInput="setVal(this.name,this.id)" id="F_pN"> 皮牛(pN)<br>
+		</td></tr>
+		<tr><td>
+			<input type="box" name="Force" onInput="setVal(this.name,this.id)" id="F_au"> 原子单位(Hartree/Bohr)<br>
+			<input type="box" name="Force" onInput="setVal(this.name,this.id)" id="F_auA"> 原子埃单位(Hartree/&#197;)<br>
+		</td></tr>
+		<tr><td>
+			<input type="box" name="Force" onInput="setVal(this.name,this.id)" id="F_mpc"> MOPAC单位(kcal/mol-&#197;)<br>
+			<input type="box" name="Force" onInput="setVal(this.name,this.id)" id="F_gmx"> GROMACS单位(kJ/mol-nm)<br>
+			<input type="box" name="Force" onInput="setVal(this.name,this.id)" id="F_md"> MD常用单位(amu-&#197;/fs<sup>2</sup>)<br>
+		</td></tr>
+		</table>
+
+		<table id="TabPrs">
+		<tr><td>
+			<input type="box" name="Press" onInput="setVal(this.name,this.id)" id="P_Pa"> 帕斯卡(Pa)<br>
+			<input type="box" name="Press" onInput="setVal(this.name,this.id)" id="P_kPa"> 千帕(kPa)<br>
+			<input type="box" name="Press" onInput="setVal(this.name,this.id)" id="P_MPa"> 兆帕(Mpa)<br>
+			<input type="box" name="Press" onInput="setVal(this.name,this.id)" id="P_GPa"> 吉帕(Gpa)<br>
+			<input type="box" name="Press" onInput="setVal(this.name,this.id)" id="P_dyncm"> 达因/厘米<sup>2</sup>(dyn/cm<sup>2</sup>)<br>
+		</td></tr>
+		<tr><td>
+			<input type="box" name="Press" onInput="setVal(this.name,this.id)" id="P_bar"> 巴(bar, 标准压力)<br>
+			<input type="box" name="Press" onInput="setVal(this.name,this.id)" id="P_atm"> 标准大气压(atm)<br>
+		</td></tr>
+		<tr><td>
+			<input type="box" name="Press" onInput="setVal(this.name,this.id)" id="P_mmH2O"> 毫米水柱(mmH2O)<br>
+			<input type="box" name="Press" onInput="setVal(this.name,this.id)" id="P_mmHg"> 毫米汞柱(mmHg)<br>
+			<input type="box" name="Press" onInput="setVal(this.name,this.id)" id="P_Torr"> 托(Torr)<br>
+		</td></tr>
+		</table>
+
+		<table id="TabCon">
+		<tr><td>
+			<input type="box" name="Conc" onInput="setVal(this.name,this.id)" id="C_M"> M(mol/L)<br>
+			<input type="box" name="Conc" onInput="setVal(this.name,this.id)" id="C_mM"> mM(mmol/L)<br>
+			<input type="box" name="Conc" onInput="setVal(this.name,this.id)" id="C_uM"> &mu;M(&mu;mol/L)<br>
+		</td></tr>
+		<tr><td>
+			<input type="box" name="Conc" onInput="setVal(this.name,this.id)" id="C_cm3"> molec/cm<sup>3</sup><br>
+			<input type="box" name="Conc" onInput="setVal(this.name,this.id)" id="C_A3"> molec/&#197;<sup>3</sup><br>
+		</td></tr>
+		<tr><td>
+			<input type="checkbox" name="TP" onClick="setTP(this.name,this.id)" id="chk_TP" > 使用温度/压强计算(理想气体)<br>
+		</td></tr>
+		<tr><td>
+			<input type="box" name="Conc" onInput="setTP(this.name,this.id)" id="C_K" value="298.15"> 温度(K)
+			&nbsp; <input type="radio" name="TP" id="rdo_K" checked> 固定<br>
+			<input type="box" name="Conc" onInput="setTP(this.name,this.id)" id="C_Pa" value="101325"> 压强(Pa)
+			<input type="radio" name="TP" id="rdo_Pa"> 固定<br>
+		</td></tr>
+		</table>
+
+		<table id="TabRho">
+		<tr><td>
+			<input type="box" name="Rho" onInput="setVal(this.name,this.id)" id="R_gmL"> g/mL(g/cm<sup>3</sup>, kg/L)<br>
+			<input type="box" name="Rho" onInput="setVal(this.name,this.id)" id="R_gL"> g/L(kg/m<sup>3</sup>)<br>
+			<input type="box" name="Rho" onInput="setVal(this.name,this.id)" id="R_amuA3"> amu/&#197;<sup>3</sup><br>
+		</td></tr>
+		<tr><td>
+			<input type="checkbox" name="MC" onClick="setMC(this.name,this.id)" id="chk_MC"> 使用分子量/摩尔浓度计算(纯物质)<br>
+		</td></tr>
+		<tr><td>
+			<input type="box" name="Rho" onInput="setMC(this.name,this.id)" id="R_amu" value="18"> 分子量(amu, g/mol)
+			<input type="radio" name="MC" id="rdo_amu" checked> 固定<br>
+			<input type="box" name="Rho" onInput="setMC(this.name,this.id)" id="R_M" value="55.5"> 摩尔浓度(M, mol/L)
+			<input type="radio" name="MC" id="rdo_M"> 固定<br>
+		</td></tr>
+		</table>
+
+		<table id="TabVDW">
+		<tr><td>原子 1</td><td>
+			<input type="box" name="VDW" onInput="setVDW(this.name,this.id)" id="V_sgm1" value='1'> &sigma;<sub>1</sub>(sigma, 硬球半径)<br>
+			<input type="box" name="VDW" onInput="setVDW(this.name,this.id)" id="V_eps1" value='1'> &epsilon;<sub>1</sub>(epsilon, 势阱深度)<br>
+			<input type="box" name="VDW" onInput="setVDW(this.name,this.id)" id="V_re1" value='1.122462048'> Re<sub>1</sub>(平衡距离)<br>
+			<input type="box" name="VDW" onInput="setVDW(this.name,this.id)" id="V_C61" value='4'> C<sub>6</sub><sup>(1)</sup><br>
+			<input type="box" name="VDW" onInput="setVDW(this.name,this.id)" id="V_C121" value='4'> C<sub>12</sub><sup>(1)</sup><br>
+		</td></tr>
+		<tr><td>原子 2</td><td>
+			<input type="box" name="VDW" onInput="setVDW(this.name,this.id)" id="V_sgm2" value='1'> &sigma;<sub>2</sub>(sigma, 硬球半径)<br>
+			<input type="box" name="VDW" onInput="setVDW(this.name,this.id)" id="V_eps2" value='0.25'> &epsilon;<sub>2</sub>(epsilon, 势阱深度)<br>
+			<input type="box" name="VDW" onInput="setVDW(this.name,this.id)" id="V_re2" value='1.122462048'> Re<sub>2</sub>(平衡距离)<br>
+			<input type="box" name="VDW" onInput="setVDW(this.name,this.id)" id="V_C62" value='1'> C<sub>6</sub><sup>(2)</sup><br>
+			<input type="box" name="VDW" onInput="setVDW(this.name,this.id)" id="V_C122" value='1'> C<sub>12</sub><sup>(1)</sup><br>
+		</td></tr>
+		<tr><td>几何平均值</td><td>
+			<input type="box" name="VDW" onInput="setVDW(this.name,this.id)" id="V_sgmg" value='1'> &sigma;<sub>12</sub>(sigma, 硬球半径)<br>
+			<input type="box" name="VDW" onInput="setVDW(this.name,this.id)" id="V_epsg" value='0.5'> &epsilon;<sub>12</sub>(epsilon, 势阱深度)<br>
+			<input type="box" name="VDW" onInput="setVDW(this.name,this.id)" id="V_reg" value='1.122462048'> Re<sub>12</sub>(平衡距离)<br>
+			<input type="box" name="VDW" onInput="setVDW(this.name,this.id)" id="V_C6g" value='2'> C<sub>6</sub><sup>(12)</sup><br>
+			<input type="box" name="VDW" onInput="setVDW(this.name,this.id)" id="V_C12g" value='2'> C<sub>12</sub><sup>(12)</sup><br>
+		</td></tr>
+		<tr><td>算术平均值</td><td>
+			<input type="box" name="VDW" onInput="setVDW(this.name,this.id)" id="V_sgma" value='1'> &sigma;<sub>12</sub>(sigma, 硬球半径)<br>
+			<input type="box" name="VDW" onInput="setVDW(this.name,this.id)" id="V_epsa" value='0.5'> &epsilon;<sub>12</sub>(epsilon, 势阱深度)<br>
+			<input type="box" name="VDW" onInput="setVDW(this.name,this.id)" id="V_rea" value='1.122462048'> Re<sub>12</sub>(平衡距离)<br>
+			<input type="box" name="VDW" onInput="setVDW(this.name,this.id)" id="V_C6a" value='2'> C<sub>6</sub><sup>(12)</sup><br>
+			<input type="box" name="VDW" onInput="setVDW(this.name,this.id)" id="V_C12a" value='2'> C<sub>12</sub><sup>(12)</sup><br>
+		</td></tr>
+		</table>
+	</div>
+
+	<input type="radio" name="tab-radio" class="tab-radio" id="tab-radio-3">
+	<label for="tab-radio-3" class="tab-handler">统计</label>
+
+	<div class="tab-content tab-content-3">
+		<table style="display: block;">
+		<tr><th>A向量</th><th>B向量</th></tr>
+		<tr><td><textarea id="datA" style="width:200px; height:300px;"></textarea></td>
+			<td><textarea id="datB" style="width:200px; height:300px;"></textarea></td></tr>
+		</table>
+
+		<br><input type="button" value="统计" onClick="getRMSE()" style="width:100px; height:30px" />
+		数据个数: <span id='datNum'></span> 数据维数: <span id='datDim'></span><br><br>
+
+		<table style="display: block;">
+			<tr><th>平均值</th><th>A向量</th><th>B向量</th></tr>
+			<tr><td>各分量</td> <td id='avgA'></td><td id='avgB'></td></tr>
+			<tr><td>所有分量</td><td id='avgAtot'></td><td id='avgBtot'></td></tr>
+			<tr><td>长度</td><td id='avgAamp'></td><td id='avgBamp'></td></tr>
+		</table>
+		<br>
+		<table style="display: block;">
+			<tr><th>AB RMSE</th><th>RMSE(n)</th><th>RMSE(n-1)</th></tr>
+			<tr><td>各分量</td> <td id='RMSE'></td><td id='RMSE1'></td></tr>
+			<tr><td>所有分量</td><td id='RMSEtot'></td><td id='RMSE1tot'></td></tr>
+			<tr><td>长度</td><td id='RMSEamp'></td><td id='RMSE1amp'></td></tr>
+		</table>
+		<img src="RMSE.png">
+	</div>
+
+	<input type="radio" name="tab-radio" class="tab-radio" id="tab-radio-4">
+	<label for="tab-radio-4" class="tab-handler tab-handler-4">理化常数</label>
+
+	<div class="tab-content tab-content-4">
+
+		<table  style="display: block;"><caption>CODATA-2014  Fundamental Physical Constants http://physics.nist.gov/constants</caption>
+		<tr>
+		  <th style="text-align:center;">Quantity</th>
+		  <th style="text-align:left;">Value</th>
+		  <th style="text-align:left;">Uncertainty</th>
+		  <th style="text-align:center;">Unit</th>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">{220} lattice spacing of silicon</td>
+		  <td style="text-align:left;">192.015 5714 e-12</td>
+		  <td style="text-align:left;">0.000 0032 e-12</td>
+		  <td style="text-align:center;">m</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">alpha particle-electron mass ratio</td>
+		  <td style="text-align:left;">7294.299 541 36</td>
+		  <td style="text-align:left;">0.000 000 24</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">alpha particle mass</td>
+		  <td style="text-align:left;">6.644 657 230 e-27</td>
+		  <td style="text-align:left;">0.000 000 082 e-27</td>
+		  <td style="text-align:center;">kg</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">alpha particle mass energy equivalent</td>
+		  <td style="text-align:left;">5.971 920 097 e-10</td>
+		  <td style="text-align:left;">0.000 000 073 e-10</td>
+		  <td style="text-align:center;">J</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">alpha particle mass energy equivalent in MeV</td>
+		  <td style="text-align:left;">3727.379 378</td>
+		  <td style="text-align:left;">0.000 023</td>
+		  <td style="text-align:center;">MeV</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">alpha particle mass in u</td>
+		  <td style="text-align:left;">4.001 506 179 127</td>
+		  <td style="text-align:left;">0.000 000 000 063</td>
+		  <td style="text-align:center;">u</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">alpha particle molar mass</td>
+		  <td style="text-align:left;">4.001 506 179 127 e-3</td>
+		  <td style="text-align:left;">0.000 000 000 063 e-3</td>
+		  <td style="text-align:center;">kg mol^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">alpha particle-proton mass ratio</td>
+		  <td style="text-align:left;">3.972 599 689 07</td>
+		  <td style="text-align:left;">0.000 000 000 36</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">Angstrom star</td>
+		  <td style="text-align:left;">1.000 014 95 e-10</td>
+		  <td style="text-align:left;">0.000 000 90 e-10</td>
+		  <td style="text-align:center;">m</td>
+		</tr>
+		<tr>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">atomic mass constant 原子质量单位 amu</td>
+		  <td style="text-align:left;">1.660 539 040 e-27</td>
+		  <td style="text-align:left;">0.000 000 020 e-27</td>
+		  <td style="text-align:center;">kg</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">atomic mass constant energy equivalent</td>
+		  <td style="text-align:left;">1.492 418 062 e-10</td>
+		  <td style="text-align:left;">0.000 000 018 e-10</td>
+		  <td style="text-align:center;">J</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">atomic mass constant energy equivalent in MeV</td>
+		  <td style="text-align:left;">931.494 0954</td>
+		  <td style="text-align:left;">0.000 0057</td>
+		  <td style="text-align:center;">MeV</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">atomic mass unit-electron volt relationship</td>
+		  <td style="text-align:left;">931.494 0954 e6</td>
+		  <td style="text-align:left;">0.000 0057 e6</td>
+		  <td style="text-align:center;">eV</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">atomic mass unit-hartree relationship</td>
+		  <td style="text-align:left;">3.423 177 6902 e7</td>
+		  <td style="text-align:left;">0.000 000 0016 e7</td>
+		  <td style="text-align:center;">E_h</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">atomic mass unit-hertz relationship</td>
+		  <td style="text-align:left;">2.252 342 7206 e23</td>
+		  <td style="text-align:left;">0.000 000 0010 e23</td>
+		  <td style="text-align:center;">Hz</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">atomic mass unit-inverse meter relationship</td>
+		  <td style="text-align:left;">7.513 006 6166 e14</td>
+		  <td style="text-align:left;">0.000 000 0034 e14</td>
+		  <td style="text-align:center;">m^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">atomic mass unit-joule relationship</td>
+		  <td style="text-align:left;">1.492 418 062 e-10</td>
+		  <td style="text-align:left;">0.000 000 018 e-10</td>
+		  <td style="text-align:center;">J</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">atomic mass unit-kelvin relationship</td>
+		  <td style="text-align:left;">1.080 954 38 e13</td>
+		  <td style="text-align:left;">0.000 000 62 e13</td>
+		  <td style="text-align:center;">K</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">atomic mass unit-kilogram relationship</td>
+		  <td style="text-align:left;">1.660 539 040 e-27</td>
+		  <td style="text-align:left;">0.000 000 020 e-27</td>
+		  <td style="text-align:center;">kg</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">atomic unit of 1st hyperpolarizability</td>
+		  <td style="text-align:left;">3.206 361 329 e-53</td>
+		  <td style="text-align:left;">0.000 000 020 e-53</td>
+		  <td style="text-align:center;">C^3 m^3 J^-2</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">atomic unit of 2nd hyperpolarizability</td>
+		  <td style="text-align:left;">6.235 380 085 e-65</td>
+		  <td style="text-align:left;">0.000 000 077 e-65</td>
+		  <td style="text-align:center;">C^4 m^4 J^-3</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">atomic unit of action 原子作用单位 hbar=hplk/2Pi</td>
+		  <td style="text-align:left;">1.054 571 800 e-34</td>
+		  <td style="text-align:left;">0.000 000 013 e-34</td>
+		  <td style="text-align:center;">J s</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">atomic unit of charge 原子电荷单位 基元电荷 echg</td>
+		  <td style="text-align:left;">1.602 176 6208 e-19</td>
+		  <td style="text-align:left;">0.000 000 0098 e-19</td>
+		  <td style="text-align:center;">C</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">atomic unit of charge density</td>
+		  <td style="text-align:left;">1.081 202 3770 e12</td>
+		  <td style="text-align:left;">0.000 000 0067 e12</td>
+		  <td style="text-align:center;">C m^-3</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">atomic unit of current</td>
+		  <td style="text-align:left;">6.623 618 183 e-3</td>
+		  <td style="text-align:left;">0.000 000 041 e-3</td>
+		  <td style="text-align:center;">A</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">atomic unit of electric dipole mom.</td>
+		  <td style="text-align:left;">8.478 353 552 e-30</td>
+		  <td style="text-align:left;">0.000 000 052 e-30</td>
+		  <td style="text-align:center;">C m</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">atomic unit of electric field</td>
+		  <td style="text-align:left;">5.142 206 707 e11</td>
+		  <td style="text-align:left;">0.000 000 032 e11</td>
+		  <td style="text-align:center;">V m^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">atomic unit of electric field gradient</td>
+		  <td style="text-align:left;">9.717 362 356 e21</td>
+		  <td style="text-align:left;">0.000 000 060 e21</td>
+		  <td style="text-align:center;">V m^-2</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">atomic unit of electric polarizability</td>
+		  <td style="text-align:left;">1.648 777 2731 e-41</td>
+		  <td style="text-align:left;">0.000 000 0011 e-41</td>
+		  <td style="text-align:center;">C^2 m^2 J^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">atomic unit of electric potential</td>
+		  <td style="text-align:left;">27.211 386 02</td>
+		  <td style="text-align:left;">0.000 000 17</td>
+		  <td style="text-align:center;">V</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">atomic unit of electric quadrupole mom.</td>
+		  <td style="text-align:left;">4.486 551 484 e-40</td>
+		  <td style="text-align:left;">0.000 000 028 e-40</td>
+		  <td style="text-align:center;">C m^2</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">atomic unit of energy 原子能量单位 Hatr</td>
+		  <td style="text-align:left;">4.359 744 650 e-18</td>
+		  <td style="text-align:left;">0.000 000 054 e-18</td>
+		  <td style="text-align:center;">J</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">atomic unit of force</td>
+		  <td style="text-align:left;">8.238 723 36 e-8</td>
+		  <td style="text-align:left;">0.000 000 10 e-8</td>
+		  <td style="text-align:center;">N</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">atomic unit of length 原子长度单位 Bhr</td>
+		  <td style="text-align:left;">0.529 177 210 67 e-10</td>
+		  <td style="text-align:left;">0.000 000 000 12 e-10</td>
+		  <td style="text-align:center;">m</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">atomic unit of mag. dipole mom.</td>
+		  <td style="text-align:left;">1.854 801 999 e-23</td>
+		  <td style="text-align:left;">0.000 000 011 e-23</td>
+		  <td style="text-align:center;">J T^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">atomic unit of mag. flux density</td>
+		  <td style="text-align:left;">2.350 517 550 e5</td>
+		  <td style="text-align:left;">0.000 000 014 e5</td>
+		  <td style="text-align:center;">T</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">atomic unit of magnetizability</td>
+		  <td style="text-align:left;">7.891 036 5886 e-29</td>
+		  <td style="text-align:left;">0.000 000 0090 e-29</td>
+		  <td style="text-align:center;">J T^-2</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">atomic unit of mass</td>
+		  <td style="text-align:left;">9.109 383 56 e-31</td>
+		  <td style="text-align:left;">0.000 000 11 e-31</td>
+		  <td style="text-align:center;">kg</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">atomic unit of mom.um</td>
+		  <td style="text-align:left;">1.992 851 882 e-24</td>
+		  <td style="text-align:left;">0.000 000 024 e-24</td>
+		  <td style="text-align:center;">kg m s^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">atomic unit of permittivity</td>
+		  <td style="text-align:left;">1.112 650 056... e-10</td>
+		  <td style="text-align:left;">(exact)</td>
+		  <td style="text-align:center;">F m^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">atomic unit of time</td>
+		  <td style="text-align:left;">2.418 884 326 509 e-17</td>
+		  <td style="text-align:left;">0.000 000 000 014 e-17</td>
+		  <td style="text-align:center;">s</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">atomic unit of velocity</td>
+		  <td style="text-align:left;">2.187 691 262 77 e6</td>
+		  <td style="text-align:left;">0.000 000 000 50 e6</td>
+		  <td style="text-align:center;">m s^-1</td>
+		</tr>
+		<tr>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">Avogadro constant 阿付加德罗常数 Navg</td>
+		  <td style="text-align:left;">6.022 140 857 e23</td>
+		  <td style="text-align:left;">0.000 000 074 e23</td>
+		  <td style="text-align:center;">mol^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">Bohr magneton</td>
+		  <td style="text-align:left;">927.400 9994 e-26</td>
+		  <td style="text-align:left;">0.000 0057 e-26</td>
+		  <td style="text-align:center;">J T^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">Bohr magneton in eV/T</td>
+		  <td style="text-align:left;">5.788 381 8012 e-5</td>
+		  <td style="text-align:left;">0.000 000 0026 e-5</td>
+		  <td style="text-align:center;">eV T^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">Bohr magneton in Hz/T</td>
+		  <td style="text-align:left;">13.996 245 042 e9</td>
+		  <td style="text-align:left;">0.000 000 086 e9</td>
+		  <td style="text-align:center;">Hz T^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">Bohr magneton in inverse meters per tesla</td>
+		  <td style="text-align:left;">46.686 448 14</td>
+		  <td style="text-align:left;">0.000 000 29</td>
+		  <td style="text-align:center;">m^-1 T^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">Bohr magneton in K/T</td>
+		  <td style="text-align:left;">0.671 714 05</td>
+		  <td style="text-align:left;">0.000 000 39</td>
+		  <td style="text-align:center;">K T^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">Bohr radius 波尔半径 Bhr</td>
+		  <td style="text-align:left;">0.529 177 210 67 e-10</td>
+		  <td style="text-align:left;">0.000 000 000 12 e-10</td>
+		  <td style="text-align:center;">m</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">Boltzmann constant 玻尔兹曼常数 kbtz</td>
+		  <td style="text-align:left;">1.380 648 52 e-23</td>
+		  <td style="text-align:left;">0.000 000 79 e-23</td>
+		  <td style="text-align:center;">J K^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">Boltzmann constant in eV/K</td>
+		  <td style="text-align:left;">8.617 3303 e-5</td>
+		  <td style="text-align:left;">0.000 0050 e-5</td>
+		  <td style="text-align:center;">eV K^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">Boltzmann constant in Hz/K</td>
+		  <td style="text-align:left;">2.083 6612 e10</td>
+		  <td style="text-align:left;">0.000 0012 e10</td>
+		  <td style="text-align:center;">Hz K^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">Boltzmann constant in inverse meters per kelvin</td>
+		  <td style="text-align:left;">69.503 457</td>
+		  <td style="text-align:left;">0.000 040</td>
+		  <td style="text-align:center;">m^-1 K^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">characteristic impedance of vacuum</td>
+		  <td style="text-align:left;">376.730 313 461...</td>
+		  <td style="text-align:left;">(exact)</td>
+		  <td style="text-align:center;">ohm</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">classical electron radius</td>
+		  <td style="text-align:left;">2.817 940 3227 e-15</td>
+		  <td style="text-align:left;">0.000 000 0019 e-15</td>
+		  <td style="text-align:center;">m</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">Compton wavelength</td>
+		  <td style="text-align:left;">2.426 310 2367 e-12</td>
+		  <td style="text-align:left;">0.000 000 0011 e-12</td>
+		  <td style="text-align:center;">m</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">Compton wavelength over 2 pi</td>
+		  <td style="text-align:left;">386.159 267 64 e-15</td>
+		  <td style="text-align:left;">0.000 000 18 e-15</td>
+		  <td style="text-align:center;">m</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">conductance quantum</td>
+		  <td style="text-align:left;">7.748 091 7310 e-5</td>
+		  <td style="text-align:left;">0.000 000 0018 e-5</td>
+		  <td style="text-align:center;">S</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">conventional value of Josephson constant</td>
+		  <td style="text-align:left;">483 597.9 e9</td>
+		  <td style="text-align:left;">(exact)</td>
+		  <td style="text-align:center;">Hz V^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">conventional value of von Klitzing constant</td>
+		  <td style="text-align:left;">25 812.807</td>
+		  <td style="text-align:left;">(exact)</td>
+		  <td style="text-align:center;">ohm</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">Cu x unit</td>
+		  <td style="text-align:left;">1.002 076 97 e-13</td>
+		  <td style="text-align:left;">0.000 000 28 e-13</td>
+		  <td style="text-align:center;">m</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">deuteron-electron mag. mom. ratio</td>
+		  <td style="text-align:left;">-4.664 345 535 e-4</td>
+		  <td style="text-align:left;">0.000 000 026 e-4</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">deuteron-electron mass ratio</td>
+		  <td style="text-align:left;">3670.482 967 85</td>
+		  <td style="text-align:left;">0.000 000 13</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">deuteron g factor</td>
+		  <td style="text-align:left;">0.857 438 2311</td>
+		  <td style="text-align:left;">0.000 000 0048</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">deuteron mag. mom.</td>
+		  <td style="text-align:left;">0.433 073 5040 e-26</td>
+		  <td style="text-align:left;">0.000 000 0036 e-26</td>
+		  <td style="text-align:center;">J T^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">deuteron mag. mom. to Bohr magneton ratio</td>
+		  <td style="text-align:left;">0.466 975 4554 e-3</td>
+		  <td style="text-align:left;">0.000 000 0026 e-3</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">deuteron mag. mom. to nuclear magneton ratio</td>
+		  <td style="text-align:left;">0.857 438 2311</td>
+		  <td style="text-align:left;">0.000 000 0048</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">deuteron mass</td>
+		  <td style="text-align:left;">3.343 583 719 e-27</td>
+		  <td style="text-align:left;">0.000 000 041 e-27</td>
+		  <td style="text-align:center;">kg</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">deuteron mass energy equivalent</td>
+		  <td style="text-align:left;">3.005 063 183 e-10</td>
+		  <td style="text-align:left;">0.000 000 037 e-10</td>
+		  <td style="text-align:center;">J</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">deuteron mass energy equivalent in MeV</td>
+		  <td style="text-align:left;">1875.612 928</td>
+		  <td style="text-align:left;">0.000 012</td>
+		  <td style="text-align:center;">MeV</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">deuteron mass in u</td>
+		  <td style="text-align:left;">2.013 553 212 745</td>
+		  <td style="text-align:left;">0.000 000 000 040</td>
+		  <td style="text-align:center;">u</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">deuteron molar mass</td>
+		  <td style="text-align:left;">2.013 553 212 745 e-3</td>
+		  <td style="text-align:left;">0.000 000 000 040 e-3</td>
+		  <td style="text-align:center;">kg mol^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">deuteron-neutron mag. mom. ratio</td>
+		  <td style="text-align:left;">-0.448 206 52</td>
+		  <td style="text-align:left;">0.000 000 11</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">deuteron-proton mag. mom. ratio</td>
+		  <td style="text-align:left;">0.307 012 2077</td>
+		  <td style="text-align:left;">0.000 000 0015</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">deuteron-proton mass ratio</td>
+		  <td style="text-align:left;">1.999 007 500 87</td>
+		  <td style="text-align:left;">0.000 000 000 19</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">deuteron rms charge radius</td>
+		  <td style="text-align:left;">2.1413 e-15</td>
+		  <td style="text-align:left;">0.0025 e-15</td>
+		  <td style="text-align:center;">m</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">electric constant 介电常数 eps0</td>
+		  <td style="text-align:left;">8.854 187 817... e-12</td>
+		  <td style="text-align:left;">(exact)</td>
+		  <td style="text-align:center;">F m^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">electron charge to mass quotient</td>
+		  <td style="text-align:left;">-1.758 820 024 e11</td>
+		  <td style="text-align:left;">0.000 000 011 e11</td>
+		  <td style="text-align:center;">C kg^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">electron-deuteron mag. mom. ratio</td>
+		  <td style="text-align:left;">-2143.923 499</td>
+		  <td style="text-align:left;">0.000 012</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">electron-deuteron mass ratio</td>
+		  <td style="text-align:left;">2.724 437 107 484 e-4</td>
+		  <td style="text-align:left;">0.000 000 000 096 e-4</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">electron g factor</td>
+		  <td style="text-align:left;">-2.002 319 304 361 82</td>
+		  <td style="text-align:left;">0.000 000 000 000 52</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">electron gyromag. ratio</td>
+		  <td style="text-align:left;">1.760 859 644 e11</td>
+		  <td style="text-align:left;">0.000 000 011 e11</td>
+		  <td style="text-align:center;">s^-1 T^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">electron gyromag. ratio over 2 pi</td>
+		  <td style="text-align:left;">28 024.951 64</td>
+		  <td style="text-align:left;">0.000 17</td>
+		  <td style="text-align:center;">MHz T^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">electron-helion mass ratio</td>
+		  <td style="text-align:left;">1.819 543 074 854 e-4</td>
+		  <td style="text-align:left;">0.000 000 000 088 e-4</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">electron mag. mom.</td>
+		  <td style="text-align:left;">-928.476 4620 e-26</td>
+		  <td style="text-align:left;">0.000 0057 e-26</td>
+		  <td style="text-align:center;">J T^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">electron mag. mom. anomaly</td>
+		  <td style="text-align:left;">1.159 652 180 91 e-3</td>
+		  <td style="text-align:left;">0.000 000 000 26 e-3</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">electron mag. mom. to Bohr magneton ratio</td>
+		  <td style="text-align:left;">-1.001 159 652 180 91</td>
+		  <td style="text-align:left;">0.000 000 000 000 26</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">electron mag. mom. to nuclear magneton ratio</td>
+		  <td style="text-align:left;">-1838.281 972 34</td>
+		  <td style="text-align:left;">0.000 000 17</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">electron mass 电子质量 emas</td>
+		  <td style="text-align:left;">9.109 383 56 e-31</td>
+		  <td style="text-align:left;">0.000 000 11 e-31</td>
+		  <td style="text-align:center;">kg</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">electron mass energy equivalent</td>
+		  <td style="text-align:left;">8.187 105 65 e-14</td>
+		  <td style="text-align:left;">0.000 000 10 e-14</td>
+		  <td style="text-align:center;">J</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">electron mass energy equivalent in MeV</td>
+		  <td style="text-align:left;">0.510 998 9461</td>
+		  <td style="text-align:left;">0.000 000 0031</td>
+		  <td style="text-align:center;">MeV</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">electron mass in u</td>
+		  <td style="text-align:left;">5.485 799 090 70 e-4</td>
+		  <td style="text-align:left;">0.000 000 000 16 e-4</td>
+		  <td style="text-align:center;">u</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">electron molar mass</td>
+		  <td style="text-align:left;">5.485 799 090 70 e-7</td>
+		  <td style="text-align:left;">0.000 000 000 16 e-7</td>
+		  <td style="text-align:center;">kg mol^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">electron-muon mag. mom. ratio</td>
+		  <td style="text-align:left;">206.766 9880</td>
+		  <td style="text-align:left;">0.000 0046</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">electron-muon mass ratio</td>
+		  <td style="text-align:left;">4.836 331 70 e-3</td>
+		  <td style="text-align:left;">0.000 000 11 e-3</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">electron-neutron mag. mom. ratio</td>
+		  <td style="text-align:left;">960.920 50</td>
+		  <td style="text-align:left;">0.000 23</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">electron-neutron mass ratio</td>
+		  <td style="text-align:left;">5.438 673 4428 e-4</td>
+		  <td style="text-align:left;">0.000 000 0027 e-4</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">electron-proton mag. mom. ratio</td>
+		  <td style="text-align:left;">-658.210 6866</td>
+		  <td style="text-align:left;">0.000 0020</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">electron-proton mass ratio</td>
+		  <td style="text-align:left;">5.446 170 213 52 e-4</td>
+		  <td style="text-align:left;">0.000 000 000 52 e-4</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">electron-tau mass ratio</td>
+		  <td style="text-align:left;">2.875 92 e-4</td>
+		  <td style="text-align:left;">0.000 26 e-4</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">electron to alpha particle mass ratio</td>
+		  <td style="text-align:left;">1.370 933 554 798 e-4</td>
+		  <td style="text-align:left;">0.000 000 000 045 e-4</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">electron to shielded helion mag. mom. ratio</td>
+		  <td style="text-align:left;">864.058 257</td>
+		  <td style="text-align:left;">0.000 010</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">electron to shielded proton mag. mom. ratio</td>
+		  <td style="text-align:left;">-658.227 5971</td>
+		  <td style="text-align:left;">0.000 0072</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">electron-triton mass ratio</td>
+		  <td style="text-align:left;">1.819 200 062 203 e-4</td>
+		  <td style="text-align:left;">0.000 000 000 084 e-4</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">electron volt 电子伏特 eV</td>
+		  <td style="text-align:left;">1.602 176 6208 e-19</td>
+		  <td style="text-align:left;">0.000 000 0098 e-19</td>
+		  <td style="text-align:center;">J</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">electron volt-atomic mass unit relationship</td>
+		  <td style="text-align:left;">1.073 544 1105 e-9</td>
+		  <td style="text-align:left;">0.000 000 0066 e-9</td>
+		  <td style="text-align:center;">u</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">electron volt-hartree relationship</td>
+		  <td style="text-align:left;">3.674 932 248 e-2</td>
+		  <td style="text-align:left;">0.000 000 023 e-2</td>
+		  <td style="text-align:center;">E_h</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">electron volt-hertz relationship</td>
+		  <td style="text-align:left;">2.417 989 262 e14</td>
+		  <td style="text-align:left;">0.000 000 015 e14</td>
+		  <td style="text-align:center;">Hz</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">electron volt-inverse meter relationship</td>
+		  <td style="text-align:left;">8.065 544 005 e5</td>
+		  <td style="text-align:left;">0.000 000 050 e5</td>
+		  <td style="text-align:center;">m^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">electron volt-joule relationship</td>
+		  <td style="text-align:left;">1.602 176 6208 e-19</td>
+		  <td style="text-align:left;">0.000 000 0098 e-19</td>
+		  <td style="text-align:center;">J</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">electron volt-kelvin relationship</td>
+		  <td style="text-align:left;">1.160 452 21 e4</td>
+		  <td style="text-align:left;">0.000 000 67 e4</td>
+		  <td style="text-align:center;">K</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">electron volt-kilogram relationship</td>
+		  <td style="text-align:left;">1.782 661 907 e-36</td>
+		  <td style="text-align:left;">0.000 000 011 e-36</td>
+		  <td style="text-align:center;">kg</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">elementary charge 基元电荷 echg</td>
+		  <td style="text-align:left;">1.602 176 6208 e-19</td>
+		  <td style="text-align:left;">0.000 000 0098 e-19</td>
+		  <td style="text-align:center;">C</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">elementary charge over h</td>
+		  <td style="text-align:left;">2.417 989 262 e14</td>
+		  <td style="text-align:left;">0.000 000 015 e14</td>
+		  <td style="text-align:center;">A J^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">Faraday constant 法拉第常数 F</td>
+		  <td style="text-align:left;">96 485.332 89</td>
+		  <td style="text-align:left;">0.000 59</td>
+		  <td style="text-align:center;">C mol^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">Faraday constant for conventional electric current</td>
+		  <td style="text-align:left;">96 485.3251</td>
+		  <td style="text-align:left;">0.0012</td>
+		  <td style="text-align:center;">C_90 mol^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">Fermi coupling constant</td>
+		  <td style="text-align:left;">1.166 3787 e-5</td>
+		  <td style="text-align:left;">0.000 0006 e-5</td>
+		  <td style="text-align:center;">GeV^-2</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">fine-structure constant</td>
+		  <td style="text-align:left;">7.297 352 5664 e-3</td>
+		  <td style="text-align:left;">0.000 000 0017 e-3</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">first radiation constant</td>
+		  <td style="text-align:left;">3.741 771 790 e-16</td>
+		  <td style="text-align:left;">0.000 000 046 e-16</td>
+		  <td style="text-align:center;">W m^2</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">first radiation constant for spectral radiance</td>
+		  <td style="text-align:left;">1.191 042 953 e-16</td>
+		  <td style="text-align:left;">0.000 000 015 e-16</td>
+		  <td style="text-align:center;">W m^2 sr^-1</td>
+		</tr>
+		<tr>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">hartree-atomic mass unit relationship</td>
+		  <td style="text-align:left;">2.921 262 3197 e-8</td>
+		  <td style="text-align:left;">0.000 000 0013 e-8</td>
+		  <td style="text-align:center;">u</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">hartree-electron volt relationship</td>
+		  <td style="text-align:left;">27.211 386 02</td>
+		  <td style="text-align:left;">0.000 000 17</td>
+		  <td style="text-align:center;">eV</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">Hartree energy 哈垂 Hatr</td>
+		  <td style="text-align:left;">4.359 744 650 e-18</td>
+		  <td style="text-align:left;">0.000 000 054 e-18</td>
+		  <td style="text-align:center;">J</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">Hartree energy in eV</td>
+		  <td style="text-align:left;">27.211 386 02</td>
+		  <td style="text-align:left;">0.000 000 17</td>
+		  <td style="text-align:center;">eV</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">hartree-hertz relationship</td>
+		  <td style="text-align:left;">6.579 683 920 711 e15</td>
+		  <td style="text-align:left;">0.000 000 000 039 e15</td>
+		  <td style="text-align:center;">Hz</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">hartree-inverse meter relationship</td>
+		  <td style="text-align:left;">2.194 746 313 702 e7</td>
+		  <td style="text-align:left;">0.000 000 000 013 e7</td>
+		  <td style="text-align:center;">m^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">hartree-joule relationship</td>
+		  <td style="text-align:left;">4.359 744 650 e-18</td>
+		  <td style="text-align:left;">0.000 000 054 e-18</td>
+		  <td style="text-align:center;">J</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">hartree-kelvin relationship</td>
+		  <td style="text-align:left;">3.157 7513 e5</td>
+		  <td style="text-align:left;">0.000 0018 e5</td>
+		  <td style="text-align:center;">K</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">hartree-kilogram relationship</td>
+		  <td style="text-align:left;">4.850 870 129 e-35</td>
+		  <td style="text-align:left;">0.000 000 060 e-35</td>
+		  <td style="text-align:center;">kg</td>
+		</tr>
+		<tr>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">helion-electron mass ratio</td>
+		  <td style="text-align:left;">5495.885 279 22</td>
+		  <td style="text-align:left;">0.000 000 27</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">helion g factor</td>
+		  <td style="text-align:left;">-4.255 250 616</td>
+		  <td style="text-align:left;">0.000 000 050</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">helion mag. mom.</td>
+		  <td style="text-align:left;">-1.074 617 522 e-26</td>
+		  <td style="text-align:left;">0.000 000 014 e-26</td>
+		  <td style="text-align:center;">J T^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">helion mag. mom. to Bohr magneton ratio</td>
+		  <td style="text-align:left;">-1.158 740 958 e-3</td>
+		  <td style="text-align:left;">0.000 000 014 e-3</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">helion mag. mom. to nuclear magneton ratio</td>
+		  <td style="text-align:left;">-2.127 625 308</td>
+		  <td style="text-align:left;">0.000 000 025</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">helion mass</td>
+		  <td style="text-align:left;">5.006 412 700 e-27</td>
+		  <td style="text-align:left;">0.000 000 062 e-27</td>
+		  <td style="text-align:center;">kg</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">helion mass energy equivalent</td>
+		  <td style="text-align:left;">4.499 539 341 e-10</td>
+		  <td style="text-align:left;">0.000 000 055 e-10</td>
+		  <td style="text-align:center;">J</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">helion mass energy equivalent in MeV</td>
+		  <td style="text-align:left;">2808.391 586</td>
+		  <td style="text-align:left;">0.000 017</td>
+		  <td style="text-align:center;">MeV</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">helion mass in u</td>
+		  <td style="text-align:left;">3.014 932 246 73</td>
+		  <td style="text-align:left;">0.000 000 000 12</td>
+		  <td style="text-align:center;">u</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">helion molar mass</td>
+		  <td style="text-align:left;">3.014 932 246 73 e-3</td>
+		  <td style="text-align:left;">0.000 000 000 12 e-3</td>
+		  <td style="text-align:center;">kg mol^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">helion-proton mass ratio</td>
+		  <td style="text-align:left;">2.993 152 670 46</td>
+		  <td style="text-align:left;">0.000 000 000 29</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">hertz-atomic mass unit relationship</td>
+		  <td style="text-align:left;">4.439 821 6616 e-24</td>
+		  <td style="text-align:left;">0.000 000 0020 e-24</td>
+		  <td style="text-align:center;">u</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">hertz-electron volt relationship</td>
+		  <td style="text-align:left;">4.135 667 662 e-15</td>
+		  <td style="text-align:left;">0.000 000 025 e-15</td>
+		  <td style="text-align:center;">eV</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">hertz-hartree relationship</td>
+		  <td style="text-align:left;">1.519 829 846 0088 e-16</td>
+		  <td style="text-align:left;">0.000 000 000 0090 e-16</td>
+		  <td style="text-align:center;">E_h</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">hertz-inverse meter relationship</td>
+		  <td style="text-align:left;">3.335 640 951... e-9</td>
+		  <td style="text-align:left;">(exact)</td>
+		  <td style="text-align:center;">m^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">hertz-joule relationship</td>
+		  <td style="text-align:left;">6.626 070 040 e-34</td>
+		  <td style="text-align:left;">0.000 000 081 e-34</td>
+		  <td style="text-align:center;">J</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">hertz-kelvin relationship</td>
+		  <td style="text-align:left;">4.799 2447 e-11</td>
+		  <td style="text-align:left;">0.000 0028 e-11</td>
+		  <td style="text-align:center;">K</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">hertz-kilogram relationship</td>
+		  <td style="text-align:left;">7.372 497 201 e-51</td>
+		  <td style="text-align:left;">0.000 000 091 e-51</td>
+		  <td style="text-align:center;">kg</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">inverse fine-structure constant</td>
+		  <td style="text-align:left;">137.035 999 139</td>
+		  <td style="text-align:left;">0.000 000 031</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">inverse meter-atomic mass unit relationship</td>
+		  <td style="text-align:left;">1.331 025 049 00 e-15</td>
+		  <td style="text-align:left;">0.000 000 000 61 e-15</td>
+		  <td style="text-align:center;">u</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">inverse meter-electron volt relationship</td>
+		  <td style="text-align:left;">1.239 841 9739 e-6</td>
+		  <td style="text-align:left;">0.000 000 0076 e-6</td>
+		  <td style="text-align:center;">eV</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">inverse meter-hartree relationship</td>
+		  <td style="text-align:left;">4.556 335 252 767 e-8</td>
+		  <td style="text-align:left;">0.000 000 000 027 e-8</td>
+		  <td style="text-align:center;">E_h</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">inverse meter-hertz relationship</td>
+		  <td style="text-align:left;">299 792 458</td>
+		  <td style="text-align:left;">(exact)</td>
+		  <td style="text-align:center;">Hz</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">inverse meter-joule relationship</td>
+		  <td style="text-align:left;">1.986 445 824 e-25</td>
+		  <td style="text-align:left;">0.000 000 024 e-25</td>
+		  <td style="text-align:center;">J</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">inverse meter-kelvin relationship</td>
+		  <td style="text-align:left;">1.438 777 36 e-2</td>
+		  <td style="text-align:left;">0.000 000 83 e-2</td>
+		  <td style="text-align:center;">K</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">inverse meter-kilogram relationship</td>
+		  <td style="text-align:left;">2.210 219 057 e-42</td>
+		  <td style="text-align:left;">0.000 000 027 e-42</td>
+		  <td style="text-align:center;">kg</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">inverse of conductance quantum</td>
+		  <td style="text-align:left;">12 906.403 7278</td>
+		  <td style="text-align:left;">0.000 0029</td>
+		  <td style="text-align:center;">ohm</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">Josephson constant</td>
+		  <td style="text-align:left;">483 597.8525 e9</td>
+		  <td style="text-align:left;">0.0030 e9</td>
+		  <td style="text-align:center;">Hz V^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">joule-atomic mass unit relationship</td>
+		  <td style="text-align:left;">6.700 535 363 e9</td>
+		  <td style="text-align:left;">0.000 000 082 e9</td>
+		  <td style="text-align:center;">u</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">joule-electron volt relationship</td>
+		  <td style="text-align:left;">6.241 509 126 e18</td>
+		  <td style="text-align:left;">0.000 000 038 e18</td>
+		  <td style="text-align:center;">eV</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">joule-hartree relationship</td>
+		  <td style="text-align:left;">2.293 712 317 e17</td>
+		  <td style="text-align:left;">0.000 000 028 e17</td>
+		  <td style="text-align:center;">E_h</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">joule-hertz relationship</td>
+		  <td style="text-align:left;">1.509 190 205 e33</td>
+		  <td style="text-align:left;">0.000 000 019 e33</td>
+		  <td style="text-align:center;">Hz</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">joule-inverse meter relationship</td>
+		  <td style="text-align:left;">5.034 116 651 e24</td>
+		  <td style="text-align:left;">0.000 000 062 e24</td>
+		  <td style="text-align:center;">m^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">joule-kelvin relationship</td>
+		  <td style="text-align:left;">7.242 9731 e22</td>
+		  <td style="text-align:left;">0.000 0042 e22</td>
+		  <td style="text-align:center;">K</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">joule-kilogram relationship</td>
+		  <td style="text-align:left;">1.112 650 056... e-17</td>
+		  <td style="text-align:left;">(exact)</td>
+		  <td style="text-align:center;">kg</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">kelvin-atomic mass unit relationship</td>
+		  <td style="text-align:left;">9.251 0842 e-14</td>
+		  <td style="text-align:left;">0.000 0053 e-14</td>
+		  <td style="text-align:center;">u</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">kelvin-electron volt relationship</td>
+		  <td style="text-align:left;">8.617 3303 e-5</td>
+		  <td style="text-align:left;">0.000 0050 e-5</td>
+		  <td style="text-align:center;">eV</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">kelvin-hartree relationship</td>
+		  <td style="text-align:left;">3.166 8105 e-6</td>
+		  <td style="text-align:left;">0.000 0018 e-6</td>
+		  <td style="text-align:center;">E_h</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">kelvin-hertz relationship</td>
+		  <td style="text-align:left;">2.083 6612 e10</td>
+		  <td style="text-align:left;">0.000 0012 e10</td>
+		  <td style="text-align:center;">Hz</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">kelvin-inverse meter relationship</td>
+		  <td style="text-align:left;">69.503 457</td>
+		  <td style="text-align:left;">0.000 040</td>
+		  <td style="text-align:center;">m^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">kelvin-joule relationship</td>
+		  <td style="text-align:left;">1.380 648 52 e-23</td>
+		  <td style="text-align:left;">0.000 000 79 e-23</td>
+		  <td style="text-align:center;">J</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">kelvin-kilogram relationship</td>
+		  <td style="text-align:left;">1.536 178 65 e-40</td>
+		  <td style="text-align:left;">0.000 000 88 e-40</td>
+		  <td style="text-align:center;">kg</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">kilogram-atomic mass unit relationship</td>
+		  <td style="text-align:left;">6.022 140 857 e26</td>
+		  <td style="text-align:left;">0.000 000 074 e26</td>
+		  <td style="text-align:center;">u</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">kilogram-electron volt relationship</td>
+		  <td style="text-align:left;">5.609 588 650 e35</td>
+		  <td style="text-align:left;">0.000 000 034 e35</td>
+		  <td style="text-align:center;">eV</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">kilogram-hartree relationship</td>
+		  <td style="text-align:left;">2.061 485 823 e34</td>
+		  <td style="text-align:left;">0.000 000 025 e34</td>
+		  <td style="text-align:center;">E_h</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">kilogram-hertz relationship</td>
+		  <td style="text-align:left;">1.356 392 512 e50</td>
+		  <td style="text-align:left;">0.000 000 017 e50</td>
+		  <td style="text-align:center;">Hz</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">kilogram-inverse meter relationship</td>
+		  <td style="text-align:left;">4.524 438 411 e41</td>
+		  <td style="text-align:left;">0.000 000 056 e41</td>
+		  <td style="text-align:center;">m^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">kilogram-joule relationship</td>
+		  <td style="text-align:left;">8.987 551 787... e16</td>
+		  <td style="text-align:left;">(exact)</td>
+		  <td style="text-align:center;">J</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">kilogram-kelvin relationship</td>
+		  <td style="text-align:left;">6.509 6595 e39</td>
+		  <td style="text-align:left;">0.000 0037 e39</td>
+		  <td style="text-align:center;">K</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">lattice parameter of silicon</td>
+		  <td style="text-align:left;">543.102 0504 e-12</td>
+		  <td style="text-align:left;">0.000 0089 e-12</td>
+		  <td style="text-align:center;">m</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">Loschmidt constant (273.15 K, 100 kPa)</td>
+		  <td style="text-align:left;">2.651 6467 e25</td>
+		  <td style="text-align:left;">0.000 0015 e25</td>
+		  <td style="text-align:center;">m^-3</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">Loschmidt constant (273.15 K, 101.325 kPa)</td>
+		  <td style="text-align:left;">2.686 7811 e25</td>
+		  <td style="text-align:left;">0.000 0015 e25</td>
+		  <td style="text-align:center;">m^-3</td>
+		</tr>
+		<tr>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">mag. constant 介磁常数 mu0 = 4 Pi E-7</td>
+		  <td style="text-align:left;">12.566 370 614... e-7</td>
+		  <td style="text-align:left;">(exact)</td>
+		  <td style="text-align:center;">N A^-2</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">mag. flux quantum</td>
+		  <td style="text-align:left;">2.067 833 831 e-15</td>
+		  <td style="text-align:left;">0.000 000 013 e-15</td>
+		  <td style="text-align:center;">Wb</td>
+		</tr>
+		<tr>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">molar gas constant 摩尔气体常数 R</td>
+		  <td style="text-align:left;">8.314 4598</td>
+		  <td style="text-align:left;">0.000 0048</td>
+		  <td style="text-align:center;">J mol^-1 K^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">molar mass constant</td>
+		  <td style="text-align:left;">1 e-3</td>
+		  <td style="text-align:left;">(exact)</td>
+		  <td style="text-align:center;">kg mol^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">molar mass of carbon-12</td>
+		  <td style="text-align:left;">12 e-3</td>
+		  <td style="text-align:left;">(exact)</td>
+		  <td style="text-align:center;">kg mol^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">molar Planck constant</td>
+		  <td style="text-align:left;">3.990 312 7110 e-10</td>
+		  <td style="text-align:left;">0.000 000 0018 e-10</td>
+		  <td style="text-align:center;">J s mol^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">molar Planck constant times c</td>
+		  <td style="text-align:left;">0.119 626 565 582</td>
+		  <td style="text-align:left;">0.000 000 000 054</td>
+		  <td style="text-align:center;">J m mol^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">molar volume of ideal gas (273.15 K, 100 kPa)</td>
+		  <td style="text-align:left;">22.710 947 e-3</td>
+		  <td style="text-align:left;">0.000 013 e-3</td>
+		  <td style="text-align:center;">m^3 mol^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">molar volume of ideal gas (273.15 K, 101.325 kPa)</td>
+		  <td style="text-align:left;">22.413 962 e-3</td>
+		  <td style="text-align:left;">0.000 013 e-3</td>
+		  <td style="text-align:center;">m^3 mol^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">molar volume of silicon</td>
+		  <td style="text-align:left;">12.058 832 14 e-6</td>
+		  <td style="text-align:left;">0.000 000 61 e-6</td>
+		  <td style="text-align:center;">m^3 mol^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">Mo x unit</td>
+		  <td style="text-align:left;">1.002 099 52 e-13</td>
+		  <td style="text-align:left;">0.000 000 53 e-13</td>
+		  <td style="text-align:center;">m</td>
+		</tr>
+		<tr>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">muon Compton wavelength</td>
+		  <td style="text-align:left;">11.734 441 11 e-15</td>
+		  <td style="text-align:left;">0.000 000 26 e-15</td>
+		  <td style="text-align:center;">m</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">muon Compton wavelength over 2 pi</td>
+		  <td style="text-align:left;">1.867 594 308 e-15</td>
+		  <td style="text-align:left;">0.000 000 042 e-15</td>
+		  <td style="text-align:center;">m</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">muon-electron mass ratio</td>
+		  <td style="text-align:left;">206.768 2826</td>
+		  <td style="text-align:left;">0.000 0046</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">muon g factor</td>
+		  <td style="text-align:left;">-2.002 331 8418</td>
+		  <td style="text-align:left;">0.000 000 0013</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">muon mag. mom.</td>
+		  <td style="text-align:left;">-4.490 448 26 e-26</td>
+		  <td style="text-align:left;">0.000 000 10 e-26</td>
+		  <td style="text-align:center;">J T^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">muon mag. mom. anomaly</td>
+		  <td style="text-align:left;">1.165 920 89 e-3</td>
+		  <td style="text-align:left;">0.000 000 63 e-3</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">muon mag. mom. to Bohr magneton ratio</td>
+		  <td style="text-align:left;">-4.841 970 48 e-3</td>
+		  <td style="text-align:left;">0.000 000 11 e-3</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">muon mag. mom. to nuclear magneton ratio</td>
+		  <td style="text-align:left;">-8.890 597 05</td>
+		  <td style="text-align:left;">0.000 000 20</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">muon mass</td>
+		  <td style="text-align:left;">1.883 531 594 e-28</td>
+		  <td style="text-align:left;">0.000 000 048 e-28</td>
+		  <td style="text-align:center;">kg</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">muon mass energy equivalent</td>
+		  <td style="text-align:left;">1.692 833 774 e-11</td>
+		  <td style="text-align:left;">0.000 000 043 e-11</td>
+		  <td style="text-align:center;">J</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">muon mass energy equivalent in MeV</td>
+		  <td style="text-align:left;">105.658 3745</td>
+		  <td style="text-align:left;">0.000 0024</td>
+		  <td style="text-align:center;">MeV</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">muon mass in u</td>
+		  <td style="text-align:left;">0.113 428 9257</td>
+		  <td style="text-align:left;">0.000 000 0025</td>
+		  <td style="text-align:center;">u</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">muon molar mass</td>
+		  <td style="text-align:left;">0.113 428 9257 e-3</td>
+		  <td style="text-align:left;">0.000 000 0025 e-3</td>
+		  <td style="text-align:center;">kg mol^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">muon-neutron mass ratio</td>
+		  <td style="text-align:left;">0.112 454 5167</td>
+		  <td style="text-align:left;">0.000 000 0025</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">muon-proton mag. mom. ratio</td>
+		  <td style="text-align:left;">-3.183 345 142</td>
+		  <td style="text-align:left;">0.000 000 071</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">muon-proton mass ratio</td>
+		  <td style="text-align:left;">0.112 609 5262</td>
+		  <td style="text-align:left;">0.000 000 0025</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">muon-tau mass ratio</td>
+		  <td style="text-align:left;">5.946 49 e-2</td>
+		  <td style="text-align:left;">0.000 54 e-2</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">natural unit of action</td>
+		  <td style="text-align:left;">1.054 571 800 e-34</td>
+		  <td style="text-align:left;">0.000 000 013 e-34</td>
+		  <td style="text-align:center;">J s</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">natural unit of action in eV s</td>
+		  <td style="text-align:left;">6.582 119 514 e-16</td>
+		  <td style="text-align:left;">0.000 000 040 e-16</td>
+		  <td style="text-align:center;">eV s</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">natural unit of energy</td>
+		  <td style="text-align:left;">8.187 105 65 e-14</td>
+		  <td style="text-align:left;">0.000 000 10 e-14</td>
+		  <td style="text-align:center;">J</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">natural unit of energy in MeV</td>
+		  <td style="text-align:left;">0.510 998 9461</td>
+		  <td style="text-align:left;">0.000 000 0031</td>
+		  <td style="text-align:center;">MeV</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">natural unit of length</td>
+		  <td style="text-align:left;">386.159 267 64 e-15</td>
+		  <td style="text-align:left;">0.000 000 18 e-15</td>
+		  <td style="text-align:center;">m</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">natural unit of mass</td>
+		  <td style="text-align:left;">9.109 383 56 e-31</td>
+		  <td style="text-align:left;">0.000 000 11 e-31</td>
+		  <td style="text-align:center;">kg</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">natural unit of mom.um</td>
+		  <td style="text-align:left;">2.730 924 488 e-22</td>
+		  <td style="text-align:left;">0.000 000 034 e-22</td>
+		  <td style="text-align:center;">kg m s^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">natural unit of mom.um in MeV/c</td>
+		  <td style="text-align:left;">0.510 998 9461</td>
+		  <td style="text-align:left;">0.000 000 0031</td>
+		  <td style="text-align:center;">MeV/c</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">natural unit of time</td>
+		  <td style="text-align:left;">1.288 088 667 12 e-21</td>
+		  <td style="text-align:left;">0.000 000 000 58 e-21</td>
+		  <td style="text-align:center;">s</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">natural unit of velocity 自然速度单位 光速 Clit</td>
+		  <td style="text-align:left;">299 792 458</td>
+		  <td style="text-align:left;">(exact)</td>
+		  <td style="text-align:center;">m s^-1</td>
+		</tr>
+		<tr>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">neutron Compton wavelength</td>
+		  <td style="text-align:left;">1.319 590 904 81 e-15</td>
+		  <td style="text-align:left;">0.000 000 000 88 e-15</td>
+		  <td style="text-align:center;">m</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">neutron Compton wavelength over 2 pi</td>
+		  <td style="text-align:left;">0.210 019 415 36 e-15</td>
+		  <td style="text-align:left;">0.000 000 000 14 e-15</td>
+		  <td style="text-align:center;">m</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">neutron-electron mag. mom. ratio</td>
+		  <td style="text-align:left;">1.040 668 82 e-3</td>
+		  <td style="text-align:left;">0.000 000 25 e-3</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">neutron-electron mass ratio</td>
+		  <td style="text-align:left;">1838.683 661 58</td>
+		  <td style="text-align:left;">0.000 000 90</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">neutron g factor</td>
+		  <td style="text-align:left;">-3.826 085 45</td>
+		  <td style="text-align:left;">0.000 000 90</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">neutron gyromag. ratio</td>
+		  <td style="text-align:left;">1.832 471 72 e8</td>
+		  <td style="text-align:left;">0.000 000 43 e8</td>
+		  <td style="text-align:center;">s^-1 T^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">neutron gyromag. ratio over 2 pi</td>
+		  <td style="text-align:left;">29.164 6933</td>
+		  <td style="text-align:left;">0.000 0069</td>
+		  <td style="text-align:center;">MHz T^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">neutron mag. mom.</td>
+		  <td style="text-align:left;">-0.966 236 50 e-26</td>
+		  <td style="text-align:left;">0.000 000 23 e-26</td>
+		  <td style="text-align:center;">J T^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">neutron mag. mom. to Bohr magneton ratio</td>
+		  <td style="text-align:left;">-1.041 875 63 e-3</td>
+		  <td style="text-align:left;">0.000 000 25 e-3</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">neutron mag. mom. to nuclear magneton ratio</td>
+		  <td style="text-align:left;">-1.913 042 73</td>
+		  <td style="text-align:left;">0.000 000 45</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">neutron mass</td>
+		  <td style="text-align:left;">1.674 927 471 e-27</td>
+		  <td style="text-align:left;">0.000 000 021 e-27</td>
+		  <td style="text-align:center;">kg</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">neutron mass energy equivalent</td>
+		  <td style="text-align:left;">1.505 349 739 e-10</td>
+		  <td style="text-align:left;">0.000 000 019 e-10</td>
+		  <td style="text-align:center;">J</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">neutron mass energy equivalent in MeV</td>
+		  <td style="text-align:left;">939.565 4133</td>
+		  <td style="text-align:left;">0.000 0058</td>
+		  <td style="text-align:center;">MeV</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">neutron mass in u</td>
+		  <td style="text-align:left;">1.008 664 915 88</td>
+		  <td style="text-align:left;">0.000 000 000 49</td>
+		  <td style="text-align:center;">u</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">neutron molar mass</td>
+		  <td style="text-align:left;">1.008 664 915 88 e-3</td>
+		  <td style="text-align:left;">0.000 000 000 49 e-3</td>
+		  <td style="text-align:center;">kg mol^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">neutron-muon mass ratio</td>
+		  <td style="text-align:left;">8.892 484 08</td>
+		  <td style="text-align:left;">0.000 000 20</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">neutron-proton mag. mom. ratio</td>
+		  <td style="text-align:left;">-0.684 979 34</td>
+		  <td style="text-align:left;">0.000 000 16</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">neutron-proton mass difference</td>
+		  <td style="text-align:left;">2.305 573 77 e-30</td>
+		  <td style="text-align:left;">0.000 000 85 e-30</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">neutron-proton mass difference energy equivalent</td>
+		  <td style="text-align:left;">2.072 146 37 e-13</td>
+		  <td style="text-align:left;">0.000 000 76 e-13</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">neutron-proton mass difference energy equivalent in MeV</td>
+		  <td style="text-align:left;">1.293 332 05</td>
+		  <td style="text-align:left;">0.000 000 48</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">neutron-proton mass difference in u</td>
+		  <td style="text-align:left;">0.001 388 449 00</td>
+		  <td style="text-align:left;">0.000 000 000 51</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">neutron-proton mass ratio</td>
+		  <td style="text-align:left;">1.001 378 418 98</td>
+		  <td style="text-align:left;">0.000 000 000 51</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">neutron-tau mass ratio</td>
+		  <td style="text-align:left;">0.528 790</td>
+		  <td style="text-align:left;">0.000 048</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">neutron to shielded proton mag. mom. ratio</td>
+		  <td style="text-align:left;">-0.684 996 94</td>
+		  <td style="text-align:left;">0.000 000 16</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">Newtonian constant of gravitation 万有引力常数 G</td>
+		  <td style="text-align:left;">6.674 08 e-11</td>
+		  <td style="text-align:left;">0.000 31 e-11</td>
+		  <td style="text-align:center;">m^3 kg^-1 s^-2</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">Newtonian constant of gravitation over h-bar c</td>
+		  <td style="text-align:left;">6.708 61 e-39</td>
+		  <td style="text-align:left;">0.000 31 e-39</td>
+		  <td style="text-align:center;">(GeV/c^2)^-2</td>
+		</tr>
+		<tr>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">nuclear magneton</td>
+		  <td style="text-align:left;">5.050 783 699 e-27</td>
+		  <td style="text-align:left;">0.000 000 031 e-27</td>
+		  <td style="text-align:center;">J T^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">nuclear magneton in eV/T</td>
+		  <td style="text-align:left;">3.152 451 2550 e-8</td>
+		  <td style="text-align:left;">0.000 000 0015 e-8</td>
+		  <td style="text-align:center;">eV T^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">nuclear magneton in inverse meters per tesla</td>
+		  <td style="text-align:left;">2.542 623 432 e-2</td>
+		  <td style="text-align:left;">0.000 000 016 e-2</td>
+		  <td style="text-align:center;">m^-1 T^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">nuclear magneton in K/T</td>
+		  <td style="text-align:left;">3.658 2690 e-4</td>
+		  <td style="text-align:left;">0.000 0021 e-4</td>
+		  <td style="text-align:center;">K T^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">nuclear magneton in MHz/T</td>
+		  <td style="text-align:left;">7.622 593 285</td>
+		  <td style="text-align:left;">0.000 000 047</td>
+		  <td style="text-align:center;">MHz T^-1</td>
+		</tr>
+		<tr>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">Planck constant 普朗克常数 hplk</td>
+		  <td style="text-align:left;">6.626 070 040 e-34</td>
+		  <td style="text-align:left;">0.000 000 081 e-34</td>
+		  <td style="text-align:center;">J s</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">Planck constant in eV s</td>
+		  <td style="text-align:left;">4.135 667 662 e-15</td>
+		  <td style="text-align:left;">0.000 000 025 e-15</td>
+		  <td style="text-align:center;">eV s</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">Planck constant over 2 pi</td>
+		  <td style="text-align:left;">1.054 571 800 e-34</td>
+		  <td style="text-align:left;">0.000 000 013 e-34</td>
+		  <td style="text-align:center;">J s</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">Planck constant over 2 pi in eV s</td>
+		  <td style="text-align:left;">6.582 119 514 e-16</td>
+		  <td style="text-align:left;">0.000 000 040 e-16</td>
+		  <td style="text-align:center;">eV s</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">Planck constant over 2 pi times c in MeV fm</td>
+		  <td style="text-align:left;">197.326 9788</td>
+		  <td style="text-align:left;">0.000 0012</td>
+		  <td style="text-align:center;">MeV fm</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">Planck length</td>
+		  <td style="text-align:left;">1.616 229 e-35</td>
+		  <td style="text-align:left;">0.000 038 e-35</td>
+		  <td style="text-align:center;">m</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">Planck mass</td>
+		  <td style="text-align:left;">2.176 470 e-8</td>
+		  <td style="text-align:left;">0.000 051 e-8</td>
+		  <td style="text-align:center;">kg</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">Planck mass energy equivalent in GeV</td>
+		  <td style="text-align:left;">1.220 910 e19</td>
+		  <td style="text-align:left;">0.000 029 e19</td>
+		  <td style="text-align:center;">GeV</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">Planck temperature</td>
+		  <td style="text-align:left;">1.416 808 e32</td>
+		  <td style="text-align:left;">0.000 033 e32</td>
+		  <td style="text-align:center;">K</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">Planck time</td>
+		  <td style="text-align:left;">5.391 16 e-44</td>
+		  <td style="text-align:left;">0.000 13 e-44</td>
+		  <td style="text-align:center;">s</td>
+		</tr>
+		<tr>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">proton charge to mass quotient</td>
+		  <td style="text-align:left;">9.578 833 226 e7</td>
+		  <td style="text-align:left;">0.000 000 059 e7</td>
+		  <td style="text-align:center;">C kg^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">proton Compton wavelength</td>
+		  <td style="text-align:left;">1.321 409 853 96 e-15</td>
+		  <td style="text-align:left;">0.000 000 000 61 e-15</td>
+		  <td style="text-align:center;">m</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">proton Compton wavelength over 2 pi</td>
+		  <td style="text-align:left;">0.210 308 910 109 e-15</td>
+		  <td style="text-align:left;">0.000 000 000 097 e-15</td>
+		  <td style="text-align:center;">m</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">proton-electron mass ratio</td>
+		  <td style="text-align:left;">1836.152 673 89</td>
+		  <td style="text-align:left;">0.000 000 17</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">proton g factor</td>
+		  <td style="text-align:left;">5.585 694 702</td>
+		  <td style="text-align:left;">0.000 000 017</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">proton gyromag. ratio</td>
+		  <td style="text-align:left;">2.675 221 900 e8</td>
+		  <td style="text-align:left;">0.000 000 018 e8</td>
+		  <td style="text-align:center;">s^-1 T^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">proton gyromag. ratio over 2 pi</td>
+		  <td style="text-align:left;">42.577 478 92</td>
+		  <td style="text-align:left;">0.000 000 29</td>
+		  <td style="text-align:center;">MHz T^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">proton mag. mom.</td>
+		  <td style="text-align:left;">1.410 606 7873 e-26</td>
+		  <td style="text-align:left;">0.000 000 0097 e-26</td>
+		  <td style="text-align:center;">J T^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">proton mag. mom. to Bohr magneton ratio</td>
+		  <td style="text-align:left;">1.521 032 2053 e-3</td>
+		  <td style="text-align:left;">0.000 000 0046 e-3</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">proton mag. mom. to nuclear magneton ratio</td>
+		  <td style="text-align:left;">2.792 847 3508</td>
+		  <td style="text-align:left;">0.000 000 0085</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">proton mag. shielding correction</td>
+		  <td style="text-align:left;">25.691 e-6</td>
+		  <td style="text-align:left;">0.011 e-6</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">proton mass</td>
+		  <td style="text-align:left;">1.672 621 898 e-27</td>
+		  <td style="text-align:left;">0.000 000 021 e-27</td>
+		  <td style="text-align:center;">kg</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">proton mass energy equivalent</td>
+		  <td style="text-align:left;">1.503 277 593 e-10</td>
+		  <td style="text-align:left;">0.000 000 018 e-10</td>
+		  <td style="text-align:center;">J</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">proton mass energy equivalent in MeV</td>
+		  <td style="text-align:left;">938.272 0813</td>
+		  <td style="text-align:left;">0.000 0058</td>
+		  <td style="text-align:center;">MeV</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">proton mass in u</td>
+		  <td style="text-align:left;">1.007 276 466 879</td>
+		  <td style="text-align:left;">0.000 000 000 091</td>
+		  <td style="text-align:center;">u</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">proton molar mass</td>
+		  <td style="text-align:left;">1.007 276 466 879 e-3</td>
+		  <td style="text-align:left;">0.000 000 000 091 e-3</td>
+		  <td style="text-align:center;">kg mol^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">proton-muon mass ratio</td>
+		  <td style="text-align:left;">8.880 243 38</td>
+		  <td style="text-align:left;">0.000 000 20</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">proton-neutron mag. mom. ratio</td>
+		  <td style="text-align:left;">-1.459 898 05</td>
+		  <td style="text-align:left;">0.000 000 34</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">proton-neutron mass ratio</td>
+		  <td style="text-align:left;">0.998 623 478 44</td>
+		  <td style="text-align:left;">0.000 000 000 51</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">proton rms charge radius</td>
+		  <td style="text-align:left;">0.8751 e-15</td>
+		  <td style="text-align:left;">0.0061 e-15</td>
+		  <td style="text-align:center;">m</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">proton-tau mass ratio</td>
+		  <td style="text-align:left;">0.528 063</td>
+		  <td style="text-align:left;">0.000 048</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">quantum of circulation</td>
+		  <td style="text-align:left;">3.636 947 5486 e-4</td>
+		  <td style="text-align:left;">0.000 000 0017 e-4</td>
+		  <td style="text-align:center;">m^2 s^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">quantum of circulation times 2</td>
+		  <td style="text-align:left;">7.273 895 0972 e-4</td>
+		  <td style="text-align:left;">0.000 000 0033 e-4</td>
+		  <td style="text-align:center;">m^2 s^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">Rydberg constant</td>
+		  <td style="text-align:left;">10 973 731.568 508</td>
+		  <td style="text-align:left;">0.000 065</td>
+		  <td style="text-align:center;">m^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">Rydberg constant times c in Hz</td>
+		  <td style="text-align:left;">3.289 841 960 355 e15</td>
+		  <td style="text-align:left;">0.000 000 000 019 e15</td>
+		  <td style="text-align:center;">Hz</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">Rydberg constant times hc in eV</td>
+		  <td style="text-align:left;">13.605 693 009</td>
+		  <td style="text-align:left;">0.000 000 084</td>
+		  <td style="text-align:center;">eV</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">Rydberg constant times hc in J</td>
+		  <td style="text-align:left;">2.179 872 325 e-18</td>
+		  <td style="text-align:left;">0.000 000 027 e-18</td>
+		  <td style="text-align:center;">J</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">Sackur-Tetrode constant (1 K, 100 kPa)</td>
+		  <td style="text-align:left;">-1.151 7084</td>
+		  <td style="text-align:left;">0.000 0014</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">Sackur-Tetrode constant (1 K, 101.325 kPa)</td>
+		  <td style="text-align:left;">-1.164 8714</td>
+		  <td style="text-align:left;">0.000 0014</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">second radiation constant</td>
+		  <td style="text-align:left;">1.438 777 36 e-2</td>
+		  <td style="text-align:left;">0.000 000 83 e-2</td>
+		  <td style="text-align:center;">m K</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">shielded helion gyromag. ratio</td>
+		  <td style="text-align:left;">2.037 894 585 e8</td>
+		  <td style="text-align:left;">0.000 000 027 e8</td>
+		  <td style="text-align:center;">s^-1 T^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">shielded helion gyromag. ratio over 2 pi</td>
+		  <td style="text-align:left;">32.434 099 66</td>
+		  <td style="text-align:left;">0.000 000 43</td>
+		  <td style="text-align:center;">MHz T^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">shielded helion mag. mom.</td>
+		  <td style="text-align:left;">-1.074 553 080 e-26</td>
+		  <td style="text-align:left;">0.000 000 014 e-26</td>
+		  <td style="text-align:center;">J T^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">shielded helion mag. mom. to Bohr magneton ratio</td>
+		  <td style="text-align:left;">-1.158 671 471 e-3</td>
+		  <td style="text-align:left;">0.000 000 014 e-3</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">shielded helion mag. mom. to nuclear magneton ratio</td>
+		  <td style="text-align:left;">-2.127 497 720</td>
+		  <td style="text-align:left;">0.000 000 025</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">shielded helion to proton mag. mom. ratio</td>
+		  <td style="text-align:left;">-0.761 766 5603</td>
+		  <td style="text-align:left;">0.000 000 0092</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">shielded helion to shielded proton mag. mom. ratio</td>
+		  <td style="text-align:left;">-0.761 786 1313</td>
+		  <td style="text-align:left;">0.000 000 0033</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">shielded proton gyromag. ratio</td>
+		  <td style="text-align:left;">2.675 153 171 e8</td>
+		  <td style="text-align:left;">0.000 000 033 e8</td>
+		  <td style="text-align:center;">s^-1 T^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">shielded proton gyromag. ratio over 2 pi</td>
+		  <td style="text-align:left;">42.576 385 07</td>
+		  <td style="text-align:left;">0.000 000 53</td>
+		  <td style="text-align:center;">MHz T^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">shielded proton mag. mom.</td>
+		  <td style="text-align:left;">1.410 570 547 e-26</td>
+		  <td style="text-align:left;">0.000 000 018 e-26</td>
+		  <td style="text-align:center;">J T^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">shielded proton mag. mom. to Bohr magneton ratio</td>
+		  <td style="text-align:left;">1.520 993 128 e-3</td>
+		  <td style="text-align:left;">0.000 000 017 e-3</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">shielded proton mag. mom. to nuclear magneton ratio</td>
+		  <td style="text-align:left;">2.792 775 600</td>
+		  <td style="text-align:left;">0.000 000 030</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">speed of light in vacuum 真空光速 Clit</td>
+		  <td style="text-align:left;">299 792 458</td>
+		  <td style="text-align:left;">(exact)</td>
+		  <td style="text-align:center;">m s^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">standard acceleration of gravity 标准重力加速度 g</td>
+		  <td style="text-align:left;">9.806 65</td>
+		  <td style="text-align:left;">(exact)</td>
+		  <td style="text-align:center;">m s^-2</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">standard atmosphere 标准大气压 atm</td>
+		  <td style="text-align:left;">101 325</td>
+		  <td style="text-align:left;">(exact)</td>
+		  <td style="text-align:center;">Pa</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">standard-state pressure 标准压力 P0</td>
+		  <td style="text-align:left;">100 000</td>
+		  <td style="text-align:left;">(exact)</td>
+		  <td style="text-align:center;">Pa</td>
+		</tr>
+		<tr>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">Stefan-Boltzmann constant</td>
+		  <td style="text-align:left;">5.670 367 e-8</td>
+		  <td style="text-align:left;">0.000 013 e-8</td>
+		  <td style="text-align:center;">W m^-2 K^-4</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">tau Compton wavelength</td>
+		  <td style="text-align:left;">0.697 787 e-15</td>
+		  <td style="text-align:left;">0.000 063 e-15</td>
+		  <td style="text-align:center;">m</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">tau Compton wavelength over 2 pi</td>
+		  <td style="text-align:left;">0.111 056 e-15</td>
+		  <td style="text-align:left;">0.000 010 e-15</td>
+		  <td style="text-align:center;">m</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">tau-electron mass ratio</td>
+		  <td style="text-align:left;">3477.15</td>
+		  <td style="text-align:left;">0.31</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">tau mass</td>
+		  <td style="text-align:left;">3.167 47 e-27</td>
+		  <td style="text-align:left;">0.000 29 e-27</td>
+		  <td style="text-align:center;">kg</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">tau mass energy equivalent</td>
+		  <td style="text-align:left;">2.846 78 e-10</td>
+		  <td style="text-align:left;">0.000 26 e-10</td>
+		  <td style="text-align:center;">J</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">tau mass energy equivalent in MeV</td>
+		  <td style="text-align:left;">1776.82</td>
+		  <td style="text-align:left;">0.16</td>
+		  <td style="text-align:center;">MeV</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">tau mass in u</td>
+		  <td style="text-align:left;">1.907 49</td>
+		  <td style="text-align:left;">0.000 17</td>
+		  <td style="text-align:center;">u</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">tau molar mass</td>
+		  <td style="text-align:left;">1.907 49 e-3</td>
+		  <td style="text-align:left;">0.000 17 e-3</td>
+		  <td style="text-align:center;">kg mol^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">tau-muon mass ratio</td>
+		  <td style="text-align:left;">16.8167</td>
+		  <td style="text-align:left;">0.0015</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">tau-neutron mass ratio</td>
+		  <td style="text-align:left;">1.891 11</td>
+		  <td style="text-align:left;">0.000 17</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">tau-proton mass ratio</td>
+		  <td style="text-align:left;">1.893 72</td>
+		  <td style="text-align:left;">0.000 17</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">Thomson cross section</td>
+		  <td style="text-align:left;">0.665 245 871 58 e-28</td>
+		  <td style="text-align:left;">0.000 000 000 91 e-28</td>
+		  <td style="text-align:center;">m^2</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">triton-electron mass ratio</td>
+		  <td style="text-align:left;">5496.921 535 88</td>
+		  <td style="text-align:left;">0.000 000 26</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">triton g factor</td>
+		  <td style="text-align:left;">5.957 924 920</td>
+		  <td style="text-align:left;">0.000 000 028</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">triton mag. mom.</td>
+		  <td style="text-align:left;">1.504 609 503 e-26</td>
+		  <td style="text-align:left;">0.000 000 012 e-26</td>
+		  <td style="text-align:center;">J T^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">triton mag. mom. to Bohr magneton ratio</td>
+		  <td style="text-align:left;">1.622 393 6616 e-3</td>
+		  <td style="text-align:left;">0.000 000 0076 e-3</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">triton mag. mom. to nuclear magneton ratio</td>
+		  <td style="text-align:left;">2.978 962 460</td>
+		  <td style="text-align:left;">0.000 000 014</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">triton mass</td>
+		  <td style="text-align:left;">5.007 356 665 e-27</td>
+		  <td style="text-align:left;">0.000 000 062 e-27</td>
+		  <td style="text-align:center;">kg</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">triton mass energy equivalent</td>
+		  <td style="text-align:left;">4.500 387 735 e-10</td>
+		  <td style="text-align:left;">0.000 000 055 e-10</td>
+		  <td style="text-align:center;">J</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">triton mass energy equivalent in MeV</td>
+		  <td style="text-align:left;">2808.921 112</td>
+		  <td style="text-align:left;">0.000 017</td>
+		  <td style="text-align:center;">MeV</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">triton mass in u</td>
+		  <td style="text-align:left;">3.015 500 716 32</td>
+		  <td style="text-align:left;">0.000 000 000 11</td>
+		  <td style="text-align:center;">u</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">triton molar mass</td>
+		  <td style="text-align:left;">3.015 500 716 32 e-3</td>
+		  <td style="text-align:left;">0.000 000 000 11 e-3</td>
+		  <td style="text-align:center;">kg mol^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">triton-proton mass ratio</td>
+		  <td style="text-align:left;">2.993 717 033 48</td>
+		  <td style="text-align:left;">0.000 000 000 22</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">unified atomic mass unit 原子质量单位 amu</td>
+		  <td style="text-align:left;">1.660 539 040 e-27</td>
+		  <td style="text-align:left;">0.000 000 020 e-27</td>
+		  <td style="text-align:center;">kg</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">von Klitzing constant</td>
+		  <td style="text-align:left;">25 812.807 4555</td>
+		  <td style="text-align:left;">0.000 0059</td>
+		  <td style="text-align:center;">ohm</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">weak mixing angle</td>
+		  <td style="text-align:left;">0.2223</td>
+		  <td style="text-align:left;">0.0021</td>
+		  <td style="text-align:center;">　</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">Wien frequency displacement law constant</td>
+		  <td style="text-align:left;">5.878 9238 e10</td>
+		  <td style="text-align:left;">0.000 0034 e10</td>
+		  <td style="text-align:center;">Hz K^-1</td>
+		</tr>
+		<tr>
+		  <td style="text-align:left;">Wien wavelength displacement law constant</td>
+		  <td style="text-align:left;">2.897 7729 e-3</td>
+		  <td style="text-align:left;">0.000 0017 e-3</td>
+		  <td style="text-align:center;">m K</td>
+		</tr>
+		</table>
+	</div>
+
+</div>
+
+<script>
+var $=function(id){return document.getElementById(id)}
+
+Clit=299792458
+Navg=6.022140857E23
+echg=1.6021766208E-19
+
+J2Hatr     = 2.293712317e17        // 0.000 000 028 e17        E_h
+J2K        = 7.2429731e22          // 0.000 0042 e22           K
+J2kg       = 1.112650056e-17       //  (exact)                 kg
+J2amu      = 6.700535363e9         // 0.000 000 082 e9         u
+J2invm     = 5.034116651e24        // 0.000 000 062 e24        m^-1
+J2eV       = 6.241509126e18        // 0.000 000 038 e18        eV
+J2Hz       = 1.509190205e33        // 0.000 000 019 e33        Hz
+
+Hatr2J    =  4.359744650e-18    //  0.000 000 054 e-18       J
+Hatr2eV   = 27.21138602         //  0.000 000 17             eV
+Hatr2Hz   =  6.579683920711e15  //  0.000 000 000 039 e15    Hz
+Hatr2invm =  2.194746313702e7   //  0.000 000 000 013 e7     m^-1
+Hatr2K    =  3.1577513e5        //  0.000 0018 e5            K
+Hatr2amu  =  2.9212623197e-8    //   0.000 000 0013 e-8       u
+Hatr2kg   =  4.850870129e-35    //   0.000 000 060 e-35       kg
+
+eV2J     = 1.6021766208e-19     // 0.000 000 0098 e-19      J
+eV2amu   = 1.0735441105e-9      // 0.000 000 0066 e-9       u
+eV2Hatr  = 3.674932248e-2       // 0.000 000 023 e-2        E_h
+eV2Hz    = 2.417989262e14       // 0.000 000 015 e14        Hz
+eV2invm  = 8.065544005e5        // 0.000 000 050 e5         m^-1
+eV2K     = 1.16045221e4         // 0.000 000 67 e4          K
+eV2kg    = 1.782661907e-36      // 0.000 000 011 e-36       kg
+
+Hz2J       = 6.626070040e-34      // 0.000 000 081 e-34       J
+Hz2amu     = 4.4398216616e-24     // 0.000 000 0020 e-24      u
+Hz2eV      = 4.135667662e-15      // 0.000 000 025 e-15       eV
+Hz2Hatr    = 1.5198298460088e-16  // 0.000 000 000 0090 e-16  E_h
+Hz2invm    = 3.335640951e-9       //  (exact)                  m^-1
+Hz2K       = 4.7992447e-11        // 0.000 0028 e-11          K
+Hz2kg      = 7.372497201e-51      // 0.000 000 091 e-51       kg
+
+invm2J    = 1.986445824e-25      // 0.000 000 024 e-25       J
+invm2amu  = 1.33102504900e-15    // 0.000 000 000 61 e-15    u
+invm2eV   = 1.2398419739e-6      // 0.000 000 0076 e-6       eV
+invm2Hatr = 4.556335252767e-8    // 0.000 000 000 027 e-8    E_h
+invm2Hz   = 299792458            //  (exact)                  Hz
+invm2K    = 1.43877736e-2        // 0.000 000 83 e-2         K
+invm2kg   = 2.210219057e-42      // 0.000 000 027 e-42       kg
+
+K2J        =  1.38064852e-23       // 0.000 000 79 e-23        J
+K2amu      =  9.2510842e-14        // 0.000 0053 e-14          u
+K2eV       =  8.6173303e-5         // 0.000 0050 e-5           eV
+K2Hatr     =  3.1668105e-6         // 0.000 0018 e-6           E_h
+K2Hz       =  2.0836612e10         // 0.000 0012 e10           Hz
+K2invm     = 69.503457             // 0.000 040                m^-1
+K2kg       =  1.53617865e-40       // 0.000 000 88 e-40        kg
+
+kg2J       = 8.987551787e16   //  (exact)                  J
+kg2amu     = 6.022140857e26       // 0.000 000 074 e26        u
+kg2eV      = 5.609588650e35       // 0.000 000 034 e35        eV
+kg2Hatr    = 2.061485823e34       // 0.000 000 025 e34        E_h
+kg2Hz      = 1.356392512e50       // 0.000 000 017 e50        Hz
+kg2invm    = 4.524438411e41       // 0.000 000 056 e41        m^-1
+kg2K       = 6.5096595e39         // 0.000 0037 e39           K
+
+amu2eV   = 931.4940954e6          // 0.000 0057 e6            eV
+amu2Hatr =   3.4231776902e7       // 0.000 000 0016 e7        E_h
+amu2Hz   =   2.2523427206e23      // 0.000 000 0010 e23       Hz
+amu2invm =   7.5130066166e14      // 0.000 000 0034 e14       m^-1
+amu2J    =   1.492418062e-10      // 0.000 000 018 e-10       J
+amu2K    =   1.08095438e13        // 0.000 000 62 e13         K
+amu2kg   =   1.660539040e-27      // 0.000 000 020 e-27       kg
+
+emas     = 9.10938356e-31    //    0.000 000 11 e-31        kg
+pmas     = 1.672621898e-27   //    0.000 000 021 e-27       kg
+
+aut      = 2.418884326509e-17  // 0.000 000 000 014 e-17   s
+auf      = 8.23872336e-8       //  0.000 000 10 e-8         N
+bhr      = 0.52917721067e-10   // 0.000 000 000 12 e-10    m
+gstd     = 9.80665             // (exact)                |  m s^-2   |
+Rgas     = 8.3144598
+
+L_m    =1.0;   L_km =1.E3;  L_cm =1.E-2;  L_mm =1.E-3;
+L_um   =1.E-6; L_nm =1.E-9; L_pm =1.E-12; L_fm =1.E-15
+L_bhr  =bhr;   L_ang =1.E-10
+L_pnt  =.0254/72.; L_inch =.0254; L_foot =.3048
+L_yard =.9144; L_mile =1609.344
+
+M_kg=1.0; M_g=1E-3; M_mg=1E-6; M_ug=1E-9
+M_emas=emas; M_pmas=pmas; M_amu=amu2kg
+M_eV=eV2kg; M_MeV=eV2kg*1E6; M_GeV=eV2kg*1E9; M_TeV=eV2kg*1E12
+M_ton=1E3; M_car=2E-4; M_onc=.028352; M_pd=.453632
+
+T_s=1.; T_min=60; T_h=3600; T_d=86400
+T_ms=1E-3; T_us=1E-6; T_ns=1E-9; T_ps=1E-12; T_fs=1E-15; T_as=1E-18
+T_au=aut; T_m=30*T_d; T_a=365*T_d; T_am=29.53*T_d; T_aa=365.2422*T_d
+
+cal=4.184
+J2cal      = 1./cal
+J2erg      = 1./1.E-7
+J2kJ_mol   = Navg/1000.
+J2kcal_mol = Navg/1000.*J2cal
+amu2Emd      = Clit*Clit*1.E-10
+invm2invcm=1.E-2
+
+m2Eum=1.E6;   m2Enm=1.E9; m2Eang=1.E10
+eV2MeV=1.E-6; eV2GeV=1.E-9; eV2TeV=1.E-12; eV2PeV=1.E-15
+Hz2MHz=1.E-6; Hz2GHz=1.E-9; Hz2THz=1.E-12; Hz2PHz=1.E-15
+
+F_N=1.0; F_dyn=1E-5; F_mN=1E-3; F_uN=1E-6; F_nN=1E-9; F_pN=1E-12
+F_au=auf; F_auA=Hatr2J/L_ang
+F_mpc=1/J2kcal_mol/L_ang; F_gmx=1/J2kJ_mol/L_nm
+F_md=amu2kg*1E20
+
+P_Pa=1.; P_kPa=1E3; P_MPa=1E6; P_GPa=1E9
+P_dyncm=1E-1; P_bar=1E5; P_atm=101325
+P_mmH2O=1.004514556*gstd; P_mmHg=13.5951*gstd; P_Torr=P_mmHg
+
+C_M=1.; C_mM=1E-3; C_uM=1E-6; C_A3=1/Navg*1E27; C_cm3=1/Navg*1E3
+
+R_gmL=1.; R_gL=1.E-3; R_amuA3=amu2kg*1E30*1E-3
+
+function setUnit(id) {
+	unit=document.getElementsByTagName('table')
+	for(i=0; i<unit.length; i++) unit[i].style.display='none'
+	$('Tab'+id).style.display='block'
+}
+
+$('V_sgmg').disabled=true
+$('V_epsg').disabled=true
+$('V_reg' ).disabled=true
+$('V_C6g' ).disabled=true
+$('V_C12g').disabled=true
+$('V_sgma').disabled=true
+$('V_epsa').disabled=true
+$('V_rea' ).disabled=true
+$('V_C6a' ).disabled=true
+$('V_C12a').disabled=true
+
+function setVDW(name, id) {
+	var f=Math.pow(2, 1./6.)
+	val=eval($(id).value)
+
+	if(id=='V_sgm1' || id=='V_re1' || id=='V_eps1') {
+		if(id=='V_sgm1') { V_sgm1=val; V_re1=f*V_sgm1; V_eps1=eval($('V_eps1').value) }
+		if(id=='V_re1')  { V_re1=val;  V_sgm1=val/f;   V_eps1=eval($('V_eps1').value) }
+		if(id=='V_eps1') { V_eps1=val; V_sgm1=eval($('V_sgm1').value); V_re1=f*V_sgm1 }
+
+		V_C61=4*V_eps1*Math.pow(V_sgm1, 6)
+		V_C121=4*V_eps1*Math.pow(V_sgm1, 12)
+	} else if(id=='V_C61' || id=='V_C121') {
+		if(id=='V_C61')  { V_C61=val;  V_C121=eval($('V_C121').value) }
+		if(id=='V_C121') { V_C121=val; V_C61=eval($('V_C61').value) }
+
+		V_sgm1=Math.pow(V_C121/V_C61, 1./6.)
+		V_eps1=0.25*V_C61*V_C61/V_C121
+		V_re1=f*V_sgm1
+	}
+
+	if(id=='V_sgm2' || id=='V_re2' || id=='V_eps2') {
+		if(id=='V_sgm2') { V_sgm2=val; V_re2=f*V_sgm2; V_eps2=eval($('V_eps2').value) }
+		if(id=='V_re2')  { V_re2=val;  V_sgm2=val/f;   V_eps2=eval($('V_eps2').value) }
+		if(id=='V_eps2') { V_eps2=val; V_sgm2=eval($('V_sgm2').value); V_re2=f*V_sgm2 }
+
+		V_C62=4*V_eps2*Math.pow(V_sgm2, 6)
+		V_C122=4*V_eps2*Math.pow(V_sgm2, 12)
+	} else if(id=='V_C62' || id=='V_C122') {
+		if(id=='V_C62')  { V_C62=val;  V_C122=eval($('V_C122').value) }
+		if(id=='V_C122') { V_C122=val; V_C62=eval($('V_C62').value) }
+
+		V_sgm2=Math.pow(V_C122/V_C62, 1./6.)
+		V_eps2=0.25*V_C62*V_C62/V_C122
+		V_re2=f*V_sgm2
+	}
+
+	if(id.slice(-1)=='2') {
+		V_sgm1=eval($('V_sgm1').value)
+		V_eps1=eval($('V_eps1').value)
+		V_C61=eval($('V_C61').value)
+		V_C121=eval($('V_C121').value)
+		V_re1=f*V_sgm1
+	}
+	if(id.slice(-1)=='1') {
+		V_sgm2=eval($('V_sgm2').value)
+		V_eps2=eval($('V_eps2').value)
+		V_C62 =eval($('V_C62').value)
+		V_C122=eval($('V_C122').value)
+		V_re2=f*V_sgm2
+	}
+
+	V_sgmg=Math.sqrt(V_sgm1*V_sgm2)
+	V_epsg=Math.sqrt(V_eps1*V_eps2)
+	V_reg =Math.sqrt(V_re1*V_re2)
+	V_C6g =Math.sqrt(V_C61*V_C62)
+	V_C12g=Math.sqrt(V_C121*V_C122)
+
+	V_sgma=0.5*(V_sgm1+V_sgm2)
+	V_epsa=0.5*(V_eps1+V_eps2)
+	V_rea =0.5*(V_re1+V_re2)
+	V_C6a =0.5*(V_C61+V_C62)
+	V_C12a=0.5*(V_C121+V_C122)
+
+	unit=document.getElementsByName(name)
+	for(i=0; i<unit.length; i++) {
+		if(unit[i].id!=id) unit[i].value=fmt(eval(unit[i].id))
+	}
+}
+
+function setTP(name, id) {
+	if(id=='chk_TP') {
+		$('C_M').disabled=$(id).checked
+		$('C_mM').disabled=$(id).checked
+		$('C_uM').disabled=$(id).checked
+		$('C_A3').disabled=$(id).checked
+		$('C_cm3').disabled=$(id).checked
+		$('rdo_K').disabled=$(id).checked
+		$('rdo_Pa').disabled=$(id).checked
+		$('C_K').value=298.15
+		$('C_Pa').value=101325
+	}
+	var Temp=eval($('C_K').value), Pres=eval($('C_Pa').value)
+	$('C_M').value=fmt(Pres*1E-3/(Rgas*Temp))
+	setVal('Conc', 'C_M')
+}
+
+function setMC(name, id) {
+	if(id=='chk_MC') {
+		$('R_gmL').disabled=$(id).checked
+		$('R_gL').disabled=$(id).checked
+		$('R_amuA3').disabled=$(id).checked
+		$('rdo_amu').disabled=$(id).checked
+		$('rdo_M').disabled=$(id).checked
+		$('R_amu').value=18
+		$('R_M').value=55.56
+	}
+	var C=eval($('R_M').value), M=eval($('R_amu').value)
+	$('R_gmL').value=fmt(M*C*1E-3)
+	setVal('Rho', 'R_gmL')
+}
+
+function setVal(name, id) {
+	var i, j, tmp, id2, txt, val
+
+	var drvUnit={ 'Emd':'amu', 'invcm':'invm',
+		'cal':'J', 'erg':'J', 'kcal_mol':'J', 'kJ_mol':'J',
+		'MeV':'eV', 'GeV':'eV', 'TeV':'eV', 'PeV':'eV',
+		'MHz':'Hz', 'GHz':'Hz', 'PHz':'Hz', 'THz':'Hz',
+		'Eum':'Rinvm', 'Enm':'Rinvm', 'Eang':'Rinvm'}
+
+	unit=document.getElementsByName(name)
+
+	if(name!='Energy') {
+		val=eval($(id).value+'*'+id); // 转换为基本单位
+		for(i=0; i<unit.length; i++) {
+			if(unit[i].id!=id) {
+				if(unit[i].id!='C_K' && unit[i].id!='C_Pa'
+					&& unit[i].id!='R_amu' && unit[i].id!='R_M') {
+					unit[i].value=fmt(eval(val+'/'+unit[i].id)) // 反转换
+				} else {
+					if(!$('chk_TP').checked) {
+						if(unit[i].id=='C_K'  && !$('rdo_K').checked)  $('C_K').value=fmt(eval($('C_Pa').value)*1E-3/(val*Rgas))
+						if(unit[i].id=='C_Pa' && !$('rdo_Pa').checked) $('C_Pa').value=fmt(val*Rgas*eval($('C_K').value)*1E3)
+					}
+					if(!$('chk_MC').checked) {
+						if(unit[i].id=='R_amu' && !$('rdo_amu').checked) $('R_amu').value=fmt(val/eval($('R_M').value))
+						if(unit[i].id=='R_M'   && !$('rdo_M').checked) $('R_M').value=fmt(val*1E3/eval($('R_amu').value))
+					}
+				}
+			}
+		}
+	} else {
+		val=eval($(id).value)
+		txt=drvUnit[id]
+		if(txt) {
+			if(txt!='Rinvm') val=eval(val+'/'+txt+'2'+id)
+			else             { val=eval(1/val+'*m2'+id); txt='invm' }
+
+			$(txt).value=fmt(val)
+			id2=id
+			id=txt
+		}
+
+		for(i=0; i<unit.length; i++) {
+			tmp=id+'2'+unit[i].id
+			if(window[tmp] != undefined && unit[i].id!=id2) {
+				unit[i].value=fmt(eval(val+'*'+tmp))
+			}
+		}
+
+		for(i=0; i<unit.length; i++) {
+			tmp=unit[i].id
+			txt=drvUnit[tmp]
+			if(txt) {
+				console.log(txt, tmp)
+				if(txt!='Rinvm') {
+					val=$(txt).value
+					if(unit[i].id!=id2) unit[i].value=fmt(eval(val+'*'+txt+'2'+tmp))
+				} else {
+					val=1/$('invm').value
+					if(unit[i].id!=id2) unit[i].value=fmt(eval(val+'*m2'+tmp))
+				}
+			}
+		}
+	}
+}
+
+function fmt(txt) {
+	txt=txt.toPrecision(15).replace(/0+e/,'e').replace(/\.0+$/,'.')
+	if(txt.indexOf('e')==-1 && txt.indexOf('.')!=-1) txt=txt.replace(/0+$/, '')
+	return txt
+}
+
+Array.prototype.sum = function () {
+	for(var t=0,i=this.length; i--; t+=parseFloat(this[i])); return t;
+}
+
+function getRMSE() {
+	var i, j, tmp
+
+	var txt=$('datA').value.replace(/^\s*\n*/,"").replace(/\s*\n*$/,"").replace(/\s+[\n|$]/g,"\n").split('\n')
+
+	var Ndat=txt.length, Ndim=txt[0].split(/\s+/).length
+
+	$('datNum').innerHTML=Ndat
+	$('datDim').innerHTML=Ndim
+
+	var datA=[], datB=[], avgA=[], avgB=[], ampA=[], ampB=[], varAB=[], RMSE=[]
+
+	j=Ndim; while(j--) avgA[j]=0
+	for(i=0; i<Ndat; i++) {
+		datA[i]=txt[i].replace(/^\s+/,"").split(/\s+/)
+		ampA[i]=0
+		for(j=0; j<Ndim; j++) {
+			ampA[i] += datA[i][j]*datA[i][j]
+			avgA[j] += parseFloat(datA[i][j])
+		}
+		ampA[i]=Math.sqrt(ampA[i])
+	}
+	var avgAamp=ampA.sum()/parseFloat(Ndat)
+	j=Ndim; while(j--) avgA[j] /= parseFloat(Ndat)
+
+	txt=$('datB').value.replace(/^\s*\n*/,"").replace(/\s*\n*$/,"").replace(/\s+[\n|$]/g,"\n").split('\n')
+
+	if(txt.length==Ndat) {
+		for(i=0; i<Ndat; i++) datB[i]=txt[i].replace(/^\s+/,"").split(/\s+/)
+	} else {
+		for(i=0; i<Ndat; i++) {
+			datB[i]=[]
+			for(j=0; j<Ndim; j++) datB[i][j]=avgA[j]
+		}
+	}
+
+	j=Ndim; while(j--) avgB[j]=0
+	for(i=0; i<Ndat; i++) {
+		ampB[i]=0
+		for(j=0; j<Ndim; j++) {
+			ampB[i] += datB[i][j]*datB[i][j]
+			avgB[j] += parseFloat(datB[i][j])
+		}
+		ampB[i]=Math.sqrt(ampB[i])
+	}
+	var avgBamp=ampB.sum()/parseFloat(Ndat)
+	j=Ndim; while(j--) avgB[j] /= parseFloat(Ndat)
+
+	$('avgA').innerHTML=avgA.join('<br>')
+	$('avgAtot').innerHTML=avgA.sum()/parseFloat(Ndim)
+	$('avgAamp').innerHTML=avgAamp
+
+	$('avgB').innerHTML=avgB.join('<br>')
+	$('avgBtot').innerHTML=avgB.sum()/parseFloat(Ndim)
+	$('avgBamp').innerHTML=avgBamp
+
+	j=Ndim; while(j--) varAB[j]=0
+	i=Ndat; while(i--) {
+		j=Ndim; while(j--) varAB[j] += Math.pow(datA[i][j]-datB[i][j],2)
+	}
+
+	j=Ndim; while(j--) RMSE[j]=Math.sqrt(varAB[j]/parseFloat(Ndat))
+	$('RMSE').innerHTML=RMSE.join("<br>")
+
+	j=Ndim; while(j--) RMSE[j]=Math.sqrt(varAB[j]/parseFloat(Ndat-1))
+	$('RMSE1').innerHTML=RMSE.join("<br>")
+
+	$('RMSEtot').innerHTML=Math.sqrt(varAB.sum()/parseFloat(Ndat*Ndim))
+	$('RMSE1tot').innerHTML=Math.sqrt(varAB.sum()/parseFloat((Ndat-1)*Ndim))
+
+	tmp=0
+	i=Ndat; while(i--) tmp += Math.pow(ampA[i]-ampB[i],2)
+
+	$('RMSEamp').innerHTML=Math.sqrt(tmp/parseFloat(Ndat))
+	$('RMSE1amp').innerHTML=Math.sqrt(tmp/parseFloat(Ndat-1))
+}
+</script>
