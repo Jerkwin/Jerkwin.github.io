@@ -188,6 +188,11 @@ table tr th {
 		</td></tr>
 		<tr><td>
 			<input type="box" name="Energy" onInput="setVal(this.name, this.id)" id="Hatr"> 哈垂(Hartree)<br>
+			<input type="box" name="Energy" onInput="setVal(this.name, this.id)" id="Ee2Bhr"> 静电势(e<sup>2</sup>/Bohr)<br>
+		</td></tr>
+		<tr><td>
+			<input type="box" name="Energy" onInput="setVal(this.name, this.id)" id="Ee2nm"> 静电势(e<sup>2</sup>/nm)<br>
+			<input type="box" name="Energy" onInput="setVal(this.name, this.id)" id="Ee2A"> 静电势(e<sup>2</sup>/&#197;)<br>
 			<input type="box" name="Energy" onInput="setVal(this.name, this.id)" id="Emd"> MD常用单位(amu-&#197;<sup>2</sup>/fs<sup>2</sup>)<br>
 		</td></tr>
 		<tr><td>
@@ -2425,6 +2430,8 @@ var $=function(id){return document.getElementById(id)}
 Clit=299792458
 Navg=6.022140857E23
 echg=1.6021766208E-19
+ang=1.E-10
+nm=1.E-9
 
 J2Hatr     = 2.293712317e17        // 0.000 000 028 e17        E_h
 J2K        = 7.2429731e22          // 0.000 0042 e22           K
@@ -2521,6 +2528,9 @@ J2kJ_mol   = Navg/1000.
 J2kcal_mol = Navg/1000.*J2cal
 amu2Emd      = Clit*Clit*1.E-10
 invm2invcm=1.E-2
+Hatr2Ee2Bhr=1.
+Hatr2Ee2A=ang/bhr
+Hatr2Ee2nm=nm/bhr
 
 m2Eum=1.E6;   m2Enm=1.E9; m2Eang=1.E10
 eV2MeV=1.E-6; eV2GeV=1.E-9; eV2TeV=1.E-12; eV2PeV=1.E-15
@@ -2529,7 +2539,7 @@ Hz2MHz=1.E-6; Hz2GHz=1.E-9; Hz2THz=1.E-12; Hz2PHz=1.E-15
 F_N=1.0; F_dyn=1E-5; F_mN=1E-3; F_uN=1E-6; F_nN=1E-9; F_pN=1E-12
 F_au=auf; F_auA=Hatr2J/L_ang
 F_mpc=1/J2kcal_mol/L_ang; F_gmx=1/J2kJ_mol/L_nm
-F_md=amu2kg*1E20
+F_md=amu2kg/(ang*ang)
 
 P_Pa=1.; P_kPa=1E3; P_MPa=1E6; P_GPa=1E9
 P_dyncm=1E-1; P_bar=1E5; P_atm=101325
@@ -2664,7 +2674,8 @@ function setVal(name, id) {
 		'cal':'J', 'erg':'J', 'kcal_mol':'J', 'kJ_mol':'J',
 		'MeV':'eV', 'GeV':'eV', 'TeV':'eV', 'PeV':'eV',
 		'MHz':'Hz', 'GHz':'Hz', 'PHz':'Hz', 'THz':'Hz',
-		'Eum':'Rinvm', 'Enm':'Rinvm', 'Eang':'Rinvm'}
+		'Eum':'Rinvm', 'Enm':'Rinvm', 'Eang':'Rinvm',
+		'Ee2Bhr':'Hatr', 'Ee2A':'Hatr', 'Ee2nm':'Hatr'}
 
 	unit=document.getElementsByName(name)
 
