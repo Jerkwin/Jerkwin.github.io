@@ -1,0 +1,21 @@
+Remark line goes here
+MASS
+
+BOND
+
+ANGLE
+c1-c1-cx   56.280     178.460   same as c1-c1-c3, penalty score=  8.0
+c1-cx-hc   48.490     108.675   Calculated using c1-c3-hc, penalty score= 75.5
+
+DIHE
+
+IMPROPER
+ca-ca-ca-ha         1.1          180.0         2.0          Using general improper torsional angle  X- X-ca-ha, penalty score=  6.0)
+ca-ca-ca-n          1.1          180.0         2.0          Using the default value
+n -o -c -os        10.5          180.0         2.0          Same as X -X -c -o , penalty score= 24.5 (use general term))
+c -ca-n -hn         1.1          180.0         2.0          Using general improper torsional angle  X- X- n-hn, penalty score=  6.0)
+
+NONBON
+
+
+
