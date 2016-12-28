@@ -1,7 +1,0 @@
-source leaprc.ff14SB
-source leaprc.gaff
-loadamberparams Lig.frcmod
-lig=loadmol2 Lig.mol2
-check lig
-saveamberparm lig Lig.prmtop Lig.inpcrd
-quit
