@@ -241,6 +241,10 @@ table tr th {
 			<input type="box" name="Force" onInput="setVal(this.name,this.id)" id="F_auA"> 原子埃单位(Hartree/&#197;)<br>
 		</td></tr>
 		<tr><td>
+			<input type="box" name="Force" onInput="setVal(this.name,this.id)" id="F_e2A"> 静电埃(e<sup>2</sup>/&#197;<sup>2</sup>)<br>
+			<input type="box" name="Force" onInput="setVal(this.name,this.id)" id="F_e2nm"> 静电纳米(e<sup>2</sup>/nm<sup>2</sup>)<br>
+		</td></tr>
+		<tr><td>
 			<input type="box" name="Force" onInput="setVal(this.name,this.id)" id="F_mpc"> MOPAC单位(kcal/mol-&#197;)<br>
 			<input type="box" name="Force" onInput="setVal(this.name,this.id)" id="F_gmx"> GROMACS单位(kJ/mol-nm)<br>
 			<input type="box" name="Force" onInput="setVal(this.name,this.id)" id="F_md"> MD常用单位(amu-&#197;/fs<sup>2</sup>)<br>
@@ -2538,6 +2542,7 @@ Hz2MHz=1.E-6; Hz2GHz=1.E-9; Hz2THz=1.E-12; Hz2PHz=1.E-15
 
 F_N=1.0; F_dyn=1E-5; F_mN=1E-3; F_uN=1E-6; F_nN=1E-9; F_pN=1E-12
 F_au=auf; F_auA=Hatr2J/L_ang
+F_e2A=auf*bhr*bhr/(ang*ang); F_e2nm=auf*bhr*bhr/(nm*nm);
 F_mpc=1/J2kcal_mol/L_ang; F_gmx=1/J2kJ_mol/L_nm
 F_md=amu2kg/(ang*ang)
 
