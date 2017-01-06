@@ -13922,6 +13922,14 @@ __注意__: 请确保坐标与速度的输出频率足够高. 自相关函数初
 </tr>
 </table>
 
+### 补充说明(吕康杰)
+
+这个命令使用时实际有两个分支, 按进程运行, 按线程运行:
+
+`-np 8` 实际会变成 `mpirun -np 8` 放到最前面, `-nmpi 8` 直接就是 `-nmpi 8`, 然后才调节`npme`的数目变化. 
+
+虽然原理上明白了, 但我尝试了依然只有gmx 2016的`nmpi`运行成功, `np`的任务, 单独用`mpirun`都可以运行,`tune_pme`里面还是用不了.
+
 ## gmx vanhove: 计算Van Hove位移及相关函数(翻译: 刘恒江)
 
 	gmx vanhove [-f [<.xtc/.trr/...>]] [-s [<.tpr/.tpb/...>]] [-n [<.ndx>]]
@@ -15008,4 +15016,3 @@ The m2p file format contains input options for the xpm2ps program. All of these 
 	y-font                   = Times-Roman
 	y-tickfontsize           = 10
 	y-tickfont               = Helvetica
-
