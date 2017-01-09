@@ -17,7 +17,7 @@ GROMACS和VMD是在分子动力学模拟中经常用到的程序, 它们都带�
 
 先给出氢键判定标准的几何准则所对应的结构图
 
-![](http://jerkwin.github.io/pic/2016/HB_gmxvmd.png)
+![](https://jerkwin.github.io/pic/2016/HB_gmxvmd.png)
 
 ## GROMACS的氢键判定
 
