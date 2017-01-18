@@ -60,7 +60,7 @@ Biochemistry 32 pp. 13123 (__1993__)
 
 ### 第一步: 获取并处理pdb文件
 
-从[Protein Data Bank](http://www.rcsb.org/pdb/)下载小肽的pdb文件`1OMB.PDB`(或点击[这里](1OMB.pdb)下载). 在Linux下你可使用如下命令:
+从[Protein Data Bank](http://www.rcsb.org/pdb/)下载小肽的pdb文件`1OMB.PDB`(或点击[这里](/GMX/1OMB.pdb)下载). 在Linux下你可使用如下命令:
 
 `wget http://www.rcsb.org/pdb/files/1OMB.pdb`
 
