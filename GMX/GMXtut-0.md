@@ -90,7 +90,7 @@ Biochemistry 32 pp. 13123 (__1993__)
 
 使用文本编辑器检查得到的`fws.pdb`文件, 保证`HEADER`和`COMPND`行具有名称(实际上, 任何名称都可以), 删除DeepView添加到文件末尾的以`SPDBV`开头的行.
 
-处理后的`fws.pdb`文件见[这里](fws.pdb). 和原先的`1OMB.PDB`文件相比, 可以看到`fws.pdb`文件中已经不含氢原子, 删除了`SEQRES`, `SHEET`, `SSBOND`, `CONECT`信息, 并且添加了`OXT`原子.
+处理后的`fws.pdb`文件见[这里](/GMX/fws.pdb). 和原先的`1OMB.PDB`文件相比, 可以看到`fws.pdb`文件中已经不含氢原子, 删除了`SEQRES`, `SHEET`, `SSBOND`, `CONECT`信息, 并且添加了`OXT`原子.
 
 __说明__: 无论何时将一个文本文件从Windows系统复制到unix系统, 一定要转换成unix文本文件. 像MS Word这类Windows编辑器会在文件中加入控制符, 这可能会使unix程序产生错误. 你可以用`to_unix`命令(如`to_unix filename filename`将`filename`文件转换成unix文本文件. 在RedHat Linux中, 还可以使用`dos2unix`命令.)
 
@@ -1285,7 +1285,7 @@ gmx-5.x
 	Temperature                 300.129      0.063    2.89586  -0.320896  (K)
 	gcq#155: "I Am a Wonderful Thing" (Kid Creole)
 
-上面命令中的`-o`选项指定了数据的输出文件(`*.xvg`), 它是一个文本文件, 可以用Xmgr或[Grace](Grace http://plasma-gate.weizmann.ac.il/Grace/)打开(只能在Linux和unix下使用),
+上面命令中的`-o`选项指定了数据的输出文件(`*.xvg`), 它是一个文本文件, 可以用Xmgr或[Grace](http://plasma-gate.weizmann.ac.il/Grace/)打开(只能在Linux和unix下使用),
 
 `xmgrace -nxy enrg-npt.xvg`
 
