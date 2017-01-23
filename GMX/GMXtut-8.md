@@ -95,9 +95,9 @@ N    opls_237     0      14.0067  4    C 0.140   C 0.140   C 0.140   C 0.140
 
 <p>OPLS-AA自带的<code>n2t</code>文件内容很少, 不能满足我们的需要, 为此, 我们需要对其进行修改, 增加石墨烯碳原子的设置. 对未修饰的石墨烯, 不考虑周期性时, 可能的碳原子类型有三种: 分别对应于与周围一个, 两个和三个原子相连接的碳原子. 前两种是边界碳原子, 最后一种是正常的碳原子. 当考虑周期性时, 就需要考虑一种碳原子类型了. 此外, 我们假定石墨烯中碳原子的电荷为0, 当不考虑边界碳原子时, 这是个很好的近似. 当然, 文献中有些模拟的石墨烯表面是带电的. 如果你也需要这样做, 可以修改相应的电荷列.</p>
 
-<p>在我们的石墨烯结构中, 碳碳键长为0.142 nm, 所以我们可以将下面的内容保存到一个文件, 如<code>graphene.n2t</code>中, 并将此文件放于<code>GROMACS主目录/share/top/oplsaa.ff/</code>目录下(也可以直接将内容添加到<code>atomname2type.n2t</code>文件中, 但不建议这么做)</p>
+<p>在我们的石墨烯结构中, 碳碳键长为0.142 nm. 我们希望被修改的参数，同时尽量不影响的其他模拟。比较安全的做法是将<code>GROMACS主目录/share/top/oplsaa.ff/</code>目录拷贝到工作目录，所有的修改都在拷贝的<code>atomname2type.n2t</code>文件中进行。运行GROMACS时，程序会自动加载当前目录下的force field文件.还有一种选择，就是在<code>GROMACS主目录/share/top/oplsaa.ff/</code>目录中拷贝一个<code>atomname2type.n2t</code>文件副本，将其命名为<code>graphene.n2t</code>，所有的修改都在<code>graphene.n2t</code>中进行.
 
-<pre><code>C    opls_145   0.00      12.011  1    C 0.142
+<pre><code>C    opls_145   0.00      12.011  1    C 0.142
 C    opls_145   0.00      12.011  2    C 0.142   C 0.142
 C    opls_145   0.00      12.011  3    C 0.142   C 0.142   C 0.142
 </code></pre>
@@ -113,7 +113,7 @@ C    opls_145   0.00      12.011  3    C 0.142   C 0.142   C 0.142
 <pre><code>g_x2top -f gra.gro -o gra.top -ff oplsaa -pbc -name graphene -kb 400000 -kt 600 -kp 150
 </code></pre>
 
-<p>上面命令中<code>-ff</code>选项指明了使用的力场. <code>-pbc</code>选项指明计算成键时考虑周期性边界条件. 如果你将石墨烯视为孤立分子, 请使用<code>-nopbc</code>选项. <code>-name</code>选项指定了拓扑文件中分子的名称. 默认情况下, <code>g_x2top</code>会自动为键合相互作用加上力场参数, 但这种自动加入的力场参数并不是根据力场中相应原子类型间的键合参数加入的. 所以, 我们使用了选项<code>-kb</code>, <code>-kp</code>, <code>-kt</code>, 它们分别指定键, 键角和二面角的力常数, 它们的默认值为400000, 400, 5. 如果不想让程序自动加入力常数, 可以使用<code>-noparam</code>选项. 关于<code>g_x2top</code>的选项, 请参考其<a href="http://jerkwin.github.io/GMX/GMXprg#gmxx2top:根据坐标生成原始拓扑文件翻译:阮洋">文档</a>.</p>
+<p>上面命令中<code>-ff</code>选项指明了使用的力场. <code>-pbc</code>选项指明计算成键时考虑周期性边界条件. 如果你将石墨烯视为孤立分子, 请使用<code>-nopbc</code>选项. <code>-name</code>选项指定了拓扑文件中分子的名称. 默认情况下, <code>g_x2top</code>会自动为键合相互作用加上力场参数, 但这种自动加入的力场参数并不是根据力场中相应原子类型间的键合参数加入的. 所以, 我们使用了选项<code>-kb</code>, <code>-kp</code>, <code>-kt</code>, 它们分别指定键, 键角和二面角的力常数, 它们的默认值为400000, 400, 5. 如果不想让程序自动加入力常数, 可以使用<code>-noparam</code>选项. 关于<code>g_x2top</code>的选项, 请参考其<a href="http://jerkwin.github.io/GMX/GMXprg#gmxx2top:根据坐标生成原始拓扑文件翻译:阮洋">文档</a>.（注意， GROMACS 5.0.X版本存在bug, 运行会导致segmentation fault， 5.0以下版本可以正常运行）</p>
 
 <p>运行命令后, 屏幕上会输出类似下面的内容:</p>
 
