@@ -193,9 +193,9 @@ GROMACS计算距离时, 会同时考虑周期性. 这意味着, 如果你有一�
 
 为启动伞形抽样, 还需要对每一个已平衡的构型调用`grompp`处理此[.mdp文件](/GMX/GMXtut-3_md_umbrella.mdp). 许多牵引参数与SMD过程中的相同, 除了`pull_rate1`以外, 它被设置为0. 我们不需要沿反应坐标移动构型, 而是将它限制在构型空间中定义好的窗口内. 设置`pull_start = yes`意味着初始的质心距离为参考距离, 我们不必对每个构型单独定义一个参考(`pull_init1`).
 
-	gmx grompp -f md_umbrella.mdp -c conf0.gro -p topol.top -n index.ndx -o umbrella0.tpr
+	gmx grompp -f md_umbrella.mdp -c npt0.gro -p topol.top -n index.ndx -o umbrella0.tpr
 	...
-	gmx grompp -f md_umbrella.mdp -c conf450.gro -p topol.top -n index.ndx -o umbrella22.tpr
+	gmx grompp -f md_umbrella.mdp -c npt22.gro -p topol.top -n index.ndx -o umbrella22.tpr
 
 现在, 需要使用`gmx mdrun`运行每个输入文件以进行实际的数据收集模拟. 一旦所有的模拟都完成了, 我们就可以进行数据分析了. 正确执行模拟的一个注意点: 未指定`-pf`和`-px`文件名时, 不要使用`mdrun`的`-deffnm`选项. 在这种情况下, 使用`-deffnm`将导致`pullf.xvg`与`pullx.xvg`输出到相同的文件(无论`-deffnm`指定了什么). 使用`-pf`和`-px`会覆盖`-deffnm`选项的设置, 即
 
