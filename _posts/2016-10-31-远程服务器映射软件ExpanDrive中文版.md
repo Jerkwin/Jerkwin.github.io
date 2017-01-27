@@ -17,18 +17,18 @@
 1. 点击[ExpanDrive](http://jerkwin.github.io/Prog/ExpanDrive1.8.4.zip)下载安装程序压缩包并解压
 2. 运行`1.ExpanDrive_安装文件.exe`进行安装. 默认会安装在C盘根目录下, 最好不要修改, 否则可能导致下面的破解失败
 3. 运行`2.ExpanDrive_破解补丁.exe`进行破解. 随意输入注册名, 点击`PATCH`即可完成破解. 注意`PATCH`的位置
-	![](http://jerkwin.github.io/pic/2016/expandrive_patch.png)
+	![](/pic/2016/expandrive_patch.png)
 3. 复制中文版`3.ExpanDrive_CN.exe`到安装目录下, 默认为`C:\ExpanDrive`. 如果觉得不方便, 可以将中文版的文件名修改下, 不影响使用.
 
 ### 使用
 
 安装目录下的`C:\ExpanDrive\ExpanDrive.exe`为英文原版, 和后面复制的中文版没有冲突, 都可以使用. 使用方法很简单, 双击运行程序, 新建一个驱动器, 填好远程服务器的信息, 你的登录名, 密码, 并设定盘符就可以了.
 
-![](http://jerkwin.github.io/pic/2016/expandrive_new.png)
+![](/pic/2016/expandrive_new.png)
 
 注意一点, 在`目录`选项下, 可以设定自定义的目录而不必直接显示整个服务器, 这样就可以每次打开后直接转到你自己的目录下而不用切换了. 像我, 平时都是在`/scratch`的目录下运行程序, 就直接将这个目录映射为一个盘符, 这样每次运行就直接连到那个目录, 方便在里面查看操作文件.
 
-![](http://jerkwin.github.io/pic/2016/expandrive_dir.png)
+![](/pic/2016/expandrive_dir.png)
 
 ### 说明
 
