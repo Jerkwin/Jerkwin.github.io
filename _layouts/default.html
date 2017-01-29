@@ -4,9 +4,9 @@
 <meta http-equiv=content-type content="text/html; charset=utf-8">
 <meta name=viewport content="width=device-width, initial-scale=1">
 <meta name=author content={{ site.author }} />
-<title>{{page.title}}|{{site.author}}</title>
+<title>{{ page.title }} | {{ site.author }}</title>
 <link href="data:image/x-icon;base64,AAABAAEAEBAQAAAAAAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAD/APr59wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIiIiIiIiAAAiIiIiIiIAACIiIiIiIgERERERERIiAREREREREiIBERERERESIgERIiIiERIiAREiIiIREiIBESIhERESIgERIiERERIiAREiIiIiIiIBESIiIiIiIgERIiIiIiIiAREREREREAABEREREREQAAERERERERAADgAQAA4AEAAOABAAAAAQAAAAEAAAABAAAAAQAAAAEAAAABAAAAAQAAAAEAAAABAAAAAQAAAA8AAAAPAAAADwAA" rel=icon type="image/x-icon" />
-<link href="/feed" rel=alternate type="application/atom+xml"/>
+<link href="/feed/" rel=alternate title={{ site.author }} type="application/atom+xml" />
 <link rel=stylesheet href="/jscss/pmd.min.css">
 </head>
 <body>
@@ -22,15 +22,23 @@
 </div></header>
 
 <div class=wrap>
-{%if page.title%}<h1>{{page.title}}</h1>
-<span class=meta style="padding-left: 1em;">{%if page.categories%}类别: {%for cat in page.categories%}<a href="/categories/#{{cat}}">{{cat}}</a>&nbsp;{%endfor%}{%endif%}{%if page.tags%}&nbsp;&nbsp;标签: {%for tag in page.tags%}<a href="/tags/#{{tag}}">{{tag}}</a>&nbsp;{%endfor%}<span id="busuanzi_container_page_pv">&nbsp;&nbsp;阅读次数: <span id="busuanzi_value_page_pv"></span></span>&nbsp;&nbsp;版权: <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">(CC) BY-NC-SA</a>{%endif%}
-</span>{%endif%}
+<h1>{{ page.title }}</h1>
+<span class=meta style="padding-left: 1em;">
+{% if page.categories %}类别:
+{% for cat in page.categories %} <a href="/categories/#{{ cat }}">{{ cat }}</a>&nbsp;{% endfor %}
+{% endif %}
+{% if page.tags %}&nbsp;&nbsp;标签:
+{% for tag in page.tags %} <a href="/tags/#{{ tag }}">{{ tag }}</a>&nbsp;{% endfor %}
+<span id="busuanzi_container_page_pv">&nbsp;&nbsp;阅读次数: <span id="busuanzi_value_page_pv"></span></span>
+&nbsp;&nbsp;版权: <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/"> (CC) BY-NC-SA</a>
+{% endif %}
+</span>
 
 <span id=tocbtn onClick="showTOC(this.innerHTML)">✕</span>
-<article class=content>{{content}}
+<article class=content>{{ content }}
 
 <hr>
-<img src="/jscss/Blog.png" style="display:table;margin:0 auto;">
+<img src="/jscss/分子模拟之道_Blog.png" style="display:table;margin:0 auto;">
 <span class=meta style="display:table;margin:0 auto;">
 <span id=busuanzi_container_site_uv>访问人次(2015年7月9日起): <span id=busuanzi_value_site_uv></span></span> | <span class="label label-info">最后更新: {{site.time | date:"%Y-%m-%d %H:%M:%S %Z"}}</span> | 版权所有 © 2008 - {{site.time | date:"%Y"}} <a href="http://jerkwin.github.io/about/">Jerkwin</a>
 </span>
