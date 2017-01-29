@@ -4,7 +4,7 @@ layout: page
 comments: yes
 ---
 
-下面是我关注或曾经关注的一些网站:
+下面是我关注或曾经关注过的一些网站:
 
 - [陈皓 酷壳](http://coolshell.cn/)
 - [阮一峰 博客](http://www.ruanyifeng.com/blog/)
@@ -19,3 +19,5 @@ comments: yes
 - [西西河](http://www.ccthere.com/)
 - [纪录片](http://www.verycd.com/sto/tv/newsreel/)
 - [网易公开课](http://open.163.com/)
+
+
