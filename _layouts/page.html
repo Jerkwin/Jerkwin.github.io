@@ -2,7 +2,9 @@
 layout: default
 ---
 
-{{content}}
+{{ content }}
 
 <hr>
-{%if page.comments%}{%include comments.md%}{%endif%}
+{% if page.comments %}
+{% include comments.md %}
+{% endif %}
