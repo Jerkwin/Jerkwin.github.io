@@ -4,8 +4,9 @@ url: http://jerkwin.github.io
 author: Jerkwin
 highlighter: rouge
 safe: true
-paginate: 25
 auto: true
 future: true
+paginate: 25
+gems: [jekyll-paginate]
 kramdown:
     toc_levels: 1..3
