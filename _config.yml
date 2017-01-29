@@ -7,6 +7,5 @@ safe: true
 auto: true
 future: true
 paginate: 25
-gems: [jekyll-paginate]
 kramdown:
     toc_levels: 1..3
