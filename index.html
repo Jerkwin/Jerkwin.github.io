@@ -2,7 +2,7 @@
 layout: default
 ---
 <ul class="listing">
-{%for post in paginator.posts%}{%capture y%}{{post.date|date:"%Y"}}{%endcapture%}{%if year!=y%}{%assign year=y%}<li class="listing-seperator">{{y}}</li>{%endif%}
+{%for post in paginator.posts%}{%capture y%}{{post.date|date:"%Y"}}{%endcapture%}{%if year !=y%}{%assign year=y%}<li class="listing-seperator">{{y}}</li>{%endif%}
 <li class="listing-item"><time>{{post.date|date:"%m-%d"}}</time><a href="{{post.url}}"> {{post.title}}</a></li>{%endfor%}
 </ul>
 
