@@ -4,9 +4,9 @@
 <meta http-equiv=content-type content="text/html; charset=utf-8">
 <meta name=viewport content="width=device-width, initial-scale=1">
 <meta name=author content={{ site.author }} />
-<title>{{ page.title }} | {{ site.author }}</title>
+<title>{{page.title}}|{{site.author}}</title>
 <link href="data:image/x-icon;base64,AAABAAEAEBAQAAAAAAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAD/APr59wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIiIiIiIiAAAiIiIiIiIAACIiIiIiIgERERERERIiAREREREREiIBERERERESIgERIiIiERIiAREiIiIREiIBESIhERESIgERIiERERIiAREiIiIiIiIBESIiIiIiIgERIiIiIiIiAREREREREAABEREREREQAAERERERERAADgAQAA4AEAAOABAAAAAQAAAAEAAAABAAAAAQAAAAEAAAABAAAAAQAAAAEAAAABAAAAAQAAAA8AAAAPAAAADwAA" rel=icon type="image/x-icon" />
-<link href="/feed/" rel=alternate title={{ site.author }} type="application/atom+xml" />
+<link href="/feed" rel=alternate type="application/atom+xml"/>
 <link rel=stylesheet href="/jscss/pmd.min.css">
 </head>
 <body>
@@ -14,7 +14,7 @@
 <a class=site-title href="/"><strong><font style="color:#39B3D7">哲</font><font style="color:#ED9C28">●</font><font style="color:#47A447">科</font><font style="color:#D9534F">●</font><font style="color:#3276B1">文</font><font style="color:#4885ed">J</font><font style="color:#db3236">e</font><font style="color:#f4c20d">r</font><font style="color:#3cba54">k</font><font style="color:#3276B1">w</font><font style="color:#db3236">i</font><font style="color:#f4c20d">n</font></strong></a>
 <a class=page-link href="/categories">类别</a>
 <a class=page-link href="/tags">标签</a>
-<a class=page-link href="/guestbook">留言</a>
+<a class=page-link href="/guests">留言</a>
 <a class=page-link href="/links">链接</a>
 <a class=page-link href="/about">关于</a>
 <a class=page-link href="/feed">订阅</a><br>
@@ -22,17 +22,9 @@
 </div></header>
 
 <div class=wrap>
-<h1>{{ page.title }}</h1>
-<span class=meta style="padding-left: 1em;">
-{% if page.categories %}类别:
-{% for cat in page.categories %} <a href="/categories/#{{ cat }}">{{ cat }}</a>&nbsp;{% endfor %}
-{% endif %}
-{% if page.tags %}&nbsp;&nbsp;标签:
-{% for tag in page.tags %} <a href="/tags/#{{ tag }}">{{ tag }}</a>&nbsp;{% endfor %}
-<span id="busuanzi_container_page_pv">&nbsp;&nbsp;阅读次数: <span id="busuanzi_value_page_pv"></span></span>
-&nbsp;&nbsp;版权: <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/"> (CC) BY-NC-SA</a>
-{% endif %}
-</span>
+{%if page.title%}<h1>{{page.title}}</h1>
+<span class=meta style="padding-left: 1em;">{%if page.categories%}类别: {%for cat in page.categories%}<a href="/categories/#{{cat}}">{{cat}}</a>&nbsp;{%endfor%}{%endif%}{%if page.tags%}&nbsp;&nbsp;标签: {%for tag in page.tags%}<a href="/tags/#{{tag}}">{{tag}}</a>&nbsp;{%endfor%}<span id="busuanzi_container_page_pv">&nbsp;&nbsp;阅读次数: <span id="busuanzi_value_page_pv"></span></span>&nbsp;&nbsp;版权: <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">(CC) BY-NC-SA</a>{%endif%}
+</span>{%endif%}
 
 <span id=tocbtn onClick="showTOC(this.innerHTML)">✕</span>
 <article class=content>{{ content }}
@@ -40,7 +32,7 @@
 <hr>
 <img src="/jscss/Blog.png" style="display:table;margin:0 auto;">
 <span class=meta style="display:table;margin:0 auto;">
-<span id=busuanzi_container_site_uv>访问人次(2015年7月9日起): <span id=busuanzi_value_site_uv></span></span> | <span class="label label-info">最后更新: {{site.time | date:"%Y-%m-%d %H:%M:%S %Z"}}</span> | 版权所有 © 2008 - {{site.time | date:"%Y"}} <a href="http://jerkwin.github.io/about/">Jerkwin</a>
+<span id=busuanzi_container_site_uv>访问人次(2015年7月 9日起): <span id=busuanzi_value_site_uv></span></span> | <span class="label label-info">最后更新: {{site.time|date:"%Y-%m-%d %H:%M:%S %Z"}}</span> | 版权所有 © 2008 - {{site.time|date:"%Y"}} <a href="http://jerkwin.github.io/about/">Jerkwin</a>
 </span>
 <a id=scrollTop href="javascript:scroll(0,0)">个</a>
 </div>
