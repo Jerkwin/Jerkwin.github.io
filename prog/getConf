@@ -1,0 +1,255 @@
+usage="\
+>>>>>>>>>>>>>>>>     getConf        <<<<<<<<<<<<<<<<
+>>>>>>>>>>>>>>>> Jerkwin@gmail.com  <<<<<<<<<<<<<<<<
+>>>>>>>>>>     2015-08-24 13:48:56     <<<<<<<<<
+>> Usage: getConf <File.(gro|xyz)>
+                  {-cent Ibgn:Istp:Iend}          # Atom index to define the center
+                  {-geom sph|cyl|cub|slab|hollow} # Geometry of the configuration
+                  {-box  a:b:c}                   # Box size in Angstrom
+                  {-rad  Ra:Rb:Rc}                # Radius for sph, cyl, cub in Angstrom
+                  {-tran Ta:Tb:Tc}                # Translation vector in Angstrom
+                  {-zmin}                         # Translate based on zmin of atoms
+                  {-dsurf Dsurf}                  # Distance of center atom from the slab surface
+                  {-pbc x/y/z}                    # Apply PBC to X/Y/Z
+                  {-out (gro|xyz)}                # Output File Format
+>> Default: getConf <File.gro> -c 1:1:1 -g sph -b 1f:1f:1f -r 1f:1f:1f -t 0.5f:0.5f:0.5f -p xyz -o gro"
+
+[[ $# -lt 1 ]] && { echo "$usage"; exit; }
+
+PBC=XYZ
+Cnt="1:1:1"
+Oxyz="xyz"
+Geom="sph"
+Box="1f:1f;1f"
+Rabc="1f:1f:1f"
+Tabc="0.5f:0.5f:0.5f"
+
+opt=($@); N=${#opt[@]}
+for((i=0; i<N; i++)); do
+	arg=${opt[$i]}; j=$((i+1))
+	[[ $arg =~ .gro ]] && { File=${opt[$i]}; Ixyz=0; }
+	[[ $arg =~ .xyz ]] && { File=${opt[$i]}; Ixyz=1; }
+	[[ $arg =~ -z   ]] && { YesZmin=1; }
+	[[ $arg =~ -c   ]] && { Cnt=${opt[$j]};  opt[$i]=""; opt[$j]=""; }
+	[[ $arg =~ -g   ]] && { Geom=${opt[$j]}; opt[$i]=""; opt[$j]=""; }
+	[[ $arg =~ -b   ]] && { Box=${opt[$j]};  opt[$i]=""; opt[$j]=""; }
+	[[ $arg =~ -r   ]] && { Rabc=${opt[$j]}; opt[$i]=""; opt[$j]=""; }
+	[[ $arg =~ -t   ]] && { Tabc=${opt[$j]}; opt[$i]=""; opt[$j]=""; }
+	[[ $arg =~ -d   ]] && { Dsrf=${opt[$j]}; opt[$i]=""; opt[$j]=""; }
+	[[ $arg =~ -p   ]] && { PBC=${opt[$j]};  opt[$i]=""; opt[$j]=""; }
+	[[ $arg =~ -o   ]] && { Oxyz=${opt[$j]}; opt[$i]=""; opt[$j]=""; }
+done
+
+awk ' BEGIN { NMAX=9999
+		Ixyz="'$Ixyz'"+0;
+		Geom="'$Geom'"; YesZmin="'$YesZmin'"+0
+		PBC="'$PBC'";   Cnt="'$Cnt'";
+		Rabc="'$Rabc'"; Tabc="'$Tabc'"; 
+		Box="'$Box'";   Dsrf="'$Dsrf'"+0
+
+		Fout="'$File'"; sub(/....$/, "", Fout)
+		if(Oxyz=="xyz") Fout=Fout"~"Geom"_"Cnt".xyz"
+		else  Fout=Fout"~"Geom"_"Cnt".gro"
+		gsub(/:/, "-", Fout)
+
+		YesXYZ=toupper(PBC)
+		YesX=index(YesXYZ, "X")
+		YesY=index(YesXYZ, "Y")
+		YesZ=index(YesXYZ, "Z")
+
+		Nini=1; Nstp=1; Nend=1
+		Ndat=split(Cnt, txt, ":")
+		if(Ndat==1) { Nini=txt[1]; Nend=Nini; Nstp=Nini }
+		if(Ndat==2) { Nini=txt[1]; Nend=txt[2] }
+		if(Ndat==3) { Nini=txt[1]; Nend=txt[2]; Nstp=txt[3] }
+
+		Ba="1f"; Bb="1f"; Bc="1f"
+		Ndat=split(Box, txt, ":")
+		if(Ndat==1) { Ba=txt[1]; Bb=Ba; Bc=Ba }
+		if(Ndat==2) { Ba=txt[1]; Bb=txt[2] }
+		if(Ndat==3) { Ba=txt[1]; Bb=txt[2]; Bc=txt[3] }
+		
+		Ra="1f"; Rb="1f"; Rc="1f"
+		Ndat=split(Rabc, txt, ":")
+		if(Ndat==1) { Ra=txt[1]; Rb=Ra; Rc=Ra }
+		if(Ndat==2) { Ra=txt[1]; Rb=txt[2] }
+		if(Ndat==3) { Ra=txt[1]; Rb=txt[2]; Rc=txt[3] }
+
+		Ta="0.5f"; Tb="0.5f"; Tc="0.5f"
+		Ndat=split(Tabc, txt, ":")
+		if(Ndat==1) { Ta=txt[1]; Tb=Ta; Tc=Ta }
+		if(Ndat==2) { Ta=txt[1]; Tb=txt[2] }
+		if(Ndat==3) { Ta=txt[1]; Tb=txt[2]; Tc=txt[3] }
+
+		YesBa=0; if(index(Ba, "f")) { sub("f", "", Ba); YesBa=1 }
+		YesBb=0; if(index(Bb, "f")) { sub("f", "", Bb); YesBb=1 }
+		YesBc=0; if(index(Bc, "f")) { sub("f", "", Bc); YesBc=1 }
+
+		YesRa=0; if(index(Ra, "f")) { sub("f", "", Ra); YesRa=1 }
+		YesRb=0; if(index(Rb, "f")) { sub("f", "", Rb); YesRb=1 }
+		YesRc=0; if(index(Rc, "f")) { sub("f", "", Rc); YesRc=1 }
+
+		YesTa=0; if(index(Ta, "f")) { sub("f", "", Ta); YesTa=1 }
+		YesTb=0; if(index(Tb, "f")) { sub("f", "", Tb); YesTb=1 }
+		YesTc=0; if(index(Tc, "f")) { sub("f", "", Tc); YesTc=1 }
+
+		FMT ="%8s%7s%5d%8.3f%8.3f%8.3f%12.3f\n"
+		FMTxyz="%8s%12.6f%12.6f%12.6f  0 %6d %s\n"
+	}
+
+	{	if(Ixyz) {
+			Natm=$0
+			getline
+			Tips=$0; a0=$(NF-2); b0=$(NF-1); c0=$NF
+			for(i=1; i<=Natm; i++) {
+				getline
+				Satm[i]=$1; Xatm[i]=$2; Yatm[i]=$3; Zatm[i]=$4; Smol[i]=$NF
+			}
+		} else {
+			Tips=$0
+			getline Natm
+			for(i=1; i<=min(Natm, NMAX); i++) {
+				getline
+				Smol[i]=$1; Satm[i]=$2
+				Xatm[i]=$4*10; Yatm[i]=$5*10; Zatm[i]=$6*10
+				if(NF==9) { YesVel=1; Vx[i]=$7; Vy[i]=$8; Vz[i]=$9 }
+			}
+			for(i=NMAX+1; i<=Natm; i++) {
+				getline
+				sub(/[0-9]+/, "", $2)
+				Smol[i]=$1; Satm[i]=$2
+				Xatm[i]=$3*10; Yatm[i]=$4*10; Zatm[i]=$5*10
+				if(NF==8) { YesVel=1; Vx[i]=$6; Vy[i]=$7; Vz[i]=$8 }
+			}
+			getline;
+			a0=$1*10; b0=$2*10; c0=$3*10
+			
+			a=Ba; if(YesBa) a = Ba*a0
+			b=Bb; if(YesBb) b = Bb*b0
+			c=Bc; if(YesBc) c = Bc*c0
+		}
+
+		if(YesRa) Ra = Ra*a0
+		if(YesRb) Rb = Rb*b0
+		if(YesRc) Rc = Rc*c0
+		Xtrs=Ta; if(YesTa) Xtrs=Ta*a
+		Ytrs=Tb; if(YesTb) Ytrs=Tb*b
+		Ztrs=Tc; if(YesTc) Ztrs=Tc*c
+
+		WholeMol(a0, b0, c0)
+print Geom, Ra, Rb, Rc
+		for(Icnt=Nini; Icnt<=Nend; Icnt += Nstp) {
+			Tx=Xatm[Icnt]; Ty=Yatm[Icnt]; Tz=Zatm[Icnt]
+			Zmin=1E10
+			if(Geom~/sl/ || Geom~/ho/) { Nout=Natm; for(i=1; i<=Natm; i++) YesOut[i]=1 }
+			else                       { Nout=0;    for(i=1; i<=Natm; i++) YesOut[i]=0 }
+			for(i=1; i<=Natm; i++) {
+				Xatm[i] -= Tx; Yatm[i] -= Ty; Zatm[i] -= Tz # Translate
+				Xcom[i] -= Tx; Ycom[i] -= Ty; Zcom[i] -= Tz
+				if(YesX) { Rtmp=a0*nint(Xcom[i]/a0); Xatm[i] -= Rtmp; Xcom[i] -= Rtmp }
+				if(YesY) { Rtmp=b0*nint(Ycom[i]/b0); Yatm[i] -= Rtmp; Ycom[i] -= Rtmp }
+				if(YesZ) { Rtmp=c0*nint(Zcom[i]/c0); Zatm[i] -= Rtmp; Zcom[i] -= Rtmp }
+				if(YesOut[i]==0) {
+						 if( Geom~/sp/ && (Xcom[i]/Ra)^2+(Ycom[i]/Rb)^2+(Zcom[i]/Rc)^2 <=1 )             YesOut[i]=1
+					else if( Geom~/cy/ && (Xcom[i]/Ra)^2+(Ycom[i]/Rb)^2<=1 && Zcom[i]^2<=Rc^2/4 )        YesOut[i]=1
+					else if( Geom~/cu/ &&  Xcom[i]^2<=Ra^2/4 && Yatm[i]^2<=Rb^2/4 && Zcom[i]^2<=Rc^2/4 ) YesOut[i]=1
+					if(YesOut[i]) { Nout++; Zmin=min(Zatm[i], Zmin) }
+				}
+			}
+
+			if(Geom~/sl/) {
+				Zmin=1E10
+				for(i=1; i<=Natm; i++) {
+					if(Dsrf && Zcom[i]>-Dsrf && Smol[i]!=Smol[Icnt]) {
+						Zatm[i] -= c0
+						Zcom[i] -= c0
+					}
+					if(Zcom[i]<Zmin) Zmin=Zcom[i]
+				}
+			} else if(Geom~/ho/) {
+				Ztrs=0
+				for(i=1; i<=Natm; i++) if(Zcom[i]<0) Zatm[i] += c
+			}
+
+			if(YesZmin==0) Zmin=0
+
+			if(Oxyz=="xyz") {
+				print Nout "\n" Tips > Fout
+				i=1; while(Smol[i]!=Smol[Icnt]) i++
+				while(Smol[i]==Smol[Icnt]) {
+					printf FMTxyz, Satm[i], Xatm[i]+Xtrs, Yatm[i]+Ytrs, Zatm[i]-Zmin+Ztrs, i, Smol[i] > Fout
+					i++
+				}
+				for(i=1; i<=Natm; i++) {
+					if(Smol[i]!=Smol[Icnt] && YesOut[i]) {
+						printf FMTxyz, Satm[i], Xatm[i]+Xtrs, Yatm[i]+Ytrs, Zatm[i]-Zmin+Ztrs, i, Smol[i] > Fout
+					}
+				}
+			} else {
+				print ">>>> Number of Atoms: " Nout
+				print Tips, " Zmin=" Zmin*0.1 "\n" Nout > Fout
+
+				if(Geom~/sl/ || Geom~/ho/) {
+					for(i=1; i<=Natm; i++) {
+						if(YesVel)
+							printf "%8s%7s%5d%8.3f%8.3f%8.3f%8.4f%8.4f%8.4f\n", Smol[i], Satm[i], i, \
+							(Xatm[i]+Xtrs)*.1, (Yatm[i]+Ytrs)*.1, (Zatm[i]-Zmin+Ztrs)*.1, Vx[i], Vy[i], Vz[i] > Fout
+						else
+							printf "%8s%7s%5d%8.3f%8.3f%8.3f\n", Smol[i], Satm[i], i, \
+							(Xatm[i]+Xtrs)*.1, (Yatm[i]+Ytrs)*.1, (Zatm[i]-Zmin+Ztrs)*.1 > Fout
+					}
+				} else {
+					i=1; while(Smol[i]!=Smol[Icnt]) i++
+					Nout=0
+					while(Smol[i]==Smol[Icnt]) {
+						Nout++
+						Rcom=Xcom[i]^2+Ycom[i]^2+Zcom[i]^2
+						printf FMT, Smol[i], Satm[i], Nout, \
+							(Xatm[i]+Xtrs)*.1, (Yatm[i]+Ytrs)*.1, (Zatm[i]-Zmin+Ztrs)*.1, Rcom> Fout
+						i++
+					}
+					for(i=1; i<=Natm; i++) {
+						if(Smol[i]!=Smol[Icnt] && YesOut[i]) {
+							Nout++
+							Rcom=Xcom[i]^2+Ycom[i]^2+Zcom[i]^2
+							printf FMT, Smol[i], Satm[i], Nout, \
+								(Xatm[i]+Xtrs)*.1, (Yatm[i]+Ytrs)*.1, (Zatm[i]-Zmin+Ztrs)*.1, Rcom > Fout
+						}
+					}
+				}
+				print a*.1, b*.1, c*.1 > Fout
+			}
+			close(Fout)
+		}
+	}
+
+function WholeMol(a, b, c) {
+	Iini=1
+	while(Iini<=Natm) {
+		# put first atom in the box, i.e., -L/2< x,y,z <L/2
+		if(YesX) Xatm[Iini] -= a*nint(Xatm[Iini]/a)
+		if(YesY) Yatm[Iini] -= b*nint(Yatm[Iini]/b)
+		if(YesZ) Zatm[Iini] -= c*nint(Zatm[Iini]/c)
+
+		Xi=Xatm[Iini]; Yi=Yatm[Iini]; Zi=Zatm[Iini]
+		Iend=Iini
+		Mass=0; Xtmp=0; Ytmp=0; Ztmp=0
+		while(Smol[Iend]==Smol[Iini]) {
+			# put all other atoms of mole. together, whole mole.
+			if(YesX) Xatm[Iend] -= a*nint((Xatm[Iend]-Xi)/a)
+			if(YesY) Yatm[Iend] -= b*nint((Yatm[Iend]-Yi)/b)
+			if(YesZ) Zatm[Iend] -= c*nint((Zatm[Iend]-Zi)/c)
+			# get COM of mole
+			Xtmp += Xatm[Iend]; Ytmp += Yatm[Iend]; Ztmp += Zatm[Iend]
+			Mass++; Iend++
+		}
+		for(i=Iini; i<Iend; i++) {
+			Xcom[i]=Xtmp/Mass; Ycom[i]=Ytmp/Mass; Zcom[i]=Ztmp/Mass
+		}
+		Iini=Iend
+	}
+}
+function abs(x)   { return (x>=0 ? x:-x ) }
+function min(x,y) { return ( x<y ? x:y )  }
+function nint(x)  { return (x>=0 ? int(x+0.5):int(x-0.5) ) }
+' ${File}
