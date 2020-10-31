@@ -1,0 +1,16 @@
+; minim.mdp - 作为grompp的输入, 用以生成em.tpr
+
+; 设置模拟类型, 终止条件, 保存
+integrator      = steep   ; 算法(steep = steepest descent minimization, 最陡下降)
+emtol           = 1000.0  ; 当最大力小于1000.0 kJ/mol/nm时停止
+emstep          = 0.01    ; 最小化步长
+nsteps          = 50000   ; 最小化进行的最大步数
+
+; 如何查找原子邻居, 计算相互作用的参数
+nstlist         = 1       ; 更新邻区列表, 长程力的频率
+cutoff-scheme   = Verlet  ; 带缓冲的邻区搜索
+ns_type         = grid    ; 确定邻区列表的方法(simple, grid)
+coulombtype     = PME     ; 长程静电相互作用的处理方法
+rcoulomb        = 1.0     ; 短程静电相互作用的截断值
+rvdw            = 1.0     ; 短程范德华相互作用的截断值
+pbc             = xyz     ; 三个维度上使用周期性边界条件
