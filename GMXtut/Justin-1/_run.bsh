@@ -1,0 +1,28 @@
+grep -v HOH 1aki.pdb > 1aki_clean.pdb
+
+echo -e "15\n7" | gmx pdb2gmx -f 1aki_clean.pdb -o 1aki_processed.gro
+
+gmx editconf -f 1aki_processed.gro -o 1aki_newbox.gro -c -d 1.0 -bt cubic
+gmx solvate -cp 1aki_newbox.gro -cs spc216.gro -o 1aki_solv.gro -p topol.top
+gmx grompp -f ions.mdp -c 1aki_solv.gro -p topol.top -o ions.tpr
+echo "13" | gmx genion -s ions.tpr -o 1aki_solv_ions.gro -p topol.top -pname NA -nname CL -neutral
+
+gmx grompp -f minim.mdp -c 1aki_solv_ions.gro -p topol.top -o em.tpr
+gmx mdrun -v -deffnm em
+echo "10 0" | gmx energy -f em.edr -o potential.xvg
+
+gmx grompp -f nvt.mdp -c em.gro -r em.gro -p topol.top -o nvt.tpr
+gmx mdrun -deffnm nvt
+echo "16 0" | gmx energy -f nvt.edr -o temperature.xvg
+
+gmx grompp -f npt.mdp -c nvt.gro -r nvt.gro -t nvt.cpt -p topol.top -o npt.tpr
+gmx mdrun -deffnm npt
+echo "18 0" | gmx energy -f npt.edr -o pressure.xvg
+echo "24 0" | gmx energy -f npt.edr -o density.xvg
+
+gmx grompp -f md.mdp -c npt.gro -t npt.cpt -p topol.top -o md_0_1.tpr
+gmx mdrun -deffnm md_0_1
+echo -e "1 \n 0" | gmx trjconv -s md_0_1.tpr -f md_0_1.xtc -o md_0_1_noPBC.xtc -pbc mol -center
+echo -e "4 \n 4" | gmx rms -s md_0_1.tpr -f md_0_1_noPBC.xtc -o rmsd.xvg -tu ns
+echo -e "4 \n 4" | gmx rms -s em.tpr -f md_0_1_noPBC.xtc -o rmsd_xtal.xvg -tu ns
+echo "1" | gmx gyrate -s md_0_1.tpr -f md_0_1_noPBC.xtc -o gyrate.xvg

@@ -1,0 +1,50 @@
+title                   = OPLS Lysozyme NVT equilibration
+define                  = -DPOSRES  ; 蛋白位置限制
+
+; 运行参数
+integrator              = md        ; 蛙跳积分方法
+nsteps                  = 50000     ; 2 * 50000 = 100 ps
+dt                      = 0.002     ; 2 fs
+
+; 输出控制
+nstxout                 = 500       ; 每1.0 ps保存一次坐标
+nstvout                 = 500       ; 每1.0 ps保存一次速度
+nstenergy               = 500       ; 每1.0 ps保存一次能量
+nstlog                  = 500       ; 每1.0 ps更新一次log文件
+
+; 键约束
+continuation            = no        ; 第一次运行动力学
+constraint_algorithm    = lincs     ; 完整约束
+constraints             = h-bonds   ; 约束涉及氢原子的键
+lincs_iter              = 1         ; LINCS迭代次数
+lincs_order             = 4         ; LINCS精度
+
+; 非键设置
+cutoff-scheme           = Verlet    ; 缓冲邻区搜索
+ns_type                 = grid      ; 搜索相邻格点单元
+nstlist                 = 10        ; 20 fs, 使用Verlet方案时基本无关
+rcoulomb                = 1.0       ; 短程静电截断(nm)
+rvdw                    = 1.0       ; 短程范德华截断(nm)
+DispCorr                = EnerPres  ; 对vdW截断进行校正
+
+; 静电
+coulombtype             = PME       ; 长程静电使用粒子网格Ewald方法(Particle Mesh Ewald)
+pme_order               = 4         ; 三次立方内插
+fourierspacing          = 0.16      ; FFT格点间距
+
+; 打开温度耦合
+tcoupl                  = V-rescale            ; 修正Berendsen热浴
+tc-grps                 = Protein Non-Protein  ; 两个耦合组, 更精确
+tau_t                   = 0.1     0.1          ; 时间常数(ps)
+ref_t                   = 300     300          ; 参考温度(K), 每组一个
+
+; 关闭压力耦合
+pcoupl                  = no        ; NVT中不使用压力耦合
+
+; 周期性边界条件
+pbc                     = xyz       ; 3-D PBC
+
+; 初始速度生成
+gen_vel                 = yes       ; 根据Maxwell分布指定速度
+gen_temp                = 300       ; Maxwell分布对应的温度
+gen_seed                = -1        ; 随机数种子
