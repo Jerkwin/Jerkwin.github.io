@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+
+<script src="three.min.js"></script>
+<script src="OrbitControls.js"></script>
+
+<style type="text/css">
+div#canvas-frame{
+  border: none;
+  cursor: pointer;
+  width: 1600px;
+  height: 800px;
+  background-color: #EEEEEE;
+}
+</style>
+
+<script>
+
+var $ = function(id){return document.getElementById(id)}
+
+var renderer, camera, scene, light, width, height;
+
+function initThree() {
+	width  = $('canvas-frame').clientWidth;
+	height = $('canvas-frame').clientHeight;
+	renderer = new THREE.WebGLRenderer({antialias: true});
+	renderer.setSize(width-10, height-10);
+	renderer.setClearColorHex(0xFFFFFF, 1.0);
+	renderer.shadowMapEnabled = true;
+	$('canvas-frame').appendChild(renderer.domElement);
+}
+
+function initScene() {
+	scene = new THREE.Scene();
+}
+
+function initCamera() {
+	camera = new THREE.PerspectiveCamera(30, width/height, 1, 10000);
+	camera.position.x = -20;
+	camera.position.y = -20;
+	camera.position.z = 15;
+	camera.up.x = 0;
+	camera.up.y = 0;
+	camera.up.z = 1;
+	camera.lookAt( {x:10, y:0, z:0 } );
+
+	var controls = new THREE.OrbitControls( camera );
+	controls.addEventListener( 'change', controls.update() );
+}
+
+function initLight() {
+	light = new THREE.DirectionalLight(0xFFFFFF, 1.0, 0);
+	light.position.set(0, 0, 100);
+	light.shadowCameraRight = 5;
+	light.shadowCameraLeft = -5;
+	light.shadowCameraTop = 5;
+	light.shadowCameraBottom = -5;
+	light.shadowCameraNear = 2;
+	light.shadowCameraFar = 100;
+	scene.add(light);
+
+	//light2 = new THREE.AmbientLight(0x101010, 1.0, 0);
+	//scene.add(light2);
+}
+
+function initObject(){
+
+	var gridMaterial, wireMaterial, vertexColorMaterial;
+	var normMaterial = new THREE.MeshNormalMaterial;
+	var shadeMaterial = new THREE.MeshPhongMaterial( { color: 0x3099d3 , wireframe: false, side:THREE.DoubleSide, shading:THREE.SmoothShading } );
+	var wireframeMaterial = new THREE.MeshBasicMaterial( { color: 0x000000, wireframe: true, side:THREE.DoubleSide } );
+	var vertexColorMaterial  = new THREE.MeshBasicMaterial( { vertexColors: THREE.VertexColors } );
+
+	THREE.ImageUtils.crossOrigin = ''
+	var wireTexture =  THREE.ImageUtils.loadTexture('square.png')
+	wireTexture.wrapS = wireTexture.wrapT = THREE.RepeatWrapping;
+	wireTexture.repeat.set( 40, 40 );
+	wireMaterial = new THREE.MeshBasicMaterial( { map: wireTexture, vertexColors: THREE.VertexColors, side:THREE.DoubleSide } );
+	var vertexColorMaterial  = new THREE.MeshBasicMaterial( { vertexColors: THREE.VertexColors } );
+
+	var meshFunction = function(x, y) {
+		x = xRange * x + xMin;
+		y = yRange * y + yMin;
+		var z = PES(x,y);
+		if ( isNaN(z) )
+			return new THREE.Vector3(0,0,9); // TODO: better fix
+		else
+			return new THREE.Vector3(x, y, z);
+	};
+
+	var segments = 25,
+	xMin = -7, xMax = 5.5, xRange = xMax - xMin,
+	yMin = -7, yMax = 7,   yRange = yMax - yMin;
+
+	var graphGeometry = new THREE.ParametricGeometry( meshFunction, segments, segments+3, false );
+
+	graphGeometry.computeBoundingBox();
+	zMin = graphGeometry.boundingBox.min.z;
+	zMax = graphGeometry.boundingBox.max.z;
+	zRange = zMax - zMin;
+	var color, point, face, numberOfSides, vertexIndex;
+
+	var faceIndices = [ 'a', 'b', 'c', 'd' ];
+
+	for ( var i = 0; i < graphGeometry.vertices.length; i++ )
+	{
+		point = graphGeometry.vertices[ i ];
+		color = new THREE.Color( 0x0000ff );
+		color.setHSL( 0.7 * (zMax - point.z) / zRange, 1, 0.5 );
+		graphGeometry.colors[i] = color; // use this array for convenience
+	}
+
+	for ( var i = 0; i < graphGeometry.faces.length; i++ )
+	{
+		face = graphGeometry.faces[ i ];
+		numberOfSides = ( face instanceof THREE.Face3 ) ? 3 : 4;
+		for( var j = 0; j < numberOfSides; j++ )
+		{
+			vertexIndex = face[ faceIndices[ j ] ];
+			face.vertexColors[ j ] = graphGeometry.colors[ vertexIndex ];
+		}
+	}
+
+	wireMaterial.map.repeat.set( segments, segments );
+	var graphMesh = new THREE.Mesh( graphGeometry, wireMaterial );
+
+	//var graphMesh = new THREE.Mesh( graphGeometry, wireframeMaterial );
+	graphMesh.doubleSided = true;
+	graphMesh.receiveShadow = true;
+
+	scene.add(graphMesh);
+
+	sphere = addSphere(.5, 0xffffff, 0,0,0)
+	sphere.castShadow = true;
+}
+
+var t=0, Xini=-4.5, x, y, z, cube, sphere;
+
+function PES(x,y) {
+	var Fx, Fy;
+	if(x==0) Fx = 4; else Fx = 4*Math.sin(x)/x+.1*x;
+	if(y==0) Fy = 4; else Fy = 4*Math.sin(y)/y;
+	return Fx+Fy;
+}
+
+function dPES(x,y) {
+	var dFx, dFy, dFz
+	if(x==0) dFx = 0; else dFx = 4*(x*Math.cos(x)-Math.sin(x))/x*x+0.1
+	if(y==0) dFy = 0; else dFy = 4*(y*Math.cos(y)-Math.sin(y))/y*y
+	var Rtmp = 1/Math.sqrt(dFx*dFx+dFy*dFy+1)
+	return [-dFx*Rtmp, -dFy*Rtmp, Rtmp]
+}
+
+function Animate() {
+	t++;
+	x = Xini+t/100; if(x>5.5) t=0;
+	y = Xini+t*0/100;
+	z=PES(x,y);
+	rad=0.5
+	norm=dPES(x,y)
+	renderer.clear();
+	sphere.position.set(x+rad*norm[0], y+rad*norm[1], z+rad*norm[2]);
+
+	camera.lookAt( {x:0, y:0, z:0 } );
+	renderer.render(scene, camera);
+	window.requestAnimationFrame(Animate);
+}
+
+function startThree() {
+	initThree();
+	initScene();
+	initCamera();
+	initLight();
+	initObject();
+	Animate();
+}
+
+function addSphere(Radii, Color, X, Y, Z) {
+	var sphere = new THREE.Mesh(
+		new THREE.SphereGeometry(Radii,20,20),
+		new THREE.MeshPhongMaterial({color: Color})
+	);
+	sphere.position.set(X,Y,Z);
+	scene.add(sphere);
+	return sphere;
+}
+</script>
+</head>
+
+<body onload="startThree();">
+<div id="canvas-frame"></div>
+
+</body>
+</html>
