@@ -1,0 +1,12 @@
+markdown: kramdown
+permalink: /:year/:month/:day/:title/
+url: https://jerkwin.github.io
+author: Jerkwin
+highlighter: rouge
+safe: true
+auto: true
+future: true
+paginate: 25
+gems: [jekyll-paginate]
+kramdown:
+    toc_levels: 1..3
