@@ -1,0 +1,28 @@
+for i in  Jerkwin.github.io ; do #gmxtools filamentcn; do
+	echo -e "\n\n"
+	cd $i && pwd
+	echo -e "\n\n"
+
+	git add .
+	comment=$1
+	[[ -z $comment ]] && { comment=regular; }
+	git commit -m "$comment"
+	git push
+
+	cd ..
+done
+
+#git filter-branch --force --prune-empty --index-filter 'git rm -rf --cached --ignore-unmatch *.*' --tag-name-filter cat -- --all
+#
+#rm -rf .git/refs/original/
+#
+#git reflog expire --expire=now --all
+#
+#git repack -A -d
+#
+#git gc --aggressive --prune=now
+#
+#git push --force
+
+
+
