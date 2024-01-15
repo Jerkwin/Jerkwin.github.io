@@ -1,0 +1,3 @@
+trajin 1cgh-equilib-md.mdcrd.gz
+reference 1cgh-all-minimize.rst 
+rms reference out 1cgh-backbone.rms @C,N,CA time 1

@@ -1,0 +1,100 @@
+!!index array str
+ "SIN"
+!entry.SIN.unit.atoms table  str name  str type  int typex  int resx  int flags  int seq  int elmnt  dbl chg
+ "O1" "O2" 0 1 131075 1 8 -0.794400
+ "C1" "C" 0 1 131075 2 6 0.795000
+ "O2" "O2" 0 1 131075 3 8 -0.794400
+ "C2" "CT" 0 1 131075 4 6 -0.012100
+ "H1" "HC" 0 1 131075 5 1 -0.018800
+ "H2" "HC" 0 1 131075 6 1 -0.018800
+ "C3" "CT" 0 1 131075 7 6 -0.013500
+ "H3" "HC" 0 1 131075 8 1 -0.012900
+ "H4" "HC" 0 1 131075 9 1 -0.012900
+ "C4" "C" 0 1 131075 10 6 0.519800
+ "O3" "O" 0 1 131075 11 8 -0.637100
+!entry.SIN.unit.atomspertinfo table  str pname  str ptype  int ptypex  int pelmnt  dbl pchg
+ "O1" "O2" 0 -1 0.0
+ "C1" "C" 0 -1 0.0
+ "O2" "O2" 0 -1 0.0
+ "C2" "CT" 0 -1 0.0
+ "H1" "HC" 0 -1 0.0
+ "H2" "HC" 0 -1 0.0
+ "C3" "CT" 0 -1 0.0
+ "H3" "HC" 0 -1 0.0
+ "H4" "HC" 0 -1 0.0
+ "C4" "C" 0 -1 0.0
+ "O3" "O" 0 -1 0.0
+!entry.SIN.unit.boundbox array dbl
+ -1.000000
+ 0.0
+ 0.0
+ 0.0
+ 0.0
+!entry.SIN.unit.childsequence single int
+ 2
+!entry.SIN.unit.connect array int
+ 0
+ 10
+!entry.SIN.unit.connectivity table  int atom1x  int atom2x  int flags
+ 1 2 1
+ 2 3 1
+ 2 4 1
+ 4 5 1
+ 4 6 1
+ 4 7 1
+ 7 8 1
+ 7 9 1
+ 7 10 1
+ 10 11 1
+!entry.SIN.unit.hierarchy table  str abovetype  int abovex  str belowtype  int belowx
+ "U" 0 "R" 1
+ "R" 1 "A" 1
+ "R" 1 "A" 2
+ "R" 1 "A" 3
+ "R" 1 "A" 4
+ "R" 1 "A" 5
+ "R" 1 "A" 6
+ "R" 1 "A" 7
+ "R" 1 "A" 8
+ "R" 1 "A" 9
+ "R" 1 "A" 10
+ "R" 1 "A" 11
+!entry.SIN.unit.name single str
+ "SIN"
+!entry.SIN.unit.positions table  dbl x  dbl y  dbl z
+ 3.536914 1.422858 -1.933042E-06
+ 2.445046 1.507778 0.548851
+ 1.888601 0.684742 1.300845
+ 1.670734 2.822044 0.246906
+ 1.411801 2.818542 -0.809827
+ 2.381158 3.634334 0.368886
+ 0.426537 3.119626 1.100641
+ 0.194559 4.178116 1.071629
+ 0.634992 2.845085 2.129426
+ -0.844869 2.410383 0.663720
+ -1.836114 3.017581 0.313663
+!entry.SIN.unit.residueconnect table  int c1x  int c2x  int c3x  int c4x  int c5x  int c6x
+ 1 0 0 0 0 0
+!entry.SIN.unit.residues table  str name  int seq  int childseq  int startatomx  str restype  int imagingx
+ "SIN" 1 18 1 "?" 0
+!entry.SIN.unit.residuesPdbSequenceNumber array int
+ 0
+!entry.SIN.unit.solventcap array dbl
+ -1.000000
+ 0.0
+ 0.0
+ 0.0
+ 0.0
+!entry.SIN.unit.velocities table  dbl x  dbl y  dbl z
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0
+

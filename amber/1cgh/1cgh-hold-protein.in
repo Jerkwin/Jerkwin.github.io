@@ -1,0 +1,14 @@
+1cgh: initial minimization of solvent and ions
+ &cntrl
+     imin   = 1,
+     maxcyc = 500,
+     ncyc   = 250,
+     ntb    = 1,
+     ntr    = 1,
+     cut    = 10
+ &end
+Hold the protein fixed
+100.0
+RES 1 228
+END
+END

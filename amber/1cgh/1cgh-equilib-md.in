@@ -1,0 +1,13 @@
+1cgh: 100ps MD
+ &cntrl
+    imin = 0, irest = 1, ntx = 7,
+    ntb = 2, pres0 = 1.0, ntp = 1,
+    taup = 2.0,
+    cut = 10, ntr = 0,
+    ntc = 2, ntf = 2,
+    tempi = 300.0, temp0 = 300.0,
+    ntt = 3, gamma_ln = 1.0,
+    nstlim = 50000, dt = 0.002,
+    ntpr = 100, ntwx = 500, ntwr = 1000
+ /
+

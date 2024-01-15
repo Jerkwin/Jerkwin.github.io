@@ -1,0 +1,67 @@
+remark goes here
+MASS
+O2 16.000        0.434               same as o  
+C  12.010        0.616               same as c  
+CT 12.010        0.878               same as c3 
+HC 1.008         0.135               same as hc 
+O  16.000        0.434               same as o  
+N  14.010        0.530               same as n  
+H  1.008         0.161               same as hn 
+H1 1.008         0.135               same as hc 
+
+BOND
+O2-C   648.00   1.214       same as c -o 
+C -CT  328.30   1.508       same as c -c3
+CT-HC  337.30   1.092       same as c3-hc
+CT-CT  303.10   1.535       same as c3-c3
+C -O   648.00   1.214       same as c -o 
+C -N   478.20   1.345       same as c -n 
+N -H   410.20   1.009       same as hn-n 
+N -CT  330.60   1.460       same as c3-n 
+CT-H1  337.30   1.092       same as c3-hc
+
+ANGLE
+O2-C -O2   79.100     127.330   same as o -c -o 
+O2-C -CT   68.000     123.110   same as c3-c -o 
+C -CT-HC   47.200     109.680   same as c -c3-hc
+C -CT-CT   63.800     110.530   same as c -c3-c3
+CT-CT-HC   46.400     110.050   same as c3-c3-hc
+HC-CT-HC   39.400     108.350   same as hc-c3-hc
+CT-C -O    68.000     123.110   same as c3-c -o 
+CT-C -N    67.900     115.150   same as c3-c -n 
+C -N -H    49.200     118.460   same as c -n -hn
+C -N -CT   63.900     121.350   same as c -n -c3
+O -C -N    75.800     122.030   same as n -c -o 
+N -CT-H1   49.800     109.500   same as hc-c3-n 
+H -N -CT   46.000     116.780   same as c3-n -hn
+H1-CT-H1   39.400     108.350   same as hc-c3-hc
+
+DIHE
+O2-C -CT-HC   1    0.000       180.000           2.000      same as X -c -c3-X 
+O2-C -CT-CT   1    0.000       180.000           2.000      same as X -c -c3-X 
+C -CT-CT-HC   1    0.156         0.000           3.000      same as X -c3-c3-X 
+C -CT-CT-C    1    0.156         0.000           3.000      same as X -c3-c3-X 
+CT-CT-C -O    1    0.000       180.000           2.000      same as X -c -c3-X 
+CT-CT-C -N    1    0.000       180.000           2.000      same as X -c -c3-X 
+HC-CT-CT-HC   1    0.156         0.000           3.000      same as X -c3-c3-X 
+CT-C -N -H    1    2.500       180.000           2.000      same as X -c -n -X 
+CT-C -N -CT   1    2.500       180.000           2.000      same as X -c -n -X 
+HC-CT-C -O    1    0.000       180.000           2.000      same as X -c -c3-X 
+HC-CT-C -N    1    0.000       180.000           2.000      same as X -c -c3-X 
+C -N -CT-H1   1    0.000         0.000           2.000      same as X -c3-n -X 
+O -C -N -H    1    2.500       180.000           2.000      same as X -c -n -X 
+O -C -N -CT   1    2.500       180.000           2.000      same as X -c -n -X 
+H -N -CT-H1   1    0.000         0.000           2.000      same as X -c3-n -X 
+
+IMPROPER
+
+NONBON
+  O2          1.6612  0.2100             same as o  
+  C           1.9080  0.0860             same as c  
+  CT          1.9080  0.1094             same as c3 
+  HC          1.4870  0.0157             same as hc 
+  O           1.6612  0.2100             same as o  
+  N           1.8240  0.1700             same as n  
+  H           0.6000  0.0157             same as hn 
+  H1          1.4870  0.0157             same as hc 
+
