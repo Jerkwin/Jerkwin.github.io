@@ -1,0 +1,288 @@
+---
+layout: post
+title: html测试
+categories:
+- 科
+tags:
+- markdown
+ math: true
+---
+
+<h1 id="一级标题h1">一级标题 H1</h1>
+
+<h2 id="二级标题h2">二级标题 H2</h2>
+
+<h6 id="h6">H6</h6>
+
+<ul>
+<li><p>标题</p></li>
+<li><p>段落</p>
+
+<p>段落
+不换行
+不换行</p>
+
+<p>强制换行<br/>
+换行</p></li>
+</ul>
+
+<p>正文</p>
+
+<ol>
+<li><p>列表1
+内容</p></li>
+<li><p>列表2</p></li>
+<li><p>列表3
+内容</p>
+
+<p>内容<br/>
+换行</p></li>
+</ol>
+
+<p>正文</p>
+
+<p>表格</p>
+
+<table>
+<colgroup>
+<col style="text-align:left;"/>
+<col style="text-align:center;"/>
+<col style="text-align:right;"/>
+</colgroup>
+
+<thead>
+<tr>
+	<th style="text-align:left;">Tables</th>
+	<th style="text-align:center;">Are</th>
+	<th style="text-align:right;">Cool</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+	<td style="text-align:left;">col 3 is</td>
+	<td style="text-align:center;">right-aligned</td>
+	<td style="text-align:right;">$1600</td>
+</tr>
+<tr>
+	<td style="text-align:left;">col 2 is</td>
+	<td style="text-align:center;">centered</td>
+	<td style="text-align:right;">$12</td>
+</tr>
+<tr>
+	<td style="text-align:left;">zebra stripes</td>
+	<td style="text-align:center;">are neat</td>
+	<td style="text-align:right;">$1</td>
+</tr>
+</tbody>
+</table>
+
+<table>
+<colgroup>
+<col style="text-align:left;"/>
+<col style="text-align:center;"/>
+<col style="text-align:right;"/>
+</colgroup>
+
+<thead>
+<tr>
+	<th style="text-align:left;"></th>
+	<th style="text-align:center;" colspan="2">Grouping</th>
+</tr>
+<tr>
+	<th style="text-align:left;">First Header</th>
+	<th style="text-align:center;">Second Header</th>
+	<th style="text-align:right;">Third Header</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+	<td style="text-align:left;">Content</td>
+	<td style="text-align:center;" colspan="2"><em>Long Cell</em></td>
+</tr>
+<tr>
+	<td style="text-align:left;">Content</td>
+	<td style="text-align:center;"><strong>Cell</strong></td>
+	<td style="text-align:right;">Cell</td>
+</tr>
+</tbody>
+
+<tbody>
+<tr>
+	<td style="text-align:left;">New section</td>
+	<td style="text-align:center;">More</td>
+	<td style="text-align:right;">Data</td>
+</tr>
+<tr>
+	<td style="text-align:left;">And more</td>
+	<td style="text-align:center;" colspan="2">With an escaped &#8216;|&#8217;</td>
+</tr>
+</tbody>
+</table>
+
+<p>[测试表格]</p>
+
+<pre><code>+----------------------------------------+
+| Tables        | Are           | Cool   |
+| ------------- |:-------------:| ------:|
+| col 3 is      | right-aligned | \$1600 |
+| col 2 is      | centered      |   \$12 |
+| zebra stripes | are neat      |    \$1 |
++----------------------------------------+
+
++--------------------------------------------+
+|             |          Grouping           ||
+First Header  | Second Header | Third Header |
+ ------------ | :-----------: | ------------:|
+Content       |          *Long Cell*        ||
+Content       |   **Cell**    |         Cell |
+
+New section   |     More      |         Data |
+And more      | With an escaped '\|'         ||
++---------------------------------------------+
+</code></pre>
+
+<p>上下标</p>
+
+<p>A<sub>i</sub> A<sup>n</sup> A<sub>i,j,k</sub> A<sup>m,n</sup></p>
+
+<p>Latex数学公式</p>
+
+<p>行内公式 <span class="math">\(e^{i \pi }+1 = 0\)</span></p>
+
+<p>对齐公式</p>
+
+<p><span class="math">\[\begin{align}
+x &= \cos t \\
+y &= \sin t
+\end{align}\]</span></p>
+
+<p>正文</p>
+
+<p>引用</p>
+
+<blockquote>
+<p>引用</p>
+
+<p>引用</p>
+
+<blockquote>
+<p>嵌套引用</p>
+</blockquote>
+
+<p>恢复</p>
+
+<h3 id="引用中的h3标题">引用中的H3标题</h3>
+
+<ol>
+<li>引用中的<em>列表项</em></li>
+<li>引用中的_列表项_</li>
+<li>引用中的<em>列表项</em></li>
+<li>引用中的__列表项__</li>
+</ol>
+
+<p>或者</p>
+
+<ul>
+<li>引用中的 <strong>一级</strong> 列表项_
+
+<ul>
+<li>二级
+
+<ul>
+<li>三级
+换行</li>
+</ul></li>
+</ul></li>
+<li>引用中的 <em>列表项</em></li>
+</ul>
+
+<p>引用中的代码</p>
+
+<pre><code>      return shell_exec(&quot;echo $input | $markdown_script&quot;);
+</code></pre>
+</blockquote>
+
+<p>代码块</p>
+
+<p>主程序 <code>Hello</code>如下</p>
+
+<pre class="line-numbers" data-start="0"><code class="language-markup"># Language: markup
+&lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+&lt;link rel="stylesheet" href="file://C:/Users/Jicun/F_Prg/Markdown/MD.css">
+&lt;link  rel="stylesheet" href="file://C:/Users/Jicun/F_Prg/Markdown/prism.css">
+&lt;script src="file://C:/Users/Jicun/F_Prg/Markdown/prism.js"></script>
+&lt;style type="text/css">body{font-family:"Times New Roman",georgia;font-size:20px;font-weight:normal;color:#276904;background-color:#FAFFD0}</style>
+&lt;script type="text/x-mathjax-config"> MathJax.Hub.Config({ tex2jax:{inlineMath:[['$','$'],['\\(','\\)']], skipTags:['script','noscript','style','textarea','pre']}});</script>
+&lt;script type="text/javascript" src="file://C:/Users/Jicun/F_Prg/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+&lt;h1 id="转战markdown">转战Markdown</h1>
+&lt;h2 id="2014-02-0211:08:34">2014&#8211;02&#8211;02 11:08:34</h2>
+</code></pre>
+
+<pre class="line-numbers" data-start="0"><code class="language-bash"># Language: bash
+function CntAtm {
+    usage="\
+    \>>>>>>>>>>>>>>>>     CntAtm(COM)     <<<<<<<<<<<<<<<<
+    \>>   Usage: CntAtm <File.gro> {Icnt1} {Icnt2} {R12Max} {XYZ}
+    \>> Default: CntAtm <File.gro>   1       1        5      XY
+    \>> Icnt1|2: #Iatm to define the center
+    \>>  R12Max: Only print configuration with #Icnt1-#Icnt2 distance < R12Max
+    \>>     XYZ: Apply PBC to X|Y|Z"
+
+    [[ $# -lt 1 ]] && { echo "$usage"; exit; }
+
+    File=${1%\.gro}; shift
+    Icnt1=1; Icnt2=1; R12Max=5; YesXYZ="XY"; YesCOM=1
+
+    [[ x$1 != x ]] && {  Icnt1=$1; }
+    [[ x$2 != x ]] && {  Icnt2=$2; }
+    [[ x$3 != x ]] && { R12Max=$3; }
+    [[ x$4 != x ]] && { YesXYZ=$4; }
+}
+</code></pre>
+
+<hr />
+
+<p>I get 10 times more traffic from <a href="http://google.com/" title="Google">Google</a>
+than from <a href="http://search.yahoo.com/" title="Yahoo Search">Yahoo</a>
+or <a href="http://search.msn.com/" title="MSN Search">MSN</a>.</p>
+
+<ul>
+<li><p>水平线</p>
+
+<hr /></li>
+<li><p>超链接</p>
+
+<ul>
+<li><p>网址超链接 <a href="http://example.com/">http://example.com/</a></p>
+
+<p>I get 10 times more traffic from <a href="http://google.com/&quot;Google&quot;">Google</a>
+than from <a href="http://search.yahoo.com/" title="Yahoo Search">Yahoo</a>
+or <a href="http://search.msn.com/" title="MSN Search">MSN</a>.</p></li>
+<li><p>引用数字超链接</p>
+
+<p>I get 10 times more traffic from <a href="http://google.com/" title="Google">Google</a> than from <a href="http://search.yahoo.com/" title="Yahoo Search">Yahoo</a> or <a href="http://search.msn.com/" title="MSN Search">MSN</a>.</p></li>
+<li><p>引用名称超链接</p>
+
+<p>I get 10 times more traffic from <a href="http://google.com/" title="Google">Google</a> than from <a href="http://search.yahoo.com/" title="Yahoo Search">Yahoo</a> or <a href="http://search.msn.com/" title="MSN Search">MSN</a>.</p></li>
+</ul></li>
+</ul>
+
+<ul>
+<li><p>脚注</p>
+
+<p>这里有一个脚注.<a href="#fn:1" id="fnref:1" title="see footnote" class="footnote">[1]</a></p></li>
+</ul>
+
+<div class="footnotes">
+<hr />
+<ol>
+
+<li id="fn:1">
+<p>脚注1 <a href="#fnref:1" title="return to article" class="reversefootnote">&#160;&#8617;</a></p>
+</li>
+
+</ol>
+</div>
+
